@@ -1,20 +1,16 @@
-import forms from "@tailwindcss/forms"
-import defaultTheme from "tailwindcss/defaultTheme"
+import defaultTheme from 'tailwindcss/defaultTheme';
+import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-    darkMode: ["class"],
+export default {
+    darkMode: "class",
     content: [
-        './pages/**/*.{js,jsx}',
-        './components/**/*.{js,jsx}',
-        './app/**/*.{js,jsx}',
-        './src/**/*.{js,jsx}',
-        "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
-        "./storage/framework/views/*.php",
-        "./resources/views/**/*.blade.php",
-
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        './storage/framework/views/*.php',
+        './resources/views/**/*.blade.php',
+        './resources/js/**/*.jsx',
     ],
-    prefix: "",
+
     theme: {
         container: {
             center: true,
@@ -23,6 +19,7 @@ module.exports = {
                 "2xl": "1400px",
             },
         },
+
         extend: {
             colors: {
                 border: "hsl(var(--border))",
@@ -65,17 +62,16 @@ module.exports = {
                 sm: "calc(var(--radius) - 4px)",
             },
             fontFamily: {
-                sans: ["Figtree", ...defaultTheme.fontFamily.sans],
+                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
-
             keyframes: {
                 "accordion-down": {
-                    from: { height: "0" },
+                    from: { height: 0 },
                     to: { height: "var(--radix-accordion-content-height)" },
                 },
                 "accordion-up": {
                     from: { height: "var(--radix-accordion-content-height)" },
-                    to: { height: "0" },
+                    to: { height: 0 },
                 },
             },
             animation: {
@@ -84,5 +80,6 @@ module.exports = {
             },
         },
     },
+
     plugins: [forms, require("tailwindcss-animate")],
-}
+};
