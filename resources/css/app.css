@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.b {
+    border: 1px red solid;
+}
+
+.bc * {
+    border: 1px red solid;
+}
