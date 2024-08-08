@@ -78,7 +78,7 @@ export default function Welcome({ role }) {
             <div>
                 <Header />
                 {sidebar && <SideBar />}
-                <main className={`w-full p-4 ${sidebar && sideBarWidth_pl} min-h-screen ${headerHeight_pt} b`}>
+                <main className={`w-full p-4 ${sidebar && sideBarWidth_pl} min-h-screen ${headerHeight_pt}`}>
                     {children}
                 </main>
                 {footer && <Footer />}
@@ -87,9 +87,9 @@ export default function Welcome({ role }) {
 
         function SideBar() {
             return (
-                <div className={`fixed flex flex-col left-0 ${sideBarWidth_w} px-3`}>
-                    <div className={`${headerHeight_h} flex items-center justify-center`}>I.Menu</div>
-                    <nav className='flex flex-col items-center'>
+                <div className={`fixed flex flex-col left-0 ${sideBarWidth_w} h-full`}>
+                    <div className={`${headerHeight_h} flex items-center justify-center p-3`}>I.Menu</div>
+                    <nav className='flex flex-1 flex-col items-center p-3 border-gray-400 border-r-[1px]'>
                         <Link>Orgs</Link>
                         <Link>logs</Link>
                     </nav>
@@ -101,7 +101,7 @@ export default function Welcome({ role }) {
 
             return (
                 <div>
-                    <div className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 ${headerHeight_h} ${sidebar && sideBarWidth_pl} bg-[#EEEEEE] px-4`}>
+                    <div className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 ${headerHeight_h} ${sidebar && sideBarWidth_pl} bg-[#EEEEEE] px-4 border-gray-400 border-b-[1px]`}>
                         <div>TigerOrgs</div>
                         <nav className='flex-1'>
                             <ul className='flex justify-end space-x-4'>
