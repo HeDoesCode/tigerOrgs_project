@@ -62,12 +62,21 @@ export default function Welcome({ role }) {
                 content <br />
                 content <br />
                 content <br />
+                content <br />
+                content <br />
+                content <br />
+                content <br />
+                content <br />
+                content <br />
+                content <br />
+                content <br />
+                content <br />
                 content n <br />
             </Layout>
         </div>
     );
 
-    function Layout({ children, sidebar, footer }) {
+    function Layout({ children, sidebar, footer, header }) {
         const headerHeight_pt = 'pt-16';
         const headerHeight_h = 'h-14';
         const sideBarWidth_pl = 'pl-20';
@@ -103,18 +112,20 @@ export default function Welcome({ role }) {
                 <div>
                     <div className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 ${headerHeight_h} ${sidebar && sideBarWidth_pl} bg-[#EEEEEE] px-4 border-gray-400 border-b-[1px]`}>
                         <div>TigerOrgs</div>
-                        <nav className='flex-1'>
-                            <ul className='flex justify-end space-x-4'>
-                                <li>Home</li>
-                                <li>Organizations</li>
-                                <li>Status</li>
-                                <li className='flex items-center'>
-                                    <div className='w-0 border-gray-400 border-r-[1px] h-5'></div>
-                                </li>
-                                <li><IconBellFilled /></li>
-                                <li><IconProfile /></li>
-                            </ul>
-                        </nav>
+                        {header && (
+                            <nav className='flex-1'>
+                                <ul className='flex justify-end space-x-4'>
+                                    <li>Home</li>
+                                    <li>Organizations</li>
+                                    <li>Status</li>
+                                    <li className='flex items-center'>
+                                        <div className='w-0 border-gray-400 border-r-[1px] h-5'></div>
+                                    </li>
+                                    <li><IconBellFilled /></li>
+                                    <li><IconProfile /></li>
+                                </ul>
+                            </nav>
+                        )}
                     </div>
                 </div>
             );
