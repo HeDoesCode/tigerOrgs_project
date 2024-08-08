@@ -68,7 +68,7 @@ export default function Welcome({ role }) {
     );
 
     function Layout({ children, sidebar, footer }) {
-        const headerHeight_pt = 'pt-14';
+        const headerHeight_pt = 'pt-16';
         const headerHeight_h = 'h-14';
         const sideBarWidth_pl = 'pl-20';
         const sideBarWidth_w = 'w-16';
@@ -78,7 +78,7 @@ export default function Welcome({ role }) {
             <div>
                 <Header />
                 {sidebar && <SideBar />}
-                <main className={`w-full px-4 ${sidebar && sideBarWidth_pl} min-h-screen ${headerHeight_pt} b`}>
+                <main className={`w-full p-4 ${sidebar && sideBarWidth_pl} min-h-screen ${headerHeight_pt} b`}>
                     {children}
                 </main>
                 {footer && <Footer />}
