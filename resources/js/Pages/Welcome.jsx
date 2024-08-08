@@ -80,8 +80,8 @@ export default function Welcome({ role }) {
                 {sidebar && <SideBar />}
                 <main className={`w-full p-4 ${sidebar && sideBarWidth_pl} min-h-screen ${headerHeight_pt}`}>
                     {children}
+                    {footer && <Footer />}
                 </main>
-                {footer && <Footer />}
             </div>
         );
 
@@ -124,7 +124,7 @@ export default function Welcome({ role }) {
 
         function Footer() {
             return (
-                <div className={`b ${footer_minHeight} mx-4`}>Footer</div>
+                <div className={`${footer_minHeight} mt-3`}>Footer</div>
             );
         }
     }
