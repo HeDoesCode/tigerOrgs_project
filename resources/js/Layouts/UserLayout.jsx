@@ -9,7 +9,7 @@ import {
     DropdownMenuContent,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu"
+} from "@/Components/ui/dropdown-menu";
 import IconFacebookRoundFilled from "@/Components/Icons/IconFacebookRoundFilled";
 import IconInstagram from "@/Components/Icons/IconInstagram";
 
