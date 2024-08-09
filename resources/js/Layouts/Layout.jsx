@@ -1,6 +1,3 @@
-import { Link } from '@inertiajs/react';
-import IconUserSearch from '@/Components/Icons/IconUserSearch';
-import IconFolder from '@/Components/Icons/IconFolder';
 
 function Layout({ children, sidebar, headerContent }) {
     // const headerHeight_pt = 'pt-[4.5rem]';
@@ -27,8 +24,6 @@ function Layout({ children, sidebar, headerContent }) {
             </main>
         </div>
     );
-
-
 
     function Header() {
         return (
