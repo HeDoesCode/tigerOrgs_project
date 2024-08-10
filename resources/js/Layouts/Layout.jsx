@@ -10,7 +10,7 @@ function Layout({ children, sidebar, headerContent }) {
         <div className={`${sidebar && 'pl-0 sm:pl-16'} flex`}>
             <Header />
             {sidebar}
-            <main className={`w-full overflow-y-auto h-full ${headerHeight_pt} my-2 px-4`}>
+            <main className={`w-full overflow-y-auto h-screen pt-[4.5rem] px-4`}>
                 {children}
             </main>
         </div>

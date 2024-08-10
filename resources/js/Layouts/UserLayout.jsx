@@ -31,7 +31,20 @@ function UserLayout({ children }) {
                 <ul className='hidden sm:flex justify-end items-center space-x-6 nunito font-extrabold'>
                     <li className='text-[#E7A600]'><Link className='contents' href='#home'>Home</Link></li>
                     <li><Link className='contents' href='#organizations'>Organizations</Link></li>
-                    <li>Status</li>
+                    <li>
+                        <HeaderDropdownMenu
+                            triggerContent={'Status'}
+                            dropdownContent={
+                                <>
+                                    <div>appplication 1</div>
+                                    <div>appplication 1</div>
+                                    <div>appplication 1</div>
+                                    <div>appplication 1</div>
+                                    \                                </>
+                            }
+                        />
+
+                    </li>
                     <li className='flex items-center'>
                         <div className='w-0 border-gray-400 border-r-[1px] h-5'></div>
                     </li>

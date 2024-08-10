@@ -8,7 +8,6 @@ import IconMenu3 from "@/Components/Icons/IconMenu3";
 
 function AdminLayout({ children }) {
     return (
-        // <Layout headerContent={<HeaderContent />} sidebar={<SideBarContent />}>
         <Layout headerContent={<HeaderContent />} sidebar={<SideBarContent />}>
             {children}
         </Layout>
