@@ -6,7 +6,7 @@ export default function Welcome() {
     return (
         <div className='w-full'>
             <Head title="Home" />
-            <UserLayout>
+            <AdminLayout>
                 content 1 <br />
                 content <br />
                 content <br />
@@ -43,7 +43,7 @@ export default function Welcome() {
                 content <br />
                 content <br />
                 content n <br />
-            </UserLayout>
+            </AdminLayout>
         </div>
     )
 }

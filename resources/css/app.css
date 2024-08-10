@@ -28,6 +28,14 @@
 
 }
 
+.o {
+    outline: 1px solid red !important;
+}
+
+.oc * {
+    outline: 1px solid red !important;
+}
+
 .poetsen-one {
     font-family: "Poetsen One", sans-serif;
     font-style: normal;
