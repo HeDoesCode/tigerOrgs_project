@@ -25,9 +25,9 @@ function Home({ bgImage, tiger1, tiger2 }) {
                                 Search
                             </button>
                         </div>
-                        <button className='bg-[#FFE6C1] bg-opacity-50 mt-8 sm:mt-12 p-4 sm:p-5 rounded-2xl border-[3px] border-[#FFCD12] nunito font-extrabold text-sm sm:text-xl shadow-md shadow-gray-500'>
+                        <Link href={route('organizations')} className='bg-[#FFE6C1] bg-opacity-50 mt-8 sm:mt-12 p-4 sm:p-5 rounded-2xl border-[3px] border-[#FFCD12] nunito font-extrabold text-sm sm:text-xl shadow-md shadow-gray-500'>
                             Browse Organizations
-                        </button>
+                        </Link>
                     </div>
                     <img className='absolute bottom-[-3.3rem] sm:bottom-[-4.3rem] right-[3%] h-36 sm:h-56' src={tiger1} alt="tiger1" onError={hideImage} />
                     <img className='absolute top-[-0.5rem] left-[5%] rotate-180 h-40 sm:h-60' src={tiger2} alt="tiger2" onError={hideImage} />
@@ -39,7 +39,7 @@ function Home({ bgImage, tiger1, tiger2 }) {
 
     function GoogleModal() {
         return (
-            <div className='fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-md bg-gray-700/20'>
+            <div className='fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20'>
                 <div className='fixed bg-white size-[25rem] border-gray-400 border rounded-xl p-2'>
 
                     {/* <form onSubmit={submit}> */}

@@ -5,7 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use phpseclib3\File\ASN1\Maps\OrganizationName;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -18,6 +18,10 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('/organizations', function () {
+    return Inertia::render('Organizations');
+})->name('organizations');
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
