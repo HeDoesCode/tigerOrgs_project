@@ -2,7 +2,7 @@ import { Link } from "@inertiajs/react";
 import IconFacebookRoundFilled from "./Icons/IconFacebookRoundFilled";
 import IconInstagram from "./Icons/IconInstagram";
 
-function Footer() {
+function Footer({ footerTiger }) {
     return (
         <div className={`min-h-36 h-auto mt-5 -mx-4 pt-10 inter font-extralight text-sm bg-[#EEEEEE] flex justify-center`}>
             <div className="flex space-x-2 mx-10 sm:mx-24 md:mx-52 border-gray-300 border-t-[1px] py-3 w-full max-w-[70rem]">

@@ -3,13 +3,13 @@ import UserLayout from '@/Layouts/UserLayout.jsx';
 import Logo from '@/Components/Logo';
 import IconSearch from '@/Components/Icons/IconSearch';
 
-function Home({ bgImage }) {
+function Home({ bgImage, tiger1, tiger2 }) {
     return (
         <div className='w-full'>
             <Head title="Home" />
             <UserLayout bgImage={bgImage}>
-                <div className='w-full flex-1 flex justify-center items-center'>
-                    <div className='flex flex-col items-center mx-7 w-full max-w-[35rem]'>
+                <div className='w-full flex-1 flex justify-center items-center relative'>
+                    <div className='flex flex-col items-center mx-7 w-full max-w-[35rem] relative'>
                         <Logo className='mb-14 text-[15cqw] sm:text-[7rem] sm:mb-20' leftClass='text-[#FFBC11]' />
                         <div className='flex w-full max-w-lg h-14 relative'>
                             <div className='absolute h-full flex items-center justify-center text-gray-500 w-20'>
@@ -24,6 +24,8 @@ function Home({ bgImage }) {
                             Browse Organizations
                         </button>
                     </div>
+                    <img className='absolute bottom-[-3.3rem] sm:bottom-[-4.3rem] right-[3%] h-36 sm:h-56' src={tiger1} alt="" />
+                    <img className='absolute top-[-0.5rem] left-[5%] rotate-180 h-40 sm:h-60' src={tiger2} alt="" />
                 </div>
             </UserLayout>
         </div>

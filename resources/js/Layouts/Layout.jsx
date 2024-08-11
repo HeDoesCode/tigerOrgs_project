@@ -2,7 +2,7 @@ import Footer from "@/Components/Footer";
 import Logo from "@/Components/Logo";
 import { Link } from "@inertiajs/react";
 
-function Layout({ children, sidebar, headerContent, bgImage }) {
+function Layout({ children, sidebar, headerContent, bgImage, footerTiger }) {
     // const headerHeight_pt = 'pt-[4.5rem]';
     const headerHeight_pt = 'pt-16';
     const headerHeight_h = 'h-16';
