@@ -1,5 +1,5 @@
 import Layout from "./Layout"
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import IconBellFilled from "@/Components/Icons/IconBellFilled";
 import IconProfile from "@/Components/Icons/IconProfile";
 import IconMenu3 from '@/Components/Icons/IconMenu3';
@@ -14,13 +14,12 @@ import IconFacebookRoundFilled from "@/Components/Icons/IconFacebookRoundFilled"
 import IconInstagram from "@/Components/Icons/IconInstagram";
 
 
-function UserLayout({ children }) {
-    const footer_minHeight = 'min-h-32';
+function UserLayout({ children, bgImage }) {
+    const footer_minHeight = '';
 
     return (
-        <Layout headerContent={<HeaderContent />}>
+        <Layout headerContent={<HeaderContent />} bgImage={bgImage}>
             {children}
-            <Footer />
         </Layout>
     );
 
@@ -135,46 +134,6 @@ function UserLayout({ children }) {
             )
         }
 
-    }
-
-    function Footer() {
-        return (
-            <div className={`${footer_minHeight} mt-5 px-3 pt-3 border-gray-300 border-t-[1px] flex space-x-2 inter font-extralight text-sm`}>
-                <div className="flex-1">
-                    <p>No Copyright 2024 © TigerOrgs Project</p>
-                    <p>In partnership with the <Link><span className="underline">University of Santo Tomas</span></Link>.</p>
-                </div>
-                <div className="flex flex-col w-min">
-                    <ul>
-                        <li>
-                            <SocialLink
-                                icon={<IconFacebookRoundFilled size='100%' />}
-                                text={'@ust.edu.ph'}
-                                href={'facebook.com'}
-                            />
-                        </li>
-                        <li>
-                            <SocialLink
-                                icon={<IconInstagram size='100%' />}
-                                text={'@ust.edu.ph'}
-                                href={'instagram.com'}
-                            />
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        );
-
-        function SocialLink({ icon, text, href, customSize }) {
-            return (
-                <a className="space-x-2 flex items-center text-[#333333] py-2 px-3 hover:underline hover:bg-gray-300 rounded-xl" href={href}>
-                    <div className={customSize || "size-6"}>
-                        {icon}
-                    </div>
-                    <span>{text}</span>
-                </a>
-            )
-        }
     }
 
 }
