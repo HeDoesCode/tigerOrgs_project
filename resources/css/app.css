@@ -19,12 +19,12 @@
 }
 
 .b {
-    outline: 1px solid red !important;
+    border: 1px solid red !important;
 
 }
 
 .bc * {
-    outline: 1px solid red !important;
+    border: 1px solid red !important;
 
 }
 
