@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import UserLayout from '@/Layouts/UserLayout.jsx';
 import Logo from '@/Components/Logo';
 import IconSearch from '@/Components/Icons/IconSearch';
@@ -33,14 +33,14 @@ function Home({ bgImage, tiger1, tiger2 }) {
                     <img className='absolute top-[-0.5rem] left-[5%] rotate-180 h-40 sm:h-60' src={tiger2} alt="tiger2" onError={hideImage} />
                 </div>
             </UserLayout>
-            {isLoggedIn && <GoogleModal />}
+            {isLoggedIn || <GoogleModal />}
         </div>
     )
 
     function GoogleModal() {
         return (
             <div className='fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-md bg-gray-700/20'>
-                <div className='fixed bg-white size-96 rounded-xl p-2'>
+                <div className='fixed bg-white size-[25rem] border-gray-400 border rounded-xl p-2'>
 
                     {/* <form onSubmit={submit}> */}
                     <div>
@@ -48,8 +48,8 @@ function Home({ bgImage, tiger1, tiger2 }) {
                             <Logo className='text-5xl' />
                         </h1>
                         <p className="text-lg font-PoetsenOne p-4 text-zinc-500">
-                            Browse and join student organizations! Enter your UST Google
-                            Suite email to gain access.
+                            Browse and join student organizations! Login with your UST Google
+                            Suite account to gain access.
                         </p>
 
                         <div>
@@ -65,9 +65,9 @@ function Home({ bgImage, tiger1, tiger2 }) {
                         <div className="px-4 py-4">
                             <h1>Privacy Notice</h1>
                             <p className="text-xs">
-                                Your privacy is important to us. We only use your
-                                indivation to enhance your experience on TigerOrgs. For
-                                more details, please read our Privacy Policy.
+                                Your privacy is absolutely important to us. We only use your
+                                information to enhance your experience on TigerOrgs. For
+                                more details, please read our <button className='underline'>Privacy Policy</button>.
                             </p>
                         </div>
                     </div>
