@@ -1,6 +1,6 @@
 import Footer from "@/Components/Footer";
 import Logo from "@/Components/Logo";
-import { Link, route } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 
 function Layout({ children, sidebar, headerContent, bgImage }) {
     // const headerHeight_pt = 'pt-[4.5rem]';
@@ -31,7 +31,8 @@ function Layout({ children, sidebar, headerContent, bgImage }) {
             <div className='relative'>
                 <div className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 ${headerHeight_h} ${sidebar && sideBarWidth_pl} bg-[#EEEEEE] px-4 border-gray-400 border-b-[1px]`}>
                     {/* <div className={`poetsen-one text-2xl ${sidebar && 'ml-2'}`}><span className='text-[#E7A600]'>Tiger</span>Orgs</div> */}
-                    <Link className='contents' href={route('/')}>
+                    {/* <Link className='contents' href={route('/')}> */}
+                    <Link className='contents'>
                         <Logo className={sidebar && 'ml-2'} />
                     </Link>
                     {headerContent}

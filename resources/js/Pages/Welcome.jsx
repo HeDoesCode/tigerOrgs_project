@@ -7,43 +7,7 @@ export default function Welcome() {
         <div className='w-full'>
             <Head title="Home" />
             <UserLayout>
-                content 1 <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content <br />
-                content n <br />
-            </UserLayout>
+                delete            </UserLayout>
         </div>
     )
 }
