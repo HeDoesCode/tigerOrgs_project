@@ -18,8 +18,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Login', [
-            'canResetPassword' => Route::has('password.request'),
+        return Inertia::render('Home', [
+            'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
+            'tiger1' => asset('src/background/tiger1.png'),
+            'tiger2' => asset('src/background/tiger2.png'),
             'status' => session('status'),
         ]);
     }

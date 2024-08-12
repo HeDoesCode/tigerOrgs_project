@@ -1,55 +1,73 @@
-import { Head, Link } from '@inertiajs/react';
-import UserLayout from '@/Layouts/UserLayout.jsx';
-import Logo from '@/Components/Logo';
-import IconSearch from '@/Components/Icons/IconSearch';
+import { Head, Link } from "@inertiajs/react";
+import UserLayout from "@/Layouts/UserLayout.jsx";
+import Logo from "@/Components/Logo";
+import IconSearch from "@/Components/Icons/IconSearch";
 
-function Home({ bgImage, tiger1, tiger2 }) {
+function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
     const hideImage = () => {
-        this.style.display = 'none';
-    }
+        this.style.display = "none";
+    };
 
-    const isLoggedIn = true;
     return (
-        <div className='w-full'>
+        <div className="w-full">
             <Head title="Home" />
             <UserLayout bgImage={bgImage}>
-                <div className='w-full flex-1 flex justify-center items-center relative'>
-                    <div className='flex flex-col items-center mx-7 w-full max-w-[35rem] relative'>
-                        <Logo className='mb-14 text-[15cqw] sm:text-[7rem] sm:mb-20' leftClass='text-[#FFBC11]' />
-                        <div className='flex w-full max-w-lg h-14 relative'>
-                            <div className='absolute h-full flex items-center justify-center text-gray-500 w-20'>
-                                <IconSearch size={'22'} />
+                <div className="w-full flex-1 flex justify-center items-center relative">
+                    <div className="flex flex-col items-center mx-7 w-full max-w-[35rem] relative">
+                        <Logo
+                            className="mb-14 text-[15cqw] sm:text-[7rem] sm:mb-20"
+                            leftClass="text-[#FFBC11]"
+                        />
+                        <div className="flex w-full max-w-lg h-14 relative">
+                            <div className="absolute h-full flex items-center justify-center text-gray-500 w-20">
+                                <IconSearch size={"22"} />
                             </div>
-                            <input type="text" className='flex-1 rounded-l-full border-gray-400 border-l-[1px] border-y-[1px] border-r-0 pl-16 text-base sm:text-lg text-ellipsis' placeholder='Search Organizations' />
-                            <button className='rounded-r-full h-auto flex items-center justify-center min-w-24 w-24 bg-[#FFCD12] border-gray-400 border-r-[1px] border-y-[1px] border-l-0 nunito font-bold'>
+                            <input
+                                type="text"
+                                className="flex-1 rounded-l-full border-gray-400 border-l-[1px] border-y-[1px] border-r-0 pl-16 text-base sm:text-lg text-ellipsis"
+                                placeholder="Search Organizations"
+                            />
+                            <button className="rounded-r-full h-auto flex items-center justify-center min-w-24 w-24 bg-[#FFCD12] border-gray-400 border-r-[1px] border-y-[1px] border-l-0 nunito font-bold">
                                 Search
                             </button>
                         </div>
-                        <Link href={route('organizations')} className='bg-[#FFE6C1] bg-opacity-50 mt-8 sm:mt-12 p-4 sm:p-5 rounded-2xl border-[3px] border-[#FFCD12] nunito font-extrabold text-sm sm:text-xl shadow-md shadow-gray-500'>
+                        <Link
+                            href={route("organizations")}
+                            className="bg-[#FFE6C1] bg-opacity-50 mt-8 sm:mt-12 p-4 sm:p-5 rounded-2xl border-[3px] border-[#FFCD12] nunito font-extrabold text-sm sm:text-xl shadow-md shadow-gray-500"
+                        >
                             Browse Organizations
                         </Link>
                     </div>
-                    <img className='absolute bottom-[-3.3rem] sm:bottom-[-4.3rem] right-[3%] h-36 sm:h-56' src={tiger1} alt="tiger1" onError={hideImage} />
-                    <img className='absolute top-[-0.5rem] left-[5%] rotate-180 h-40 sm:h-60' src={tiger2} alt="tiger2" onError={hideImage} />
+                    <img
+                        className="absolute bottom-[-3.3rem] sm:bottom-[-4.3rem] right-[3%] h-36 sm:h-56"
+                        src={tiger1}
+                        alt="tiger1"
+                        onError={hideImage}
+                    />
+                    <img
+                        className="absolute top-[-0.5rem] left-[5%] rotate-180 h-40 sm:h-60"
+                        src={tiger2}
+                        alt="tiger2"
+                        onError={hideImage}
+                    />
                 </div>
             </UserLayout>
             {isLoggedIn || <GoogleModal />}
         </div>
-    )
+    );
 
     function GoogleModal() {
         return (
-            <div className='fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20'>
-                <div className='fixed bg-white size-[25rem] border-gray-400 border rounded-xl p-2'>
-
+            <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20">
+                <div className="fixed bg-white size-[25rem] border-gray-400 border rounded-xl p-2">
                     {/* <form onSubmit={submit}> */}
                     <div>
-                        <h1 className='p-3'>
-                            <Logo className='text-5xl' />
+                        <h1 className="p-3">
+                            <Logo className="text-5xl" />
                         </h1>
                         <p className="text-lg font-PoetsenOne p-4 text-zinc-500">
-                            Browse and join student organizations! Login with your UST Google
-                            Suite account to gain access.
+                            Browse and join student organizations! Login with
+                            your UST Google Suite account to gain access.
                         </p>
 
                         <div>
@@ -65,16 +83,20 @@ function Home({ bgImage, tiger1, tiger2 }) {
                         <div className="px-4 py-4">
                             <h1>Privacy Notice</h1>
                             <p className="text-xs">
-                                Your privacy is absolutely important to us. We only use your
-                                information to enhance your experience on TigerOrgs. For
-                                more details, please read our <button className='underline'>Privacy Policy</button>.
+                                Your privacy is absolutely important to us. We
+                                only use your information to enhance your
+                                experience on TigerOrgs. For more details,
+                                please read our{" "}
+                                <button className="underline">
+                                    Privacy Policy
+                                </button>
+                                .
                             </p>
                         </div>
                     </div>
-
                 </div>
             </div>
-        )
+        );
 
         function GoogleLogo() {
             return (
@@ -106,8 +128,7 @@ function Home({ bgImage, tiger1, tiger2 }) {
                 </svg>
             );
         }
-
     }
 }
 
-export default Home
+export default Home;
