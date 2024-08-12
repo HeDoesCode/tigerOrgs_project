@@ -39,7 +39,7 @@ function UserLayout({ children, bgImage }) {
                                     <div>appplication 1</div>
                                     <div>appplication 1</div>
                                     <div>appplication 1</div>
-                                    \                                </>
+                                </>
                             }
                         />
 

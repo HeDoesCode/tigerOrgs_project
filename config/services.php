@@ -13,6 +13,13 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'google' => [
+        'client_id' => '440120132994-vp12qj5pmdv9uajtvq0rfsstj8ohhqac.apps.googleusercontent.com',
+
+        'client_secret' => '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',
+
+        'redirect' => 'http://127.0.0.1:8000/auth/google/callback',
+    ],
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
