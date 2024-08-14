@@ -6,17 +6,16 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use phpseclib3\File\ASN1\Maps\OrganizationName;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
         'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
         'tiger1' => asset('src/background/tiger1.png'),
         'tiger2' => asset('src/background/tiger2.png'),
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        // 'canLogin' => Route::has('login'),
+        // 'canRegister' => Route::has('register'),
+        // 'laravelVersion' => Application::VERSION,
+        // 'phpVersion' => PHP_VERSION,
         'isLoggedIn' => Auth::check(),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
