@@ -28,12 +28,12 @@ function UserLayout({ children, bgImage }) {
                 {/* content for large */}
                 <ul className="hidden sm:flex justify-end items-center space-x-6 nunito font-extrabold">
                     <li className="text-[#E7A600]">
-                        <Link className="contents" href="#home">
+                        <Link className="contents" href='/'>
                             Home
                         </Link>
                     </li>
                     <li>
-                        <Link className="contents" href="#organizations">
+                        <Link className="contents" href={route('organizations')}>
                             Organizations
                         </Link>
                     </li>
@@ -126,11 +126,10 @@ function UserLayout({ children, bgImage }) {
                     href={href}
                     method="post"
                     as="button"
-                    className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${
-                        current
-                            ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
-                            : "hover:text-white"
-                    } ${className}`}
+                    className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${current
+                        ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
+                        : "hover:text-white"
+                        } ${className}`}
                     onClick={onClick}
                 >
                     {children}
