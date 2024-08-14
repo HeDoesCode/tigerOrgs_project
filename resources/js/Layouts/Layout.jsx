@@ -32,7 +32,7 @@ function Layout({ children, sidebar, headerContent, bgImage, footerTiger }) {
                 <div className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 ${headerHeight_h} ${sidebar && sideBarWidth_pl} bg-[#EEEEEE] px-4 border-gray-400 border-b-[1px]`}>
                     {/* <div className={`poetsen-one text-2xl ${sidebar && 'ml-2'}`}><span className='text-[#E7A600]'>Tiger</span>Orgs</div> */}
                     {/* <Link className='contents' href={route('/')}> */}
-                    <Link className='contents'>
+                    <Link className='contents' href='/'>
                         <Logo className={sidebar && 'ml-2'} />
                     </Link>
                     {headerContent}
