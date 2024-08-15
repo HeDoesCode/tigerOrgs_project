@@ -20,9 +20,16 @@ Route::get('/', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/organizations', function () {
-    return Inertia::render('Organizations');
-})->name('organizations');
+// Route::get('/organizations', function () {
+//     return Inertia::render('Organizations/Organizations');
+// })->name('organizations');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/organizations', function () {
+        return Inertia::render('Organizations/Organizations');
+    })->name('organizations');
+    // other user-level routes
+});
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
