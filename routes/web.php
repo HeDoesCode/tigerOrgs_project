@@ -34,4 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// temp routes
+
+Route::get('/formbuilder', function () {
+    return Inertia::render('forms.formbuilder');
+})->name('formbuilder');
+
 require __DIR__ . '/auth.php';
