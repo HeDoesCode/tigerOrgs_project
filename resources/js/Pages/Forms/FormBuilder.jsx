@@ -1,7 +1,11 @@
+import AdminLayout from "@/Layouts/AdminLayout"
+
 function FormBuilder() {
     return (
-        <div>
-
+        <div className="w-full">
+            <AdminLayout>
+                content
+            </AdminLayout>
         </div>
     )
 }

@@ -36,8 +36,11 @@ Route::middleware('auth')->group(function () {
 
 // temp routes
 
-Route::get('/formbuilder', function () {
-    return Inertia::render('forms.formbuilder');
-})->name('formbuilder');
+Route::middleware('auth')->group(function () {
+    Route::get('/formbuilder', function () {
+        return Inertia::render('Forms/FormBuilder');
+    })->name('formbuilder');
+    // other user-level routes
+});
 
 require __DIR__ . '/auth.php';
