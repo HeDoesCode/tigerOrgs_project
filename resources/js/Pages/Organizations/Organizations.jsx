@@ -27,11 +27,12 @@ function Organizations() {
                         </ControlContainer>
 
                         <ControlContainer name='Keywords'>
-                            <div className="w-full flex flex-wrap gap-2">
-                                <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit rounded-md">Tile&nbsp;1</span>
+                            <div className="w-full flex flex-wrap gap-2 min-h-12 border-[1px] rounded-md border-gray-500 p-2 relative">
+                                {/* <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit rounded-md">Tile&nbsp;1</span>
                                 <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit rounded-md">Tile&nbsp;a#1</span>
                                 <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit rounded-md">Ti&nbsp;#1</span>
-                                <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit rounded-md">Tiasd&nbsp;#1</span>
+                                <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit rounded-md">Tiasd&nbsp;#1</span> */}
+                                <div className="text-sm flex justify-center absolute inset-0 items-center rounded-md w-full h-full cursor-pointer text-gray-500 hover:!bg-gray-800 hover:!text-white">-- Browse Keywords --</div>
                             </div>
                         </ControlContainer>
 
@@ -39,7 +40,7 @@ function Organizations() {
                         <ControlContainer name='Category'>
                             <Select>
                                 <SelectTrigger className="w-full h-12 border-gray-500 bg-transparent">
-                                    <SelectValue placeholder="Choose Category" />
+                                    <SelectValue placeholder="-- Browse Categories --" />
                                 </SelectTrigger>
                                 <SelectContent className='border-gray-500 bg-[#EEEEEE] quicksand'>
                                     <SelectItem value="light" className='hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10'>University-Wide</SelectItem>
@@ -50,7 +51,11 @@ function Organizations() {
 
 
 
-                        <div>organizations joined</div>
+                        <div className="w-full">
+                            <div>for superadmin</div>
+                            <div>separator</div>
+                            <div>member orgs</div>
+                        </div>
                     </div>
                     <div className="md:flex-1 overflow-x-hidden">
                         <OrgContainerRow title='Suggested based on your interests'>
@@ -115,9 +120,9 @@ function Organizations() {
                     <img src={orgBg} className="object-cover h-full rounded-lg shadow-sm" alt={orgBg} onError={hideImage} />
                     {isRecruiting && <div className="absolute left-1/2 -translate-x-1/2 top-3 text-[0.6rem] px-2 py-[0.15rem] rounded-[0.25rem] bg-[#EF9B1E]/90 inter font-extrabold text-white shadow-sm shadow-black/50">Now&nbsp;Recruiting</div>}
                     <img src={orgIcon} className="absolute right-2 bottom-2 bg-[#EEEEEE] size-14 rounded-full object-cover" />
-                    <div className="transition-all flex flex-col justify-center duration-200 ease-in-out absolute inset-0 bg-black/0 overflow-y-auto group-hover:bg-black/70 invisible group-hover:visible group-hover:delay-100 rounded-lg text-white/0 group-hover:text-white/100 p-3 tracking-wide transOptimize">
-                        <p className="poppins tracking-wide">{title}</p>
-                        <p className="quicksand font-extralight text-sm">{desc}</p>
+                    <div className="transition-all hidden md:flex flex-col justify-center duration-200 ease-in-out absolute inset-0 bg-black/0 overflow-y-auto group-hover:bg-black/70 invisible group-hover:visible group-hover:delay-100 rounded-lg text-white/0 group-hover:text-white/100 p-3 tracking-wide transOptimize">
+                        <p className="poppins tracking-normal md:tracking-wide text-sm md:text-lg">{title}</p>
+                        <p className="quicksand font-extralight text-sm overflow-hidden overflow-ellipsis">{desc}</p>
                     </div>
                 </div>
                 {/* hover replacement */}

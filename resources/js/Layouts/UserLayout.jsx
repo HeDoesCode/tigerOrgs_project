@@ -86,7 +86,7 @@ function UserLayout({ children, bgImage }) {
                 </ul>
 
                 {/* content for narrow */}
-                <div className="flex w-full sm:hidden justify-end space-x-2">
+                <div className="flex w-full sm:hidden justify-end space-x-4">
                     <Notifications count="15" />
                     <HeaderDropdownMenu
                         triggerContent={
