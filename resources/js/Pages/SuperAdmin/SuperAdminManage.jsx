@@ -1,6 +1,6 @@
 import { Head } from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout.jsx";
-import AdminLayout from "@/Layouts/AdminLayout";
+import SuperAdminLayout from "@/Layouts/SuperAdminLayout";
 import IconInvite from "@/Components/Icons/IconInvite";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
 import IconUser from "@/Components/Icons/IconUser";
@@ -21,11 +21,19 @@ export default function SuperAdminManage() {
     return (
         <div className="w-full">
             <Head title="OSA Dashboard" />
-            <AdminLayout>
+            <SuperAdminLayout>
                 <MainAdminFrame
                     navItems={[
-                        { icon: <IconCheckBox />, label: "Status" },
-                        { icon: <IconInvite />, label: "Invite" },
+                        {
+                            icon: <IconCheckBox />,
+                            label: "Status",
+                            link: route("superadmin.status"),
+                        },
+                        {
+                            icon: <IconInvite />,
+                            label: "Invite",
+                            link: route("superadmin.invite"),
+                        },
                     ]}
                 >
                     <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-1 gap-4 p-5">
@@ -92,7 +100,7 @@ export default function SuperAdminManage() {
                         </Card>
                     </div>
                 </MainAdminFrame>
-            </AdminLayout>
+            </SuperAdminLayout>
         </div>
     );
 }

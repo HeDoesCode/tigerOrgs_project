@@ -1,5 +1,5 @@
 import MainAdminFrame from "@/Components/MainAdminFrame";
-import AdminLayout from "@/Layouts/AdminLayout";
+import SuperAdminLayout from "@/Layouts/SuperAdminLayout";
 import { Head } from "@inertiajs/react";
 import IconInvite from "@/Components/Icons/IconInvite";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
@@ -9,15 +9,23 @@ function SuperAdminInvite() {
     return (
         <div className="w-full">
             <Head title="OSA Dashboard" />
-            <AdminLayout>
+            <SuperAdminLayout>
                 <MainAdminFrame
                     navItems={[
-                        { icon: <IconCheckBox />, label: "Status" },
-                        { icon: <IconInvite />, label: "Invite" },
+                        {
+                            icon: <IconCheckBox />,
+                            label: "Status",
+                            link: route("superadmin.status"),
+                        },
+                        {
+                            icon: <IconInvite />,
+                            label: "Invite",
+                            link: route("superadmin.invite"),
+                        },
                     ]}
                 >
                     <div className="grid grid-rows-1 p-5 gap-2">
-                        <div className="p-4 grid grid-cols-10 rounded-xl bg-white divide-x divide-gray-300">
+                        <div className="p-4 shadow-lg grid grid-cols-10 rounded-xl bg-white divide-x divide-gray-300">
                             <div className=" col-span-2 content-center">
                                 <h1 className="ml-2 font-bold">
                                     Joseph Paduga
@@ -40,14 +48,14 @@ function SuperAdminInvite() {
                                 </h1>
                             </div>
                             <div className="col-span-1 flex justify-center">
-                                <div className="bg-[#EEEEEE] p-2 rounded-full">
+                                <div className="hover:bg-[#EEEEEE] p-2 rounded-full">
                                     <IconDotsVertical />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </MainAdminFrame>
-            </AdminLayout>
+            </SuperAdminLayout>
         </div>
     );
 }

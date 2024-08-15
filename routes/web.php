@@ -20,9 +20,13 @@ Route::get('/', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/superadmin', function (){
+Route::get('/superadmin/status', function (){
+    return Inertia::render('SuperAdmin/SuperAdminManage');
+})->name('superadmin.status');
+
+Route::get('/superadmin/invite', function (){
     return Inertia::render('SuperAdmin/SuperAdminInvite');
-})->name('superadmin');
+})->name('superadmin.invite');
 
 
 Route::get('/organizations', function () {
