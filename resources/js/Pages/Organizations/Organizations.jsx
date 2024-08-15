@@ -27,10 +27,12 @@ function Organizations() {
                         </ControlContainer>
 
                         <ControlContainer name='Keywords'>
-                            <div className="w-full h-36 flex flex-initial gap-2 o">
-                                <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit">Tile&nbsp;1</span>
+                            <div className="w-full flex flex-wrap gap-2  o">
+                                <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit ">Tile&nbsp;1</span>
                                 <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit">Tile&nbsp;a#1</span>
                                 <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit">Ti&nbsp;#1</span>
+                                <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit">Tiasd&nbsp;#1</span>
+                                <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit">Tiasd&nbsp;#1</span>
                                 <span className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-fit">Tiasd&nbsp;#1</span>
                             </div>
                         </ControlContainer>
