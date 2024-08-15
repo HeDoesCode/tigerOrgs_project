@@ -2,7 +2,7 @@ import Footer from "@/Components/Footer";
 import Logo from "@/Components/Logo";
 import { Link } from "@inertiajs/react";
 
-function Layout({ children, sidebar, headerContent, bgImage, footerTiger }) {
+function Layout({ children, sidebar, headerContent, bgImage, footer }) {
     // const headerHeight_pt = 'pt-[4.5rem]';
     const headerHeight_pt = 'pt-16';
     const headerHeight_h = 'h-16';
@@ -21,7 +21,7 @@ function Layout({ children, sidebar, headerContent, bgImage, footerTiger }) {
             {sidebar}
             <main className={`w-full overflow-y-auto h-screen pt-[4.5rem] px-4 select-text flex flex-col`} style={bgStyle}>
                 {children}
-                <Footer />
+                {footer && <Footer />}
             </main>
         </div >
     );

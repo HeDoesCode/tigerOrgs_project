@@ -17,7 +17,7 @@ function UserLayout({ children, bgImage }) {
     const footer_minHeight = "";
 
     return (
-        <Layout headerContent={<HeaderContent />} bgImage={bgImage}>
+        <Layout headerContent={<HeaderContent />} bgImage={bgImage} footer>
             {children}
         </Layout>
     );
