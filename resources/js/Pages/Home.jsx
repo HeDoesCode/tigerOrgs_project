@@ -53,13 +53,15 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
                     </div>
                 </div>
             </UserLayout>
-            {isLoggedIn || <GoogleModal />}
+            <div className="relative">
+                {isLoggedIn || <GoogleModal />}
+            </div>
         </div>
     );
 
     function GoogleModal() {
         return (
-            <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20">
+            <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[2147483647]">
                 <div className="fixed bg-white size-[25rem] border-gray-400 border rounded-xl p-2">
                     {/* <form onSubmit={submit}> */}
                     <div>
