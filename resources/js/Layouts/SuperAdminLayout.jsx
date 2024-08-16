@@ -23,7 +23,7 @@ function SuperAdminLayout({ children }) {
         return (
             <div className="flex-1 flex justify-end">
                 <Link
-                    href="#userpage"
+                    href={route("organizations")}
                     className="p-3 -m-3 hover:bg-gray-800 hover:text-white rounded-xl"
                 >
                     <IconExit size="27" />

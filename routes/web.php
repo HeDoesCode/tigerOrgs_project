@@ -55,9 +55,6 @@ Route::get('/superadmin/dataupload', function (){
 
 
 
-Route::get('/organizations', function () {
-    return Inertia::render('Organizations');
-})->name('organizations');
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
