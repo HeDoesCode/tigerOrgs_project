@@ -14,7 +14,7 @@ import {
     CardTitle,
 } from "@/Components/ui/card";
 
-export default function SuperAdminLoginHistory() {
+export default function SuperAdminInviteHistory() {
     return (
         <div className="w-full">
             <Head title="OSA Dashboard" />
@@ -40,12 +40,21 @@ export default function SuperAdminLoginHistory() {
                                     Aug-15-2024
                                 </h1>
                             </div>
-                            <div className=" col-span-5 ">
+                            <div className=" col-span-3 ">
                                 <h1 className="ml-2  text-center">
                                     <span className="font-bold">
-                                        Arvin Alkuino
+                                        Ethan Catacutan
                                     </span>{" "}
-                                    accessed the Super Admin Dashboard
+                                    invited{" "}
+                                    <span className="font-bold">
+                                        Laurence Arcilla
+                                    </span>{" "}
+                                    as <span className="font-bold">Admin</span>
+                                </h1>
+                            </div>
+                            <div className=" col-span-2 ">
+                                <h1 className="ml-2 text-center">
+                                    College of Architecture
                                 </h1>
                             </div>
                             <div className=" col-span-1 ">

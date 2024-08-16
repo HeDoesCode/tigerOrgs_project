@@ -4,6 +4,7 @@ import { Head } from "@inertiajs/react";
 import IconInvite from "@/Components/Icons/IconInvite";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
 import IconDotsVertical from "@/Components/Icons/IconDotsVertical";
+import VerticalCard from "@/Components/VerticalCard";
 
 function SuperAdminInvite() {
     return (
@@ -15,18 +16,18 @@ function SuperAdminInvite() {
                         {
                             icon: <IconCheckBox />,
                             label: "Status",
-                            link: route("superadmin.status"),
+                            link: "superadmin.status",
                         },
                         {
                             icon: <IconInvite />,
                             label: "Invite",
-                            link: route("superadmin.invite"),
+                            link: "superadmin.invite",
                         },
                     ]}
                 >
                     <div className="grid grid-rows-1 p-5 gap-2">
-                        <div className="p-4 shadow-lg grid grid-cols-10 rounded-xl bg-white divide-x divide-gray-300">
-                            <div className=" col-span-2 content-center">
+                        <VerticalCard gridcol="grid-cols-12">
+                            <div className=" col-span-3 content-center">
                                 <h1 className="ml-2 font-bold">
                                     Joseph Paduga
                                 </h1>
@@ -36,23 +37,23 @@ function SuperAdminInvite() {
                                     laurencearvin.arcila.cics@ust.edu.ph
                                 </h1>
                             </div>
-                            <div className="col-span-2 content-center">
+                            <div className="col-span-3 content-center">
                                 <h1 className=" text-center text-sm">
                                     College of Information and Computing
                                     Sciences
                                 </h1>
                             </div>
                             <div className="col-span-2 px-4 text-sm content-center ">
-                                <h1 className="py-1 text-center font-semibold rounded-xl bg-green-50 border-2 border-green-600 text-green-800">
+                                <h1 className=" text-center font-semibold rounded-xl bg-green-50 border-2 border-green-600 text-green-800">
                                     Assigned to 1 Org
                                 </h1>
                             </div>
                             <div className="col-span-1 flex justify-center">
-                                <div className="hover:bg-[#EEEEEE] p-2 rounded-full">
+                                <div className="hover:bg-[#EEEEEE]  rounded-full">
                                     <IconDotsVertical />
                                 </div>
                             </div>
-                        </div>
+                        </VerticalCard>
                     </div>
                 </MainAdminFrame>
             </SuperAdminLayout>

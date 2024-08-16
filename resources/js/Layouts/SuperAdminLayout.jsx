@@ -8,8 +8,11 @@ import IconMenu3 from "@/Components/Icons/IconMenu3";
 import IconList from "@/Components/Icons/IconList";
 import IconHistory from "@/Components/Icons/IconHistory";
 import IconDataUpload from "@/Components/Icons/IconDataUpload";
+import { usePage } from "@inertiajs/react";
 
 function SuperAdminLayout({ children }) {
+    const { url } = usePage();
+    const routePath = (routeName) => new URL(route(routeName)).pathname;
     return (
         <Layout headerContent={<HeaderContent />} sidebar={<SideBarContent />}>
             {children}
@@ -64,19 +67,27 @@ function SuperAdminLayout({ children }) {
                 <nav className="flex-1 flex flex-col space-y-3 m-2 transition-all group-hover:mr-0 ease-in-out duration-300">
                     <SideBarLink
                         icon={<IconList size="100%" />}
-                        href="#managepage"
+                        href={route("superadmin.status")}
                         desc="Organizations"
-                        current
+                        current={
+                            url === routePath("superadmin.status") ||
+                            url === routePath("superadmin.invite")
+                        }
                     />
                     <SideBarLink
                         icon={<IconHistory size="100%" />}
-                        href="#recruitmentpage"
+                        href={route("superadmin.loginhistory")}
                         desc="Activity&nbsp;Log"
+                        current={
+                            url === routePath("superadmin.loginhistory") ||
+                            url === routePath("superadmin.invitehistory")
+                        }
                     />
                     <SideBarLink
                         icon={<IconDataUpload size="100%" />}
-                        href="#recruitmentpage"
+                        href={route("superadmin.dataupload")}
                         desc="Data&nbsp;Upload"
+                        current={url === routePath("superadmin.dataupload")}
                     />
                 </nav>
             </div>

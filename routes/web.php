@@ -20,6 +20,8 @@ Route::get('/', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+//superadmin temporary routes
+
 Route::get('/superadmin/status', function (){
     return Inertia::render('SuperAdmin/SuperAdminManage');
 })->name('superadmin.status');
@@ -27,6 +29,19 @@ Route::get('/superadmin/status', function (){
 Route::get('/superadmin/invite', function (){
     return Inertia::render('SuperAdmin/SuperAdminInvite');
 })->name('superadmin.invite');
+
+Route::get('/superadmin/loginhistory', function (){
+    return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
+})->name('superadmin.loginhistory');
+
+Route::get('/superadmin/invitehistory', function (){
+    return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
+})->name('superadmin.invitehistory');
+
+Route::get('/superadmin/dataupload', function (){
+    return Inertia::render('SuperAdmin/SuperAdminDataUpload');
+})->name('superadmin.dataupload');
+
 
 
 Route::get('/organizations', function () {

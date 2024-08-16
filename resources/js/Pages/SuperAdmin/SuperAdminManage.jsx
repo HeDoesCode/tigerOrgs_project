@@ -27,12 +27,12 @@ export default function SuperAdminManage() {
                         {
                             icon: <IconCheckBox />,
                             label: "Status",
-                            link: route("superadmin.status"),
+                            link: "superadmin.status",
                         },
                         {
                             icon: <IconInvite />,
                             label: "Invite",
-                            link: route("superadmin.invite"),
+                            link: "superadmin.invite",
                         },
                     ]}
                 >

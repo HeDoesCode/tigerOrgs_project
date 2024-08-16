@@ -3,6 +3,7 @@ import { Link, usePage } from "@inertiajs/react";
 
 function MainAdminFrame({ children, navItems }) {
     const { url } = usePage();
+    const routePath = (routeName) => new URL(route(routeName)).pathname;
 
     const [selectedNav, setSelectedNav] = useState(navItems[0]?.label);
 
@@ -17,12 +18,12 @@ function MainAdminFrame({ children, navItems }) {
                         <Link
                             key={index}
                             className={`py-3 rounded-t-xl hover:bg-gray-800 hover:text-white text-md flex justify-center cursor-pointer ${
-                                url === item.link
+                                url === routePath(item.link)
                                     ? "border-b-2 border-[#FF9900] text-[#FF9900]"
                                     : ""
                             }`}
                             onClick={() => handleNavClick(item.label)}
-                            href={item.link}
+                            href={route(item.link)}
                         >
                             {item.icon}
                             <div className="pl-2">{item.label}</div>
