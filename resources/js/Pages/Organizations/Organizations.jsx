@@ -24,7 +24,7 @@ function Organizations() {
                 </div>
                 <div className="flex flex-col md:flex-row gap-6">
                     {/* control panel */}
-                    <div className="flex flex-col w-64 space-y-5 h-full">
+                    <div className="flex flex-col w-64 space-y-5">
                         <ControlContainer className="relative" name="Search">
                             <input
                                 type="text"
