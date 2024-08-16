@@ -33,14 +33,14 @@ class GoogleController extends Controller
 
                 return redirect()->intended('');
             } else {
-                // $newUser = User::create([
-                //     'name' => $user->name,
-                //     'email' => $user->email,
-                //     'google_id' => $user->id,
-                //     'password' => encrypt('123456dummy')
-                // ]);
+                $newUser = User::create([
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'google_id' => $user->id,
+                    'password' => encrypt('123456dummy')
+                ]);
 
-                // Auth::login($newUser);
+                Auth::login($newUser);
 
                 return redirect()->intended('/');
             }
