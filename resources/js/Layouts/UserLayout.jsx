@@ -10,16 +10,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
-import IconFacebookRoundFilled from "@/Components/Icons/IconFacebookRoundFilled";
-import IconInstagram from "@/Components/Icons/IconInstagram";
 
-function UserLayout({ children, bgImage }) {
+function UserLayout({ children, bgImage, noPadding }) {
     const footer_minHeight = "";
     const { url } = usePage();
     const routePath = (routeName) => new URL(route(routeName)).pathname;
 
     return (
-        <Layout headerContent={<HeaderContent />} bgImage={bgImage} footer>
+        <Layout headerContent={<HeaderContent />} bgImage={bgImage} noPadding={noPadding} footer>
             {children}
         </Layout>
     );
@@ -37,11 +35,10 @@ function UserLayout({ children, bgImage }) {
                         }
                     >
                         <Link
-                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl ${
-                                url === routePath("dashboard")
-                                    ? "text-[#ffbb10] hover:text-[#E7A600]"
-                                    : ""
-                            }`}
+                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl ${url === routePath("dashboard")
+                                ? "text-[#ffbb10] hover:text-[#E7A600]"
+                                : ""
+                                }`}
                             href={route("dashboard")}
                         >
                             Home
@@ -56,11 +53,10 @@ function UserLayout({ children, bgImage }) {
                         }
                     >
                         <Link
-                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl outline-none ${
-                                url === routePath("organizations")
-                                    ? "text-[#ffbb10]"
-                                    : ""
-                            }`}
+                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl outline-none ${url === routePath("organizations")
+                                ? "text-[#ffbb10]"
+                                : ""
+                                }`}
                             href={route("organizations")}
                         >
                             Organizations
@@ -170,11 +166,10 @@ function UserLayout({ children, bgImage }) {
                     href={href}
                     method="post"
                     as="button"
-                    className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${
-                        current
-                            ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
-                            : "hover:text-white"
-                    } ${className}`}
+                    className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${current
+                        ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
+                        : "hover:text-white"
+                        } ${className}`}
                     onClick={onClick}
                 >
                     {children}
