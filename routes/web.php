@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -24,6 +23,7 @@ Route::get('/', function () {
 //     return Inertia::render('Organizations/Organizations');
 // })->name('organizations');
 
+// temp user routes
 Route::middleware('auth')->group(function () {
     Route::get('/organizations', function () {
         return Inertia::render('Organizations/Organizations');
@@ -31,28 +31,33 @@ Route::middleware('auth')->group(function () {
     // other user-level routes
 });
 
+Route::get('organizations/{any}/home', function () {
+    return Inertia::render('Organizations/Home');
+})->name('organizations.home');
+
+
+
 //superadmin temporary routes
 
-Route::get('/superadmin/status', function (){
+Route::get('/superadmin/status', function () {
     return Inertia::render('SuperAdmin/SuperAdminManage');
 })->name('superadmin.status');
 
-Route::get('/superadmin/invite', function (){
+Route::get('/superadmin/invite', function () {
     return Inertia::render('SuperAdmin/SuperAdminInvite');
 })->name('superadmin.invite');
 
-Route::get('/superadmin/loginhistory', function (){
+Route::get('/superadmin/loginhistory', function () {
     return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
 })->name('superadmin.loginhistory');
 
-Route::get('/superadmin/invitehistory', function (){
+Route::get('/superadmin/invitehistory', function () {
     return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
 })->name('superadmin.invitehistory');
 
-Route::get('/superadmin/dataupload', function (){
+Route::get('/superadmin/dataupload', function () {
     return Inertia::render('SuperAdmin/SuperAdminDataUpload');
 })->name('superadmin.dataupload');
-
 
 
 
