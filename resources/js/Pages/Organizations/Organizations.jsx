@@ -23,8 +23,6 @@ function Organizations() {
                     Browse <span className="text-[#ffb700]">Organizations</span>
                 </div>
                 <div className="flex flex-col md:flex-row gap-6">
-
-
                     {/* control panel */}
                     <div className="flex flex-col w-64 space-y-5">
                         <ControlContainer className="relative" name="Search">
@@ -80,6 +78,7 @@ function Organizations() {
                                     icon="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/379249269_872028557643589_7767519284231773085_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFZKMicf1CYVeO4tuXfLyje4vxiXiyaS5Pi_GJeLJpLkxoQdpaGhxXY4SmR3UK6qiMMC1rZpt805xAUxbdgvAMc&_nc_ohc=waaGroD6R1cQ7kNvgHtcHoo&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYAs3lfS3aOKI2arEPVOaRvbB6MUXpd7KTxLuOGdcKaJgA&oe=66C28011"
                                     title="Fotomasino"
                                     isAdmin
+                                    link={route("admin.editpage")}
                                 />
                                 <OrganizationJoined
                                     icon="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
@@ -88,8 +87,6 @@ function Organizations() {
                             </ul>
                         </ControlContainer>
                     </div>
-
-
 
                     {/* orgs panel */}
                     <div className="md:flex-1 space-y-3 overflow-x-hidden">
@@ -127,7 +124,7 @@ function Organizations() {
                                 }
                                 title="Fotomasino 1"
                                 desc="The Thomasian Photographers Guild"
-                                href="#Fotomasino"
+                                href="Fotomasino"
                             />
                             <OrganizationTile
                                 orgBg={
