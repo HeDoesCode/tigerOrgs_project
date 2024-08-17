@@ -1,5 +1,5 @@
 import Layout from "./Layout";
-import { Link, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import IconBellFilled from "@/Components/Icons/IconBellFilled";
 import IconProfile from "@/Components/Icons/IconProfile";
 import IconMenu3 from "@/Components/Icons/IconMenu3";
@@ -15,6 +15,8 @@ import IconInstagram from "@/Components/Icons/IconInstagram";
 
 function UserLayout({ children, bgImage }) {
     const footer_minHeight = "";
+    const { url } = usePage();
+    const routePath = (routeName) => new URL(route(routeName)).pathname;
 
     return (
         <Layout headerContent={<HeaderContent />} bgImage={bgImage} footer>
@@ -27,17 +29,51 @@ function UserLayout({ children, bgImage }) {
             <nav className="flex-1">
                 {/* content for large */}
                 <ul className="hidden sm:flex justify-end items-center space-x-6 nunito font-extrabold">
-                    <li className="text-[#E7A600]">
-                        <Link className="contents" href='/'>
+                    <li
+                        className={
+                            url === routePath("dashboard")
+                                ? "font-bold text-[#ffbb10]"
+                                : ""
+                        }
+                    >
+                        <Link
+                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl ${
+                                url === routePath("dashboard")
+                                    ? "text-[#ffbb10] hover:text-[#E7A600]"
+                                    : ""
+                            }`}
+                            href={route("dashboard")}
+                        >
                             Home
                         </Link>
                     </li>
-                    <li>
-                        <Link className="contents" href={route('organizations')}>
+
+                    <li
+                        className={
+                            url === routePath("organizations")
+                                ? "font-bold text-[#ffbb10]"
+                                : ""
+                        }
+                    >
+                        <Link
+                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl outline-none ${
+                                url === routePath("organizations")
+                                    ? "text-[#ffbb10]"
+                                    : ""
+                            }`}
+                            href={route("organizations")}
+                        >
                             Organizations
                         </Link>
                     </li>
-                    <li>
+
+                    <li
+                        className={
+                            url === "put the status route here"
+                                ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
+                                : "hover:text-white"
+                        }
+                    >
                         <HeaderDropdownMenu
                             triggerContent={"Status"}
                             dropdownContent={
@@ -96,8 +132,16 @@ function UserLayout({ children, bgImage }) {
                         }
                         dropdownContent={
                             <>
-                                <DDM_Link current>Home</DDM_Link>
-                                <DDM_Link>Organizations</DDM_Link>
+                                <DDM_Link
+                                    current={url === routePath("dashboard")}
+                                >
+                                    Home
+                                </DDM_Link>
+                                <DDM_Link
+                                    current={url === routePath("organizations")}
+                                >
+                                    Organizations
+                                </DDM_Link>
                                 <div className="px-3">
                                     <DropdownMenuSeparator className="bg-gray-400" />
                                 </div>
@@ -126,10 +170,11 @@ function UserLayout({ children, bgImage }) {
                     href={href}
                     method="post"
                     as="button"
-                    className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${current
-                        ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
-                        : "hover:text-white"
-                        } ${className}`}
+                    className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${
+                        current
+                            ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
+                            : "hover:text-white"
+                    } ${className}`}
                     onClick={onClick}
                 >
                     {children}
