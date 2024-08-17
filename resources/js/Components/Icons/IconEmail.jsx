@@ -1,4 +1,4 @@
-function IconStatus({ size }) {
+function IconEmail({ size }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -10,12 +10,13 @@ function IconStatus({ size }) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="icon icon-tabler icons-tabler-outline icon-tabler-bolt"
+            className="icon icon-tabler icons-tabler-outline icon-tabler-mail"
         >
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11" />
+            <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" />
+            <path d="M3 7l9 6l9 -6" />
         </svg>
     );
 }
 
-export default IconStatus;
+export default IconEmail;
