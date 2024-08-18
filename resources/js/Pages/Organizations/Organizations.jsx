@@ -100,7 +100,7 @@ function Organizations() {
                                 }
                                 title="Fotomasino 1"
                                 desc="The Thomasian Photographers Guild"
-                                href="#Fotomasino"
+                                href={route('organizations.home', ['test'])}
                             />
                             <OrganizationTile
                                 orgBg={

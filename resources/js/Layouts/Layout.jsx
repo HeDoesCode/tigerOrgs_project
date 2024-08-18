@@ -2,7 +2,7 @@ import Footer from "@/Components/Footer";
 import Logo from "@/Components/Logo";
 import { Link } from "@inertiajs/react";
 
-function Layout({ children, sidebar, headerContent, bgImage, footer }) {
+function Layout({ children, sidebar, headerContent, bgImage, footer, noPadding }) {
     // const headerHeight_pt = 'pt-[4.5rem]';
     const headerHeight_pt = "pt-16";
     const headerHeight_h = "h-16";
@@ -18,12 +18,12 @@ function Layout({ children, sidebar, headerContent, bgImage, footer }) {
         : {};
 
     return (
-        <div className={`${sidebar && "pl-0 sm:pl-16"} flex select-none`}>
+        <div className={`${sidebar && "pl-0 sm:pl-16"} flex mx-auto select-none max-w-[1920px]`}>
             <Header />
             <div className="z-50">{sidebar}</div>
             <main
-                className={`w-full overflow-y-auto h-screen pt-[4.5rem] px-4 select-text flex flex-col`}
-                style={bgStyle}
+                className={`w-full overflow-x-clip overflow-y-auto h-screen ${noPadding ? 'pt-16' : 'pt-[4.5rem]'} ${noPadding || 'px-4'} select-text flex flex-col`}
+                style={bgImage ? bgStyle : {}}
             >
                 {children}
                 {footer && <Footer />}

@@ -1,6 +1,7 @@
 import { Link } from "@inertiajs/react";
-import IconFacebookRoundFilled from "./Icons/IconFacebookRoundFilled";
-import IconInstagram from "./Icons/IconInstagram";
+import IconSocialInstagram from "./Icons/Social/IconInstagram";
+import IconFacebookRoundFilled from "./Icons/Social/IconFacebookRoundFilled";
+import IconInstagram from "./Icons/Social/IconInstagram";
 
 function Footer({ footerTiger }) {
     return (
