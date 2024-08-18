@@ -3,6 +3,7 @@ import { Link } from "@inertiajs/react"
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -18,6 +19,7 @@ import IconInstagram from "@/Components/Icons/Social/IconInstagram"
 import IconFacebookRoundFilled from "@/Components/Icons/Social/IconFacebookRoundFilled"
 import IconX from "@/Components/Icons/Social/IconX"
 import IconLinkedIn from "@/Components/Icons/Social/IconLinkedIn"
+import IconPencil from "@/Components/Icons/IconPencil"
 
 function Home({ editing, isRecruiting }) {
     editing = false;
@@ -106,9 +108,9 @@ function Home({ editing, isRecruiting }) {
                 },
             ],
         },
-    ]
+    ];
 
-    const originalPageData = {}
+    const originalPageData = pageData;
 
     /*
     pageData para sa view mode and edit mode.
@@ -120,7 +122,7 @@ function Home({ editing, isRecruiting }) {
     return (
         <div className="w-full">
             <UserLayout noPadding>
-                <div className={editing && 'border-[3px] border-red-500'}>
+                <div className={editing ? 'border-[5px] border-blue-500' : ''}>
                     {/* cover photo */}
                     <CoverPhoto />
                     <div className="w-full h-fit md:h-48 -mt-14 px-5 md:px-12 flex justify-between">
@@ -132,9 +134,11 @@ function Home({ editing, isRecruiting }) {
                             <div className="w-full justify-center space-x-3 flex">
                                 <OrganizationMetadata />
                                 <div className="w-fit text-xs font-bold h-min">
-                                    <div className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9]">
-                                        View&nbsp;QR&nbsp;<IconQR size='20' />
-                                    </div>
+                                    <button>
+                                        <div className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9]">
+                                            View&nbsp;QR&nbsp;<IconQR size='20' />
+                                        </div>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -151,14 +155,11 @@ function Home({ editing, isRecruiting }) {
                     </div>
 
                     <div className="w-full px-5 md:px-12 flex md:hidden justify-center space-x-3 my-4">
-                        <div className="">
-                            <div className="text-lg inter font-extrabold">Society of Information Technology Enthusiasts (SITE) [max lines: 3]</div>
-                            <div className="text-sm">210 members</div>
-                        </div>
+                        <OrganizationMetadata />
                         <div className="w-fit text-xs font-bold h-min">
-                            <div className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9]">
-                                <span className="hidden sm:inline">View&nbsp;QR&nbsp;</span><IconQR size='20' />
-                            </div>
+                            <button className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9] hover:bg-[#969696]">
+                                <span className="hidden sm:inline">View QR </span><IconQR size='20' />
+                            </button>
                         </div>
                     </div>
 
@@ -166,34 +167,24 @@ function Home({ editing, isRecruiting }) {
                     <section className="h-fit px-5 md:px-12 space-y-3 md:space-y-8">
 
                         {/* About Us */}
-                        <Tile name='About Us'>
-                            {pageData.find(data => data.type === 'aboutUs').data}
-                        </Tile>
+                        <AboutUs />
 
                         <div className="w-full flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-8">
                             <div className="flex flex-col space-y-3 md:space-y-8 wfull md:w-1/2">
 
                                 {/* Contacts and Information */}
-                                <Tile name='Contacts and Information'>
-                                    <ContactsContainer />
-                                </Tile>
+                                <ContactsContainer />
 
                                 {/* Officers */}
-                                <Tile name='Officers'>
-                                    <OfficersContainer />
-                                </Tile>
+                                <OfficersContainer />
                             </div>
 
                             {/* Facebook Iframe */}
                             <div className="w-full md:w-1/2">
-                                <Tile className='h-full' name='Social Activities'>
-                                    facebook iframe
-                                </Tile>
+                                <SocialIFrame />
                             </div>
                         </div>
-                        <Tile name='Showcase Photos' id='photos' className='overflow-x-hidden'>
-                            <PhotoScrollArea />
-                        </Tile>
+                        <PhotoScrollArea />
                     </section>
                 </div>
                 {editing && (
@@ -205,11 +196,39 @@ function Home({ editing, isRecruiting }) {
         </div>
     )
 
-    function EditArea() {
+    function Tile({ children, className, name, id }) {
         return (
-            <div className="absolute inset-0 h-full w-full flex items-center justify-center group hover:border hover:border-red-500">
-                <button className="bg-gray-300/50 group-hover:bg-gray-500/80 px-3 py-2 opacity-50 hover:opacity-100 text-black hover:text-white rounded-xl">Edit</button>
+            <div className={`w-full bg-white p-4 md:p-7 rounded-lg flex flex-col ${className} space-y-1 relative`} id={id}>
+                <div className="poppins text-lg font-extrabold">
+                    {name}
+                </div>
+                <div className="w-full block">
+                    {children}
+                </div>
             </div>
+        )
+    }
+
+    function EditArea({ children, title, description }) {
+        return (
+            <Dialog>
+                <DialogTrigger className="contents">
+                    <div className="absolute inset-0 h-full w-full flex items-center justify-center group hover:border hover:border-red-500">
+                        <div className="bg-gray-300/50 group-hover:bg-gray-500/90 px-3 py-2 opacity-50 group-hover:opacity-100 text-black group-hover:text-white rounded-xl flex flex-nowrap"><IconPencil /> Edit</div>
+                    </div>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>{title}</DialogTitle>
+                        <DialogDescription>
+                            {description}
+                        </DialogDescription>
+                    </DialogHeader>
+                    {children}
+                </DialogContent>
+            </Dialog>
+
+
         )
     }
 
@@ -220,7 +239,11 @@ function Home({ editing, isRecruiting }) {
                     alt="Organization Cover Photo"
                     className="w-full object-cover" />
                 {editing && (
-                    <EditArea />
+                    <EditArea title='Set Page Cover Photo'>
+                        <div>
+                            photo upload preview and shee
+                        </div>
+                    </EditArea>
                 )}
             </div>
         )
@@ -233,7 +256,11 @@ function Home({ editing, isRecruiting }) {
                     alt="Organization Logo"
                     className="size-full object-cover" />
                 {editing && (
-                    <EditArea />
+                    <EditArea title='Set Organization Logo'>
+                        <div>
+                            photo upload preview and shee
+                        </div>
+                    </EditArea>
                 )}
             </div>
         )
@@ -241,55 +268,32 @@ function Home({ editing, isRecruiting }) {
 
     function OrganizationMetadata() {
         return (
-            <div>
-                <div className="text-lg inter font-extrabold">Society of Information Technology Enthusiasts (SITE) [max lines: 3]</div>
-                <div className="text-sm">210 members</div>
-            </div>
-        )
-    }
-
-    function PhotoScrollArea() {
-        const photos = pageData.find(data => data.type === 'photos').data;
-
-        return (
-            <div className="h-52 md:h-80 w-full flex flex-row overflow-x-auto gap-x-6 pb-1">
-                {photos.map((photo, index) => (
-                    <Dialog key={index}>
-                        <DialogTrigger className="contents">
-                            <div className="h-full flex-shrink-0 relative rounded-xl overflow-clip">
-                                <img src={photo.src}
-                                    className="h-full object-cover"
-                                    alt={photo.caption} />
-                                <div className="absolute bottom-0 top-52 left-0 right-0 bg-gradient-to-b from-transparent to-black text-white px-9 flex items-center quicksand font-bold tracking-wide">
-                                    <span className="line-clamp-3">{photo.caption}</span>
-                                </div>
-                            </div>
-                        </DialogTrigger>
-                        <DialogContent className='max-w-5xl'>
-                            <DialogHeader>
-                                <DialogTitle>{photo.caption}</DialogTitle>
-                            </DialogHeader>
-                            <img src={photo.src} className="w-full h-auto" alt={photo.caption} />
-                        </DialogContent>
-                    </Dialog>
-                ))}
-            </div>
-        )
-    }
-
-    function Tile({ children, className, name, id }) {
-        return (
-            <div className={`w-full bg-white p-4 md:p-7 rounded-lg flex flex-col ${className} space-y-1 relative`} id={id}>
-                <div className="poppins text-lg font-extrabold">
-                    {name}
-                </div>
-                <div className="w-full block">
-                    {children}
-                </div>
+            <div className="flex-1 relative">
+                <div className="text-lg inter font-extrabold">{pageData.find(page => page.type === 'metadata').metadata.organizationName}</div>
+                <div className="text-sm">{pageData.find(page => page.type === 'metadata').metadata.members} members</div>
                 {editing && (
-                    <EditArea />
+                    <EditArea title='Set Organization Title pwede ba to palitan? offical ata to'>
+                        <div>
+                            text editor
+                        </div>
+                    </EditArea>
                 )}
             </div>
+        )
+    }
+
+    function AboutUs() {
+        return (
+            <Tile name='About Us'>
+                {pageData.find(data => data.type === 'aboutUs').data}
+                {editing && (
+                    <EditArea title='Set About Us description'>
+                        <div>
+                            text editor
+                        </div>
+                    </EditArea>
+                )}
+            </Tile>
         )
     }
 
@@ -305,14 +309,23 @@ function Home({ editing, isRecruiting }) {
         }
 
         return (
-            <ul className="w-full space-y-2 pl-2">
-                {data.map((contact, index) => (
-                    <li key={index} className="flex items-center quicksand">
-                        <div>{platformIcons[contact.platform]}</div>
-                        <a className="ml-3 truncate flex-1 hover:text-blue-600 hover:underline" href={contact.address}>{contact.address}</a>
-                    </li>
-                ))}
-            </ul>
+            <Tile name='Contacts and Information'>
+                <ul className="w-full space-y-2 pl-2 relative">
+                    {data.map((contact, index) => (
+                        <li key={index} className="flex items-center quicksand">
+                            <div>{platformIcons[contact.platform]}</div>
+                            <a className="ml-3 truncate flex-1 hover:text-blue-600 hover:underline" href={contact.address}>{contact.address}</a>
+                        </li>
+                    ))}
+                </ul>
+                {editing && (
+                    <EditArea title='Set contacts list'>
+                        <div>
+                            complex bullet text editor
+                        </div>
+                    </EditArea>
+                )}
+            </Tile>
         )
     }
 
@@ -320,18 +333,81 @@ function Home({ editing, isRecruiting }) {
         const officers = pageData.find(page => page.type === 'officers').data;
 
         return (
-            <ul className="w-full space-y-2 pl-2">
-                {officers.map((officer, index) => (
-                    <li key={index} className="flex items-center">
-                        <span className="mr-3">•</span>
+            <Tile name='Officers'>
+                <ul className="w-full space-y-2 pl-2">
+                    {officers.map((officer, index) => (
+                        <li key={index} className="flex items-center">
+                            <span className="mr-3">•</span>
+                            <div>
+                                <div className="nunito font-extrabold text-lg">{officer.name}</div>
+                                <div className="-mt-1 quicksand text-sm">{officer.position}</div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+                {editing && (
+                    <EditArea title='Set organization officers (pati rin ba to editable?)'>
                         <div>
-                            <div className="nunito font-extrabold text-lg">{officer.name}</div>
-                            <div className="-mt-1 quicksand text-sm">{officer.position}</div>
+                            complex bullet text editor
                         </div>
-                    </li>
-                ))}
-            </ul>
+                    </EditArea>
+                )}
+            </Tile>
         );
+    }
+
+    function SocialIFrame() {
+        return (
+            <Tile className='h-full' name='Social Activities'>
+                facebook iframe
+                {editing && (
+                    <EditArea title='Set IFrame link'>
+                        <div>
+                            text editor
+                        </div>
+                    </EditArea>
+                )}
+            </Tile>
+        )
+    }
+
+    function PhotoScrollArea() {
+        const photos = pageData.find(data => data.type === 'photos').data;
+
+        return (
+            <Tile name='Showcase Photos' id='photos' className='overflow-x-hidden'>
+                <div className="h-52 md:h-80 w-full flex flex-row overflow-x-auto gap-x-6 pb-1 relative">
+                    {photos.map((photo, index) => (
+                        <Dialog key={index}>
+                            <DialogTrigger className="contents">
+                                <div className="h-full flex-shrink-0 relative rounded-xl overflow-clip">
+                                    <img src={photo.src}
+                                        className="h-full object-cover"
+                                        alt={photo.caption} />
+                                    <div className="absolute bottom-0 top-52 left-0 right-0 bg-gradient-to-b from-transparent to-black text-white px-9 flex items-center quicksand font-bold tracking-wide">
+                                        <span className="line-clamp-3">{photo.caption}</span>
+                                    </div>
+                                </div>
+                            </DialogTrigger>
+                            <DialogContent className='max-w-5xl'>
+                                <DialogHeader>
+                                    <DialogTitle>{photo.caption}</DialogTitle>
+                                    <DialogDescription></DialogDescription>
+                                </DialogHeader>
+                                <img src={photo.src} className="w-full h-auto" alt={photo.caption} />
+                            </DialogContent>
+                        </Dialog>
+                    ))}
+                </div>
+                {editing && (
+                    <EditArea title='Set showcase photos'>
+                        <div>
+                            complex multi-file upload with text edit (pic and caption)
+                        </div>
+                    </EditArea>
+                )}
+            </Tile>
+        )
     }
 }
 
