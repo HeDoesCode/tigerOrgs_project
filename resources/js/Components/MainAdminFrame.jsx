@@ -26,7 +26,7 @@ function MainAdminFrame({ children, navItems }) {
                             href={route(item.link)}
                         >
                             {item.icon}
-                            <div className="pl-2">{item.label}</div>
+                            <div className="pl-2 poppins">{item.label}</div>
                         </Link>
                     ))}
                 </div>

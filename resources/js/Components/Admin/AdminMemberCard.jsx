@@ -19,8 +19,10 @@ function AdminMemberCard({ isAdmin }) {
                         isAdmin ? "bg-[#FF9900]" : "bg-[#FFBC58]"
                     } p-1 px-4 rounded-2xl flex justify-between`}
                 >
-                    <IconAdmin />
-                    <div className="ml-2 font-semibold">
+                    <div className="mx-1 text-gray-800">
+                        <IconAdmin />
+                    </div>
+                    <div className="ml-2  poppins">
                         {isAdmin ? "Admin" : "Member"}
                     </div>
                 </div>

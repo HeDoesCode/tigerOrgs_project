@@ -96,7 +96,7 @@ function AdminLayout({ children }) {
                 >
                     <Link className="contents" href={href}>
                         <div className="min-h-7 min-w-7 size-7">{icon}</div>
-                        <div className="text-left pl-3 text-lg overflow-hidden h-min my-auto w-full">
+                        <div className="text-left pl-3 poppins text-lg overflow-hidden h-min my-auto w-full">
                             {desc}
                         </div>
                     </Link>

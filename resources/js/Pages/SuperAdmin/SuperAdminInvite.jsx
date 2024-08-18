@@ -33,18 +33,18 @@ function SuperAdminInvite() {
                                 </h1>
                             </div>
                             <div className="col-span-3 content-center">
-                                <h1 className="text-center">
+                                <h1 className="text-center font-semibold text-gray-500">
                                     laurencearvin.arcila.cics@ust.edu.ph
                                 </h1>
                             </div>
                             <div className="col-span-3 content-center">
-                                <h1 className=" text-center text-sm">
+                                <h1 className=" text-center text-sm font-semibold text-gray-500">
                                     College of Information and Computing
                                     Sciences
                                 </h1>
                             </div>
                             <div className="col-span-2 px-4 text-sm content-center ">
-                                <h1 className=" text-center font-semibold rounded-xl bg-green-50 border-2 border-green-600 text-green-800">
+                                <h1 className=" text-center font-semibold rounded-xl poppins bg-green-50 border-2 border-green-600 text-green-800">
                                     Assigned to 1 Org
                                 </h1>
                             </div>

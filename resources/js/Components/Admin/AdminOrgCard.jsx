@@ -25,7 +25,7 @@ function AdminOrgCard({ edit, visible, setVisible }) {
                         </h1>
                     </div>
                 </div>
-                <h3 className="text-xs pt-4 text-justify">
+                <h3 className="text-gray-500 text-xs pt-4 text-justify font-semibold">
                     College of Information and Computing Sciences
                 </h3>
             </div>
@@ -57,7 +57,7 @@ function AdminOrgCard({ edit, visible, setVisible }) {
                         >
                             <AdminDropdownMenu
                                 triggerContent={
-                                    <div className="pl-1 flex content-center">
+                                    <div className="pl-1 flex content-center poppins">
                                         {visible ? "Visible" : "Not Visible"}
                                         <IconChevronDown size="15" />
                                     </div>
@@ -80,7 +80,7 @@ function AdminOrgCard({ edit, visible, setVisible }) {
                         <div
                             className={`text-sm font-semibold col-start-4 col-end-7 flex justify-center rounded-xl border-2 ${visibilityClass}`}
                         >
-                            <div className="pl-1 flex content-center">
+                            <div className="pl-1 flex content-center poppins">
                                 {visible ? "Visible" : "Not Visible"}
                             </div>
                         </div>
@@ -94,7 +94,7 @@ function AdminOrgCard({ edit, visible, setVisible }) {
                         Status:
                     </div>
                     <div
-                        className={`text-sm font-semibold col-start-4 col-end-7 flex justify-center rounded-xl border-2 ${visibilityClass}`}
+                        className={`text-sm font-semibold col-start-4 col-end-7 flex justify-center rounded-xl poppins border-2 ${visibilityClass}`}
                     >
                         {visible ? "Active" : "Inactive"}
                     </div>
