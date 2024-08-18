@@ -20,7 +20,8 @@ import IconX from "@/Components/Icons/Social/IconX"
 import IconLinkedIn from "@/Components/Icons/Social/IconLinkedIn"
 
 function Home({ editing, isRecruiting }) {
-    editing = true;
+    editing = false;
+    isRecruiting = false;
 
     const pageData = [
         {
@@ -138,12 +139,14 @@ function Home({ editing, isRecruiting }) {
                             </div>
                         </div>
                         <div className="pt-8 space-y-2 inter font-bold">
-                            <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative">
-                                Apply<div className="inline rotate-45"><IconArrowUp size='20' /></div>
-                            </div>
-                            <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative">
+                            {isRecruiting && (
+                                <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative">
+                                    Apply<div className="inline rotate-45"><IconArrowUp size='20' /></div>
+                                </div>
+                            )}
+                            <a className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-500 cursor-pointer">
                                 Follow<div className="inline"><IconUserPlus size='20' /></div>
-                            </div>
+                            </a>
                         </div>
                     </div>
 
@@ -162,10 +165,11 @@ function Home({ editing, isRecruiting }) {
                     {/* main content */}
                     <section className="h-fit px-5 md:px-12 space-y-3 md:space-y-8">
 
-                        {/* About the Organization */}
+                        {/* About Us */}
                         <Tile name='About Us'>
                             {pageData.find(data => data.type === 'aboutUs').data}
                         </Tile>
+
                         <div className="w-full flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-8">
                             <div className="flex flex-col space-y-3 md:space-y-8 wfull md:w-1/2">
 
