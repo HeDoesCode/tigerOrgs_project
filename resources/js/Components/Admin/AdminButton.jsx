@@ -5,7 +5,7 @@ function AdminButton({ onClick, icon, name, className }) {
             className={`flex px-9 py-1  rounded-2xl  ${className}`}
         >
             {icon}
-            <span className="ml-2">{name}</span>
+            <span className="ml-2 poppins">{name}</span>
         </button>
     );
 }

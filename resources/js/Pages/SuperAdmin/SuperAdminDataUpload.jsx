@@ -52,6 +52,7 @@ function SuperAdminDataUpload() {
                             link: "superadmin.dataupload",
                         },
                     ]}
+                    title="Data Upload"
                 >
                     <div className="grid grid-cols-12 p-5 gap-2">
                         <div className="p-5 shadow-lg grid gridcol rounded-xl bg-white col-span-7">

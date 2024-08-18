@@ -7,8 +7,10 @@ import IconInvite from "@/Components/Icons/IconInvite";
 import IconDotsVertical from "@/Components/Icons/IconDotsVertical";
 import Home from "../Organizations/Home";
 import IconEdit from "@/Components/Icons/IconEdit";
+import IconForms from "@/Components/Icons/IconForms";
+import IconHistory from "@/Components/Icons/IconHistory";
 
-function AdminEditPage() {
+function AdminManageForms() {
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
@@ -16,25 +18,28 @@ function AdminEditPage() {
                 <MainAdminFrame
                     navItems={[
                         {
-                            icon: <IconEdit />,
-                            label: "Edit Page",
-                            link: "admin.editpage",
+                            icon: <IconCheckBox />,
+                            label: "Student Applications",
+                            link: "admin.applications",
                         },
                         {
-                            icon: <IconInvite />,
-                            label: "Members",
-                            link: "admin.invite",
+                            icon: <IconForms />,
+                            label: "Recruitment Form",
+                            link: "admin.forms",
+                        },
+                        {
+                            icon: <IconHistory />,
+                            label: "Form History",
+                            link: "admin.formhistory",
                         },
                     ]}
-                    title="Edit Organization's Page"
+                    title="Manage Recruitment Form"
                 >
-                    <div className="p-5">
-                        <Home editing="false" />
-                    </div>
+                    <div className="p-5"></div>
                 </MainAdminFrame>
             </AdminLayout>
         </div>
     );
 }
 
-export default AdminEditPage;
+export default AdminManageForms;

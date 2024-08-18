@@ -32,33 +32,43 @@ export default function SuperAdminInviteHistory() {
                             link: "superadmin.invitehistory",
                         },
                     ]}
+                    title="Activity Log"
                 >
                     <div className="grid grid-rows-1 p-5 gap-2">
                         <VerticalCard gridcol="grid-cols-7">
                             <div className=" col-span-1 ">
-                                <h1 className="ml-2  text-center">
+                                <h1 className="ml-2  text-center font-semibold text-gray-500">
                                     Aug-15-2024
                                 </h1>
                             </div>
                             <div className=" col-span-3 ">
                                 <h1 className="ml-2  text-center">
-                                    <span className="font-bold">
+                                    <span className="font-bold text-gray-500">
                                         Ethan Catacutan
                                     </span>{" "}
-                                    invited{" "}
-                                    <span className="font-bold">
+                                    <span className="text-gray-500 font-medium">
+                                        invited{" "}
+                                    </span>
+                                    <span className="font-bold text-gray-500">
                                         Laurence Arcilla
                                     </span>{" "}
-                                    as <span className="font-bold">Admin</span>
+                                    <span className="text-gray-500 font-medium">
+                                        as{" "}
+                                    </span>
+                                    <span className="font-bold text-gray-500">
+                                        Admin
+                                    </span>
                                 </h1>
                             </div>
                             <div className=" col-span-2 ">
-                                <h1 className="ml-2 text-center">
+                                <h1 className="ml-2 text-center font-medium text-gray-500">
                                     College of Architecture
                                 </h1>
                             </div>
                             <div className=" col-span-1 ">
-                                <h1 className="ml-2 text-center">1:04 PM</h1>
+                                <h1 className="ml-2 text-center font-semibold text-gray-500">
+                                    1:04 PM
+                                </h1>
                             </div>
                         </VerticalCard>
                     </div>
