@@ -287,13 +287,6 @@ function Home({ editing, isRecruiting }) {
             <div className="flex-1 relative">
                 <div className="text-lg inter font-extrabold">{pageData.find(page => page.type === 'metadata').metadata.organizationName}</div>
                 <div className="text-sm">{pageData.find(page => page.type === 'metadata').metadata.members} members</div>
-                {editing && (
-                    <EditArea title='Set Organization Title pwede ba to palitan? offical ata to'>
-                        <div>
-                            text editor
-                        </div>
-                    </EditArea>
-                )}
             </div>
         )
     }
@@ -361,13 +354,6 @@ function Home({ editing, isRecruiting }) {
                         </li>
                     ))}
                 </ul>
-                {editing && (
-                    <EditArea title='Set organization officers (pati rin ba to editable?)'>
-                        <div>
-                            complex bullet text editor
-                        </div>
-                    </EditArea>
-                )}
             </Tile>
         );
     }
