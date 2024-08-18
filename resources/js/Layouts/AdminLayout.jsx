@@ -7,6 +7,8 @@ import { useState } from "react";
 import IconMenu3 from "@/Components/Icons/IconMenu3";
 import IconList from "@/Components/Icons/IconList";
 import IconHistory from "@/Components/Icons/IconHistory";
+import IconFolderCog from "@/Components/Icons/IconFolderCog";
+import IconOrg from "@/Components/Icons/IconOrg";
 
 function AdminLayout({ children }) {
     const { url } = usePage();
@@ -65,7 +67,7 @@ function AdminLayout({ children }) {
                 </div>
                 <nav className="flex-1 flex flex-col space-y-3 m-2 transition-all group-hover:mr-0 ease-in-out duration-300">
                     <SideBarLink
-                        icon={<IconList size="100%" />}
+                        icon={<IconFolderCog size="100%" />}
                         href={route("admin.editpage")}
                         desc="Manage"
                         current={
@@ -74,12 +76,13 @@ function AdminLayout({ children }) {
                         }
                     />
                     <SideBarLink
-                        icon={<IconHistory size="100%" />}
-                        href={route("superadmin.loginhistory")}
-                        desc="Activity&nbsp;Log"
+                        icon={<IconOrg size="100%" />}
+                        href={route("admin.applications")}
+                        desc="Recruitment"
                         current={
-                            url === routePath("superadmin.loginhistory") ||
-                            url === routePath("superadmin.invitehistory")
+                            url === routePath("admin.applications") ||
+                            url === routePath("admin.forms") ||
+                            url === routePath("admin.formhistory")
                         }
                     />
                 </nav>

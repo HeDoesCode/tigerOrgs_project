@@ -6,6 +6,7 @@ import IconInvite from "@/Components/Icons/IconInvite";
 import AdminButton from "@/Components/Admin/AdminButton";
 import IconBellFilled from "@/Components/Icons/IconBellFilled";
 import AdminMemberCard from "@/Components/Admin/AdminMemberCard";
+import IconEdit from "@/Components/Icons/IconEdit";
 
 function AdminInvite() {
     return (
@@ -15,7 +16,7 @@ function AdminInvite() {
                 <MainAdminFrame
                     navItems={[
                         {
-                            icon: <IconCheckBox />,
+                            icon: <IconEdit />,
                             label: "Edit Page",
                             link: "admin.editpage",
                         },
