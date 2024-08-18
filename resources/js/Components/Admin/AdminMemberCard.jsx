@@ -12,7 +12,7 @@ import IconCancel from "@/Components/Icons/IconCancel";
 
 function AdminMemberCard({ isAdmin }) {
     return (
-        <div className="shadow-lg hover:bg-gray-100 p-3 w-full bg-white rounded-xl">
+        <div className="hover:scale-[1.02] transition-all duration-300 ease-in-out shadow-lg hover:bg-gray-100 p-3 w-full bg-white rounded-xl">
             <div className="flex justify justify-between mb-4">
                 <div
                     className={`${

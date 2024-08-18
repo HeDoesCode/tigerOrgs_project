@@ -41,21 +41,21 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
                             />
                             <button className="rounded-r-full h-auto flex items-center justify-center min-w-12 w-24 bg-[#FFCD12] border-gray-400 border-r-[1px] border-y-[1px] border-l-0 nunito font-bold">
                                 <span className="hidden sm:inline">Search</span>
-                                <span className="inline sm:hidden"><IconSearch size={"22"} /></span>
+                                <span className="inline sm:hidden">
+                                    <IconSearch size={"22"} />
+                                </span>
                             </button>
                         </div>
                         <Link
                             href={route("organizations")}
-                            className="bg-[#FFE6C1] bg-opacity-50 mt-8 sm:mt-12 p-4 sm:p-5 rounded-2xl border-[3px] border-[#FFCD12] nunito font-extrabold text-sm sm:text-xl shadow-md shadow-gray-500"
+                            className="hover:scale-[1.06] transition-all duration-300 ease-in-out bg-[#FFE6C1] bg-opacity-50 mt-8 sm:mt-12 p-4 sm:p-5 rounded-2xl border-[3px] border-[#FFCD12] nunito font-extrabold text-sm sm:text-xl shadow-md shadow-gray-500"
                         >
                             Browse Organizations
                         </Link>
                     </div>
                 </div>
             </UserLayout>
-            <div className="relative">
-                {isLoggedIn || <GoogleModal />}
-            </div>
+            <div className="relative">{isLoggedIn || <GoogleModal />}</div>
         </div>
     );
 
