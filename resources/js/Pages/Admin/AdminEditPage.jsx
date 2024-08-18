@@ -5,6 +5,7 @@ import IconCheckBox from "@/Components/Icons/IconCheckBox";
 import VerticalCard from "@/Components/VerticalCard";
 import IconInvite from "@/Components/Icons/IconInvite";
 import IconDotsVertical from "@/Components/Icons/IconDotsVertical";
+import Home from "../Organizations/Home";
 
 function AdminEditPage() {
     return (
@@ -25,7 +26,9 @@ function AdminEditPage() {
                         },
                     ]}
                 >
-                    <div className="p-5">Edit Page</div>
+                    <div className="p-5">
+                        <Home editing="false" />
+                    </div>
                 </MainAdminFrame>
             </AdminLayout>
         </div>
