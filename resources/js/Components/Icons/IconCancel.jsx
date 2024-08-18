@@ -1,4 +1,4 @@
-function IconSearch({ size }) {
+function IconCancel({ size }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -10,13 +10,13 @@ function IconSearch({ size }) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="icon icon-tabler icons-tabler-outline icon-tabler-search"
+            className="icon icon-tabler icons-tabler-outline icon-tabler-cancel"
         >
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-            <path d="M21 21l-6 -6" />
+            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+            <path d="M18.364 5.636l-12.728 12.728" />
         </svg>
     );
 }
 
-export default IconSearch;
+export default IconCancel;

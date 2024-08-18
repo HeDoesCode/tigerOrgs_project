@@ -1,4 +1,4 @@
-function IconSearch({ size }) {
+function IconAdmin({ size }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -10,13 +10,14 @@ function IconSearch({ size }) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="icon icon-tabler icons-tabler-outline icon-tabler-search"
+            className="icon icon-tabler icons-tabler-outline icon-tabler-user-check"
         >
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-            <path d="M21 21l-6 -6" />
+            <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+            <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+            <path d="M15 19l2 2l4 -4" />
         </svg>
     );
 }
 
-export default IconSearch;
+export default IconAdmin;

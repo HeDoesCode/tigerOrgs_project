@@ -54,6 +54,15 @@ Route::get('/superadmin/dataupload', function (){
     return Inertia::render('SuperAdmin/SuperAdminDataUpload');
 })->name('superadmin.dataupload');
 
+//admin temporary routes
+Route::get('/admin/editpage', function (){
+    return Inertia::render('Admin/AdminEditPage');
+})->name('admin.editpage');
+
+Route::get('/admin/invite', function (){
+    return Inertia::render('Admin/AdminInvite');
+})->name('admin.invite');
+
 
 
 
