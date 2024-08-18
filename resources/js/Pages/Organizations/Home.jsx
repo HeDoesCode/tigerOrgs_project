@@ -22,8 +22,8 @@ import IconLinkedIn from "@/Components/Icons/Social/IconLinkedIn"
 import IconPencil from "@/Components/Icons/IconPencil"
 
 function Home({ editing, isRecruiting }) {
-    editing = false;
-    isRecruiting = false;
+    // editing = false;
+    // isRecruiting = false;
 
     const pageData = [
         {
@@ -162,7 +162,9 @@ function Home({ editing, isRecruiting }) {
                                     Apply<div className="inline rotate-45"><IconArrowUp size='20' /></div>
                                 </div>
                             )}
-                            <a className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-500 cursor-pointer">
+
+                            {/* remove route if editing */}
+                            <a className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-500 cursor-pointer" >
                                 Follow<div className="inline"><IconUserPlus size='20' /></div>
                             </a>
                         </div>
