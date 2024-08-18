@@ -1,5 +1,5 @@
-import UserLayout from "@/Layouts/UserLayout";
-import { Link } from "@inertiajs/react";
+import UserLayout from "@/Layouts/UserLayout"
+import { Head, Link } from "@inertiajs/react"
 import {
     Dialog,
     DialogContent,
@@ -7,103 +7,104 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/Components/ui/dialog";
+} from "@/Components/ui/dialog"
 
-import IconArrowUp from "@/Components/Icons/IconArrowUp";
-import IconMailFilled from "@/Components/Icons/IconMailFilled";
-import IconQR from "@/Components/Icons/IconQR";
-import IconUserPlus from "@/Components/Icons/IconUserPlus";
 
-import IconInstagram from "@/Components/Icons/Social/IconInstagram";
-import IconFacebookRoundFilled from "@/Components/Icons/Social/IconFacebookRoundFilled";
-import IconX from "@/Components/Icons/Social/IconX";
-import IconLinkedIn from "@/Components/Icons/Social/IconLinkedIn";
-import IconPencil from "@/Components/Icons/IconPencil";
+import IconArrowUp from "@/Components/Icons/IconArrowUp"
+import IconMailFilled from "@/Components/Icons/IconMailFilled"
+import IconQR from "@/Components/Icons/IconQR"
+import IconUserPlus from "@/Components/Icons/IconUserPlus"
+
+import IconInstagram from "@/Components/Icons/Social/IconInstagram"
+import IconFacebookRoundFilled from "@/Components/Icons/Social/IconFacebookRoundFilled"
+import IconX from "@/Components/Icons/Social/IconX"
+import IconLinkedIn from "@/Components/Icons/Social/IconLinkedIn"
+import IconPencil from "@/Components/Icons/IconPencil"
 
 function Home({ editing, isRecruiting }) {
+    editing = false;
     isRecruiting = false;
 
     const pageData = [
         {
-            type: "logo",
-            src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
+            type: 'logo',
+            src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s',
         },
         {
-            type: "coverPhoto",
-            src: "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D",
+            type: 'coverPhoto',
+            src: 'https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D',
         },
         {
-            type: "metadata",
+            type: 'metadata',
             metadata: {
-                organizationName:
-                    "Society of Information Technology Enthusiasts (SITE)",
-                members: "210",
-            },
+                organizationName: 'Society of Information Technology Enthusiasts (SITE)',
+                members: '210',
+            }
         },
         {
-            type: "aboutUs",
-            data: "Official TigerOrgs™ page of the Society of Information Technology Enthusiasts, the mother organization of the IT students of the University of Santo Tomas.",
+            type: 'aboutUs',
+            data: 'Official TigerOrgs™ page of the Society of Information Technology Enthusiasts, the mother organization of the IT students of the University of Santo Tomas.',
         },
         {
-            type: "contacts",
+            type: 'contacts',
             data: [
                 {
-                    platform: "email",
-                    address: "site.cics@ust.edu.ph",
+                    platform: 'email',
+                    address: 'site.cics@ust.edu.ph',
                 },
                 {
-                    platform: "facebook",
-                    address: "https://www.facebook.com/site.ust",
+                    platform: 'facebook',
+                    address: 'https://www.facebook.com/site.ust',
                 },
                 {
-                    platform: "instagram",
-                    address: "https://www.instagram.com/site.ust",
+                    platform: 'instagram',
+                    address: 'https://www.instagram.com/site.ust',
                 },
                 {
-                    platform: "x",
-                    address: "https://www.x.com/site.ust",
+                    platform: 'x',
+                    address: 'https://www.x.com/site.ust',
                 },
             ],
         },
         {
-            type: "officers",
+            type: 'officers',
             data: [
                 {
-                    position: "President",
-                    name: "John Doe",
+                    position: 'President',
+                    name: 'John Doe',
                 },
                 {
-                    position: "Vice President",
-                    name: "Jane Smith",
+                    position: 'Vice President',
+                    name: 'Jane Smith',
                 },
                 {
-                    position: "Secretary",
-                    name: "Alex Johnson",
+                    position: 'Secretary',
+                    name: 'Alex Johnson',
                 },
                 {
-                    position: "Treasurer",
-                    name: "Emily Davis",
+                    position: 'Treasurer',
+                    name: 'Emily Davis',
                 },
                 {
-                    position: "Auditor",
-                    name: "Michael Brown",
+                    position: 'Auditor',
+                    name: 'Michael Brown',
                 },
                 {
-                    position: "PRO",
-                    name: "Sarah Lee",
-                },
+                    position: 'PRO',
+                    name: 'Sarah Lee',
+                }
             ],
         },
         {
-            type: "photos",
+            type: 'photos',
             data: [
                 {
-                    caption: "CICS Wellness Series",
-                    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
+                    caption: 'CICS Wellness Series',
+                    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s',
                 },
                 {
-                    caption: "CICS Wellness Series",
-                    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
+                    caption: 'CICS Wellness Series',
+                    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s',
                 },
             ],
         },
@@ -118,13 +119,28 @@ function Home({ editing, isRecruiting }) {
     probably (pageData === originalPageData)
     */
 
+
+    // to do: remove editable org name and officers
     return (
         <div className="w-full">
-            <UserLayout noPadding>
-                <div className={editing ? "border-[5px] border-blue-500" : ""}>
+            {editing ? (
+                <PageContent />
+            ) : (
+                <UserLayout noPadding>
+                    <PageContent />
+                </UserLayout>
+            )}
+        </div>
+    )
+
+    function PageContent() {
+        return (
+            <>
+                <div>
                     {/* cover photo */}
                     <CoverPhoto />
                     <div className="w-full h-fit md:h-48 -mt-14 px-5 md:px-12 flex justify-between">
+
                         {/* organization logo */}
                         <OrganizationLogo />
 
@@ -134,8 +150,7 @@ function Home({ editing, isRecruiting }) {
                                 <div className="w-fit text-xs font-bold h-min">
                                     <button>
                                         <div className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9]">
-                                            View&nbsp;QR&nbsp;
-                                            <IconQR size="20" />
+                                            View&nbsp;QR&nbsp;<IconQR size='20' />
                                         </div>
                                     </button>
                                 </div>
@@ -144,17 +159,11 @@ function Home({ editing, isRecruiting }) {
                         <div className="pt-8 space-y-2 inter font-bold">
                             {isRecruiting && (
                                 <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative">
-                                    Apply
-                                    <div className="inline rotate-45">
-                                        <IconArrowUp size="20" />
-                                    </div>
+                                    Apply<div className="inline rotate-45"><IconArrowUp size='20' /></div>
                                 </div>
                             )}
                             <a className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-500 cursor-pointer">
-                                Follow
-                                <div className="inline">
-                                    <IconUserPlus size="20" />
-                                </div>
+                                Follow<div className="inline"><IconUserPlus size='20' /></div>
                             </a>
                         </div>
                     </div>
@@ -163,21 +172,20 @@ function Home({ editing, isRecruiting }) {
                         <OrganizationMetadata />
                         <div className="w-fit text-xs font-bold h-min">
                             <button className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9] hover:bg-[#969696]">
-                                <span className="hidden sm:inline">
-                                    View QR{" "}
-                                </span>
-                                <IconQR size="20" />
+                                <span className="hidden sm:inline">View QR </span><IconQR size='20' />
                             </button>
                         </div>
                     </div>
 
                     {/* main content */}
                     <section className="h-fit px-5 md:px-12 space-y-3 md:space-y-8">
+
                         {/* About Us */}
                         <AboutUs />
 
                         <div className="w-full flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-8">
                             <div className="flex flex-col space-y-3 md:space-y-8 wfull md:w-1/2">
+
                                 {/* Contacts and Information */}
                                 <ContactsContainer />
 
@@ -195,124 +203,116 @@ function Home({ editing, isRecruiting }) {
                 </div>
                 {editing && (
                     <div className="flex justify-end px-5 md:px-12 mt-6">
-                        <button className="px-3 py-2 bg-cyan-400 rounded-lg">
-                            Save Changes
-                        </button>
+                        <button className="px-3 py-2 bg-cyan-400 rounded-lg">Save Changes</button>
                     </div>
                 )}
-            </UserLayout>
-        </div>
-    );
+            </>
+        )
+    }
 
     function Tile({ children, className, name, id }) {
         return (
-            <div
-                className={`w-full bg-white p-4 md:p-7 rounded-lg flex flex-col ${className} space-y-1 relative`}
-                id={id}
-            >
-                <div className="poppins text-lg font-extrabold">{name}</div>
-                <div className="w-full block">{children}</div>
+            <div className={`w-full bg-white p-4 md:p-7 rounded-lg flex flex-col ${className} space-y-1 relative`} id={id}>
+                <div className="poppins text-lg font-extrabold">
+                    {name}
+                </div>
+                <div className="w-full block">
+                    {children}
+                </div>
             </div>
-        );
+        )
     }
 
     function EditArea({ children, title, description }) {
         return (
             <Dialog>
                 <DialogTrigger className="contents">
-                    <div className="absolute inset-0 h-full w-full flex items-center justify-center group hover:border hover:border-red-500">
-                        <div className="bg-gray-300/50 group-hover:bg-gray-500/90 px-3 py-2 opacity-50 group-hover:opacity-100 text-black group-hover:text-white rounded-xl flex flex-nowrap">
-                            <IconPencil /> Edit
-                        </div>
+                    <div className="absolute inset-0 h-full w-full flex items-center justify-center group hover:border hover:border-red-500 hover:backdrop-blur-sm transition-all">
+                        <div className="bg-gray-300/50 group-hover:bg-gray-500/90 px-3 py-2 opacity-50 group-hover:opacity-100 text-black group-hover:text-white rounded-xl flex flex-nowrap"><IconPencil /> Edit</div>
                     </div>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>{title}</DialogTitle>
-                        <DialogDescription>{description}</DialogDescription>
+                        <DialogDescription>
+                            {description}
+                        </DialogDescription>
                     </DialogHeader>
                     {children}
                 </DialogContent>
             </Dialog>
-        );
+
+
+        )
     }
 
     function CoverPhoto() {
         return (
             <div className="max-h-[25rem] h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
-                <img
-                    src={
-                        pageData.find((page) => page.type === "coverPhoto").src
-                    }
+                <img src={pageData.find(page => page.type === 'coverPhoto').src}
                     alt="Organization Cover Photo"
-                    className="w-full object-cover"
-                />
+                    className="w-full object-cover" />
                 {editing && (
-                    <EditArea title="Set Page Cover Photo">
-                        <div>photo upload preview and shee</div>
+                    <EditArea title='Set Page Cover Photo'>
+                        <div>
+                            photo upload preview and shee
+                        </div>
                     </EditArea>
                 )}
             </div>
-        );
+        )
     }
 
     function OrganizationLogo() {
         return (
             <div className="size-36 md:size-44 rounded-[2rem] overflow-clip relative">
-                <img
-                    src={pageData.find((page) => page.type === "logo").src}
+                <img src={pageData.find(page => page.type === 'logo').src}
                     alt="Organization Logo"
-                    className="size-full object-cover"
-                />
+                    className="size-full object-cover" />
                 {editing && (
-                    <EditArea title="Set Organization Logo">
-                        <div>photo upload preview and shee</div>
+                    <EditArea title='Set Organization Logo'>
+                        <div>
+                            photo upload preview and shee
+                        </div>
                     </EditArea>
                 )}
             </div>
-        );
+        )
     }
 
     function OrganizationMetadata() {
         return (
             <div className="flex-1 relative">
-                <div className="text-lg inter font-extrabold">
-                    {
-                        pageData.find((page) => page.type === "metadata")
-                            .metadata.organizationName
-                    }
-                </div>
-                <div className="text-sm">
-                    {
-                        pageData.find((page) => page.type === "metadata")
-                            .metadata.members
-                    }{" "}
-                    members
-                </div>
+                <div className="text-lg inter font-extrabold">{pageData.find(page => page.type === 'metadata').metadata.organizationName}</div>
+                <div className="text-sm">{pageData.find(page => page.type === 'metadata').metadata.members} members</div>
                 {editing && (
-                    <EditArea title="Set Organization Title pwede ba to palitan? offical ata to">
-                        <div>text editor</div>
+                    <EditArea title='Set Organization Title pwede ba to palitan? offical ata to'>
+                        <div>
+                            text editor
+                        </div>
                     </EditArea>
                 )}
             </div>
-        );
+        )
     }
 
     function AboutUs() {
         return (
-            <Tile name="About Us">
-                {pageData.find((data) => data.type === "aboutUs").data}
+            <Tile name='About Us'>
+                {pageData.find(data => data.type === 'aboutUs').data}
                 {editing && (
-                    <EditArea title="Set About Us description">
-                        <div>text editor</div>
+                    <EditArea title='Set About Us description'>
+                        <div>
+                            text editor
+                        </div>
                     </EditArea>
                 )}
             </Tile>
-        );
+        )
     }
 
     function ContactsContainer() {
-        const data = pageData.find((data) => data.type === "contacts").data;
+        const data = pageData.find(data => data.type === 'contacts').data;
 
         const platformIcons = {
             email: <IconMailFilled />,
@@ -320,55 +320,50 @@ function Home({ editing, isRecruiting }) {
             facebook: <IconFacebookRoundFilled />,
             x: <IconX />,
             linkedin: <IconLinkedIn />,
-        };
+        }
 
         return (
-            <Tile name="Contacts and Information">
+            <Tile name='Contacts and Information'>
                 <ul className="w-full space-y-2 pl-2 relative">
                     {data.map((contact, index) => (
                         <li key={index} className="flex items-center quicksand">
                             <div>{platformIcons[contact.platform]}</div>
-                            <a
-                                className="ml-3 truncate flex-1 hover:text-blue-600 hover:underline"
-                                href={contact.address}
-                            >
-                                {contact.address}
-                            </a>
+                            <a className="ml-3 truncate flex-1 hover:text-blue-600 hover:underline" href={contact.address}>{contact.address}</a>
                         </li>
                     ))}
                 </ul>
                 {editing && (
-                    <EditArea title="Set contacts list">
-                        <div>complex bullet text editor</div>
+                    <EditArea title='Set contacts list'>
+                        <div>
+                            complex bullet text editor
+                        </div>
                     </EditArea>
                 )}
             </Tile>
-        );
+        )
     }
 
     function OfficersContainer() {
-        const officers = pageData.find((page) => page.type === "officers").data;
+        const officers = pageData.find(page => page.type === 'officers').data;
 
         return (
-            <Tile name="Officers">
+            <Tile name='Officers'>
                 <ul className="w-full space-y-2 pl-2">
                     {officers.map((officer, index) => (
                         <li key={index} className="flex items-center">
                             <span className="mr-3">•</span>
                             <div>
-                                <div className="nunito font-extrabold text-lg">
-                                    {officer.name}
-                                </div>
-                                <div className="-mt-1 quicksand text-sm">
-                                    {officer.position}
-                                </div>
+                                <div className="nunito font-extrabold text-lg">{officer.name}</div>
+                                <div className="-mt-1 quicksand text-sm">{officer.position}</div>
                             </div>
                         </li>
                     ))}
                 </ul>
                 {editing && (
-                    <EditArea title="Set organization officers (pati rin ba to editable?)">
-                        <div>complex bullet text editor</div>
+                    <EditArea title='Set organization officers (pati rin ba to editable?)'>
+                        <div>
+                            complex bullet text editor
+                        </div>
                     </EditArea>
                 )}
             </Tile>
@@ -377,68 +372,57 @@ function Home({ editing, isRecruiting }) {
 
     function SocialIFrame() {
         return (
-            <Tile className="h-full" name="Social Activities">
+            <Tile className='h-full' name='Social Activities'>
                 facebook iframe
                 {editing && (
-                    <EditArea title="Set IFrame link">
-                        <div>text editor</div>
+                    <EditArea title='Set IFrame link'>
+                        <div>
+                            text editor
+                        </div>
                     </EditArea>
                 )}
             </Tile>
-        );
+        )
     }
 
     function PhotoScrollArea() {
-        const photos = pageData.find((data) => data.type === "photos").data;
+        const photos = pageData.find(data => data.type === 'photos').data;
 
         return (
-            <Tile
-                name="Showcase Photos"
-                id="photos"
-                className="overflow-x-hidden"
-            >
+            <Tile name='Showcase Photos' id='photos' className='overflow-x-hidden'>
                 <div className="h-52 md:h-80 w-full flex flex-row overflow-x-auto gap-x-6 pb-1 relative">
                     {photos.map((photo, index) => (
                         <Dialog key={index}>
                             <DialogTrigger className="contents">
                                 <div className="h-full flex-shrink-0 relative rounded-xl overflow-clip">
-                                    <img
-                                        src={photo.src}
+                                    <img src={photo.src}
                                         className="h-full object-cover"
-                                        alt={photo.caption}
-                                    />
+                                        alt={photo.caption} />
                                     <div className="absolute bottom-0 top-52 left-0 right-0 bg-gradient-to-b from-transparent to-black text-white px-9 flex items-center quicksand font-bold tracking-wide">
-                                        <span className="line-clamp-3">
-                                            {photo.caption}
-                                        </span>
+                                        <span className="line-clamp-3">{photo.caption}</span>
                                     </div>
                                 </div>
                             </DialogTrigger>
-                            <DialogContent className="max-w-5xl">
+                            <DialogContent className='max-w-5xl'>
                                 <DialogHeader>
                                     <DialogTitle>{photo.caption}</DialogTitle>
                                     <DialogDescription></DialogDescription>
                                 </DialogHeader>
-                                <img
-                                    src={photo.src}
-                                    className="w-full h-auto"
-                                    alt={photo.caption}
-                                />
+                                <img src={photo.src} className="w-full h-auto" alt={photo.caption} />
                             </DialogContent>
                         </Dialog>
                     ))}
                 </div>
                 {editing && (
-                    <EditArea title="Set showcase photos">
+                    <EditArea title='Set showcase photos'>
                         <div>
-                            complex multi-file upload with text edit (pic and
-                            caption)
+                            complex multi-file upload with text edit (pic and caption)
                         </div>
                     </EditArea>
                 )}
             </Tile>
-        );
+        )
     }
 }
 
-export default Home;
+export default Home
