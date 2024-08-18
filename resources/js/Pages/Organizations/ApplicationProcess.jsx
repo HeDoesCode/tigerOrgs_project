@@ -5,7 +5,7 @@ import IconVideo from "@/Components/Icons/IconVideo"
 import IconCopyCheck from "@/Components/Icons/IconCopyCheck"
 import { Link } from "@inertiajs/react"
 
-function ApplicationProcess({ pageLayoutData }) {
+function ApplicationProcess({ pageLayoutData, pageData }) {
     pageLayoutData = [
         {
             type: "logo",
