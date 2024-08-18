@@ -10,7 +10,7 @@ function AdminOrgCard({ edit, visible, setVisible }) {
         : "bg-red-50  border-red-600 text-red-800";
 
     return (
-        <div className="px-4 rounded-xl divide-y divide-gray-300 shadow-lg hover:bg-gray-100">
+        <div className="px-4 rounded-xl divide-y divide-gray-300 shadow-lg bg-white hover:bg-gray-100">
             <div className="py-4 ">
                 <div className="grid grid-cols-3 divide-x divide-gray-300">
                     <div className="p-2 content-center">
