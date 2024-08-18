@@ -32,6 +32,7 @@ export default function SuperAdminLoginHistory() {
                             link: "superadmin.invitehistory",
                         },
                     ]}
+                    title="Activity Log"
                 >
                     <div className="grid grid-rows-1 p-5 gap-2">
                         <VerticalCard gridcol="grid-cols-7">

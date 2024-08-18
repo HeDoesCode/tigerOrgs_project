@@ -24,6 +24,7 @@ function SuperAdminInvite() {
                             link: "superadmin.invite",
                         },
                     ]}
+                    title="Role Invitation"
                 >
                     <div className="grid grid-rows-1 p-5 gap-2">
                         <VerticalCard gridcol="grid-cols-12">

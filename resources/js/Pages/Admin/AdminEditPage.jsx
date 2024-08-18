@@ -25,6 +25,7 @@ function AdminEditPage() {
                             link: "admin.invite",
                         },
                     ]}
+                    title="Edit Organization's Page"
                 >
                     <div className="p-5">
                         <Home editing="false" />

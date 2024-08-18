@@ -49,6 +49,7 @@ export default function SuperAdminManage() {
                             link: "superadmin.invite",
                         },
                     ]}
+                    title="Recruitment Enabled"
                 >
                     <div className="w-full">
                         <div className=" flex justify-end mt-5 me-5">

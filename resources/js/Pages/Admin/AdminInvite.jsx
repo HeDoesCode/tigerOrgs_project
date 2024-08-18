@@ -25,6 +25,7 @@ function AdminInvite() {
                             link: "admin.invite",
                         },
                     ]}
+                    title="Admin Invitation"
                 >
                     <div>
                         <div className="pt-5 pl-5 flex justify-between">
