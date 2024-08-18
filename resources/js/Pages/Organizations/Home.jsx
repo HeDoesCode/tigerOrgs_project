@@ -22,7 +22,7 @@ import IconLinkedIn from "@/Components/Icons/Social/IconLinkedIn"
 import IconPencil from "@/Components/Icons/IconPencil"
 
 function Home({ editing, isRecruiting }) {
-    editing = true;
+    editing = false;
     isRecruiting = false;
 
     const pageData = [
@@ -119,9 +119,23 @@ function Home({ editing, isRecruiting }) {
     probably (pageData === originalPageData)
     */
 
+
+    // to do: remove editable org name and officers
     return (
         <div className="w-full">
-            <UserLayout noPadding>
+            {editing ? (
+                <PageContent />
+            ) : (
+                <UserLayout noPadding>
+                    <PageContent />
+                </UserLayout>
+            )}
+        </div>
+    )
+
+    function PageContent() {
+        return (
+            <>
                 <div>
                     {/* cover photo */}
                     <CoverPhoto />
@@ -192,9 +206,9 @@ function Home({ editing, isRecruiting }) {
                         <button className="px-3 py-2 bg-cyan-400 rounded-lg">Save Changes</button>
                     </div>
                 )}
-            </UserLayout>
-        </div>
-    )
+            </>
+        )
+    }
 
     function Tile({ children, className, name, id }) {
         return (
