@@ -1,5 +1,11 @@
-import UserLayout from "@/Layouts/UserLayout";
-import { Head, Link } from "@inertiajs/react";
+import IconMailFilled from "@/Components/Icons/IconMailFilled";
+
+import IconInstagram from "@/Components/Icons/Social/IconInstagram";
+import IconFacebookRoundFilled from "@/Components/Icons/Social/IconFacebookRoundFilled";
+import IconX from "@/Components/Icons/Social/IconX";
+import IconLinkedIn from "@/Components/Icons/Social/IconLinkedIn";
+import EditArea from "@/Components/Organizations/EditArea";
+
 import {
     Dialog,
     DialogContent,
@@ -8,23 +14,10 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/Components/ui/dialog";
+import OrganizationLayout from "@/Components/Organizations/OrganizationLayout";
 
-import IconArrowUp from "@/Components/Icons/IconArrowUp";
-import IconMailFilled from "@/Components/Icons/IconMailFilled";
-import IconQR from "@/Components/Icons/IconQR";
-import IconUserPlus from "@/Components/Icons/IconUserPlus";
-
-import IconInstagram from "@/Components/Icons/Social/IconInstagram";
-import IconFacebookRoundFilled from "@/Components/Icons/Social/IconFacebookRoundFilled";
-import IconX from "@/Components/Icons/Social/IconX";
-import IconLinkedIn from "@/Components/Icons/Social/IconLinkedIn";
-import IconPencil from "@/Components/Icons/IconPencil";
-
-function Home({ editing, isRecruiting }) {
-    // editing = false;
-    // isRecruiting = false;
-
-    const pageData = [
+function Home({ editing = true, isRecruiting = true, pageData, pageLayoutData }) {
+    pageData = [
         {
             type: "logo",
             src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
@@ -110,115 +103,54 @@ function Home({ editing, isRecruiting }) {
         },
     ];
 
-    const originalPageData = pageData;
+    pageLayoutData = [
+        {
+            type: "logo",
+            src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
+        },
+        {
+            type: "coverPhoto",
+            src: "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D",
+        },
+        {
+            type: "metadata",
+            metadata: {
+                organizationName:
+                    "Society of Information Technology Enthusiasts (SITE)",
+                members: "210",
+            },
+        },
+    ]
 
-    /*
-    pageData para sa view mode and edit mode.
-    sa edit mode, store sa originalPageData yung original data and store sa pageData yung original data first then yung edits
-    compare yung orig and new data jan natin determine if enable or disable yung "Save Changes" button para save bandwidth di lang basta basta upload to server
-    probably (pageData === originalPageData)
-    */
-
-    // to do: remove editable org name and officers
     return (
-        <div className="w-full">
-            {editing ? (
-                <PageContent />
-            ) : (
-                <UserLayout noPadding>
-                    <PageContent />
-                </UserLayout>
-            )}
-        </div>
-    );
+        <OrganizationLayout pageLayoutData={pageLayoutData} isRecruiting={isRecruiting} editing={editing}>
+            {/* About Us */}
+            <AboutUs />
 
-    function PageContent() {
-        return (
-            <>
-                <div>
-                    {/* cover photo */}
-                    <CoverPhoto />
-                    <div className="w-full h-fit md:h-48 -mt-14 px-5 md:px-12 flex justify-between">
-                        {/* organization logo */}
-                        <OrganizationLogo />
+            <div className="w-full flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-8">
+                <div className="flex flex-col space-y-3 md:space-y-8 wfull md:w-1/2">
+                    {/* Contacts and Information */}
+                    <ContactsContainer />
 
-                        <div className="flex-1 hidden md:flex px-8 pt-12 my-2 items-center">
-                            <div className="w-full justify-center space-x-3 flex">
-                                <OrganizationMetadata />
-                                <div className="w-fit text-xs font-bold h-min">
-                                    <button>
-                                        <div className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9]">
-                                            View&nbsp;QR&nbsp;
-                                            <IconQR size="20" />
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="pt-8 space-y-2 inter font-bold">
-                            {isRecruiting && (
-                                <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative">
-                                    Apply
-                                    <div className="inline rotate-45">
-                                        <IconArrowUp size="20" />
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* remove route if editing */}
-                            <a className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-500 cursor-pointer">
-                                Follow
-                                <div className="inline">
-                                    <IconUserPlus size="20" />
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div className="w-full px-5 md:px-12 flex md:hidden justify-center space-x-3 my-4">
-                        <OrganizationMetadata />
-                        <div className="w-fit text-xs font-bold h-min">
-                            <button className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9] hover:bg-[#969696]">
-                                <span className="hidden sm:inline">
-                                    View QR{" "}
-                                </span>
-                                <IconQR size="20" />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* main content */}
-                    <section className="h-fit px-5 md:px-12 space-y-3 md:space-y-8">
-                        {/* About Us */}
-                        <AboutUs />
-
-                        <div className="w-full flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-8">
-                            <div className="flex flex-col space-y-3 md:space-y-8 wfull md:w-1/2">
-                                {/* Contacts and Information */}
-                                <ContactsContainer />
-
-                                {/* Officers */}
-                                <OfficersContainer />
-                            </div>
-
-                            {/* Facebook Iframe */}
-                            <div className="w-full md:w-1/2">
-                                <SocialIFrame />
-                            </div>
-                        </div>
-                        <PhotoScrollArea />
-                    </section>
+                    {/* Officers */}
+                    <OfficersContainer />
                 </div>
-                {editing && (
-                    <div className="flex justify-end px-5 md:px-12 mt-6">
-                        <button className="px-3 py-2 bg-cyan-400 rounded-lg">
-                            Save Changes
-                        </button>
-                    </div>
-                )}
-            </>
-        );
-    }
+
+                {/* Facebook Iframe */}
+                <div className="w-full md:w-1/2">
+                    <SocialIFrame />
+                </div>
+            </div>
+            <PhotoScrollArea />
+            {editing && (
+                <div className="flex justify-end px-5 md:px-12 mt-6">
+                    <button className="px-3 py-2 bg-cyan-400 rounded-lg">
+                        Save Changes
+                    </button>
+                </div>
+            )}
+        </OrganizationLayout>
+    )
 
     function Tile({ children, className, name, id }) {
         return (
@@ -232,82 +164,6 @@ function Home({ editing, isRecruiting }) {
         );
     }
 
-    function EditArea({ children, title, description }) {
-        return (
-            <Dialog>
-                <DialogTrigger className="contents">
-                    <div className="absolute inset-0 h-full w-full flex items-center justify-center group hover:border hover:border-red-500 hover:backdrop-blur-sm transition-all">
-                        <div className="bg-gray-300/50 group-hover:bg-gray-500/90 px-3 py-2 opacity-50 group-hover:opacity-100 text-black group-hover:text-white rounded-xl flex flex-nowrap">
-                            <IconPencil /> Edit
-                        </div>
-                    </div>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>{title}</DialogTitle>
-                        <DialogDescription>{description}</DialogDescription>
-                    </DialogHeader>
-                    {children}
-                </DialogContent>
-            </Dialog>
-        );
-    }
-
-    function CoverPhoto() {
-        return (
-            <div className="max-h-[25rem] h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
-                <img
-                    src={
-                        pageData.find((page) => page.type === "coverPhoto").src
-                    }
-                    alt="Organization Cover Photo"
-                    className="w-full object-cover"
-                />
-                {editing && (
-                    <EditArea title="Set Page Cover Photo">
-                        <div>photo upload preview and shee</div>
-                    </EditArea>
-                )}
-            </div>
-        );
-    }
-
-    function OrganizationLogo() {
-        return (
-            <div className="size-36 md:size-44 rounded-[2rem] overflow-clip relative">
-                <img
-                    src={pageData.find((page) => page.type === "logo").src}
-                    alt="Organization Logo"
-                    className="size-full object-cover"
-                />
-                {editing && (
-                    <EditArea title="Set Organization Logo">
-                        <div>photo upload preview and shee</div>
-                    </EditArea>
-                )}
-            </div>
-        );
-    }
-
-    function OrganizationMetadata() {
-        return (
-            <div className="flex-1 relative">
-                <div className="text-lg inter font-extrabold">
-                    {
-                        pageData.find((page) => page.type === "metadata")
-                            .metadata.organizationName
-                    }
-                </div>
-                <div className="text-sm">
-                    {
-                        pageData.find((page) => page.type === "metadata")
-                            .metadata.members
-                    }{" "}
-                    members
-                </div>
-            </div>
-        );
-    }
 
     function AboutUs() {
         return (
@@ -447,4 +303,4 @@ function Home({ editing, isRecruiting }) {
     }
 }
 
-export default Home;
+export default Home
