@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-function Task({ id, title }) {
+function Task({ id, Component }) {
     const { attributes, listeners, setNodeRef, transform, transition } =
         useSortable({ id });
 
@@ -9,9 +9,10 @@ function Task({ id, title }) {
         transition,
         transform: CSS.Transform.toString(transform),
     };
+
     return (
         <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
-            <input type="checkbox" /> {title}
+            {Component ? <Component /> : "Default Input"}
         </div>
     );
 }
