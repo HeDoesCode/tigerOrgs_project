@@ -120,7 +120,7 @@ function Home({ editing, isRecruiting }) {
     return (
         <div className="w-full">
             <UserLayout noPadding>
-                <div>
+                <div className={editing && 'border-[3px] border-red-500'}>
                     {/* cover photo */}
                     <CoverPhoto />
                     <div className="w-full h-fit md:h-48 -mt-14 px-5 md:px-12 flex justify-between">
@@ -195,12 +195,12 @@ function Home({ editing, isRecruiting }) {
                             <PhotoScrollArea />
                         </Tile>
                     </section>
-                    {editing && (
-                        <div className="flex justify-end px-5 md:px-12 mt-6">
-                            <button className="px-3 py-2 bg-cyan-400 rounded-lg">Save Changes</button>
-                        </div>
-                    )}
                 </div>
+                {editing && (
+                    <div className="flex justify-end px-5 md:px-12 mt-6">
+                        <button className="px-3 py-2 bg-cyan-400 rounded-lg">Save Changes</button>
+                    </div>
+                )}
             </UserLayout>
         </div>
     )
