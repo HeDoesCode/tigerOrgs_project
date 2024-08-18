@@ -1,5 +1,5 @@
 import UserLayout from "@/Layouts/UserLayout"
-import { Link } from "@inertiajs/react"
+import { Head, Link } from "@inertiajs/react"
 import {
     Dialog,
     DialogContent,
@@ -22,7 +22,7 @@ import IconLinkedIn from "@/Components/Icons/Social/IconLinkedIn"
 import IconPencil from "@/Components/Icons/IconPencil"
 
 function Home({ editing, isRecruiting }) {
-    editing = false;
+    editing = true;
     isRecruiting = false;
 
     const pageData = [
@@ -122,7 +122,7 @@ function Home({ editing, isRecruiting }) {
     return (
         <div className="w-full">
             <UserLayout noPadding>
-                <div className={editing ? 'border-[5px] border-blue-500' : ''}>
+                <div>
                     {/* cover photo */}
                     <CoverPhoto />
                     <div className="w-full h-fit md:h-48 -mt-14 px-5 md:px-12 flex justify-between">
@@ -213,7 +213,7 @@ function Home({ editing, isRecruiting }) {
         return (
             <Dialog>
                 <DialogTrigger className="contents">
-                    <div className="absolute inset-0 h-full w-full flex items-center justify-center group hover:border hover:border-red-500">
+                    <div className="absolute inset-0 h-full w-full flex items-center justify-center group hover:border hover:border-red-500 hover:backdrop-blur-sm transition-all">
                         <div className="bg-gray-300/50 group-hover:bg-gray-500/90 px-3 py-2 opacity-50 group-hover:opacity-100 text-black group-hover:text-white rounded-xl flex flex-nowrap"><IconPencil /> Edit</div>
                     </div>
                 </DialogTrigger>
