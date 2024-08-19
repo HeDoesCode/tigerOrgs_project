@@ -16,7 +16,7 @@ import {
 } from "@/Components/ui/dialog";
 import OrganizationLayout from "@/Components/Organizations/OrganizationLayout";
 
-function Home({ editing = true, isRecruiting = true, pageData, pageLayoutData }) {
+function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData }) {
     pageData = [
         {
             type: "logo",
