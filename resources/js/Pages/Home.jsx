@@ -82,7 +82,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
                                 <GoogleLogo className="w-6 h-6" />
                                 Sign in with Google
                             </a>
-                            <div className="flex ml-5 w-fit px-3 py-1 rounded-lg items-center space-x-3 hover:bg-gray-300 transition-all duration-100">
+                            <div className="flex ml-4 w-fit px-3 py-1 rounded-lg items-center space-x-3 hover:bg-gray-300 transition-all duration-100">
                                 <Checkbox id='rememberme' />
                                 <label htmlFor="rememberme" className="select-none cursor-pointer">Remember me for a month</label>
                             </div>
