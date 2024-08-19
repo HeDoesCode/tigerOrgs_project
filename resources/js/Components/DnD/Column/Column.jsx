@@ -16,6 +16,7 @@ function Column({ tasks }) {
                         id={task.id}
                         key={task.id}
                         Component={task.Component}
+                        value={task.value}
                     />
                 ))}
             </SortableContext>

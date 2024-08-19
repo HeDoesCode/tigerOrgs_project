@@ -1,10 +1,20 @@
 import React from "react";
-function TextInput() {
+function TextInput({ value = "", onChange }) {
+    const handleInputChange = (e) => {
+        const newValue = e.target.value;
+        if (onChange) {
+            onChange(newValue); // Notify parent of the change
+        }
+    };
     return (
-        <div className="w-full p-4 m-1 bg-neutral-100 rounded-3xl">
+        <div
+            className="w-full p-4  bg-neutral-100 rounded-b-3xl
+
+"
+        >
             <span>
                 <div className="px-3 py-1 text-zinc-700 text-sm underline">
-                    For short texts, use Text Field
+                    Text Field
                 </div>
             </span>
 
