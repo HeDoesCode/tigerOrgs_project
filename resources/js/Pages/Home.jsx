@@ -2,6 +2,8 @@ import { Head, Link } from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout.jsx";
 import Logo from "@/Components/Logo";
 import IconSearch from "@/Components/Icons/IconSearch";
+import { Checkbox } from "@/Components/ui/checkbox"
+
 
 function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
     const hideImage = () => {
@@ -62,7 +64,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
     function GoogleModal() {
         return (
             <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[2147483647]">
-                <div className="fixed bg-white size-[25rem] border-gray-400 border rounded-xl p-2">
+                <div className="fixed bg-white w-[25rem] border-gray-400 border rounded-xl p-2">
                     {/* <form onSubmit={submit}> */}
                     <div>
                         <h1 className="p-3">
@@ -80,7 +82,10 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
                                 <GoogleLogo className="w-6 h-6" />
                                 Sign in with Google
                             </a>
-
+                            <div className="flex ml-5 w-fit px-3 py-1 rounded-lg items-center space-x-3 hover:bg-gray-300 transition-all duration-100">
+                                <Checkbox id='rememberme' />
+                                <label htmlFor="rememberme" className="select-none cursor-pointer">Remember me for a month</label>
+                            </div>
                         </div>
 
                         <div className="px-4 py-4">
@@ -89,7 +94,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
                                 Your privacy is absolutely important to us. We
                                 only use your information to enhance your
                                 experience on TigerOrgs. For more details,
-                                please read our{" "}
+                                please read our&nbsp;
                                 <button className="underline">
                                     Privacy Policy
                                 </button>
