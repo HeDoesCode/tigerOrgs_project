@@ -15,7 +15,7 @@ function Task({ id, title, Component }) {
     return (
         <div ref={setNodeRef} style={style} {...attributes}>
             <div className="drag-handle" {...listeners}>
-                ++
+                Drag Here
             </div>
             <div>
                 {Component ? <Component /> : <input type="checkbox" />}
