@@ -1,9 +1,11 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-function Task({ id, Component }) {
+function Task({ id, title, Component }) {
     const { attributes, listeners, setNodeRef, transform, transition } =
-        useSortable({ id });
+        useSortable({
+            id,
+        });
 
     const style = {
         transition,
@@ -11,8 +13,14 @@ function Task({ id, Component }) {
     };
 
     return (
-        <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
-            {Component ? <Component /> : "Default Input"}
+        <div ref={setNodeRef} style={style} {...attributes}>
+            <div className="drag-handle" {...listeners}>
+                ++
+            </div>
+            <div>
+                {Component ? <Component /> : <input type="checkbox" />}
+                {title}
+            </div>
         </div>
     );
 }
