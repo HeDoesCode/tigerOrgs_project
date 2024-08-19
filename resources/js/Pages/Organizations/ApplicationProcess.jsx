@@ -28,10 +28,10 @@ function ApplicationProcess({ pageLayoutData, pageData }) {
 
     return (
         <OrganizationLayout pageLayoutData={pageLayoutData}>
-            <div className="flex flex-col max-w-xl mx-auto mt-12 space-y-9">
+            <div className="flex flex-col max-w-xl mx-auto mt-12 space-y-9 scale-90 sm:scale-100">
                 <div className="poppins text-xl font-bold">Application Process Overview</div>
                 <div className="flex flex-col relative gap-y-5">
-                    <div className="absolute left-0 top-0 bottom-0 h-full w-20 flex justify-center py-[5%]">
+                    <div className="absolute left-0 top-0 bottom-0 h-full w-20 flex justify-center py-20">
                         <div className="h-full w-[0.15rem] bg-black"></div>
                     </div>
                     <Process icon={<IconClipboardText size='45' strokeWidth='1.3' />} title='Fill Application Form' details='Complete the application form, ensuring you read and follow all instructions.' status='done' />
@@ -40,7 +40,7 @@ function ApplicationProcess({ pageLayoutData, pageData }) {
                         <button className="px-3 py-2 bg-[#04AA6D] text-white inter font-bold text-xs rounded-lg">View Meeting Link</button>
                     </Process>
                     <Process icon={<IconCopyCheck size='45' strokeWidth='1.3' />} title='Final Review' details='Your application will undergo a final screening process.' status='fail' >
-                        <div className="px-3 py-2 bg-red-300 text-black inter font-bold text-xs rounded-lg">Unfortunately, you did not pass the final review. Thank you for your interest and effort.</div>
+                        <div className="px-3 py-2 bg-red-300 text-black inter font-bold text-xs rounded-lg text-justify">Unfortunately, you did not pass the final review. Thank you for your interest and effort.</div>
                     </Process>
                 </div>
                 <div className="w-full flex justify-center">
