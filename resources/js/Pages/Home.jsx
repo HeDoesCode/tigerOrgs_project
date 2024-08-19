@@ -73,14 +73,14 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
                             your UST Google Suite account to gain access.
                         </p>
 
-                        <div>
-                            <a
-                                href="auth/google"
+                        <div className="flex flex-col">
+                            <a href="auth/google"
                                 className="flex px-4 py-4 items-center m-4 h-11 border-zinc-400 border justify-center rounded-full bg-slate-200 text-center  text-black hover:bg-slate-300 "
                             >
                                 <GoogleLogo className="w-6 h-6" />
                                 Sign in with Google
                             </a>
+
                         </div>
 
                         <div className="px-4 py-4">

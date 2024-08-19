@@ -35,10 +35,9 @@ Route::get('organizations/{any}/home', function () {
     return Inertia::render('Organizations/Home');
 })->name('organizations.home');
 
-Route::get('/organizations/{any}/application', function () {
-    return Inertia::render('Organizations/ApplicationProcess');
-})->name('organizations.application');
-
+// Route::get('/profile', function () {
+//     return Inertia::render('Profile/Edit');
+// })->name('profile');
 
 //superadmin temporary routes
 
