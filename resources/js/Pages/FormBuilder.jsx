@@ -9,6 +9,7 @@ import SelectInput from "@/Components/ui/SelectInput";
 import RadioInput from "@/Components/ui/RadioInput";
 import CheckboxesInput from "@/Components/ui/CheckboxesInput";
 import FileUploadInput from "@/Components/ui/FileUploadInput";
+import { FormActionsContext } from "@/Components/Forms/Context/FormsAction";
 
 const inputTypes = [
     { type: "text", component: TextInput },
@@ -50,16 +51,24 @@ function FormBuilder() {
         }
     }
 
+    function handleDeleItem(id) {
+        if (!confirm("Are you sure you want to delete ${id}?")) return;
+        setItems(items.filter((item) => items.id !== id));
+    }
+
     return (
         <>
             <div className="flex flex-col justify-center bg-white m-4 p-4 max-w-xl mx-auto">
                 <h1 className="text-3xl mb-4">Form Builder test</h1>
-                <DndContext
-                    onDragEnd={handleDragEnd}
-                    collisionDetection={closestCorners}
-                >
-                    <Column tasks={tasks} />
-                </DndContext>
+                <FormActionsContext.Provider value={handleDeleItem}>
+                    <DndContext
+                        onDragEnd={handleDragEnd}
+                        collisionDetection={closestCorners}
+                    >
+                        <Column tasks={tasks} />
+                    </DndContext>
+                </FormActionsContext.Provider>
+
                 <br />
                 <br />
                 <h1>=== Input Types ===</h1>
