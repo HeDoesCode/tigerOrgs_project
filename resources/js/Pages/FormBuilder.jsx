@@ -52,8 +52,8 @@ function FormBuilder() {
 
     return (
         <>
-            <div className="flex flex-col items-center justify-center bg-white o">
-                <h1 className="text-3xl min o">Form Builder test</h1>
+            <div className="flex flex-col justify-center bg-white m-4 p-4 max-w-xl mx-auto">
+                <h1 className="text-3xl mb-4">Form Builder test</h1>
                 <DndContext
                     onDragEnd={handleDragEnd}
                     collisionDetection={closestCorners}
@@ -62,16 +62,18 @@ function FormBuilder() {
                 </DndContext>
                 <br />
                 <br />
-                <h1 className="o">=== Input Types ===</h1>
-                {inputTypes.map((input) => (
-                    <button
-                        key={input.type}
-                        style={{ display: "block" }}
-                        onClick={() => handleAddTask(input.type)}
-                    >
-                        {input.type}
-                    </button>
-                ))}
+                <h1>=== Input Types ===</h1>
+                <div className="flex items-center space-y-2">
+                    {inputTypes.map((input) => (
+                        <button
+                            key={input.type}
+                            className="bg-gray-200 px-4 py-2 border rounded hover:bg-gray-300 "
+                            onClick={() => handleAddTask(input.type)}
+                        >
+                            {input.type}
+                        </button>
+                    ))}
+                </div>
             </div>
         </>
     );
