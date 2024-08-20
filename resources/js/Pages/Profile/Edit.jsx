@@ -24,6 +24,7 @@ function Edit() {
 
     return (
         <div className="w-full">
+            <Head title="Profile" />
             <UserLayout>
                 <div className="w-full poppins text-lg md:text-xl font-bold mt-3 mb-5">
                     Manage <span className="text-[#ffb700]">Profile</span>

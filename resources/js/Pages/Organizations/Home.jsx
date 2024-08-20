@@ -15,6 +15,7 @@ import {
     DialogTrigger,
 } from "@/Components/ui/dialog";
 import OrganizationLayout from "@/Components/Organizations/OrganizationLayout";
+import { Head } from "@inertiajs/react";
 
 function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData }) {
     pageData = [
@@ -126,7 +127,7 @@ function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData 
         <OrganizationLayout pageLayoutData={pageLayoutData} isRecruiting={isRecruiting} editing={editing}>
             {/* About Us */}
             <AboutUs />
-
+            <Head title={pageData.find(data => data.type === 'metadata').metadata.organizationName} />
             <div className="w-full flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-8">
                 <div className="flex flex-col space-y-3 md:space-y-8 wfull md:w-1/2">
                     {/* Contacts and Information */}
