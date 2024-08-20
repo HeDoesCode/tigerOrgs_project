@@ -2,7 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripHorizontal } from "lucide-react";
 
-function Task({ id, title, Component }) {
+function Task({ id, title, value, numberValue, onChange, Component }) {
     const { attributes, listeners, setNodeRef, transform, transition } =
         useSortable({
             id,
@@ -22,7 +22,17 @@ function Task({ id, title, Component }) {
                 <GripHorizontal />
             </div>
             <div>
-                {Component ? <Component /> : <input type="checkbox" />}
+                {Component ? (
+                    <Component
+                        value={value}
+                        numberValue={numberValue}
+                        onChange={(newTextValue, newNumberValue) =>
+                            onChange(newTextValue, newNumberValue)
+                        }
+                    />
+                ) : (
+                    <input type="checkbox" />
+                )}
                 {title}
             </div>
         </div>

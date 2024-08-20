@@ -52,6 +52,7 @@ function FormBuilder() {
                     title: type,
                     Component: inputType.component,
                     value: "",
+                    required: false,
                 },
             ]);
         }
@@ -60,6 +61,19 @@ function FormBuilder() {
     function handleDeleItem(id) {
         if (!confirm(`Are you sure you want to delete item ${id}?`)) return;
         setTasks(tasks.filter((item) => item.id !== id));
+    }
+    function handleChange(id, newTextValue, newNumberValue) {
+        setTasks((tasks) =>
+            tasks.map((task) =>
+                task.id === id
+                    ? {
+                          ...task,
+                          value: newTextValue,
+                          numberValue: newNumberValue,
+                      }
+                    : task
+            )
+        );
     }
 
     function saveFormAsDraft() {
@@ -95,11 +109,11 @@ function FormBuilder() {
                         onDragEnd={handleDragEnd}
                         collisionDetection={closestCorners}
                     >
-                        <Column tasks={tasks} />
+                        <Column tasks={tasks} onChange={handleChange} />
                     </DndContext>
                 </FormActionsContext.Provider>
 
-                <div className="flex justify-center items-center o">
+                <div className="flex justify-center items-center ">
                     <button
                         className="bg-gray-200 m-1 px-4 py-2 rounded"
                         onClick={saveFormAsDraft}

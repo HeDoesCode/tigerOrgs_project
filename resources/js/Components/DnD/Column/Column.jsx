@@ -4,7 +4,7 @@ import {
 } from "@dnd-kit/sortable";
 import Task from "../Task/Task";
 
-function Column({ tasks }) {
+function Column({ tasks, onChange }) {
     return (
         <div>
             <SortableContext
@@ -17,6 +17,10 @@ function Column({ tasks }) {
                         key={task.id}
                         Component={task.Component}
                         value={task.value}
+                        numberValue={task.numberValue}
+                        onChange={(newTextValue, newNumberValue) =>
+                            onChange(task.id, newTextValue, newNumberValue)
+                        }
                     />
                 ))}
             </SortableContext>

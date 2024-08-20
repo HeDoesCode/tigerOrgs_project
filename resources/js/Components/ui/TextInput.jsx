@@ -3,7 +3,7 @@ function TextInput({ value = "", onChange }) {
     const handleInputChange = (e) => {
         const newValue = e.target.value;
         if (onChange) {
-            onChange(newValue); // Notify parent of the change
+            onChange(newValue);
         }
     };
     return (
@@ -22,6 +22,8 @@ function TextInput({ value = "", onChange }) {
                 className="w-full bg-transparent rounded-2xl border-1 border-x-stone-600"
                 type="text"
                 placeholder="Question here..."
+                value={value}
+                onChange={handleInputChange}
             />
             <br />
             <div className="p-4 m-1 text-zinc-700">Answer texts .....</div>
