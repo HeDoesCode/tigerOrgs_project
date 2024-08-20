@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function SelectInput({ value = "", onChange }) {
+function SelectInput({ value }) {
     const [options, setOptions] = useState([
         "Option 1",
         "Option 2",
