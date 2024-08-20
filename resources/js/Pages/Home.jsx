@@ -6,7 +6,7 @@ import { Checkbox } from "@/Components/ui/checkbox"
 import Policy from "@/Components/ui/Custom/Policy";
 
 
-function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
+function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = true }) {
     const hideImage = () => {
         this.style.display = "none";
     };
@@ -62,7 +62,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
                 {isLoggedIn || <GoogleModal />}
                 {isNewUser && (
                     <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[2147483647]">
-                        <div className="inter fixed bg-white mx-5 max-w-[40rem] max-h-[80vh] overflow-y-auto border-gray-400 border rounded-xl p-10 space-y-5">
+                        <div className="inter fixed bg-white mx-5 max-w-[40rem] max-h-[80vh] overflow-y-auto border-gray-400 border rounded-xl p-5 sm:p-10 space-y-5">
                             <Policy>
                                 <Policy.Title>
                                     Terms and Conditions Policy
@@ -98,6 +98,10 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
                                     </Policy.Number>
                                 </Policy.Content>
                             </Policy>
+                            <div className="pt-7 flex items-end justify-center sm:justify-end space-x-2 sm:space-x-4">
+                                <button className="px-6 py-1 border border-black text-xs sm:text-base rounded-lg hover:bg-black/10">Decline</button>
+                                <button onClick={() => isNewUser = false} className="px-6 py-1 bg-[#FFBC11] text-xs sm:text-base rounded-lg hover:bg-[#ebb222]">Accept</button>
+                            </div>
                         </div>
                     </div>
                 )}

@@ -30,9 +30,10 @@ Policy.Paragraph = ({ children }) => {
 
 Policy.Number = ({ number, title, children }) => {
     return (
-        <div className="flex flex-col space-y-1">
-            <div className="font-bold relative">{number}.
-                <div className="absolute left-4 top-0">{title}</div>
+        <div className="flex flex-col">
+            <div className="font-bold relative mb-1">
+                <div className="absolute">{number}.</div>
+                <div className="pl-4 top-0">{title}</div>
             </div>
             <div className='pl-4 space-y-1'>{children}</div>
         </div>
