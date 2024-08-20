@@ -57,7 +57,7 @@ function AdminLayout({ children }) {
                         </div>
                     </p>
                 </div>
-                <nav className="flex-1 flex flex-col space-y-3 m-2 transition-all group-hover:mr-0 ease-in-out duration-300">
+                <nav className="flex-1 flex flex-col space-y-3 ml-2 my-2 transition-all group-hover:mr-0 ease-in-out duration-300">
                     <SideBarLink
                         icon={<IconFolderCog size="100%" />}
                         href={route("admin.editpage")}
@@ -83,14 +83,10 @@ function AdminLayout({ children }) {
 
         function SideBarLink({ icon, href, desc, current }) {
             return (
-                <div
-                    className={`flex pl-[0.6rem] transition-all ease-in-out duration-300 p-2 group-hover:pl-5 group-hover:rounded-r-none rounded-full ${(current && "bg-[#FFBC58]") ||
-                        "hover:bg-gray-800 hover:text-white"
-                        }`}
-                >
-                    <Link className="contents" href={href}>
+                <div className='flex'>
+                    <Link className={`flex items-center py-2 pl-3 rounded-l-full overflow-x-clip w-full ${(current && "bg-[#FFBC58]") || "hover:bg-gray-800 hover:text-white"}`} href={href}>
                         <div className="min-h-7 min-w-7 size-7">{icon}</div>
-                        <div className="text-left pl-3 poppins text-lg overflow-hidden h-min my-auto w-full">
+                        <div className="text-left poppins text-lg overflow-hidden h-min w-full invisible group-hover:visible ml-3 transition-all">
                             {desc}
                         </div>
                     </Link>
