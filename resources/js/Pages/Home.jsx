@@ -6,7 +6,7 @@ import { Checkbox } from "@/Components/ui/checkbox"
 import Policy from "@/Components/ui/Custom/Policy";
 
 
-function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = true }) {
+function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
     const hideImage = () => {
         this.style.display = "none";
     };
@@ -100,7 +100,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = true }) {
                             </Policy>
                             <div className="pt-7 flex items-end justify-center sm:justify-end space-x-2 sm:space-x-4">
                                 <button className="px-6 py-1 border border-black text-xs sm:text-base rounded-lg hover:bg-black/10">Decline</button>
-                                <button onClick={() => isNewUser = false} className="px-6 py-1 bg-[#FFBC11] text-xs sm:text-base rounded-lg hover:bg-[#ebb222]">Accept</button>
+                                <button className="px-6 py-1 bg-[#FFBC11] text-xs sm:text-base rounded-lg hover:bg-[#ebb222]">Accept</button>
                             </div>
                         </div>
                     </div>
