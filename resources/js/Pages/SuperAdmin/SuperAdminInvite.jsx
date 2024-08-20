@@ -7,6 +7,7 @@ import IconDotsVertical from "@/Components/Icons/IconDotsVertical";
 import VerticalCard from "@/Components/VerticalCard";
 import AdminButton from "@/Components/Admin/AdminButton";
 import IconBellFilled from "@/Components/Icons/IconBellFilled";
+import DotsVertical from "@/Components/DotsVertical";
 
 function SuperAdminInvite() {
     return (
@@ -59,11 +60,7 @@ function SuperAdminInvite() {
                                         Assigned to 1 Org
                                     </h1>
                                 </div>
-                                <div className="col-span-1 flex justify-center">
-                                    <div className="hover:bg-[#EEEEEE]  rounded-full">
-                                        <IconDotsVertical />
-                                    </div>
-                                </div>
+                                <DotsVertical />
                             </VerticalCard>
                         </div>
                     </div>
