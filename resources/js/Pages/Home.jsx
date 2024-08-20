@@ -108,7 +108,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
     function GoogleModal() {
         return (
             <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[2147483647]">
-                <div className="fixed bg-white w-[25rem] border-gray-400 border rounded-xl p-2">
+                <div className="bg-white w-[25rem] max-w-[25rem] max-h-[80vh] border-gray-400 border rounded-xl p-2 mx-5">
                     {/* <form onSubmit={submit}> */}
                     <div>
                         <h1 className="p-3">
@@ -128,7 +128,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
                             </a>
                             <div className="flex ml-4 w-fit px-3 py-1 rounded-lg items-center space-x-3 hover:bg-gray-300 transition-all duration-100">
                                 <Checkbox id='rememberme' />
-                                <label htmlFor="rememberme" className="select-none cursor-pointer">Remember me for a month</label>
+                                <label htmlFor="rememberme" className="select-none cursor-pointer">Remember Me</label>
                             </div>
                         </div>
 
