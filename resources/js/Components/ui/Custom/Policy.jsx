@@ -24,7 +24,7 @@ Policy.Content = ({ children }) => {
 
 Policy.Paragraph = ({ children }) => {
     return (
-        <p>{children}</p>
+        <p className="text-justify">{children}</p>
     )
 }
 
@@ -35,7 +35,7 @@ Policy.Number = ({ number, title, children }) => {
                 <div className="absolute">{number}.</div>
                 <div className="pl-4 top-0">{title}</div>
             </div>
-            <div className='pl-4 space-y-1'>{children}</div>
+            <div className='pl-4 space-y-1 text-justify'>{children}</div>
         </div>
     )
 }
