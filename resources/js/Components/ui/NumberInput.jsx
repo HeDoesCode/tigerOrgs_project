@@ -8,7 +8,7 @@ function NumberInput({ value = "", numberValue = "", onChange }) {
         const newValue = e.target.value;
         setText(newValue);
         if (onChange) {
-            onChange(newValue, number); // Notify parent of the text change
+            onChange(newValue, number);
         }
     };
 
@@ -16,7 +16,7 @@ function NumberInput({ value = "", numberValue = "", onChange }) {
         const newNumber = e.target.value;
         setNumber(newNumber);
         if (onChange) {
-            onChange(text, newNumber); // Notify parent of the number change
+            onChange(text, newNumber);
         }
     };
 
