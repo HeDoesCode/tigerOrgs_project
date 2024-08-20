@@ -9,6 +9,7 @@ import IconList from "@/Components/Icons/IconList";
 import IconHistory from "@/Components/Icons/IconHistory";
 import IconFolderCog from "@/Components/Icons/IconFolderCog";
 import IconOrg from "@/Components/Icons/IconOrg";
+import SideBar from "@/Components/ui/Custom/SideBar";
 
 function AdminLayout({ children }) {
     const { url } = usePage();
@@ -35,7 +36,7 @@ function AdminLayout({ children }) {
     function SideBarContent() {
         return (
             <div
-                className={`border-gray-300 border-r-[1px] fixed -left-16 hover:left-0 sm:left-0 top-0 bottom-0 min-w-16 w-0 sm:w-16 max-w-52 flex flex-col justify-center bg-[#EEEEEE] transition-all ease-in-out duration-300 group hover:w-52 hover:bg-[#FEFEFE] overflow-clip`}
+                className='border-gray-300 border-r-[1px] fixed -left-16 hover:left-0 sm:left-0 top-0 bottom-0 min-w-16 w-0 sm:w-16 max-w-52 flex flex-col justify-center bg-[#EEEEEE] transition-all ease-in-out duration-300 group hover:w-52 hover:bg-[#FEFEFE] overflow-clip'
             >
                 <button className="fixed size-16 left-0 top-0 flex sm:hidden items-center justify-center cursor-default">
                     <IconMenu3 size="27" />
@@ -51,10 +52,10 @@ function AdminLayout({ children }) {
                         />
                     </div>
                     <p className="text-center mr-3 font-bold text-xs leading-4 line-clamp-3 h-min my-auto w-32 overflow-clip">
-                        <div className="w-32 min-w-32">
+                        <span className="w-32 min-w-32">
                             Placeholder Society of Information Technology
                             Enthusiasts (SITE)
-                        </div>
+                        </span>
                     </p>
                 </div>
                 <nav className="flex-1 flex flex-col space-y-3 ml-2 my-2 transition-all group-hover:mr-0 ease-in-out duration-300">
