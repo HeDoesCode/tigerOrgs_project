@@ -15,7 +15,7 @@ function AdminDropdownMenu({ triggerContent, dropdownItems, title, onSelect }) {
                 <DropdownMenuLabel className="poppins">
                     {title}
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-gray-300 mx-2" />
 
                 {dropdownItems.map((item, index) => (
                     <DropdownMenuItem
