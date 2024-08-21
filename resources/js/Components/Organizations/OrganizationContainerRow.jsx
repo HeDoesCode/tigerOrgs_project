@@ -16,12 +16,12 @@ function OrganizationContainerRow({ children, title, className }) {
                     </button>
                 </div>
             </div>
-            <div className={!expand ?
-                (
-                    'flex flex-row space-x-2 w-full overflow-x-auto overflow-y-hidden'
-                ) :
+            <div className={expand ?
                 (
                     'w-full select-none max-h-full overflow-y-hidden overflow-x-hidden grid grid-cols-[repeat(auto-fill,_minmax(9rem,1fr))] md:grid-cols-[repeat(auto-fill,_minmax(12rem,1fr))] gap-4 justify-items-center border border-gray-400 rounded-lg'
+                ) :
+                (
+                    'flex flex-row space-x-2 w-full overflow-x-auto overflow-y-hidden'
                 )
             }>
                 {children}
