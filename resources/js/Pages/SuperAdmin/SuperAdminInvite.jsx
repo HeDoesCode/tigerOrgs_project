@@ -8,6 +8,16 @@ import VerticalCard from "@/Components/VerticalCard";
 import AdminButton from "@/Components/Admin/AdminButton";
 import IconBellFilled from "@/Components/Icons/IconBellFilled";
 import DotsVertical from "@/Components/DotsVertical";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogClose,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/Components/ui/dialog";
+import Searchbar from "@/Components/Searchbar";
 
 function SuperAdminInvite() {
     return (
@@ -31,11 +41,45 @@ function SuperAdminInvite() {
                 >
                     <div>
                         <div className="flex justify-end me-5 mt-5">
-                            <AdminButton
-                                className="mr-2 bg-white hover:bg-gray-800 hover:text-white"
-                                icon={<IconInvite />}
-                                name="Assign"
-                            />
+                            <Dialog>
+                                <DialogTrigger>
+                                    <AdminButton
+                                        className="mr-2 bg-white hover:bg-gray-800 hover:text-white"
+                                        icon={<IconInvite />}
+                                        name="Assign"
+                                    />
+                                </DialogTrigger>
+                                <DialogContent className="w-80 sm:min-w-[800px]">
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            Assign Role for Student
+                                        </DialogTitle>
+                                        <DialogDescription>
+                                            Search for a student and assign them
+                                            to be the administrator of their
+                                            organization.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <Searchbar />
+                                    <div>
+                                        <VerticalCard gridcol="grid-cols-4">
+                                            <div className="text-sm font-bold content-center text-center">
+                                                Laurence Arvin Arcilla
+                                            </div>
+                                            <div className="truncate col-span-2 content-center text-sm font-semibold text-center">
+                                                laurencearvin.arcilla.cics@ust.edu.ph
+                                            </div>
+                                            <div className="sm px-4 text-sm content-center ">
+                                                <AdminButton
+                                                    className="mr-2 bg-white hover:bg-gray-800 hover:text-white"
+                                                    icon={<IconInvite />}
+                                                    name="Assign"
+                                                />
+                                            </div>
+                                        </VerticalCard>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
                         </div>
                         <div className="grid grid-rows-1 p-5 gap-2">
                             <VerticalCard gridcol="md:grid-cols-12">
