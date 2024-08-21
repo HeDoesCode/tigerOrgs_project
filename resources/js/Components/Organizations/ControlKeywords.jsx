@@ -10,11 +10,11 @@ import {
 
 import { Button } from "@/Components/ui/button"
 
-function ControlKeywords({ keywordList }) {
+function ControlKeywords({ keywordList, className }) {
     // keywordList = 1;
     // const availableKeywordsList = { 'test1', 'test2', 'test3', 'test4', 'test5', 'test6'};
     return (
-        <div className="w-full flex flex-wrap gap-2 max-h-20 min-h-10 border-[1px] rounded-md border-gray-500 p-2 relative text-xs overflow-clip group">
+        <div className={`w-full flex flex-wrap gap-2 max-h-20 min-h-10 border-[1px] rounded-md border-gray-500 p-2 relative text-xs overflow-clip group ${className}`}>
             <Dialog>
                 <DialogTrigger className="absolute size-full inset-0">
                     <div className="size-full flex items-center justify-center invisible group-hover:visible group-hover:!bg-gray-800 text-black/0 group-hover:!text-white transition-all duration-200 ease-in-out">

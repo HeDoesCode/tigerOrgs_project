@@ -10,16 +10,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
-import IconFacebookRoundFilled from "@/Components/Icons/IconFacebookRoundFilled";
-import IconInstagram from "@/Components/Icons/IconInstagram";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs"
 
-function UserLayout({ children, bgImage }) {
+
+function UserLayout({ children, bgImage, noPadding }) {
     const footer_minHeight = "";
     const { url } = usePage();
     const routePath = (routeName) => new URL(route(routeName)).pathname;
 
     return (
-        <Layout headerContent={<HeaderContent />} bgImage={bgImage} footer>
+        <Layout headerContent={<HeaderContent />} bgImage={bgImage} noPadding={noPadding} footer>
             {children}
         </Layout>
     );
@@ -37,11 +37,10 @@ function UserLayout({ children, bgImage }) {
                         }
                     >
                         <Link
-                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl ${
-                                url === routePath("dashboard")
-                                    ? "text-[#ffbb10] hover:text-[#E7A600]"
-                                    : ""
-                            }`}
+                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl ${url === routePath("dashboard")
+                                ? "text-[#ffbb10] hover:text-[#E7A600]"
+                                : ""
+                                }`}
                             href={route("dashboard")}
                         >
                             Home
@@ -56,18 +55,17 @@ function UserLayout({ children, bgImage }) {
                         }
                     >
                         <Link
-                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl outline-none ${
-                                url === routePath("organizations")
-                                    ? "text-[#ffbb10]"
-                                    : ""
-                            }`}
+                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl outline-none ${url === routePath("organizations")
+                                ? "text-[#ffbb10]"
+                                : ""
+                                }`}
                             href={route("organizations")}
                         >
                             Organizations
                         </Link>
                     </li>
 
-                    <li
+                    {/* <li
                         className={
                             url === "put the status route here"
                                 ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
@@ -77,15 +75,28 @@ function UserLayout({ children, bgImage }) {
                         <HeaderDropdownMenu
                             triggerContent={"Status"}
                             dropdownContent={
-                                <>
-                                    <div>appplication 1</div>
-                                    <div>appplication 1</div>
-                                    <div>appplication 1</div>
-                                    <div>appplication 1</div>
-                                </>
+                                // <>
+                                //     <div>appplication 1</div>
+                                //     <div>appplication 1</div>
+                                //     <div>appplication 1</div>
+                                //     <div>appplication 1</div>
+                                // </>
+                                <div className="oc w-72">
+                                    <div>Application Status</div>
+                                    <div className="flex flex-col">
+                                        <div className="flex items-start">
+                                            <div className="size-16 flex items-center justify-center">icon</div>
+                                            <div className="flex flex-col">
+                                                <div>title</div>
+                                                <div>details</div>
+                                                <div>buttons</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             }
                         />
-                    </li>
+                    </li> */}
                     <li className="flex items-center">
                         <div className="w-0 border-gray-400 border-r-[1px] h-5"></div>
                     </li>
@@ -100,23 +111,21 @@ function UserLayout({ children, bgImage }) {
                                     <IconProfile />
                                 </div>
                             }
-                            dropdownContent={
-                                <>
-                                    <DDM_Link href="#profilepage">
-                                        <IconProfile />
-                                        <span>Profile</span>
-                                    </DDM_Link>
-                                    <DDM_Link
-                                        href={route("logout")}
-                                        method="post"
-                                        as="button"
-                                    >
-                                        <IconExit />
-                                        <span>Logout</span>
-                                    </DDM_Link>
-                                </>
-                            }
-                        />
+                        >
+                            <DDM_Link href={route('profile.edit')}>
+                                <IconProfile />
+                                <span>Profile</span>
+                            </DDM_Link>
+                            <DDM_Link
+                                href={route("logout")}
+                                method="post"
+                                as="button"
+                            >
+                                <IconExit />
+                                <span>Logout</span>
+                            </DDM_Link>
+
+                        </HeaderDropdownMenu>
                     </li>
                     {/* <IconExit /> */}
                 </ul>
@@ -145,7 +154,7 @@ function UserLayout({ children, bgImage }) {
                                 <div className="px-3">
                                     <DropdownMenuSeparator className="bg-gray-400" />
                                 </div>
-                                <DDM_Link href="#profilepage">
+                                <DDM_Link href={route('profile.edit')}>
                                     <IconProfile />
                                     <span>Profile</span>
                                 </DDM_Link>
@@ -168,14 +177,13 @@ function UserLayout({ children, bgImage }) {
             return (
                 <Link
                     href={href}
-                    method="post"
-                    as="button"
-                    className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${
-                        current
-                            ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
-                            : "hover:text-white"
-                    } ${className}`}
-                    onClick={onClick}
+                    // method="post"
+                    // as="button"
+                    className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${current
+                        ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
+                        : "hover:text-white"
+                        } ${className}`}
+                // onClick={onClick}
                 >
                     {children}
                 </Link>
@@ -185,16 +193,160 @@ function UserLayout({ children, bgImage }) {
         function Notifications({ count }) {
             return (
                 <HeaderDropdownMenu
-                    triggerContent={<NotificationsIcon count="25" size="24" />}
-                    dropdownContent={
-                        <>
-                            <div>notif 1</div>
-                            <div>notif 1</div>
-                            <div>notif 1</div>
-                            <div>notif 1</div>
-                        </>
-                    }
-                />
+                    triggerContent={<NotificationsIcon count={12 + 15} size="24" />}
+                >
+                    <Tabs defaultValue="notifications" className="w-96">
+                        <TabsList className='flex items-center'>
+                            <TabsTrigger value="notifications" className='data-[state=active]:bg-gray-800 data-[state=active]:text-white rounded-lg'>
+                                <div className="relative">
+                                    Notifications
+                                    <span className="absolute -right-3 -top-1 text-[0.6rem] rounded-full bg-red-600 size-4 flex justify-center items-center text-white font-normal">
+                                        12
+                                    </span>
+                                </div>
+                            </TabsTrigger>
+                            <TabsTrigger value="applications" className='data-[state=active]:bg-gray-800 data-[state=active]:text-white rounded-lg'>
+                                <div className="relative">
+                                    Applications
+                                    <span className="absolute -right-3 -top-1 text-[0.6rem] rounded-full bg-red-600 size-4 flex justify-center items-center text-white font-normal">
+                                        15
+                                    </span>
+                                </div>
+                            </TabsTrigger>
+                        </TabsList>
+                        <div className="px-2">
+                            <TabsContent value="notifications">
+                                <div className="flex flex-col space-y-3 max-h-[20rem] overflow-y-auto">
+                                    <div className="flex space-x-3">
+                                        <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
+                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                                alt=""
+                                                className="size-full object-cover" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center">
+                                                <div className="font-bold">TomasinoWeb</div>
+                                                <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">2 days ago</div>
+                                            </div>
+                                            <div className="poppins text-sm font-light mt-1">Mark Doe invites you as Admin for TomasinoWeb.</div>
+                                            <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
+                                                <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">Accept</div>
+                                                <div className="px-8 py-2 bg-[#F44336] font-semibold rounded-full">Decline</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex space-x-3">
+                                        <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
+                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                                alt=""
+                                                className="size-full object-cover" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center">
+                                                <div className="font-bold">TomasinoWeb</div>
+                                                <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">2 days ago</div>
+                                            </div>
+                                            <div className="poppins text-sm font-light mt-1">Mark Doe invites you as Admin for TomasinoWeb.</div>
+                                            <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
+                                                <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">Accept</div>
+                                                <div className="px-8 py-2 bg-[#F44336] font-semibold rounded-full">Decline</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex space-x-3">
+                                        <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
+                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                                alt=""
+                                                className="size-full object-cover" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center">
+                                                <div className="font-bold">TomasinoWeb</div>
+                                                <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">2 days ago</div>
+                                            </div>
+                                            <div className="poppins text-sm font-light mt-1">Mark Doe invites you as Admin for TomasinoWeb.</div>
+                                            <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
+                                                <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">Accept</div>
+                                                <div className="px-8 py-2 bg-[#F44336] font-semibold rounded-full">Decline</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex space-x-3">
+                                        <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
+                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                                alt=""
+                                                className="size-full object-cover" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center">
+                                                <div className="font-bold">TomasinoWeb</div>
+                                                <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">2 days ago</div>
+                                            </div>
+                                            <div className="poppins text-sm font-light mt-1">Mark Doe invites you as Admin for TomasinoWeb.</div>
+                                            <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
+                                                <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">Accept</div>
+                                                <div className="px-8 py-2 bg-[#F44336] font-semibold rounded-full">Decline</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="applications">
+                                <div className="flex flex-col space-y-3 max-h-[20rem] overflow-y-auto">
+                                    <div className="flex space-x-3">
+                                        <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
+                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                                alt=""
+                                                className="size-full object-cover" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center">
+                                                <div className="font-bold">TomasinoWeb</div>
+                                                <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">2 days ago</div>
+                                            </div>
+                                            <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
+                                                <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">View</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex space-x-3">
+                                        <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
+                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                                alt=""
+                                                className="size-full object-cover" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center">
+                                                <div className="font-bold">TomasinoWeb</div>
+                                                <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">2 days ago</div>
+                                            </div>
+                                            <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
+                                                <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">View</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex space-x-3">
+                                        <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
+                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                                alt=""
+                                                className="size-full object-cover" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center">
+                                                <div className="font-bold">TomasinoWeb</div>
+                                                <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">2 days ago</div>
+                                            </div>
+                                            <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
+                                                <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">View</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </TabsContent>
+                        </div>
+                    </Tabs>
+                </HeaderDropdownMenu>
             );
 
             function NotificationsIcon({ size, count }) {
@@ -209,14 +361,14 @@ function UserLayout({ children, bgImage }) {
             }
         }
 
-        function HeaderDropdownMenu({ triggerContent, dropdownContent }) {
+        function HeaderDropdownMenu({ triggerContent, children }) {
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger className="flex items-center p-3 -m-3 hover:bg-gray-800 hover:text-white rounded-xl outline-none">
                         {triggerContent}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-[#f8f8f8] border-gray-300 flex flex-col justify-center space-y-2 p-2">
-                        {dropdownContent}
+                        {children}
                     </DropdownMenuContent>
                 </DropdownMenu>
             );

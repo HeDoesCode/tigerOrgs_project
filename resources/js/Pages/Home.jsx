@@ -2,8 +2,11 @@ import { Head, Link } from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout.jsx";
 import Logo from "@/Components/Logo";
 import IconSearch from "@/Components/Icons/IconSearch";
+import { Checkbox } from "@/Components/ui/checkbox"
+import Policy from "@/Components/ui/Custom/Policy";
 
-function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
+
+function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
     const hideImage = () => {
         this.style.display = "none";
     };
@@ -32,7 +35,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
                         />
                         <div className="flex w-full max-w-lg h-14 relative">
                             <div className="absolute h-full hidden sm:flex items-center justify-center text-gray-500 w-20">
-                                <IconSearch size={"22"} />
+                                <IconSearch size="22" />
                             </div>
                             <input
                                 type="text"
@@ -41,12 +44,14 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
                             />
                             <button className="rounded-r-full h-auto flex items-center justify-center min-w-12 w-24 bg-[#FFCD12] border-gray-400 border-r-[1px] border-y-[1px] border-l-0 nunito font-bold">
                                 <span className="hidden sm:inline">Search</span>
-                                <span className="inline sm:hidden"><IconSearch size={"22"} /></span>
+                                <span className="inline sm:hidden">
+                                    <IconSearch size={"22"} />
+                                </span>
                             </button>
                         </div>
                         <Link
                             href={route("organizations")}
-                            className="bg-[#FFE6C1] bg-opacity-50 mt-8 sm:mt-12 p-4 sm:p-5 rounded-2xl border-[3px] border-[#FFCD12] nunito font-extrabold text-sm sm:text-xl shadow-md shadow-gray-500"
+                            className="hover:scale-[1.06] transition-all duration-300 ease-in-out bg-[#FFE6C1] bg-opacity-50 mt-8 sm:mt-12 p-4 sm:p-5 rounded-2xl border-[3px] border-[#FFCD12] nunito font-extrabold text-sm sm:text-xl shadow-md shadow-gray-500"
                         >
                             Browse Organizations
                         </Link>
@@ -55,6 +60,54 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
             </UserLayout>
             <div className="relative">
                 {isLoggedIn || <GoogleModal />}
+                {isNewUser && (
+                    <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[2147483647]">
+                        <div className="inter fixed bg-white mx-5 max-w-[40rem]  border-gray-400 border rounded-xl p-5 sm:p-10 space-y-5">
+                            <div className="overflow-y-auto max-h-[70vh] pr-2 w-full">
+                                <Policy>
+                                    <Policy.Title>
+                                        Terms and Conditions Policy
+                                    </Policy.Title>
+                                    <Policy.Content>
+                                        <Policy.Paragraph>
+                                            Welcome to TigerOrgs! By accessing or using our platform, you agree to comply with and be bound by the following terms and conditions. Please read them  carefully.
+                                        </Policy.Paragraph>
+                                        <Policy.Number number='1' title='Acceptance of Terms'>
+                                            By registering, accessing, or using TigerOrgs, you agree to be bound by these Terms and Conditions and our Privacy Policy. If you do not agree with any part of these terms, you should not use the platform.
+                                        </Policy.Number>
+                                        <Policy.Number number='2' title='Eligibility'>
+                                            TigerOrgs is exclusively for students, staff, and affiliated personnel of the University of Santo Tomas (UST). By using the platform, you confirm that you are a current member of the UST community and have a valid UST Gmail account.
+                                        </Policy.Number>
+                                        <Policy.Number number='3' title='User Registration and Accounts'>
+                                            <Policy.Bullet>
+                                                Account Creation: You must register using your UST Gmail account. You are responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account.
+                                            </Policy.Bullet>
+                                            <Policy.Bullet>
+                                                First-Time Users: If you are a first-time user, you will be prompted to complete the registration process, including providing accurate and up-to-date information.
+                                            </Policy.Bullet>
+                                        </Policy.Number>
+                                        <Policy.Number number='4' title='Use of the Platform'>
+                                            <Policy.Bullet>
+                                                Content and Conduct: You agree to use TigerOrgs only for lawful purposes and in a way that does not infringe the rights of others or restrict their use and enjoyment of the platform.
+                                            </Policy.Bullet>
+                                            <Policy.Bullet>
+                                                Prohibited Activities: You must not misuse the platform by introducing viruses, trojans, or other harmful material or by attempting to gain unauthorized access to any part of the platform.
+                                            </Policy.Bullet>
+                                        </Policy.Number>
+                                        <Policy.Number number='5' title='Policy'>
+                                            Your use of the platform is also governed by our Privacy Policy, which details how we collect, use, and protect your personal information.
+                                        </Policy.Number>
+                                    </Policy.Content>
+                                </Policy>
+                                <div className="pt-7 flex items-end justify-center sm:justify-end space-x-2 sm:space-x-4">
+                                    <button className="px-6 py-1 border border-black text-xs sm:text-base rounded-lg hover:bg-black/10">Decline</button>
+                                    <button className="px-6 py-1 bg-[#FFBC11] text-xs sm:text-base rounded-lg hover:bg-[#ebb222]">Accept</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -62,7 +115,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
     function GoogleModal() {
         return (
             <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[2147483647]">
-                <div className="fixed bg-white size-[25rem] border-gray-400 border rounded-xl p-2">
+                <div className="bg-white w-[25rem] max-w-[25rem] max-h-[80vh] border-gray-400 border rounded-xl p-2 mx-5">
                     {/* <form onSubmit={submit}> */}
                     <div>
                         <h1 className="p-3">
@@ -73,14 +126,17 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
                             your UST Google Suite account to gain access.
                         </p>
 
-                        <div>
-                            <a
-                                href="auth/google"
+                        <div className="flex flex-col">
+                            <a href="auth/google"
                                 className="flex px-4 py-4 items-center m-4 h-11 border-zinc-400 border justify-center rounded-full bg-slate-200 text-center  text-black hover:bg-slate-300 "
                             >
                                 <GoogleLogo className="w-6 h-6" />
                                 Sign in with Google
                             </a>
+                            <div className="flex ml-4 w-fit px-3 py-1 rounded-lg items-center space-x-3 hover:bg-gray-300 transition-all duration-100">
+                                <Checkbox id='rememberme' />
+                                <label htmlFor="rememberme" className="select-none cursor-pointer">Remember Me</label>
+                            </div>
                         </div>
 
                         <div className="px-4 py-4">
@@ -89,7 +145,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn }) {
                                 Your privacy is absolutely important to us. We
                                 only use your information to enhance your
                                 experience on TigerOrgs. For more details,
-                                please read our{" "}
+                                please read our&nbsp;
                                 <button className="underline">
                                     Privacy Policy
                                 </button>

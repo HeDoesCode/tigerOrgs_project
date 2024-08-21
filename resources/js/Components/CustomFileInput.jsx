@@ -13,7 +13,7 @@ function CustomFileInput({ handleFileChange, fileType }) {
     };
 
     return (
-        <div className="flex items-center mt-2">
+        <div className="flex items-center mt-2 hover:scale-[1.01] transition-all duration-300 ease-in-out">
             <label className="cursor-pointer w-full flex items-center justify-between rounded-xl bg-[#D9D9D9] text-black px-4 py-2 shadow-md">
                 <span>Upload New {fileType}</span>
                 <IconFile />

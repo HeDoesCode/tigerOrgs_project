@@ -2,10 +2,12 @@ function AdminButton({ onClick, icon, name, className }) {
     return (
         <button
             onClick={onClick}
-            className={`flex px-9 py-1  rounded-2xl  ${className}`}
+            className={`flex px-9 py-1 shadow-lg rounded-2xl   ${className}`}
         >
             {icon}
-            <span className="ml-2">{name}</span>
+            <span className="ml-2 poppins hidden truncate sm:block">
+                {name}
+            </span>
         </button>
     );
 }

@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\FormBuilderController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -25,6 +23,7 @@ Route::get('/', function () {
 //     return Inertia::render('Organizations/Organizations');
 // })->name('organizations');
 
+// temp user routes
 Route::middleware('auth')->group(function () {
     Route::get('/organizations', function () {
         return Inertia::render('Organizations/Organizations');
@@ -32,37 +31,58 @@ Route::middleware('auth')->group(function () {
     // other user-level routes
 });
 
+Route::get('organizations/{any}/home', function () {
+    return Inertia::render('Organizations/Home');
+})->name('organizations.home');
+
+// Route::get('/profile', function () {
+//     return Inertia::render('Profile/Edit');
+// })->name('profile');
+
 //superadmin temporary routes
 
-Route::get('/superadmin/status', function (){
+Route::get('/superadmin/status', function () {
     return Inertia::render('SuperAdmin/SuperAdminManage');
 })->name('superadmin.status');
 
-Route::get('/superadmin/invite', function (){
+Route::get('/superadmin/invite', function () {
     return Inertia::render('SuperAdmin/SuperAdminInvite');
 })->name('superadmin.invite');
 
-Route::get('/superadmin/loginhistory', function (){
+Route::get('/superadmin/loginhistory', function () {
     return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
 })->name('superadmin.loginhistory');
 
-Route::get('/superadmin/invitehistory', function (){
+Route::get('/superadmin/invitehistory', function () {
     return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
 })->name('superadmin.invitehistory');
 
-Route::get('/superadmin/dataupload', function (){
+Route::get('/superadmin/dataupload', function () {
     return Inertia::render('SuperAdmin/SuperAdminDataUpload');
 })->name('superadmin.dataupload');
 
+
+
 //admin temporary routes
-Route::get('/admin/editpage', function (){
+Route::get('/admin/editpage', function () {
     return Inertia::render('Admin/AdminEditPage');
 })->name('admin.editpage');
 
-Route::get('/admin/invite', function (){
+Route::get('/admin/invite', function () {
     return Inertia::render('Admin/AdminInvite');
 })->name('admin.invite');
 
+Route::get('/admin/applications', function () {
+    return Inertia::render('Admin/AdminManageApplication');
+})->name('admin.applications');
+
+Route::get('/admin/forms', function () {
+    return Inertia::render('Admin/AdminManageForms');
+})->name('admin.forms');
+
+Route::get('/admin/formshistory', function () {
+    return Inertia::render('Admin/AdminFormHistory');
+})->name('admin.formhistory');
 
 
 
@@ -72,8 +92,8 @@ Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback'])
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // Route::get('/form-builder', [FormBuilderController::class], 'show')->name('formbuilder');

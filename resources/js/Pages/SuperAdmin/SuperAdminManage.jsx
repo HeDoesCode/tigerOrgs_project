@@ -6,6 +6,8 @@ import MainAdminFrame from "@/Components/MainAdminFrame";
 import IconSave from "@/Components/Icons/IconSave";
 import IconCancel from "@/Components/Icons/IconCancel";
 
+import ControlContainer from "@/Components/Organizations/ControlContainer";
+
 import IconEdit from "@/Components/Icons/IconEdit";
 import { useState } from "react";
 import AdminButton from "@/Components/Admin/AdminButton";
@@ -49,12 +51,13 @@ export default function SuperAdminManage() {
                             link: "superadmin.invite",
                         },
                     ]}
+                    title="Recruitment Enabled"
                 >
                     <div className="w-full">
                         <div className=" flex justify-end mt-5 me-5">
                             {edit ? (
                                 <AdminButton
-                                    className="bg-gray-300 hover:bg-white"
+                                    className="bg-white hover:bg-gray-800 hover:text-white"
                                     onClick={toggleEdit}
                                     icon={<IconEdit />}
                                     name="Edit"
@@ -62,14 +65,14 @@ export default function SuperAdminManage() {
                             ) : (
                                 <div className="flex">
                                     <AdminButton
-                                        className="mr-2 bg-green-100 hover:bg-green-200"
+                                        className="mr-2 bg-green-100 hover:text-white hover:bg-green-800"
                                         onClick={handleSave}
                                         icon={<IconSave />}
                                         name="Save"
                                     />
 
                                     <AdminButton
-                                        className="mr-2 bg-red-100 hover:bg-red-200"
+                                        className="mr-2 bg-red-100 hover:text-white hover:bg-red-800"
                                         onClick={toggleEdit}
                                         icon={<IconCancel />}
                                         name="Cancel"
@@ -78,7 +81,7 @@ export default function SuperAdminManage() {
                             )}
                         </div>
 
-                        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-1 gap-4 p-5">
+                        <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 p-5">
                             <AdminOrgCard
                                 edit={edit}
                                 visible={visible}
