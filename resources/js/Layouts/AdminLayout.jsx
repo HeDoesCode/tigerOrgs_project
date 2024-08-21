@@ -35,9 +35,7 @@ function AdminLayout({ children }) {
 
     function SideBarContent() {
         return (
-            <div
-                className='border-gray-300 border-r-[1px] fixed -left-16 hover:left-0 sm:left-0 top-0 bottom-0 min-w-16 w-0 sm:w-16 max-w-52 flex flex-col justify-center bg-[#EEEEEE] transition-all ease-in-out duration-300 group hover:w-52 hover:bg-[#FEFEFE] overflow-clip'
-            >
+            <div className="border-gray-300 border-r-[1px] fixed -left-16 hover:left-0 sm:left-0 top-0 bottom-0 min-w-16 w-0 sm:w-16 max-w-52 flex flex-col justify-center bg-[#EEEEEE] transition-all ease-in-out duration-300 group hover:w-52 hover:bg-[#FEFEFE] overflow-clip">
                 <button className="fixed size-16 left-0 top-0 flex sm:hidden items-center justify-center cursor-default">
                     <IconMenu3 size="27" />
                 </button>
@@ -84,8 +82,14 @@ function AdminLayout({ children }) {
 
         function SideBarLink({ icon, href, desc, current }) {
             return (
-                <div className='flex'>
-                    <Link className={`flex items-center py-2 pl-3 rounded-l-full overflow-x-clip w-full ${(current && "bg-[#FFBC58]") || "hover:bg-gray-800 hover:text-white"}`} href={href}>
+                <div className="flex">
+                    <Link
+                        className={`flex items-center py-2 pl-3 rounded-l-full overflow-x-clip w-full ${
+                            (current && "bg-[#FFBC58]") ||
+                            "hover:bg-gray-800 hover:text-white"
+                        }`}
+                        href={href}
+                    >
                         <div className="min-h-7 min-w-7 size-7">{icon}</div>
                         <div className="text-left poppins text-lg overflow-hidden h-min w-full invisible group-hover:visible ml-3 transition-all">
                             {desc}
