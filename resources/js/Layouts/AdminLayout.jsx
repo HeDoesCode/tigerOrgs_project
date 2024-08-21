@@ -51,12 +51,12 @@ function AdminLayout({ children }) {
                             className="bg-cover rounded-full"
                         />
                     </div>
-                    <p className="text-center mr-3 font-bold text-xs leading-4 line-clamp-3 h-min my-auto w-32 overflow-clip">
-                        <span className="w-32 min-w-32">
+                    <div className="text-center mr-3 font-bold text-xs leading-4 line-clamp-3 h-min my-auto w-32 overflow-clip">
+                        <div className="w-32 min-w-32">
                             Placeholder Society of Information Technology
                             Enthusiasts (SITE)
-                        </span>
-                    </p>
+                        </div>
+                    </div>
                 </div>
                 <nav className="flex-1 flex flex-col space-y-3 ml-2 my-2 transition-all group-hover:mr-0 ease-in-out duration-300">
                     <SideBarLink
