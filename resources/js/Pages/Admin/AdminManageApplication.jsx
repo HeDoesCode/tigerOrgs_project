@@ -64,7 +64,7 @@ function AdminManageApplication() {
                         </div>
 
                         <div className="bg-[#EEEEEE] mt-2 border divide-y  divide-gray-400  border-gray-400 rounded-xl   ">
-                            <div className="grid grid-cols-9 py-2 text-center font-medium">
+                            <div className="lg:grid hidden  grid-cols-9 py-2 text-center font-medium">
                                 <div className="col-span-2 ">Full Name</div>
                                 <div className="col-span-2">College</div>
                                 <div className="col-span-2">Email</div>
@@ -74,21 +74,21 @@ function AdminManageApplication() {
                                 </div>
                                 <div className="col-span-1">Actions</div>
                             </div>
-                            <div className="grid grid-cols-9 py-2 text-center min-h-16">
-                                <div className="col-span-2 content-center">
+                            <div className="grid grid-cols-1 lg:grid-cols-9 py-2 text-center min-h-16">
+                                <div className="lg:col-span-2 content-center">
                                     Laurence Arvin Arcilla
                                 </div>
-                                <div className="col-span-2 content-center ">
+                                <div className="lg:col-span-2 content-center ">
                                     College of Information and Computing
                                     Sciences
                                 </div>
-                                <div className="col-span-2 content-center">
+                                <div className="lg:col-span-2 content-center truncate">
                                     laurencearvin.arcilla.cics@ust.edu.ph
                                 </div>
                                 <div className="col-span-1 content-center">
                                     Aug-13-2024
                                 </div>
-                                <div className="col-span-1 px-4 content-center">
+                                <div className="lg:col-span-1 px-4 content-center">
                                     <div
                                         className={`bg-[#609B00] rounded-xl text-white`}
                                     >
@@ -97,7 +97,10 @@ function AdminManageApplication() {
                                 </div>
                                 <div className="col-span-1 grid grid-cols-2">
                                     <div className="underline content-center underline-offset-2">
-                                        View
+                                        View{" "}
+                                        <span className="lg:hidden ">
+                                            Response{" "}
+                                        </span>
                                     </div>
                                     <DotsVertical />
                                 </div>

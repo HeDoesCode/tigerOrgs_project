@@ -37,7 +37,7 @@ function AdminFormHistory() {
                     title="Browse Previous Forms"
                 >
                     <div className="p-5">
-                        <VerticalCard gridcol="grid-cols-5">
+                        <VerticalCard gridcol="sm:grid-cols-5">
                             <div className="col-span-1">
                                 <h1 className="ml-2  text-center font-semibold text-gray-500">
                                     Aug-15-2024

@@ -29,23 +29,25 @@ function AdminInvite() {
                     title="Admin Invitation"
                 >
                     <div>
+                        <div className="flex justify-end me-5 mt-5">
+                            <AdminButton
+                                className="mr-2  sm:mt-0 bg-white hover:bg-gray-800 hover:text-white"
+                                icon={<IconBellFilled />}
+                                name="Send Notification"
+                            />
+
+                            <AdminButton
+                                className="mr-2   sm:mt-0 bg-white hover:bg-gray-800 hover:text-white"
+                                icon={<IconInvite />}
+                                name="Add Member Manually"
+                            />
+                        </div>
+
                         <div className="pt-5 pl-5 flex justify-between">
                             <div className="poppins">Current Admin:</div>
-                            <div className="flex justify-end me-5">
-                                <AdminButton
-                                    className="mr-2 bg-gray-300 hover:bg-white"
-                                    icon={<IconBellFilled />}
-                                    name="Send Notification"
-                                />
-
-                                <AdminButton
-                                    className="mr-2 bg-gray-300 hover:bg-white"
-                                    icon={<IconInvite />}
-                                    name="Add Member Manually"
-                                />
-                            </div>
                         </div>
-                        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4 p-5">
+
+                        <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-4 p-5">
                             <AdminMemberCard isAdmin />
                             <AdminMemberCard isAdmin />
                         </div>
@@ -53,7 +55,7 @@ function AdminInvite() {
                         <div className="pt-5 pl-5 flex justify-between">
                             <div className="poppins">Other Members:</div>
                         </div>
-                        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4 p-5">
+                        <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-4 p-5">
                             <AdminMemberCard />
                             <AdminMemberCard />
                             <AdminMemberCard />

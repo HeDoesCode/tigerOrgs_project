@@ -64,7 +64,7 @@ function AdminMemberCard({ isAdmin }) {
                 <div className="col-span-1 grid content-center justify-self-center text-gray-500">
                     <IconEmail />
                 </div>
-                <div className="col-span-4 text-md ">
+                <div className="col-span-4 text-md truncate">
                     roshe.sapin.cics@ust.edu.ph
                 </div>
             </div>
