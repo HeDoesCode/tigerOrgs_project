@@ -1,4 +1,5 @@
-function FileUploadInput() {
+function FileUploadInput({ value = "", onChange }) {
+    const handleQuestionChange = (e) => {};
     return (
         <div className="w-full p-4 bg-neutral-100 rounded-b-3xl">
             <div className="px-3 py-1 text-zinc-700 text-sm underline">

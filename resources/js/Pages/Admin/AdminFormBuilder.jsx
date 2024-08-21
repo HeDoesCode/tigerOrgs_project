@@ -112,6 +112,11 @@ function AdminFormBuilder() {
         }
     }
 
+    function cancelFormDraft() {
+        localStorage.removeItem("formDraft");
+        alert("Form draft canceled!");
+    }
+
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
@@ -150,24 +155,6 @@ function AdminFormBuilder() {
                                     />
                                 </DndContext>
                             </FormActionsContext.Provider>
-
-                            <div className="flex justify-center items-center ">
-                                <button
-                                    className="bg-gray-200 m-1 px-4 py-2 rounded"
-                                    onClick={saveFormAsDraft}
-                                >
-                                    Save as Draft
-                                </button>
-                                <button
-                                    className="bg-gray-200 px-4 py-2 rounded "
-                                    onClick={loadFormDraft}
-                                >
-                                    Load Draft
-                                </button>
-                            </div>
-
-                            <br />
-                            <br />
                             <h1 className="flex justify-center">
                                 === Input Types ===
                             </h1>
@@ -184,6 +171,23 @@ function AdminFormBuilder() {
                                     </button>
                                 ))}
                             </div>
+                            <div className="flex justify-center items-center ">
+                                <button
+                                    className="bg-gray-200 m-1 px-4 py-2 rounded-2xl "
+                                    onClick={saveFormAsDraft}
+                                >
+                                    Save Draft
+                                </button>
+                                <button
+                                    className="bg-gray-200 px-4 py-2 rounded "
+                                    onClick={cancelFormDraft}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+
+                            <br />
+                            <br />
                         </div>
                     </div>
                 </MainAdminFrame>

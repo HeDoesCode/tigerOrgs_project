@@ -84,21 +84,9 @@ function FormBuilder() {
         alert("Form saved as draft!");
     }
 
-    function loadFormDraft() {
-        if (
-            tasks.length > 0 &&
-            !confirm(
-                "Loading the draft will overwrite your current form. Proceed?"
-            )
-        )
-            return;
-
-        const savedForm = localStorage.getItem("formDraft");
-        if (savedForm) {
-            setTasks(JSON.parse(savedForm));
-        } else {
-            alert("No draft found!");
-        }
+    function cancelFormDraft() {
+        localStorage.removeItem("formDraft");
+        alert("Form draft canceled!");
     }
 
     return (
