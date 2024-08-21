@@ -102,52 +102,10 @@ function FormBuilder() {
     }
 
     return (
-        <>
+        <div>
             {" "}
-            <AdminLayout>
-                <div className="flex flex-col justify-center bg-white m-4 p-4 max-w-xl mx-auto">
-                    <h1 className="text-3xl mb-4">Form Builder test</h1>
-                    <FormActionsContext.Provider value={handleDeleItem}>
-                        <DndContext
-                            onDragEnd={handleDragEnd}
-                            collisionDetection={closestCorners}
-                        >
-                            <Column tasks={tasks} onChange={handleChange} />
-                        </DndContext>
-                    </FormActionsContext.Provider>
-
-                    <div className="flex justify-center items-center ">
-                        <button
-                            className="bg-gray-200 m-1 px-4 py-2 rounded"
-                            onClick={saveFormAsDraft}
-                        >
-                            Save as Draft
-                        </button>
-                        <button
-                            className="bg-gray-200 px-4 py-2 rounded "
-                            onClick={loadFormDraft}
-                        >
-                            Load Draft
-                        </button>
-                    </div>
-
-                    <br />
-                    <br />
-                    <h1 className="flex justify-center">=== Input Types ===</h1>
-                    <div className="flex items-center space-y-2">
-                        {inputTypes.map((input) => (
-                            <button
-                                key={input.type}
-                                className="bg-gray-200 px-4 py-2 border rounded hover:bg-gray-300 "
-                                onClick={() => handleAddTask(input.type)}
-                            >
-                                {input.type}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </AdminLayout>
-        </>
+            <AdminLayout></AdminLayout>
+        </div>
     );
 }
 

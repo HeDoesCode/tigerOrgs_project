@@ -99,7 +99,7 @@ Route::middleware('auth')->group(function () {
 // Route::get('/form-builder', [FormBuilderController::class], 'show')->name('formbuilder');
 
 Route::get('/admin/form-builder', function (){
-    return Inertia::render('Admin/FormBuilder');
+    return Inertia::render('Admin/AdminFormBuilder');
 })->name('admin.formbuilder');
 
 require __DIR__ . '/auth.php';
