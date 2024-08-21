@@ -1,24 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function RadioInput() {
-    const [options, setOptions] = useState(["Option 1", "Option 2"]);
-    const [newOption, setNewOption] = useState("");
+function RadioInput({ value = "", radioValue = [], onChange }) {
+    const [question, setQuestion] = useState(value);
+    const [radio, setRadio] = useState(
+        radioValue.length > 0
+            ? radioValue
+            : ["Option 1", "Option 2", "Option 3"]
+    );
+    const [newRadio, setNewRadio] = useState("");
 
-    const handleOptionChange = (index, event) => {
-        const updatedOptions = [...options];
-        updatedOptions[index] = event.target.value;
-        setOptions(updatedOptions);
+    useEffect(() => {
+        if (onChange) {
+            onChange(question, radio);
+        }
+    }, [question, radio]);
+
+    const handleQuestionChange = (e) => {
+        const newQuestion = e.target.value;
+        setQuestion(newQuestion);
     };
 
-    const handleAddOption = () => {
-        if (newOption.trim() !== "") {
-            setOptions([...options, newOption]);
-            setNewOption("");
+    const handleRadioChange = (index, event) => {
+        const updatedRadio = [...radio];
+        updatedRadio[index] = event.target.value;
+        setRadio(updatedRadio);
+    };
+
+    const handleAddRadio = () => {
+        if (newRadio.trim() !== "") {
+            setRadio([...radio, newRadio]);
+            setNewRadio("");
         }
     };
 
-    const handleRemoveOption = (index) => {
-        setOptions(options.filter((_, i) => i !== index));
+    const handleRemoveRadio = (index) => {
+        setRadio(radio.filter((_, i) => i !== index));
     };
 
     return (
@@ -30,25 +46,27 @@ function RadioInput() {
                 className="w-full bg-transparent rounded-2xl border-1 border-x-stone-600 mb-2"
                 type="text"
                 placeholder="Question here..."
+                value={question}
+                onChange={handleQuestionChange}
             />
 
-            {options.map((option, index) => (
+            {radio.map((radio, index) => (
                 <div key={index} className="flex items-center mb-2">
                     <input
                         type="radio"
                         name="radioGroup"
-                        value={option}
+                        value={radio}
                         className="mr-2"
                     />
                     <input
                         className="w-full p-1 rounded border border-gray-300"
                         type="text"
-                        value={option}
-                        onChange={(event) => handleOptionChange(index, event)}
+                        value={radio}
+                        onChange={(event) => handleRadioChange(index, event)}
                     />
                     <button
                         className="ml-2 text-red-500"
-                        onClick={() => handleRemoveOption(index)}
+                        onClick={() => handleRemoveRadio(index)}
                     >
                         Remove
                     </button>
@@ -60,13 +78,10 @@ function RadioInput() {
                     className="w-full p-1 rounded border border-gray-300"
                     type="text"
                     placeholder="Add new option..."
-                    value={newOption}
-                    onChange={(e) => setNewOption(e.target.value)}
+                    value={newRadio}
+                    onChange={(e) => setNewRadio(e.target.value)}
                 />
-                <button
-                    className="ml-2 text-blue-500"
-                    onClick={handleAddOption}
-                >
+                <button className="ml-2 text-blue-500" onClick={handleAddRadio}>
                     Add
                 </button>
             </div>

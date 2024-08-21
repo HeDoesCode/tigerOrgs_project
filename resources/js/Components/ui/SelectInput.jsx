@@ -1,12 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function SelectInput({ value }) {
-    const [options, setOptions] = useState([
-        "Option 1",
-        "Option 2",
-        "Option 3",
-    ]);
+function SelectInput({ value = "", selectValue = [], onChange }) {
+    const [question, setQuestion] = useState(value);
+    const [options, setOptions] = useState(
+        selectValue.length > 0
+            ? selectValue
+            : ["Option 1", "Option 2", "Option 3"]
+    );
     const [newOption, setNewOption] = useState("");
+
+    useEffect(() => {
+        if (onChange) {
+            onChange(question, options);
+        }
+    }, [question, options]);
+
+    const handleQuestionChange = (e) => {
+        const newQuestion = e.target.value;
+        setQuestion(newQuestion);
+    };
 
     const handleOptionChange = (index, event) => {
         const updatedOptions = [...options];
@@ -34,6 +46,8 @@ function SelectInput({ value }) {
                 className="w-full bg-transparent rounded-2xl border-1 border-x-stone-600 mb-2"
                 type="text"
                 placeholder="Question here..."
+                value={question}
+                onChange={handleQuestionChange}
             />
 
             {options.map((option, index) => (

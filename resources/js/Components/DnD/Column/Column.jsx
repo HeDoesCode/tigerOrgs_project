@@ -18,8 +18,24 @@ function Column({ tasks, onChange }) {
                         Component={task.Component}
                         value={task.value}
                         numberValue={task.numberValue}
-                        onChange={(newTextValue, newNumberValue) =>
-                            onChange(task.id, newTextValue, newNumberValue)
+                        selectValue={task.selectValue}
+                        checkboxValue={task.checkboxValue}
+                        radioValue={task.radioValue}
+                        onChange={(
+                            newTextValue,
+                            newNumberValue,
+                            newSelectValue,
+                            newChecboxValue,
+                            newRadioValue
+                        ) =>
+                            onChange(
+                                task.id,
+                                newTextValue,
+                                newNumberValue,
+                                newSelectValue,
+                                newChecboxValue,
+                                newRadioValue
+                            )
                         }
                     />
                 ))}

@@ -1,8 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function CheckboxesInput() {
-    const [checkboxes, setCheckboxes] = useState(["Checkbox 1", "Checkbox 2"]);
+function CheckboxesInput({ value = "", checkboxValue = [], onChange }) {
+    const [question, setQuestion] = useState(value);
+    const [checkboxes, setCheckboxes] = useState(
+        checkboxValue.length > 0 ? checkboxValue : ["Option 1", "Option 2"]
+    );
     const [newCheckbox, setNewCheckbox] = useState("");
+
+    useEffect(() => {
+        if (onChange) {
+            onChange(question, checkboxes);
+        }
+    }, [question, checkboxes]);
+
+    const handleQuestionChange = (e) => {
+        const newQuestion = e.target.value;
+        setQuestion(newQuestion);
+    };
 
     const handleCheckboxChange = (index, event) => {
         const updatedCheckboxes = [...checkboxes];
@@ -30,6 +44,8 @@ function CheckboxesInput() {
                 className="w-full bg-transparent rounded-2xl border-1 border-x-stone-600 mb-2"
                 type="text"
                 placeholder="Question here..."
+                value={question}
+                onChange={handleQuestionChange}
             />
             {checkboxes.map((checkbox, index) => (
                 <div key={index} className="flex items-center mb-2">
