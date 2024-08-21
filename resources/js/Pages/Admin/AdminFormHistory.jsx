@@ -9,6 +9,7 @@ import Home from "../Organizations/Home";
 import IconEdit from "@/Components/Icons/IconEdit";
 import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
+import IconEye from "@/Components/Icons/IconEye";
 
 function AdminFormHistory() {
     return (
@@ -35,7 +36,33 @@ function AdminFormHistory() {
                     ]}
                     title="Browse Previous Forms"
                 >
-                    <div className="p-5"></div>
+                    <div className="p-5">
+                        <VerticalCard gridcol="sm:grid-cols-5">
+                            <div className="col-span-1">
+                                <h1 className="ml-2  text-center font-semibold text-gray-500">
+                                    Aug-15-2024
+                                </h1>
+                            </div>
+                            <div className=" col-span-3">
+                                <h1 className="ml-2  text-center">
+                                    <span className="font-bold text-gray-500">
+                                        Laurence Arcilla
+                                    </span>{" "}
+                                    <span className="text-gray-500 font-medium">
+                                        created a Form.
+                                    </span>
+                                </h1>
+                            </div>
+                            <div className="col-span-1 flex justify-center text-gray-500">
+                                <div className="px-2">
+                                    <IconEye />
+                                </div>
+                                <div className="px-2">
+                                    <IconEdit />
+                                </div>
+                            </div>
+                        </VerticalCard>
+                    </div>
                 </MainAdminFrame>
             </AdminLayout>
         </div>

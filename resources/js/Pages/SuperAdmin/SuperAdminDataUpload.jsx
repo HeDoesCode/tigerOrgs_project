@@ -55,7 +55,7 @@ function SuperAdminDataUpload() {
                     title="Data Upload"
                 >
                     <div className="grid grid-cols-12 p-5 gap-2">
-                        <div className="p-5 shadow-lg grid gridcol rounded-xl bg-white col-span-7">
+                        <div className="p-5 shadow-lg grid gridcol rounded-xl bg-white col-span-12 lg:col-span-7">
                             <h1 className="font-bold">Student Information</h1>
                             <h2 className="text-sm">
                                 Last Date Uploaded: Aug-09-2024
@@ -65,7 +65,7 @@ function SuperAdminDataUpload() {
                                 fileType="Student File"
                             />
                         </div>
-                        <div className="p-5 shadow-lg grid gridcol rounded-xl bg-white col-span-7">
+                        <div className="p-5 shadow-lg grid gridcol rounded-xl bg-white col-span-12 lg:col-span-7">
                             <h1 className="font-bold">Staff Information</h1>
                             <h2 className="text-sm">
                                 Last Date Uploaded: Aug-09-2024
@@ -75,7 +75,7 @@ function SuperAdminDataUpload() {
                                 fileType="Staff File"
                             />
                         </div>
-                        <div className="p-5 shadow-lg grid gridcol rounded-xl bg-white col-span-7">
+                        <div className="p-5 shadow-lg grid gridcol rounded-xl bg-white col-span-12 lg:col-span-7">
                             <h1 className="font-bold">Organization List</h1>
                             <h2 className="text-sm">
                                 Last Date Uploaded: Aug-09-2024

@@ -7,6 +7,7 @@ import IconDotsVertical from "@/Components/Icons/IconDotsVertical";
 import VerticalCard from "@/Components/VerticalCard";
 import AdminButton from "@/Components/Admin/AdminButton";
 import IconBellFilled from "@/Components/Icons/IconBellFilled";
+import DotsVertical from "@/Components/DotsVertical";
 
 function SuperAdminInvite() {
     return (
@@ -31,20 +32,20 @@ function SuperAdminInvite() {
                     <div>
                         <div className="flex justify-end me-5 mt-5">
                             <AdminButton
-                                className="mr-2 bg-gray-300 hover:bg-white"
+                                className="mr-2 bg-white hover:bg-gray-800 hover:text-white"
                                 icon={<IconInvite />}
                                 name="Assign"
                             />
                         </div>
                         <div className="grid grid-rows-1 p-5 gap-2">
-                            <VerticalCard gridcol="grid-cols-12">
+                            <VerticalCard gridcol="md:grid-cols-12">
                                 <div className=" col-span-3 content-center">
-                                    <h1 className="ml-2 font-bold">
+                                    <h1 className="md:ml-2 text-center md:text-left font-bold">
                                         Joseph Paduga
                                     </h1>
                                 </div>
                                 <div className="col-span-3 content-center">
-                                    <h1 className="text-center font-semibold text-gray-500">
+                                    <h1 className="text-center font-semibold truncate text-gray-500">
                                         laurencearvin.arcila.cics@ust.edu.ph
                                     </h1>
                                 </div>
@@ -59,11 +60,7 @@ function SuperAdminInvite() {
                                         Assigned to 1 Org
                                     </h1>
                                 </div>
-                                <div className="col-span-1 flex justify-center">
-                                    <div className="hover:bg-[#EEEEEE]  rounded-full">
-                                        <IconDotsVertical />
-                                    </div>
-                                </div>
+                                <DotsVertical />
                             </VerticalCard>
                         </div>
                     </div>

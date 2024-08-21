@@ -35,7 +35,7 @@ export default function SuperAdminInviteHistory() {
                     title="Activity Log"
                 >
                     <div className="grid grid-rows-1 p-5 gap-2">
-                        <VerticalCard gridcol="grid-cols-7">
+                        <VerticalCard gridcol="sm:grid-cols-8">
                             <div className=" col-span-1 ">
                                 <h1 className="ml-2  text-center font-semibold text-gray-500">
                                     Aug-15-2024
@@ -65,7 +65,7 @@ export default function SuperAdminInviteHistory() {
                                     College of Architecture
                                 </h1>
                             </div>
-                            <div className=" col-span-1 ">
+                            <div className=" col-span-2 ">
                                 <h1 className="ml-2 text-center font-semibold text-gray-500">
                                     1:04 PM
                                 </h1>
