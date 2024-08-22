@@ -84,7 +84,7 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
 
     function CoverPhoto() {
         return (
-            <div className="max-h-[25rem] h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
+            <div className="max-h-[25rem] min-h-[15rem] h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
                 <img
                     src={
                         pageLayoutData.find((page) => page.type === "coverPhoto").src
