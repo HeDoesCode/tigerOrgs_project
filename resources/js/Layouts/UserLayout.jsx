@@ -139,36 +139,33 @@ function UserLayout({ children, bgImage, noPadding }) {
                                 <IconMenu3 size="27" />
                             </div>
                         }
-                        dropdownContent={
-                            <>
-                                <DDM_Link
-                                    current={url === routePath("dashboard")}
-                                >
-                                    Home
-                                </DDM_Link>
-                                <DDM_Link
-                                    current={url === routePath("organizations")}
-                                >
-                                    Organizations
-                                </DDM_Link>
-                                <div className="px-3">
-                                    <DropdownMenuSeparator className="bg-gray-400" />
-                                </div>
-                                <DDM_Link href={route('profile.edit')}>
-                                    <IconProfile />
-                                    <span>Profile</span>
-                                </DDM_Link>
-                                <DDM_Link
-                                    href={route("logout")}
-                                    method="post"
-                                    as="button"
-                                >
-                                    <IconExit />
-                                    <span>Logout</span>
-                                </DDM_Link>
-                            </>
-                        }
-                    />
+                    >
+                        <DDM_Link
+                            current={url === routePath("dashboard")}
+                        >
+                            Home
+                        </DDM_Link>
+                        <DDM_Link
+                            current={url === routePath("organizations")}
+                        >
+                            Organizations
+                        </DDM_Link>
+                        <div className="px-3">
+                            <DropdownMenuSeparator className="bg-gray-400" />
+                        </div>
+                        <DDM_Link href={route('profile.edit')}>
+                            <IconProfile />
+                            <span>Profile</span>
+                        </DDM_Link>
+                        <DDM_Link
+                            href={route("logout")}
+                            method="post"
+                            as="button"
+                        >
+                            <IconExit />
+                            <span>Logout</span>
+                        </DDM_Link>
+                    </HeaderDropdownMenu>
                 </div>
             </nav>
         );

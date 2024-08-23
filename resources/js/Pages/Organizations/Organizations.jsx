@@ -24,7 +24,7 @@ function Organizations() {
                 </div>
                 <div className="flex flex-col md:flex-row gap-6">
                     {/* control panel */}
-                    <div className="flex flex-col w-64 space-y-5">
+                    <div className="flex flex-col w-full md:w-64 space-y-5">
                         <ControlContainer className="relative" name="Search">
                             <input
                                 type="text"
@@ -44,7 +44,12 @@ function Organizations() {
                                 <SelectTrigger className="w-full h-12 border-gray-500 bg-transparent">
                                     <SelectValue placeholder="-- Browse Categories --" />
                                 </SelectTrigger>
-                                <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand">
+                                <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand"
+                                    ref={(ref) => {
+                                        if (!ref) return;
+                                        ref.ontouchstart = (e) => e.preventDefault();
+                                    }}
+                                >
                                     <SelectItem
                                         value="light"
                                         className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
