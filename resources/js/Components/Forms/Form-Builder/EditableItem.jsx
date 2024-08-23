@@ -1,7 +1,6 @@
-import { useContext } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { FormActionsContext } from "../Context/FormActions";
+import GripHorizontal from "@/Components/Icons/Grip-Horizontal";
 import EditPropertiesForm from "./EditPropertiesForm";
 
 function EditableItem({ id, item }) {
@@ -13,18 +12,19 @@ function EditableItem({ id, item }) {
         transform: CSS.Transform.toString(transform),
     };
 
-    const handleDeleteItem = useContext(FormActionsContext);
-
     return (
-        <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
-            <div>
-                {item.type}
-                <button onClick={() => handleDeleteItem(id)}>
-                    ========== Delete
-                </button>
+        <div className="p-2" ref={setNodeRef} {...attributes} style={style}>
+            <div
+                className="drag-handle justify-center items-center flex bg-neutral-200 rounded-t-3xl"
+                {...listeners}
+            >
+                <GripHorizontal />
             </div>
-            <div>
-                <EditPropertiesForm itemType={item.type} />
+            <div className="border p-3 bg-white rounded-bl-lg rounded-br-lg">
+                <h3 className="px-3 py-1 text-zinc-700 text-sm underline">
+                    {item.type}
+                </h3>
+                <EditPropertiesForm id={id} />
             </div>
         </div>
     );
