@@ -7,17 +7,17 @@ import {
     DropdownMenuLabel,
 } from "@/Components/ui/dropdown-menu";
 
-function AdminDropdownMenu({ triggerContent, dropdownItems, title, onSelect }) {
+function AdminDropdownMenu({ ...props }) {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>{triggerContent}</DropdownMenuTrigger>
+            <DropdownMenuTrigger>{props.triggerContent}</DropdownMenuTrigger>
             <DropdownMenuContent className="bg-[#f8f8f8] border-gray-300 flex flex-col justify-center space-y-2 p-2">
                 <DropdownMenuLabel className="poppins">
-                    {title}
+                    {props.title}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gray-300 mx-2" />
 
-                {dropdownItems.map((item, index) => (
+                {props.dropdownItems.map((item, index) => (
                     <DropdownMenuItem
                         key={index}
                         onSelect={() => onSelect(item.value)}

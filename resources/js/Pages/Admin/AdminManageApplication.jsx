@@ -10,6 +10,8 @@ import IconEdit from "@/Components/Icons/IconEdit";
 import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import DotsVertical from "@/Components/DotsVertical";
+import AdminDialog from "@/Components/Admin/AdminDialog";
+import AdminDropdownMenu from "@/Components/Admin/AdminDropdownMenu";
 
 function AdminManageApplication() {
     return (
@@ -96,13 +98,36 @@ function AdminManageApplication() {
                                     </div>
                                 </div>
                                 <div className="col-span-1 grid grid-cols-2">
-                                    <div className="underline content-center underline-offset-2">
-                                        View{" "}
-                                        <span className="lg:hidden ">
-                                            Response{" "}
-                                        </span>
-                                    </div>
-                                    <DotsVertical />
+                                    <AdminDialog
+                                        title="Answer of the Applicant"
+                                        trigger={
+                                            <div className="underline content-center underline-offset-2">
+                                                View{" "}
+                                                <span className="lg:hidden ">
+                                                    Response{" "}
+                                                </span>
+                                            </div>
+                                        }
+                                    ></AdminDialog>
+
+                                    <AdminDropdownMenu
+                                        triggerContent={<DotsVertical />}
+                                        title="Select Action"
+                                        dropdownItems={[
+                                            {
+                                                name: "Assign as President (First Choice)",
+                                                value: "assign",
+                                            },
+                                            {
+                                                name: "Send Notification",
+                                                value: "notif",
+                                            },
+                                            {
+                                                name: "Reject Application",
+                                                value: "reject",
+                                            },
+                                        ]}
+                                    />
                                 </div>
                             </div>
                         </div>

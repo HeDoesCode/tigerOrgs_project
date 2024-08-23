@@ -10,6 +10,7 @@ import IconEdit from "@/Components/Icons/IconEdit";
 import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import IconEye from "@/Components/Icons/IconEye";
+import AdminDialog from "@/Components/Admin/AdminDialog";
 
 function AdminFormHistory() {
     return (
@@ -54,9 +55,15 @@ function AdminFormHistory() {
                                 </h1>
                             </div>
                             <div className="col-span-1 flex justify-center text-gray-500">
-                                <div className="px-2">
-                                    <IconEye />
-                                </div>
+                                <AdminDialog
+                                    title="Form History"
+                                    trigger={
+                                        <div className="px-2">
+                                            <IconEye />
+                                        </div>
+                                    }
+                                ></AdminDialog>
+
                                 <div className="px-2">
                                     <IconEdit />
                                 </div>

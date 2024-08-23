@@ -8,16 +8,10 @@ import VerticalCard from "@/Components/VerticalCard";
 import AdminButton from "@/Components/Admin/AdminButton";
 import IconBellFilled from "@/Components/Icons/IconBellFilled";
 import DotsVertical from "@/Components/DotsVertical";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogClose,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/Components/ui/dialog";
+
 import Searchbar from "@/Components/Searchbar";
+import AdminDialog from "@/Components/Admin/AdminDialog";
+import AdminDropdownMenu from "@/Components/Admin/AdminDropdownMenu";
 
 function SuperAdminInvite() {
     return (
@@ -41,45 +35,37 @@ function SuperAdminInvite() {
                 >
                     <div>
                         <div className="flex justify-end me-5 mt-5">
-                            <Dialog>
-                                <DialogTrigger>
+                            <AdminDialog
+                                title="Assign Role for Student"
+                                description="Search for a student and assign them to be the
+                        administrator of their organization."
+                                trigger={
                                     <AdminButton
                                         className="mr-2 bg-white hover:bg-gray-800 hover:text-white"
                                         icon={<IconInvite />}
                                         name="Assign"
                                     />
-                                </DialogTrigger>
-                                <DialogContent className="w-80 sm:min-w-[800px]">
-                                    <DialogHeader>
-                                        <DialogTitle>
-                                            Assign Role for Student
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                            Search for a student and assign them
-                                            to be the administrator of their
-                                            organization.
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <Searchbar />
-                                    <div>
-                                        <VerticalCard gridcol="grid-cols-4">
-                                            <div className="text-sm font-bold content-center text-center">
-                                                Laurence Arvin Arcilla
-                                            </div>
-                                            <div className="truncate col-span-2 content-center text-sm font-semibold text-center">
-                                                laurencearvin.arcilla.cics@ust.edu.ph
-                                            </div>
-                                            <div className="sm px-4 text-sm content-center ">
-                                                <AdminButton
-                                                    className="mr-2 bg-white hover:bg-gray-800 hover:text-white"
-                                                    icon={<IconInvite />}
-                                                    name="Assign"
-                                                />
-                                            </div>
-                                        </VerticalCard>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
+                                }
+                            >
+                                <Searchbar />
+                                <div>
+                                    <VerticalCard gridcol="grid-cols-4">
+                                        <div className="text-sm font-bold content-center text-center">
+                                            Laurence Arvin Arcilla
+                                        </div>
+                                        <div className="truncate col-span-2 content-center text-sm font-semibold text-center">
+                                            laurencearvin.arcilla.cics@ust.edu.ph
+                                        </div>
+                                        <div className="sm px-4 text-sm content-center ">
+                                            <AdminButton
+                                                className="mr-2 bg-white hover:bg-gray-800 hover:text-white"
+                                                icon={<IconInvite />}
+                                                name="Assign"
+                                            />
+                                        </div>
+                                    </VerticalCard>
+                                </div>
+                            </AdminDialog>
                         </div>
                         <div className="grid grid-rows-1 p-5 gap-2">
                             <VerticalCard gridcol="md:grid-cols-12">
@@ -104,7 +90,20 @@ function SuperAdminInvite() {
                                         Assigned to 1 Org
                                     </h1>
                                 </div>
-                                <DotsVertical />
+                                <AdminDropdownMenu
+                                    triggerContent={<DotsVertical />}
+                                    title="Select Action"
+                                    dropdownItems={[
+                                        {
+                                            name: "Assign to Another Org",
+                                            value: true,
+                                        },
+                                        {
+                                            name: "Delete Role",
+                                            value: false,
+                                        },
+                                    ]}
+                                />
                             </VerticalCard>
                         </div>
                     </div>

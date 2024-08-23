@@ -73,6 +73,7 @@ function AdminLayout({ children }) {
                         current={
                             url === routePath("admin.applications") ||
                             url === routePath("admin.forms") ||
+                            url === routePath("admin.formbuilder") ||
                             url === routePath("admin.formhistory")
                         }
                     />
