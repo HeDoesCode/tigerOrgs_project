@@ -3,10 +3,10 @@ import IconSocialInstagram from "./Icons/Social/IconInstagram";
 import IconFacebookRoundFilled from "./Icons/Social/IconFacebookRoundFilled";
 import IconInstagram from "./Icons/Social/IconInstagram";
 
-function Footer({ footerTiger }) {
+function Footer() {
     return (
-        <div className={`min-h-36 h-auto mt-5 -mx-4 pt-10 inter font-extralight text-sm bg-[#EEEEEE] flex justify-center`}>
-            <div className="flex space-x-2 mx-10 sm:mx-24 md:mx-52 border-gray-300 border-t-[1px] py-3 w-full max-w-[70rem]">
+        <div className={`min-h-36 mt-5 -mx-4 pt-10 pb-4 inter font-extralight text-sm bg-[#EEEEEE] flex justify-center`}>
+            <div className="flex space-x-2 mx-10 sm:mx-24 md:mx-52 border-gray-300 border-t-[1px] pt-3 pb-5 w-full max-w-[70rem] h-fit">
                 <div className="flex-1">
                     <p className="leading-6">No Copyright 2024 © TigerOrgs Project <br />
                         In partnership with the <Link><span className="underline">University of Santo Tomas</span></Link>.</p>
@@ -30,7 +30,6 @@ function Footer({ footerTiger }) {
                     </ul>
                 </div>
             </div>
-
         </div>
     );
 
