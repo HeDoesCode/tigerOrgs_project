@@ -55,25 +55,40 @@ function FormBuilder() {
         };
 
         if (type === "select" || type === "radio" || type === "checkbox") {
-            newItem = { ...newItem, options: [] };
+            newItem = {
+                ...newItem,
+                options: [],
+            };
         }
         setItems([...items, newItem]);
     }
 
     function handleEditItem(id, data) {
-        setItems((prevItems) => {
-            const updatedItems = [...prevItems];
-            const itemIndex = updatedItems.findIndex((item) => item.id === id);
+        const updatedItems = [...items];
+        const editedItemIndex = updatedItems.findIndex(
+            (item) => item.id === id
+        );
 
-            if (itemIndex !== -1) {
-                updatedItems[itemIndex] = {
-                    ...updatedItems[itemIndex],
+        switch (updatedItems[editedItemIndex].type) {
+            case "select":
+            case "checkbox":
+            case "radio":
+                updatedItems[editedItemIndex] = {
+                    ...updatedItems[editedItemIndex],
+                    name: data.question,
+                    required: data.required,
+                    options: data.options,
+                };
+                break;
+            default:
+                updatedItems[editedItemIndex] = {
+                    ...updatedItems[editedItemIndex],
                     name: data.question,
                     required: data.required,
                 };
-            }
-            return updatedItems;
-        });
+        }
+
+        setItems([...updatedItems]);
     }
 
     function handleDeleteItem(id) {

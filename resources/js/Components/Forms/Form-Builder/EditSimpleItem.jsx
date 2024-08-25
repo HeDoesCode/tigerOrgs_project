@@ -2,7 +2,7 @@ import { useForm } from "@inertiajs/react";
 import { useContext } from "react";
 import { FormActionsContext } from "../Context/FormActionsContext";
 
-function EditPropertiesForm({ id }) {
+function EditSimpleItem({ id }) {
     const { data, setData, post, processing, errors } = useForm({
         question: "",
         required: false,
@@ -19,9 +19,9 @@ function EditPropertiesForm({ id }) {
     return (
         <form onSubmit={handleSave}>
             <ul>
-                <li>
+                <li className="mb-2">
                     <input
-                        className="w-full bg-transparent rounded-2xl border-1 border-x-stone-600 mb-2"
+                        className="w-full bg-transparent rounded-2xl border-1 border-x-stone-600"
                         type="text"
                         value={data.question}
                         onChange={(e) => setData("question", e.target.value)}
@@ -29,7 +29,7 @@ function EditPropertiesForm({ id }) {
                         required
                     />
                 </li>
-                <li>
+                <li className="mb-2">
                     <input
                         type="checkbox"
                         id="required"
@@ -37,7 +37,7 @@ function EditPropertiesForm({ id }) {
                     />
                     <label htmlFor="required"> Required</label>
                 </li>
-                <li className="flex items-center">
+                <li className="grid grid-cols-3">
                     <button
                         className="bg-gray-200 px-4 py-2 border  hover:bg-gray-300 "
                         type="submit"
@@ -68,4 +68,4 @@ function EditPropertiesForm({ id }) {
     );
 }
 
-export default EditPropertiesForm;
+export default EditSimpleItem;

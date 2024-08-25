@@ -1,7 +1,8 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import GripHorizontal from "@/Components/Icons/Grip-Horizontal";
-import EditPropertiesForm from "./EditPropertiesForm";
+import EditSimpleItem from "./EditSimpleItem";
+import EditMultiChoiceItem from "./EditMultiChoiceItem";
 
 function EditableItem({ id, item }) {
     const { attributes, listeners, setNodeRef, transform, transition } =
@@ -24,7 +25,13 @@ function EditableItem({ id, item }) {
                 <h3 className="px-3 py-1 text-zinc-700 text-sm underline">
                     {item.type}
                 </h3>
-                <EditPropertiesForm id={id} />
+                {item.type === "select" ||
+                item.type === "radio" ||
+                item.type === "checkbox" ? (
+                    <EditMultiChoiceItem id={id} />
+                ) : (
+                    <EditSimpleItem id={id} />
+                )}
             </div>
         </div>
     );
