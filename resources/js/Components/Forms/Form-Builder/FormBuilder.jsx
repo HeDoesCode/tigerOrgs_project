@@ -99,7 +99,7 @@ function FormBuilder() {
     return (
         <div className="p-5">
             <div className="flex flex-col justify-center bg-white m-4 p-4 max-w-xl mx-auto">
-                <h1 className="text-3xl mb-4">Create Form</h1>
+                <h1 className="text-3xl mb-4 px-2 font-medium">Create Form</h1>
                 <FormActionsContext.Provider
                     value={{ delete: handleDeleteItem, edit: handleEditItem }}
                 >

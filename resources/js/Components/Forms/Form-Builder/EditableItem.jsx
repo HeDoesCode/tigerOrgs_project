@@ -4,6 +4,16 @@ import GripHorizontal from "@/Components/Icons/Grip-Horizontal";
 import EditSimpleItem from "./EditSimpleItem";
 import EditMultiChoiceItem from "./EditMultiChoiceItem";
 
+// Define a mapping from item types to more descriptive labels
+const typeLabels = {
+    text: "Text Input",
+    number: "Number Input",
+    select: "Select Dropdown",
+    radio: "Multiple Choice",
+    checkbox: "Checkboxes",
+    "pdf upload": "PDF Upload",
+};
+
 function EditableItem({ id, item }) {
     const { attributes, listeners, setNodeRef, transform, transition } =
         useSortable({ id });
@@ -23,7 +33,7 @@ function EditableItem({ id, item }) {
             </div>
             <div className="border p-3 bg-white rounded-bl-lg rounded-br-lg">
                 <h3 className="px-3 py-1 text-zinc-700 text-sm underline">
-                    {item.type}
+                    {typeLabels[item.type] || item.type}
                 </h3>
                 {item.type === "select" ||
                 item.type === "radio" ||
