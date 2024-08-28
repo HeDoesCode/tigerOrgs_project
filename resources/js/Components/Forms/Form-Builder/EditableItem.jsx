@@ -35,9 +35,9 @@ function EditableItem({ id, item }) {
                 <h3 className="px-3 py-1 text-zinc-700 text-sm underline">
                     {typeLabels[item.type] || item.type}
                 </h3>
-                {item.type === "select" ||
-                item.type === "radio" ||
-                item.type === "checkbox" ? (
+                {item.type === "Select" ||
+                item.type === "Radio Group" ||
+                item.type === "Checkbox" ? (
                     <EditMultiChoiceItem id={id} />
                 ) : (
                     <EditSimpleItem id={id} />

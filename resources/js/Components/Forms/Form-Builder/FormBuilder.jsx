@@ -10,17 +10,25 @@ import { arrayMove } from "@dnd-kit/sortable";
 // import CheckboxesInput from "@/Components/ui/CheckboxesInput";
 // import FileUploadInput from "@/Components/ui/FileUploadInput";
 
+import letterT from "@/Components/Icons/letterT";
+import number123 from "@/Components/Icons/number123";
+import radiobutton from "@/Components/Icons/radiobutton";
+import select from "@/Components/Icons/select";
+import checkbox from "@/Components/Icons/checkbox";
+import Iconfileupload from "@/Components/Icons/Iconfileupload";
+import IconResume from "@/Components/Icons/IconResume";
+
 import { FormActionsContext } from "../Context/FormActionsContext";
 import BuilderWrap from "./BuilderWrap";
 
 const inputTypes = [
-    { type: "text" },
-    { type: "number" },
-    { type: "select" },
-    { type: "radio" },
-    { type: "checkbox" },
-    { type: "pdf upload" },
-    { type: "image upload" },
+    { type: "Text", icon: letterT },
+    { type: "Number", icon: number123 },
+    { type: "Select", icon: radiobutton },
+    { type: "Radio Group", icon: select },
+    { type: "Checkbox", icon: checkbox },
+    { type: "CV/Resume Upload", icon: Iconfileupload },
+    { type: "Image Upload", icon: IconResume },
 ];
 
 function FormBuilder() {
@@ -54,7 +62,11 @@ function FormBuilder() {
             required: false,
         };
 
-        if (type === "select" || type === "radio" || type === "checkbox") {
+        if (
+            type === "Select" ||
+            type === "Radio Group" ||
+            type === "Checkbox"
+        ) {
             newItem = {
                 ...newItem,
                 options: [],
@@ -70,9 +82,9 @@ function FormBuilder() {
         );
 
         switch (updatedItems[editedItemIndex].type) {
-            case "select":
-            case "checkbox":
-            case "radio":
+            case "Select":
+            case "Checkbox":
+            case "Radio Group":
                 updatedItems[editedItemIndex] = {
                     ...updatedItems[editedItemIndex],
                     name: data.question,
@@ -111,14 +123,17 @@ function FormBuilder() {
                     </DndContext>
                 </FormActionsContext.Provider>
                 <h1 className="flex justify-center">=== Input Types ===</h1>
-                <div className="flex items-center ">
+                <div className="flex text-xs text-center rounded-2xl bg-gray-200 m-2">
                     {inputTypes.map((input) => (
                         <button
                             key={input.type}
-                            className="bg-gray-200 px-4 py-2 border  hover:bg-gray-300 "
+                            className="rounded-xl hover:bg-gray-300 w-20 p-2"
                             onClick={() => handleAddItem(input.type)}
                         >
-                            {input.type}
+                            <div className="w-6 h-6 mx-auto mb-2">
+                                {input.icon && <input.icon />}
+                            </div>
+                            <span>{input.type}</span>
                         </button>
                     ))}
                     <button onClick={() => console.log(items)}>
