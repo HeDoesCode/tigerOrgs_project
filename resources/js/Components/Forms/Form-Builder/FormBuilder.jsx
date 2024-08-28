@@ -122,15 +122,14 @@ function FormBuilder() {
                         <BuilderWrap items={items} />
                     </DndContext>
                 </FormActionsContext.Provider>
-                <h1 className="flex justify-center">=== Input Types ===</h1>
-                <div className="flex text-xs text-center rounded-2xl bg-gray-200 m-2">
+                <div className="flex text-xs text-center rounded-2xl bg-gray-200 m-2 ">
                     {inputTypes.map((input) => (
                         <button
                             key={input.type}
                             className="rounded-xl hover:bg-gray-300 w-20 p-2"
                             onClick={() => handleAddItem(input.type)}
                         >
-                            <div className="w-6 h-6 mx-auto mb-2">
+                            <div className="w-6 h-6 mx-auto mb-2 ">
                                 {input.icon && <input.icon />}
                             </div>
                             <span>{input.type}</span>

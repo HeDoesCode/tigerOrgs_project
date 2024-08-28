@@ -40,14 +40,6 @@ function EditMultiChoiceItem({ id }) {
         <form onSubmit={handleSave}>
             <ul>
                 <li className="mb-2">
-                    <li className="mb-2">
-                        <input
-                            type="checkbox"
-                            id="required"
-                            onChange={() => setData("required", !data.required)}
-                        />
-                        <label htmlFor="required"> Required</label>
-                    </li>
                     <input
                         className="w-full bg-transparent rounded-2xl border-1 border-x-stone-600"
                         type="text"
@@ -56,6 +48,14 @@ function EditMultiChoiceItem({ id }) {
                         placeholder="Type Question here..."
                         required
                     />
+                    <li className="flex items-center gap-2 p-2">
+                        <input
+                            type="checkbox"
+                            id="required"
+                            onChange={() => setData("required", !data.required)}
+                        />
+                        <label htmlFor="required"> Required</label>
+                    </li>
                 </li>
 
                 <li className="mb-2">
