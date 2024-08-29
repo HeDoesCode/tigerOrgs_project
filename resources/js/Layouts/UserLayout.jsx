@@ -170,17 +170,15 @@ function UserLayout({ children, bgImage, noPadding }) {
             </nav>
         );
 
-        function DDM_Link({ children, className, href, current, onClick }) {
+        function DDM_Link({ children, className, href, current, onClick, ...props }) {
             return (
                 <Link
                     href={href}
-                    // method="post"
-                    // as="button"
                     className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${current
                         ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
                         : "hover:text-white"
                         } ${className}`}
-                // onClick={onClick}
+                    {...props}
                 >
                     {children}
                 </Link>
