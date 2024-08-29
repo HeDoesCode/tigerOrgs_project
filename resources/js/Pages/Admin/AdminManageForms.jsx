@@ -12,6 +12,8 @@ import IconHistory from "@/Components/Icons/IconHistory";
 import { Button } from "@/Components/ui/button";
 import IconPlus from "@/Components/Icons/IconPlus";
 import AdminDropdownMenu from "@/Components/Admin/AdminDropdownMenu";
+import React from 'react';
+
 
 function AdminManageForms() {
     return (

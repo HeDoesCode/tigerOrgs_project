@@ -170,7 +170,7 @@ function UserLayout({ children, bgImage, noPadding }) {
             </nav>
         );
 
-        function DDM_Link({ children, className, href, current, onClick }) {
+        function DDM_Link({ children, className, href, current, onClick, ...props }) {
             return (
                 <Link
                     href={href}
@@ -180,7 +180,8 @@ function UserLayout({ children, bgImage, noPadding }) {
                         ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
                         : "hover:text-white"
                         } ${className}`}
-                // onClick={onClick}
+                    // onClick={onClick}
+                    {...props}
                 >
                     {children}
                 </Link>
@@ -216,7 +217,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                                 <div className="flex flex-col space-y-3 max-h-[20rem] overflow-y-auto">
                                     <div className="flex space-x-3">
                                         <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                            <img src="https://scontent.fmnl17-6.fna.fbcdn.net/v/t39.30808-6/270248466_309421074524208_4699754745554854022_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=yC-BELgtmowQ7kNvgHUmIjf&_nc_ht=scontent.fmnl17-6.fna&oh=00_AYBwYH1t1Zi3U_x38BsJSncwk0jYhnSTI_zL7cMQUnJUYg&oe=66D5FB66"
                                                 alt=""
                                                 className="size-full object-cover" />
                                         </div>
@@ -234,7 +235,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                                     </div>
                                     <div className="flex space-x-3">
                                         <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                            <img src="https://scontent.fmnl17-6.fna.fbcdn.net/v/t39.30808-6/270248466_309421074524208_4699754745554854022_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=yC-BELgtmowQ7kNvgHUmIjf&_nc_ht=scontent.fmnl17-6.fna&oh=00_AYBwYH1t1Zi3U_x38BsJSncwk0jYhnSTI_zL7cMQUnJUYg&oe=66D5FB66"
                                                 alt=""
                                                 className="size-full object-cover" />
                                         </div>
@@ -252,7 +253,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                                     </div>
                                     <div className="flex space-x-3">
                                         <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                            <img src="https://scontent.fmnl17-6.fna.fbcdn.net/v/t39.30808-6/270248466_309421074524208_4699754745554854022_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=yC-BELgtmowQ7kNvgHUmIjf&_nc_ht=scontent.fmnl17-6.fna&oh=00_AYBwYH1t1Zi3U_x38BsJSncwk0jYhnSTI_zL7cMQUnJUYg&oe=66D5FB66"
                                                 alt=""
                                                 className="size-full object-cover" />
                                         </div>
@@ -270,7 +271,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                                     </div>
                                     <div className="flex space-x-3">
                                         <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                            <img src="https://scontent.fmnl17-6.fna.fbcdn.net/v/t39.30808-6/270248466_309421074524208_4699754745554854022_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=yC-BELgtmowQ7kNvgHUmIjf&_nc_ht=scontent.fmnl17-6.fna&oh=00_AYBwYH1t1Zi3U_x38BsJSncwk0jYhnSTI_zL7cMQUnJUYg&oe=66D5FB66"
                                                 alt=""
                                                 className="size-full object-cover" />
                                         </div>
@@ -292,7 +293,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                                 <div className="flex flex-col space-y-3 max-h-[20rem] overflow-y-auto">
                                     <div className="flex space-x-3">
                                         <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                            <img src="https://scontent.fmnl17-6.fna.fbcdn.net/v/t39.30808-6/270248466_309421074524208_4699754745554854022_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=yC-BELgtmowQ7kNvgHUmIjf&_nc_ht=scontent.fmnl17-6.fna&oh=00_AYBwYH1t1Zi3U_x38BsJSncwk0jYhnSTI_zL7cMQUnJUYg&oe=66D5FB66"
                                                 alt=""
                                                 className="size-full object-cover" />
                                         </div>
@@ -308,7 +309,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                                     </div>
                                     <div className="flex space-x-3">
                                         <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                            <img src="https://scontent.fmnl17-6.fna.fbcdn.net/v/t39.30808-6/270248466_309421074524208_4699754745554854022_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=yC-BELgtmowQ7kNvgHUmIjf&_nc_ht=scontent.fmnl17-6.fna&oh=00_AYBwYH1t1Zi3U_x38BsJSncwk0jYhnSTI_zL7cMQUnJUYg&oe=66D5FB66"
                                                 alt=""
                                                 className="size-full object-cover" />
                                         </div>
@@ -324,7 +325,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                                     </div>
                                     <div className="flex space-x-3">
                                         <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                            <img src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
+                                            <img src="https://scontent.fmnl17-6.fna.fbcdn.net/v/t39.30808-6/270248466_309421074524208_4699754745554854022_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=yC-BELgtmowQ7kNvgHUmIjf&_nc_ht=scontent.fmnl17-6.fna&oh=00_AYBwYH1t1Zi3U_x38BsJSncwk0jYhnSTI_zL7cMQUnJUYg&oe=66D5FB66"
                                                 alt=""
                                                 className="size-full object-cover" />
                                         </div>

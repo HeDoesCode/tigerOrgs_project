@@ -16,7 +16,7 @@ function AdminOrgCard({ edit, visible, setVisible }) {
                     <div className="p-2 content-center">
                         <img
                             className="rounded-full"
-                            src="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/440096730_826883032808917_2272899317032424872_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFY16kie3QKS5JLsu4R5Co3s8I0CHAxSVezwjQIcDFJV5grYXpdnx2rAo0x6IfMB54BbPIGz1zC9qWORtbekVnR&_nc_ohc=o4senzkxINEQ7kNvgEcR4qP&_nc_ht=scontent.fmnl3-3.fna&oh=00_AYAIbyF-ixCWFza2D-A3bW7QegWlGJsxnzn_4qB24rLvww&oe=66BA59F9"
+                            src="https://scontent.fmnl17-2.fna.fbcdn.net/v/t39.30808-6/440096730_826883032808917_2272899317032424872_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeE5nX_nuDQ5deko2WfiPxvns8I0CHAxSVezwjQIcDFJV5IWvg5O4MnmXwDnGWWcxV0XtPxuywMSCFl8sltdRceT&_nc_ohc=9pFmDDb31l0Q7kNvgEzZ1NF&_nc_ht=scontent.fmnl17-2.fna&oh=00_AYB3WN-OKzbn5PQd6LUZHOUJvUFxyCSXQSrBkf3vTEe4uQ&oe=66D60979"
                         />
                     </div>
                     <div className="col-span-2  px-2">
