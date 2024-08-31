@@ -14,8 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         DB::table('users')->insert([
             'userID' => '2024000001',
             'email' => 'arvin.alkuino.cics@ust.edu.ph',
@@ -52,6 +50,8 @@ class DatabaseSeeder extends Seeder
             'college' => 'College of Information and Computing Sciences',
             'status' => 'student',
         ]);
+
+        User::factory(10)->create();
 
         DB::table('roles')->insert([
             'role_description' => 'superadmin',
