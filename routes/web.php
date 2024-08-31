@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BackendTestingController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
@@ -102,4 +103,7 @@ Route::get('/admin/form-builder', function (){
     return Inertia::render('Admin/AdminFormBuilder');
 })->name('admin.formbuilder');
 
+// temporary testing route
+
+Route::get('/testing', [BackendTestingController::class, 'run']);
 require __DIR__ . '/auth.php';
