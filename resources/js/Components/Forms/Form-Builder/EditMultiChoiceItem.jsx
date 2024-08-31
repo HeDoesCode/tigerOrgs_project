@@ -48,15 +48,16 @@ function EditMultiChoiceItem({ id }) {
                         placeholder="Type Question here..."
                         required
                     />
+                    <li className="flex items-center gap-2 p-2">
+                        <input
+                            type="checkbox"
+                            id="required"
+                            onChange={() => setData("required", !data.required)}
+                        />
+                        <label htmlFor="required"> Required</label>
+                    </li>
                 </li>
-                <li className="mb-2">
-                    <input
-                        type="checkbox"
-                        id="required"
-                        onChange={() => setData("required", !data.required)}
-                    />
-                    <label htmlFor="required"> Required</label>
-                </li>
+
                 <li className="mb-2">
                     {data.options.map((option, index) => (
                         <div key={index} className="flex items-center mb-2">

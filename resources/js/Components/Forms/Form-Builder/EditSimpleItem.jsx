@@ -28,15 +28,16 @@ function EditSimpleItem({ id }) {
                         placeholder="Type Question here..."
                         required
                     />
+                    <li className="flex items-center gap-2 p-2">
+                        <input
+                            type="checkbox"
+                            id="required"
+                            onChange={() => setData("required", !data.required)}
+                        />
+                        <label htmlFor="required"> Required</label>
+                    </li>
                 </li>
-                <li className="mb-2">
-                    <input
-                        type="checkbox"
-                        id="required"
-                        onChange={() => setData("required", !data.required)}
-                    />
-                    <label htmlFor="required"> Required</label>
-                </li>
+
                 <li className="grid grid-cols-3">
                     <button
                         className="bg-gray-200 px-4 py-2 border  hover:bg-gray-300 "
