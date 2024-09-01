@@ -1,6 +1,9 @@
 import Footer from "@/Components/Footer";
 import Logo from "@/Components/Logo";
-import { Link } from "@inertiajs/react";
+import { Toaster } from "@/Components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
+import { Link, usePage } from "@inertiajs/react";
+import { useEffect } from "react";
 
 function Layout({
     children,
@@ -14,6 +17,15 @@ function Layout({
     const headerHeight_h = "h-16";
     const sideBarWidth_pl = "pl-16";
 
+    const { toast } = useToast()
+    const { flash } = usePage().props
+    // console.log(flash.toast.title);
+    useEffect(() => {
+    if(flash.toast) {
+        toast(flash.toast)
+    }
+    }, [flash.toast])
+
     const bgStyle = {
         backgroundImage: `url("${bgImage}")`,
         backgroundSize: "cover",
@@ -21,6 +33,7 @@ function Layout({
     };
 
     return (
+        <>
         <div
             className={`${
                 sidebar && "pl-0 sm:pl-16"
@@ -38,6 +51,8 @@ function Layout({
                 {footer && <Footer />}
             </main>
         </div>
+        <Toaster className='z-[+1]' />
+        </>
     );
 
     function Header() {

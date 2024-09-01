@@ -61,7 +61,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
             <div className="relative">
                 {isLoggedIn || <GoogleModal />}
                 {isNewUser && (
-                    <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[2147483647]">
+                    <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[50]">
                         <div className="inter fixed bg-white mx-5 max-w-[40rem]  border-gray-400 border rounded-xl p-5 sm:p-10 space-y-5">
                             <div className="overflow-y-auto max-h-[70vh] pr-2 w-full">
                                 <Policy>
@@ -114,7 +114,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
 
     function GoogleModal() {
         return (
-            <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[2147483647]">
+            <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[50]">
                 <div className="bg-white w-[25rem] max-w-[25rem] max-h-[80vh] border-gray-400 border rounded-xl p-2 mx-5">
                     {/* <form onSubmit={submit}> */}
                     <div>

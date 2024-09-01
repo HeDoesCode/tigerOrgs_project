@@ -29,12 +29,13 @@ class GoogleController extends Controller
 
         $registeredUser = User::where('email', $googleUser->email)->first();
 
-        
+
         if ($registeredUser == null) {
             return redirect()->route('login')->with('error', 'You are not authorized to access this application.');
         }
 
         Auth::login($registeredUser);
+        session()->flash('toast', 'test');
         return redirect()->intended('/');
     }
 }
