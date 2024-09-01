@@ -2,15 +2,20 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
 class UserFactory extends Factory
 {
+
+    private static $emailCounter = 1;
+    
     public function definition()
     {
         $firstname = strtolower(fake()->firstName());
@@ -18,14 +23,33 @@ class UserFactory extends Factory
         $email = $firstname.'.'.$lastname.'.'.'cics@ust.edu.ph';
 
         return [
-            'userID' => '2024'.random_int(100000,999999),
-            'email' => $email,
+            'userID' => '2024' . fake()->unique()->numberBetween(100000, 999999),
+            'email' => $this->generateUniqueEmail($firstname, $lastname),
             'firstname' => $firstname,
             'lastname' => $lastname,
             'middlename' => 'CICS',
             'college' => 'College of Information and Computing Sciences',
             'status' => 'student',
         ];
+    }
+
+    protected function generateUniqueEmail($firstname, $lastname)
+    {
+        // Custom email generation logic
+        $email = strtolower("{$firstname}.{$lastname}." . self::$emailCounter . '@ust.edu.ph');
+        self::$emailCounter++;
+        return $email;
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            
+            $roleIDs = Role::whereIn('role_description', ['superadmin', 'admin', 'student'])->pluck('roleID')->toArray();
+            if (!empty($roleIDs)) {
+                $user->roles()->attach($this->faker->randomElement($roleIDs));
+            }
+        });
     }
 
     // /**

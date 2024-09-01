@@ -4,7 +4,7 @@ import IconStatus from "@/Components/Icons/IconStatus";
 import IconChevronDown from "@/Components/Icons/IconChevronDown";
 import AdminDropdownMenu from "@/Components/Admin/AdminDropdownMenu";
 
-function AdminOrgCard({ edit, visible, setVisible }) {
+function AdminOrgCard({ edit, visible, setVisible, organization }) {
     const visibilityClass = visible
         ? "bg-green-50  border-green-600 text-green-800"
         : "bg-red-50  border-red-600 text-red-800";
@@ -16,17 +16,18 @@ function AdminOrgCard({ edit, visible, setVisible }) {
                     <div className="p-2 content-center">
                         <img
                             className="rounded-full"
-                            src="https://scontent.fmnl3-3.fna.fbcdn.net/v/t39.30808-6/440096730_826883032808917_2272899317032424872_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFY16kie3QKS5JLsu4R5Co3s8I0CHAxSVezwjQIcDFJV5grYXpdnx2rAo0x6IfMB54BbPIGz1zC9qWORtbekVnR&_nc_ohc=o4senzkxINEQ7kNvgEcR4qP&_nc_ht=scontent.fmnl3-3.fna&oh=00_AYAIbyF-ixCWFza2D-A3bW7QegWlGJsxnzn_4qB24rLvww&oe=66BA59F9"
+                            src={organization.logo}
+                            alt={organization.name}
                         />
                     </div>
                     <div className="col-span-2  px-2">
                         <h1 className="text-sm font-bold py-4 ">
-                            SITE Society of Information Technology Enthusiast
+                            {organization.name}
                         </h1>
                     </div>
                 </div>
                 <h3 className="text-gray-500 text-xs pt-4 text-justify font-semibold">
-                    College of Information and Computing Sciences
+                    {organization.department}
                 </h3>
             </div>
 
@@ -39,7 +40,7 @@ function AdminOrgCard({ edit, visible, setVisible }) {
                         Members:
                     </div>
                     <div className="text-sm font-semibold col-start-4 col-end-7 flex justify-center">
-                        116
+                        {organization.members_count}
                     </div>
                 </div>
 
@@ -51,7 +52,7 @@ function AdminOrgCard({ edit, visible, setVisible }) {
                         <span>Visibility:</span>
                     </div>
 
-                    {!edit ? (
+                    {edit ? (
                         <div
                             className={`text-sm font-semibold col-start-4 col-end-7 flex justify-center rounded-xl border-2 ${visibilityClass}`}
                         >

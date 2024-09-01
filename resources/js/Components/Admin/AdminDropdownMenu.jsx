@@ -7,7 +7,7 @@ import {
     DropdownMenuLabel,
 } from "@/Components/ui/dropdown-menu";
 
-function AdminDropdownMenu({ ...props }) {
+function AdminDropdownMenu({ onSelect, ...props }) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>{props.triggerContent}</DropdownMenuTrigger>
