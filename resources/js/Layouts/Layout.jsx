@@ -11,10 +11,8 @@ function Layout({
     noPadding,
 }) {
     // const headerHeight_pt = 'pt-[4.5rem]';
-    const headerHeight_pt = "pt-16";
     const headerHeight_h = "h-16";
     const sideBarWidth_pl = "pl-16";
-    const sideBarWidth_w = "w-16";
 
     const bgStyle = {
         backgroundImage: `url("${bgImage}")`,
