@@ -1,36 +1,71 @@
-import { Head } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import SuperAdminLayout from "@/Layouts/SuperAdminLayout";
 import IconInvite from "@/Components/Icons/IconInvite";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
 import MainAdminFrame from "@/Components/MainAdminFrame";
 import IconSave from "@/Components/Icons/IconSave";
 import IconCancel from "@/Components/Icons/IconCancel";
-
-import ControlContainer from "@/Components/Organizations/ControlContainer";
-
 import IconEdit from "@/Components/Icons/IconEdit";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminButton from "@/Components/Admin/AdminButton";
 import AdminOrgCard from "@/Components/Admin/AdminOrgCard";
 
-export default function SuperAdminManage() {
-    const [edit, setEdit] = useState(true);
-    const [visible, setVisible] = useState(true);
-    const [originalVisible, setOriginalVisible] = useState(visible);
+export default function SuperAdminManage({ organizations }) {
+    const [edit, setEdit] = useState(false);
+    const [visibleStates, setVisibleStates] = useState(
+        organizations.reduce((acc, org) => {
+            acc[org.orgID] = org.visibility;
+            return acc;
+        }, {})
+    );
+
+    const { data, setData, post, processing, reset } = useForm({
+        organizations: organizations.map((org) => ({
+            id: org.orgID,
+            visibility: org.visibility,
+        })),
+    });
+
+    useEffect(() => {
+        setData(
+            "organizations",
+            organizations.map((org) => ({
+                id: org.orgID,
+                visibility: visibleStates[org.orgID],
+            }))
+        );
+    }, [visibleStates]);
 
     const toggleEdit = () => {
-        if (!edit) {
-            setOriginalVisible(visible);
-        } else {
-            setVisible(originalVisible);
-        }
         setEdit((prevEdit) => !prevEdit);
     };
 
     const handleSave = () => {
-        //logic pang save
-        setOriginalVisible(visible);
+        post(route("superadmin.update-organizations"), {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                setEdit(false);
+                // Update the initial state of organizations after successful save
+                organizations.forEach((org) => {
+                    org.visibility = visibleStates[org.orgID];
+                });
+            },
+            onError: () => {
+                console.error("Save failed. Please try again.");
+            },
+        });
+    };
+
+    const handleCancel = () => {
+        setVisibleStates(
+            organizations.reduce((acc, org) => {
+                acc[org.orgID] = org.visibility;
+                return acc;
+            }, {})
+        );
         setEdit(false);
+        reset();
     };
 
     return (
@@ -54,8 +89,8 @@ export default function SuperAdminManage() {
                     title="Recruitment Enabled"
                 >
                     <div className="w-full">
-                        <div className=" flex justify-end mt-5 me-5">
-                            {edit ? (
+                        <div className="flex justify-end mt-5 me-5">
+                            {!edit ? (
                                 <AdminButton
                                     className="bg-white hover:bg-gray-800 hover:text-white"
                                     onClick={toggleEdit}
@@ -69,11 +104,11 @@ export default function SuperAdminManage() {
                                         onClick={handleSave}
                                         icon={<IconSave />}
                                         name="Save"
+                                        disabled={processing}
                                     />
-
                                     <AdminButton
                                         className="mr-2 bg-red-100 hover:text-white hover:bg-red-800"
-                                        onClick={toggleEdit}
+                                        onClick={handleCancel}
                                         icon={<IconCancel />}
                                         name="Cancel"
                                     />
@@ -82,11 +117,20 @@ export default function SuperAdminManage() {
                         </div>
 
                         <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 p-5">
-                            <AdminOrgCard
-                                edit={edit}
-                                visible={visible}
-                                setVisible={setVisible}
-                            />
+                            {organizations.map((organization) => (
+                                <AdminOrgCard
+                                    key={organization.orgID}
+                                    edit={edit}
+                                    visible={visibleStates[organization.orgID]}
+                                    setVisible={(newValue) => {
+                                        setVisibleStates((prevState) => ({
+                                            ...prevState,
+                                            [organization.orgID]: newValue,
+                                        }));
+                                    }}
+                                    organization={organization}
+                                />
+                            ))}
                         </div>
                     </div>
                 </MainAdminFrame>
