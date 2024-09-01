@@ -10,17 +10,8 @@ import {
 } from "@/Components/ui/select";
 import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 
-function Edit() {
-    const departments = [
-        {
-            name: "(CICS) College of Information and Computing Sciences",
-            value: "cics",
-        },
-        {
-            name: "(FOE) Faculty of Engineering",
-            value: "foe",
-        },
-    ];
+function Edit({ user, email }) {
+    const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
 
     return (
         <div className="w-full">
@@ -30,39 +21,42 @@ function Edit() {
                     Manage <span className="text-[#ffb700]">Profile</span>
                 </div>
                 <div className="mt-4 w-full flex justify-center px-5">
-                    <div className="w-full max-w-[40rem] flex flex-col items-center drop-shadow shadow-black rounded-[2rem] space-y-3 bg-[#F4F4F4] border border-gray-300">
+                    <div className="w-full max-w-[65rem] flex flex-col items-center drop-shadow shadow-black rounded-[2rem] space-y-3 bg-[#F4F4F4] border border-gray-300">
                         <div className="h-36 w-full flex flex-col justify-center px-16 space-y-3 bg-[#ffd875] rounded-[2rem]">
-                            <span className="poetsen-one text-3xl">
-                                Alex Martinez
+                            <span className="poetsen-one text-3xl uppercase ">
+                                {fullName}
                             </span>
                             <div className="flex space-x-3">
                                 <IconMailFilled />
-                                <span>alex.martinez.cics@ust.edu.ph</span>
+                                <span>{user.email}</span>
                             </div>
                         </div>
                         <div className="w-full rounded-[2rem] bg-[#F0F0F0] drop-shadow border border-gray-300 p-8">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <InputField
-                                    type="number"
-                                    required
-                                    title="ID Number"
-                                    placeholder="2000123456"
-                                    min={2000000000}
-                                    max={2999999999}
-                                />
-                                <InputField
-                                    type="select"
-                                    required
-                                    title="Department"
-                                    placeholder="Select Department"
-                                    contents={departments}
-                                />
+                                <div className="">
+                                    ID Number:
+                                    <div className="text-lg font-semibold">
+                                        {user.userID}
+                                    </div>
+                                </div>
+                                <div className="">
+                                    Affiliation:
+                                    <div className="text-lg font-semibold ">
+                                        {user.college}
+                                    </div>
+                                </div>
+                                <div className="">
+                                    Stakeholder Category:
+                                    <div className="text-lg font-semibold ">
+                                        {user.status}
+                                    </div>
+                                </div>
+
                                 <InputField
                                     type="text"
                                     required
                                     title="Section"
                                     placeholder="[YEAR]-[SECTION] ex. 3-ITG"
-                                    contents={departments}
                                 />
                             </div>
                             <div className="mt-10">
