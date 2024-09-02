@@ -19,11 +19,10 @@ function Layout({
 
     const { toast } = useToast()
     const { flash } = usePage().props
-    // console.log(flash.toast.title);
     useEffect(() => {
-    if(flash.toast) {
-        toast(flash.toast)
-    }
+        if (flash.toast) {
+            toast(flash.toast)
+        }
     }, [flash.toast])
 
     const bgStyle = {
@@ -34,24 +33,22 @@ function Layout({
 
     return (
         <>
-        <div
-            className={`${
-                sidebar && "pl-0 sm:pl-16"
-            } flex mx-auto select-none max-w-[1920px]`}
-        >
-            <Header />
-            <div className="z-50">{sidebar}</div>
-            <main
-                className={`w-full overflow-x-clip overflow-y-auto h-screen ${
-                    noPadding ? "pt-16" : "pt-[4.5rem]"
-                } ${noPadding || "px-4"} select-text flex flex-col`}
-                style={bgImage ? bgStyle : {}}
+            <div
+                className={`${sidebar && "pl-0 sm:pl-16"
+                    } flex mx-auto select-none max-w-[1920px]`}
             >
-                {children}
-                {footer && <Footer />}
-            </main>
-        </div>
-        <Toaster className='z-[+1]' />
+                <Header />
+                <div className="z-50">{sidebar}</div>
+                <main
+                    className={`w-full overflow-x-clip overflow-y-auto h-screen ${noPadding ? "pt-16" : "pt-[4.5rem]"
+                        } ${noPadding || "px-4"} select-text flex flex-col`}
+                    style={bgImage ? bgStyle : {}}
+                >
+                    {children}
+                    {footer && <Footer />}
+                </main>
+            </div>
+            <Toaster className='z-[+1]' />
         </>
     );
 
@@ -59,9 +56,8 @@ function Layout({
         return (
             <div className="relative">
                 <div
-                    className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 ${headerHeight_h} ${
-                        sidebar && sideBarWidth_pl
-                    }
+                    className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 ${headerHeight_h} ${sidebar && sideBarWidth_pl
+                        }
                      bg-[#EEEEEE] px-4 border-gray-400 border-b-[1px] z-40`}
                 >
                     <Link className="contents" href="/">
