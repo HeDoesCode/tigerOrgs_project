@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\BackendTestingController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SuperAdminController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -39,15 +41,18 @@ Route::get('organizations/{any}/home', function () {
 //     return Inertia::render('Profile/Edit');
 // })->name('profile');
 
+
+
 //superadmin temporary routes
+Route::controller(SuperAdminController::class)->group(function(){
+    //manage page 
+    Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
+    Route::get('superadmin/status', 'manage')->name('superadmin.status');
 
-Route::get('/superadmin/status', function () {
-    return Inertia::render('SuperAdmin/SuperAdminManage');
-})->name('superadmin.status');
-
-Route::get('/superadmin/invite', function () {
-    return Inertia::render('SuperAdmin/SuperAdminInvite');
-})->name('superadmin.invite');
+    //invite page
+    Route::get('/superadmin/search-users', 'search');
+    Route::post('/superadmin/update-organizations', 'updateOrganizations')-> name('superadmin.update-organizations');
+});
 
 Route::get('/superadmin/loginhistory', function () {
     return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
@@ -102,4 +107,7 @@ Route::get('/admin/form-builder', function (){
     return Inertia::render('Admin/AdminFormBuilder');
 })->name('admin.formbuilder');
 
+// temporary testing route
+
+Route::get('/testing', [BackendTestingController::class, 'run']);
 require __DIR__ . '/auth.php';

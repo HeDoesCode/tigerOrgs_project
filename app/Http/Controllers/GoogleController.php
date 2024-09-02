@@ -22,30 +22,19 @@ class GoogleController extends Controller
     public function googlecallback()
     {
         try {
-
-            $user = Socialite::driver('google')->user();
-
-            $finduser = User::where('google_id', $user->id)->orWhere('email', $user->email)->first();
-
-            if ($finduser) {
-
-                Auth::login($finduser);
-
-                return redirect()->intended('');
-            } else {
-                $newUser = User::create([
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'google_id' => $user->id,
-                    'password' => encrypt('123456dummy')
-                ]);
-
-                Auth::login($newUser);
-
-                return redirect()->intended('/');
-            }
+            $googleUser = Socialite::driver('google')->user();
         } catch (Exception $e) {
-            dd($e->getMessage());
+            return redirect()->route('login')->with('error', 'There was an error logging in. Please try again.');
         }
+
+        $registeredUser = User::where('email', $googleUser->email)->first();
+
+        
+        if ($registeredUser == null) {
+            return redirect()->route('login')->with('error', 'You are not authorized to access this application.');
+        }
+
+        Auth::login($registeredUser);
+        return redirect()->intended('/');
     }
 }

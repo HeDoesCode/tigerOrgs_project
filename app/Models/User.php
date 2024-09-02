@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -11,37 +12,46 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    public $timestamps = false;
+    public $incrementing = false;
+
+    protected $primaryKey = 'userID';
     protected $fillable = [
-        'name',
+        'userID',
         'email',
-        'password',
+        'firstname',
+        'lastname',
+        'middlename',
+        'college',
+        'status',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+    public function roles() : BelongsToMany {
+        return $this->belongsToMany(Role::class, 'user_roles', 'userID', 'roleID');
     }
+
+    public function memberOf() : BelongsToMany {
+        return $this->belongsToMany(Organization::class, 'organization_members', 'userID', 'orgID');
+    }
+
+    public function follows() : BelongsToMany {
+        return $this->belongsToMany(Organization::class, 'organization_followers', 'userID', 'orgID');
+    }
+
+    public function interests() : BelongsToMany {
+        return $this->belongsToMany(Keyword::class, 'user_keywords', 'userID', 'keyID');
+    }
+
+    // protected $hidden = [
+    //     'password',
+    //     'remember_token',
+    // ];
+
+    // protected function casts(): array
+    // {
+    //     return [
+    //         'email_verified_at' => 'datetime',
+    //         'password' => 'hashed',
+    //     ];
+    // }
 }
