@@ -11,7 +11,8 @@ const typeLabels = {
     select: "Select Dropdown",
     radio: "Multiple Choice",
     checkbox: "Checkboxes",
-    "pdf upload": "PDF Upload",
+    file_upload: "PDF Upload",
+    image_upload: "Image Upload",
 };
 
 function EditableItem({ id, item }) {
@@ -37,12 +38,12 @@ function EditableItem({ id, item }) {
                         {typeLabels[item.type] || item.type}
                     </h3>
                 </div>
-                {item.type === "Select" ||
-                item.type === "Radio Group" ||
-                item.type === "Checkbox" ? (
-                    <EditMultiChoiceItem id={id} />
+                {item.type === "select" ||
+                item.type === "radio" ||
+                item.type === "checkbox" ? (
+                    <EditMultiChoiceItem id={id} type={item.type} />
                 ) : (
-                    <EditSimpleItem id={id} />
+                    <EditSimpleItem id={id} type={item.type} />
                 )}
             </div>
         </div>

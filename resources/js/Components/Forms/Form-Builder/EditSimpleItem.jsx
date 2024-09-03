@@ -3,9 +3,11 @@ import { useContext } from "react";
 import { FormActionsContext } from "../Context/FormActionsContext";
 import { useEffect } from "react";
 
-function EditSimpleItem({ id }) {
+function EditSimpleItem({ id, type }) {
+    const defaultQuestion = `${type}_${id}`;
+
     const { data, setData, post, processing, errors } = useForm({
-        question: "",
+        question: defaultQuestion,
         required: false,
     });
 
@@ -27,10 +29,10 @@ function EditSimpleItem({ id }) {
                 <li className="flex items-center gap-2 p-2">
                     <input
                         type="checkbox"
-                        id="required"
+                        id={`required_${id}`}
                         onChange={() => setData("required", !data.required)}
                     />
-                    <label htmlFor="required"> Required</label>
+                    <label htmlFor={`required_${id}`}> Required</label>
                 </li>
                 <li className="mb-2">
                     <input
@@ -38,6 +40,11 @@ function EditSimpleItem({ id }) {
                         type="text"
                         value={data.question}
                         onChange={(e) => setData("question", e.target.value)}
+                        onBlur={(e) => {
+                            e.target.value === ""
+                                ? setData("question", defaultQuestion)
+                                : setData("question", e.target.value);
+                        }}
                         placeholder="Type Question here..."
                         required
                     />
@@ -48,7 +55,7 @@ function EditSimpleItem({ id }) {
                         type="reset"
                         onClick={() =>
                             setData({
-                                question: "",
+                                question: defaultQuestion,
                                 required: false,
                             })
                         }

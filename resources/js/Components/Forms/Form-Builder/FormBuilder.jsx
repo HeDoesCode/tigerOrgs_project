@@ -3,13 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 import { closestCorners, DndContext } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 
-// import TextInput from "@/Components/ui/TextInput";
-// import NumberInput from "@/Components/ui/NumberInput";
-// import SelectInput from "@/Components/ui/SelectInput";
-// import RadioInput from "@/Components/ui/RadioInput";
-// import CheckboxesInput from "@/Components/ui/CheckboxesInput";
-// import FileUploadInput from "@/Components/ui/FileUploadInput";
-
 import letterT from "@/Components/Icons/letterT";
 import number123 from "@/Components/Icons/number123";
 import radiobutton from "@/Components/Icons/radiobutton";
@@ -17,18 +10,20 @@ import select from "@/Components/Icons/select";
 import checkbox from "@/Components/Icons/checkbox";
 import Iconfileupload from "@/Components/Icons/Iconfileupload";
 import IconResume from "@/Components/Icons/IconResume";
+import emailIcon from "@/Components/Icons/emailIcon";
 
 import { FormActionsContext } from "../Context/FormActionsContext";
 import BuilderWrap from "./BuilderWrap";
 
 const inputTypes = [
-    { type: "Text", icon: letterT },
-    { type: "Number", icon: number123 },
-    { type: "Select", icon: radiobutton },
-    { type: "Radio Group", icon: select },
-    { type: "Checkbox", icon: checkbox },
-    { type: "CV/Resume Upload", icon: Iconfileupload },
-    { type: "Image Upload", icon: IconResume },
+    { type: "text", icon: letterT },
+    { type: "number", icon: number123 },
+    { type: "email", icon: emailIcon },
+    { type: "select", icon: select },
+    { type: "radio", icon: radiobutton },
+    { type: "checkbox", icon: checkbox },
+    { type: "file_upload", icon: Iconfileupload },
+    { type: "image_upload", icon: IconResume },
 ];
 
 function FormBuilder() {
@@ -62,11 +57,7 @@ function FormBuilder() {
             required: false,
         };
 
-        if (
-            type === "Select" ||
-            type === "Radio Group" ||
-            type === "Checkbox"
-        ) {
+        if (type === "select" || type === "radio" || type === "checkbox") {
             newItem = {
                 ...newItem,
                 options: [],
@@ -82,9 +73,9 @@ function FormBuilder() {
         );
 
         switch (updatedItems[editedItemIndex].type) {
-            case "Select":
-            case "Checkbox":
-            case "Radio Group":
+            case "select":
+            case "checkbox":
+            case "radio":
                 updatedItems[editedItemIndex] = {
                     ...updatedItems[editedItemIndex],
                     name: data.question,

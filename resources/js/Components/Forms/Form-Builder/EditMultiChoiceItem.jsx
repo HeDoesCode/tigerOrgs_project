@@ -2,12 +2,14 @@ import { useContext, useEffect } from "react";
 import { FormActionsContext } from "../Context/FormActionsContext";
 import { useForm } from "@inertiajs/react";
 
-function EditMultiChoiceItem({ id }) {
+function EditMultiChoiceItem({ id, type }) {
+    const defaultQuestion = `${type}_${id}`;
+
     const { delete: handleDeleteItem, edit: handleEditItem } =
         useContext(FormActionsContext);
 
     const { data, setData, post, processing, errors } = useForm({
-        question: "",
+        question: defaultQuestion,
         required: false,
         options: ["option 1", "option 2", "option 3"],
     });
@@ -51,10 +53,10 @@ function EditMultiChoiceItem({ id }) {
                 <li className="flex items-center gap-2 p-2">
                     <input
                         type="checkbox"
-                        id="required"
+                        id={`required_${id}`}
                         onChange={() => setData("required", !data.required)}
                     />
-                    <label htmlFor="required"> Required</label>
+                    <label htmlFor={`required_${id}`}> Required</label>
                 </li>
                 <li className="mb-2">
                     <input
@@ -62,6 +64,11 @@ function EditMultiChoiceItem({ id }) {
                         type="text"
                         value={data.question}
                         onChange={(e) => setData("question", e.target.value)}
+                        onBlur={(e) => {
+                            e.target.value === ""
+                                ? setData("question", defaultQuestion)
+                                : setData("question", e.target.value);
+                        }}
                         placeholder="Type Question here..."
                         required
                     />
@@ -78,6 +85,17 @@ function EditMultiChoiceItem({ id }) {
                                     onChange={(e) =>
                                         handleEditOption(index, e.target.value)
                                     }
+                                    onBlur={(e) => {
+                                        e.target.value === ""
+                                            ? handleEditOption(
+                                                  index,
+                                                  `Option ${index + 1}`
+                                              )
+                                            : handleEditOption(
+                                                  index,
+                                                  e.target.value
+                                              );
+                                    }}
                                 />
 
                                 <button
@@ -106,7 +124,7 @@ function EditMultiChoiceItem({ id }) {
                         type="reset"
                         onClick={() =>
                             setData({
-                                question: "",
+                                question: defaultQuestion,
                                 required: false,
                                 options: ["option 1", "option 2", "option 3"],
                             })
