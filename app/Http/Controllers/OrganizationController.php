@@ -13,14 +13,39 @@ class OrganizationController extends Controller
 {
     public function browse(): Response
     {
-        $organizations = Organization::with('photos')
+        $query = Organization::query();
+
+        // handle search query
+        if (request('search')) {
+            $query->where('name', 'like', '%' . request('search') . '%');
+        }
+
+        // handle category filter
+        if (request('category')) {
+            // $query->where('name', 'like', '%' . request('search') . '%');
+            $query->where('department', request('category'));
+        }
+
+        // attach photos
+        $organizations = $query->with('photos')
             ->withCount('members')
             ->get();
-        $keywords = Keyword::all();
-        // dd($organizations);
+
+        $queryParameters = [];
+        if (request('search')) {
+            $queryParameters['search'] = request('search');
+        }
+        if (request('category')) {
+            $queryParameters['category'] = request('category');
+        }
+
+        $departments = Organization::distinct()
+            ->pluck('department');
+
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
-            'keywords' => $keywords,
+            'departments' => $departments,
+            'queryParameters' => $queryParameters ?: null,
         ]);
     }
 }
