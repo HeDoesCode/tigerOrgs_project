@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BackendTestingController;
+use App\Http\Controllers\FormBuilderController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
@@ -101,13 +102,11 @@ Route::middleware('auth')->group(function () {
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route::get('/form-builder', [FormBuilderController::class], 'show')->name('formbuilder');
-
-Route::get('/admin/form-builder', function (){
-    return Inertia::render('Admin/AdminFormBuilder');
-})->name('admin.formbuilder');
+// form builder routes
+Route::get('/admin/form-builder', [FormBuilderController::class, 'showBuilder'])->name('admin.formbuilder');
+Route::post('/admin/form-builder/save', [FormBuilderController::class, 'save']);
 
 // temporary testing route
-
 Route::get('/testing', [BackendTestingController::class, 'run']);
+
 require __DIR__ . '/auth.php';

@@ -14,6 +14,7 @@ import emailIcon from "@/Components/Icons/emailIcon";
 
 import { FormActionsContext } from "../Context/FormActionsContext";
 import BuilderWrap from "./BuilderWrap";
+import { router } from "@inertiajs/react";
 
 const inputTypes = [
     { type: "text", icon: letterT },
@@ -99,6 +100,16 @@ function FormBuilder() {
         setItems(items.filter((item) => item.id !== id));
     }
 
+    function handleSave() {
+        let dataToBeSent = JSON.stringify(items);
+
+        router.post("/admin/form-builder/save", dataToBeSent, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    }
+
     return (
         <div className="p-5">
             <div className="flex flex-col justify-center bg-white m-4 p-4 max-w-xl mx-auto">
@@ -126,10 +137,10 @@ function FormBuilder() {
                             <span>{input.type}</span>
                         </button>
                     ))}
-                    <button onClick={() => console.log(items)}>
-                        Check Items
-                    </button>
                 </div>
+
+                <button onClick={() => console.log(items)}>Check Items</button>
+                <button onClick={handleSave}>Save</button>
             </div>
         </div>
     );
