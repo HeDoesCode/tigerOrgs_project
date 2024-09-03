@@ -20,6 +20,9 @@ class OrganizationController extends Controller
             $query->where('name', 'like', '%' . request('search') . '%');
         }
 
+        $departments = $query->distinct()
+            ->pluck('department');
+
         // handle category filter
         if (request('category')) {
             // $query->where('name', 'like', '%' . request('search') . '%');
@@ -39,8 +42,6 @@ class OrganizationController extends Controller
             $queryParameters['category'] = request('category');
         }
 
-        $departments = Organization::distinct()
-            ->pluck('department');
 
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
