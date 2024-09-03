@@ -68,6 +68,10 @@ function Organizations({ organizations, queryParameters = null, departments, key
         return () => clearTimeout(filterCategoryDebounce);
     }
 
+    const handleClearQuery = () => {
+        router.get(route("organizations"));
+    }
+
     return (
         <div className="w-full">
             <Head title="Browse Organizations" />
@@ -81,11 +85,11 @@ function Organizations({ organizations, queryParameters = null, departments, key
                         <ControlContainer className="relative" name="Search">
                             <input
                                 type="text"
-                                className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-12 pl-10 focus:pl-3 transition-all duration-200"
+                                className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-11 pl-10 focus:pl-3 transition-all duration-200"
                                 defaultValue={queryParameters['search'] || ''}
                                 onChange={handleSearch}
                             />
-                            <div className="absolute text-gray-500 left-0 bottom-0 h-12 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
+                            <div className="absolute text-gray-500 left-0 bottom-0 h-11 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
                                 <IconSearch size="22" />
                             </div>
                         </ControlContainer>
@@ -99,7 +103,12 @@ function Organizations({ organizations, queryParameters = null, departments, key
                                 <SelectTrigger className="w-full h-12 border-gray-500 bg-transparent">
                                     <SelectValue placeholder="All" />
                                 </SelectTrigger>
-                                <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand">
+                                <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand"
+                                    ref={(ref) => {
+                                        if (!ref) return;
+                                        ref.ontouchstart = (e) => e.preventDefault();
+                                    }}
+                                >
                                     <SelectItem
                                         value="All"
                                         className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
@@ -115,21 +124,20 @@ function Organizations({ organizations, queryParameters = null, departments, key
                                             {department}
                                         </SelectItem>
                                     ))}
-                                    {/* <SelectItem
-                                        value="Conservatory of Music"
-                                        className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
-                                    >
-                                        Conservatory of Music
-                                    </SelectItem>
-                                    <SelectItem
-                                        value="College of Architecture"
-                                        className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
-                                    >
-                                        College of Architecture
-                                    </SelectItem> */}
                                 </SelectContent>
                             </Select>
                         </ControlContainer>
+
+                        {Object.keys(queryParameters).length !== 0 && (
+                            <ControlContainer className='flex items-center !-mb-3 !mt-3'>
+                                <button
+                                    className="w-fit px-3 py-1 bg-[#ffb700] hover:bg-[#f1ad00] rounded-lg text-sm"
+                                    onClick={handleClearQuery}
+                                >
+                                    Clear All
+                                </button>
+                            </ControlContainer>
+                        )}
 
                         <ControlContainer>
                             <ul className="bg-transparent flex flex-col py-3 rounded-md space-y-4">
