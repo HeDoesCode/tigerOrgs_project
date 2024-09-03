@@ -1,15 +1,29 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout.jsx";
 import Logo from "@/Components/Logo";
 import IconSearch from "@/Components/Icons/IconSearch";
 import { Checkbox } from "@/Components/ui/checkbox"
 import Policy from "@/Components/ui/Custom/Policy";
+import { useState } from "react";
 
 
 function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
     const hideImage = () => {
         this.style.display = "none";
     };
+
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearchEnterKey = (e) => {
+        if (e.key !== "Enter") return;
+        handleSearchQuery();
+    }
+
+    const handleSearchQuery = () => {
+        const queryParameters = {};
+        queryParameters['search'] = searchQuery;
+        router.get(route("organizations"), queryParameters);
+    }
 
     return (
         <div className="w-full">
@@ -41,8 +55,12 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
                                 type="text"
                                 className="flex-1 rounded-l-full border-gray-400 border-l-[1px] border-y-[1px] border-r-0 pl-6 sm:pl-16 text-base sm:text-lg text-ellipsis overflow-hidden"
                                 placeholder="Search Organizations"
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={handleSearchEnterKey}
                             />
-                            <button className="rounded-r-full h-auto flex items-center justify-center min-w-12 w-24 bg-[#FFCD12] border-gray-400 border-r-[1px] border-y-[1px] border-l-0 nunito font-bold">
+                            <button className="rounded-r-full h-auto flex items-center justify-center min-w-12 w-24 bg-[#FFCD12] border-gray-400 border-r-[1px] border-y-[1px] border-l-0 nunito font-bold"
+                                onClick={handleSearchQuery}
+                            >
                                 <span className="hidden sm:inline">Search</span>
                                 <span className="inline sm:hidden">
                                     <IconSearch size={"22"} />
