@@ -10,9 +10,11 @@ import {
 } from "@/Components/ui/select";
 import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 
-function Edit({ user, email }) {
+function Edit({ user }) {
     const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
-
+    const handleSectionChange = (e) => {
+        setSection(e.target.value);
+    };
     return (
         <div className="w-full">
             <Head title="Profile" />
@@ -22,7 +24,7 @@ function Edit({ user, email }) {
                 </div>
                 <div className="mt-4 w-full flex justify-center px-5">
                     <div className="w-full max-w-[65rem] flex flex-col items-center drop-shadow shadow-black rounded-[2rem] space-y-3 bg-[#F4F4F4] border border-gray-300">
-                        <div className="h-36 w-full flex flex-col justify-center px-16 space-y-3 bg-[#ffd875] rounded-[2rem]">
+                        <div className="h-36 w-full flex flex-col justify-center px-12 space-y-3 bg-[#ffd875] rounded-[2rem]">
                             <span className="poetsen-one text-3xl uppercase ">
                                 {fullName}
                             </span>
@@ -57,12 +59,17 @@ function Edit({ user, email }) {
                                     required
                                     title="Section"
                                     placeholder="[YEAR]-[SECTION] ex. 3-ITG"
+                                    // value={"value"}
+                                    onChange={handleSectionChange}
                                 />
                             </div>
                             <div className="mt-10">
                                 <InputField title="Interests">
                                     <ControlKeywords />
                                 </InputField>
+                            </div>
+                            <div className="mt-10">
+                                <InputField title="CV/Resume"></InputField>
                             </div>
                         </div>
                     </div>
@@ -81,6 +88,8 @@ function Edit({ user, email }) {
         contents,
         min,
         max,
+        onChange,
+        value,
     }) {
         switch (type) {
             case "number": {
@@ -116,6 +125,8 @@ function Edit({ user, email }) {
                             max={max}
                             required={required}
                             placeholder={placeholder}
+                            value={value}
+                            onChange={onChange}
                         />
                     </div>
                 );
