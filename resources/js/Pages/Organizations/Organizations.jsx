@@ -13,8 +13,28 @@ import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 import OrganizationJoined from "@/Components/Organizations/OrganizationJoined";
 import OrganizationContainerRow from "@/Components/Organizations/OrganizationContainerRow";
 import OrganizationTile from "@/Components/Organizations/OrganizationTile";
+import Pre from "@/Components/Pre";
+import { useState } from "react";
+import { useEffect } from "react";
 
-function Organizations() {
+function Organizations({ organizations, keywords }) {
+    // console.log(organizations)
+    const [organizationList, setOrganizationList] = useState({});
+
+    useEffect(() => {
+        const groupedByDepartment = organizations.reduce((acc, organization) => {
+            const department = organization.department;
+            if (!acc[department]) {
+                acc[department] = [];
+            }
+            acc[department].push(organization);
+            return acc;
+        }, {});
+
+        setOrganizationList(groupedByDepartment);
+    }, [organizations]);
+
+
     return (
         <div className="w-full">
             <Head title="Browse Organizations" />
@@ -95,13 +115,9 @@ function Organizations() {
 
                     {/* orgs panel */}
                     <div className="md:flex-1 space-y-3 overflow-x-hidden">
-                        <OrganizationContainerRow title="Suggested based on your interests">
-                            <Test />
-                        </OrganizationContainerRow>
-                        <OrganizationContainerRow title="Suggested based on your interests">
-                            <Test />
-                        </OrganizationContainerRow>
-                        <OrganizationContainerRow title="Suggested based on your interests">
+                        {/* <Pre object={organizationList} /> */}
+
+                        {/* <OrganizationContainerRow title="Suggested based on your interests">
                             <OrganizationTile
                                 orgBg={
                                     "https://www.brandignity.com/wp-content/uploads/2020/12/digital-marketing-photography.jpg"
@@ -124,7 +140,24 @@ function Organizations() {
                                 desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
                                 isRecruiting
                             />
-                        </OrganizationContainerRow>
+                        </OrganizationContainerRow> */}
+
+                        {Object.entries(organizationList).map(([department, orgs]) => (
+                            <OrganizationContainerRow key={department} title={department}>
+                                {orgs.map((org, index) => (
+                                    <OrganizationTile
+                                        key={index}
+                                        orgBg={org.photos[0] || 'https:www.brandignity.com/wp-content/uploads/2020/12/digital-marketing-photography.jpg'}
+                                        orgIcon={org.logo}
+                                        title={org.name}
+                                        desc={org.description}
+                                        count={org.members_count}
+                                        href={`#linkToOrgId${org.orgId}`}
+                                    />
+                                ))}
+
+                            </OrganizationContainerRow>
+                        ))}
                     </div>
                 </div>
             </UserLayout>
