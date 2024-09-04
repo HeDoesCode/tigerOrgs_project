@@ -21,7 +21,7 @@ class isSuperAdmin
         // return null if false
         // return next request if true
 
-        if (User::find(Auth::id())->roles[0]->role_description === 'superAdmin')
+        if (User::find(Auth::id())->roles[0]->role_description === 'superadmin')
             return $next($request);
         else {
             // session()->flash('toast', [
