@@ -45,7 +45,8 @@ class GoogleController extends Controller
         }
 
 
-        Auth::login($registeredUser, true);
+        // Auth::login($registeredUser, remembermeboolean);
+        Auth::login($registeredUser);
 
         // remember me
         return redirect()->intended('/');
