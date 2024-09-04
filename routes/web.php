@@ -22,15 +22,8 @@ Route::get('/', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Route::get('/organizations', function () {
-//     return Inertia::render('Organizations/Organizations');
-// })->name('organizations');
-
 // temp user routes
 Route::middleware('auth')->group(function () {
-    // Route::get('/organizations', function () {
-    //     return Inertia::render('Organizations/Organizations');
-    // })->name('organizations');
     Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
     // other user-level routes
 });
