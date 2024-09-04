@@ -41,17 +41,15 @@ Route::get('organizations/{any}/home', function () {
 //     return Inertia::render('Profile/Edit');
 // })->name('profile');
 
-
-
 //superadmin temporary routes
-Route::controller(SuperAdminController::class)->group(function(){
+Route::controller(SuperAdminController::class)->group(function () {
     //manage page 
     Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
     Route::get('superadmin/status', 'manage')->name('superadmin.status');
 
     //invite page
     Route::get('/superadmin/search-users', 'search');
-    Route::post('/superadmin/update-organizations', 'updateOrganizations')-> name('superadmin.update-organizations');
+    Route::post('/superadmin/update-organizations', 'updateOrganizations')->name('superadmin.update-organizations');
 });
 
 Route::get('/superadmin/loginhistory', function () {
