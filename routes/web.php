@@ -103,7 +103,7 @@ Route::middleware('auth')->group(function () {
 
 // Route::get('/form-builder', [FormBuilderController::class], 'show')->name('formbuilder');
 
-Route::get('/admin/form-builder', function (){
+Route::get('/admin/form-builder', function () {
     return Inertia::render('Admin/AdminFormBuilder');
 })->name('admin.formbuilder');
 
