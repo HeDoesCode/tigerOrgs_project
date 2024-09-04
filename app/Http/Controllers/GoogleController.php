@@ -24,17 +24,31 @@ class GoogleController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
         } catch (Exception $e) {
-            return redirect()->route('login')->with('error', 'There was an error logging in. Please try again.');
+            session()->flash('toast', [
+                'title' => 'Login Error',
+                'description' => 'There was an error logging in. Please try again later.',
+                'duration' => 2000,
+                'variant' => 'destructive'
+            ]);
+            return redirect()->route('login');
         }
 
         $registeredUser = User::where('email', $googleUser->email)->first();
 
-        
+
+        // if ($registeredUser == null) {
+        //     return redirect()->route('login')->with('error', 'You are not authorized to access this application.');
+        // }
+
         if ($registeredUser == null) {
-            return redirect()->route('login')->with('error', 'You are not authorized to access this application.');
+            return abort(403, 'Only enrolled students of the University of Santo Tomas can use this application.');
         }
 
+
+        // Auth::login($registeredUser, remembermeboolean);
         Auth::login($registeredUser);
+
+        // remember me
         return redirect()->intended('/');
     }
 }

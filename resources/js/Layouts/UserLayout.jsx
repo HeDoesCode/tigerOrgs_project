@@ -31,17 +31,17 @@ function UserLayout({ children, bgImage, noPadding }) {
                 <ul className="hidden sm:flex justify-end items-center space-x-6 nunito font-extrabold">
                     <li
                         className={
-                            url === routePath("dashboard")
+                            url === routePath("index")
                                 ? "font-bold text-[#ffbb10]"
                                 : ""
                         }
                     >
                         <Link
-                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl ${url === routePath("dashboard")
+                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl ${url === routePath("index")
                                 ? "text-[#ffbb10] hover:text-[#E7A600]"
                                 : ""
                                 }`}
-                            href={route("dashboard")}
+                            href={route("index")}
                         >
                             Home
                         </Link>
@@ -141,7 +141,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                         }
                     >
                         <DDM_Link
-                            current={url === routePath("dashboard")}
+                            current={url === routePath("index")}
                         >
                             Home
                         </DDM_Link>

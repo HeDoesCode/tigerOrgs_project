@@ -1,13 +1,14 @@
 <?php
 
-use Inertia\Inertia;
+use App\Http\Controllers\BackendTestingController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdminController;
-use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\BackendTestingController;
+use App\Http\Middleware\isAdmin;
+use App\Http\Middleware\isSuperAdmin;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -20,11 +21,17 @@ Route::get('/', function () {
         // 'phpVersion' => PHP_VERSION,
         'isLoggedIn' => Auth::check(),
     ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('index');
+
+// Route::get('/organizations', function () {
+//     return Inertia::render('Organizations/Organizations');
+// })->name('organizations');
 
 // temp user routes
 Route::middleware('auth')->group(function () {
-    Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
+    Route::get('/organizations', function () {
+        return Inertia::render('Organizations/Organizations');
+    })->name('organizations');
     // other user-level routes
 });
 
@@ -36,10 +43,8 @@ Route::get('organizations/{any}/home', function () {
 //     return Inertia::render('Profile/Edit');
 // })->name('profile');
 
-
-
 //superadmin temporary routes
-Route::controller(SuperAdminController::class)->group(function () {
+Route::middleware('isSuperAdmin')->controller(SuperAdminController::class)->group(function () {
     //manage page
     Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
     Route::get('superadmin/status', 'manage')->name('superadmin.status');
@@ -64,7 +69,7 @@ Route::get('/superadmin/dataupload', function () {
 
 
 //admin temporary routes
-Route::get('/admin/editpage', function () {
+Route::middleware('isAdmin')->get('/admin/editpage', function () {
     return Inertia::render('Admin/AdminEditPage');
 })->name('admin.editpage');
 
