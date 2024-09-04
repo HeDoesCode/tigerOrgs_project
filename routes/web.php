@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdminController;
+use App\Http\Middleware\isAdmin;
+use App\Http\Middleware\isSuperAdmin;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -42,8 +44,8 @@ Route::get('organizations/{any}/home', function () {
 // })->name('profile');
 
 //superadmin temporary routes
-Route::controller(SuperAdminController::class)->group(function () {
-    //manage page 
+Route::middleware(isSuperAdmin::class)->controller(SuperAdminController::class)->group(function () {
+    //manage page
     Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
     Route::get('superadmin/status', 'manage')->name('superadmin.status');
 
@@ -67,7 +69,7 @@ Route::get('/superadmin/dataupload', function () {
 
 
 //admin temporary routes
-Route::get('/admin/editpage', function () {
+Route::middleware(isAdmin::class)->get('/admin/editpage', function () {
     return Inertia::render('Admin/AdminEditPage');
 })->name('admin.editpage');
 
