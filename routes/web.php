@@ -21,7 +21,7 @@ Route::get('/', function () {
         // 'phpVersion' => PHP_VERSION,
         'isLoggedIn' => Auth::check(),
     ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('index');
 
 // Route::get('/organizations', function () {
 //     return Inertia::render('Organizations/Organizations');
@@ -44,7 +44,7 @@ Route::get('organizations/{any}/home', function () {
 // })->name('profile');
 
 //superadmin temporary routes
-Route::middleware(isSuperAdmin::class)->controller(SuperAdminController::class)->group(function () {
+Route::middleware('isSuperAdmin')->controller(SuperAdminController::class)->group(function () {
     //manage page
     Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
     Route::get('superadmin/status', 'manage')->name('superadmin.status');
@@ -69,7 +69,7 @@ Route::get('/superadmin/dataupload', function () {
 
 
 //admin temporary routes
-Route::middleware(isAdmin::class)->get('/admin/editpage', function () {
+Route::middleware('isAdmin')->get('/admin/editpage', function () {
     return Inertia::render('Admin/AdminEditPage');
 })->name('admin.editpage');
 
