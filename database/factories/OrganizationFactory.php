@@ -17,14 +17,11 @@ class OrganizationFactory extends Factory
     public function definition(): array
     {
         $departments = [
+            // 'Graduate School',
+            // 'Graduate School of Law',
             // 'University wide',
-            // 'College of Information and Computing Sciences',
-            // 'Faculty of Engineering',
-            // 'Faculty of Arts and Letters',
-            // 'College of Science',
-            // 'College of Commerce and Business Administration',
 
-            // 'University wide',
+
             'College of Information and Computing Sciences',
             'Faculty of Engineering',
             'Faculty of Arts and Letters',
@@ -42,14 +39,9 @@ class OrganizationFactory extends Factory
             'Institute of Physical Education and Athletics',
             'College of Rehabilitation Sciences',
             'College of Tourism and Hospitality Management',
-            // 'Graduate School',
-            // 'Graduate School of Law',
             'Faculty of Canon Law',
             'Faculty of Philosophy',
             'Faculty of Sacred Theology',
-            // 'Senior High School',
-            // 'Junior High School',
-            // 'Education High School',
         ];
 
         return [
