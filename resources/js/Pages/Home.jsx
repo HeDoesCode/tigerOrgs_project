@@ -193,7 +193,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
                                 Sign in with Google
                             </a>
                             <div className="flex ml-4 w-fit px-3 py-1 rounded-lg items-center space-x-3 hover:bg-gray-300 transition-all duration-100">
-                                <Checkbox id="rememberme" />
+                                <Checkbox id="rememberme" className='data-[state=checked]:bg-[#fdd56f] data-[state=checked]:text-black' />
                                 <label
                                     htmlFor="rememberme"
                                     className="select-none cursor-pointer"
