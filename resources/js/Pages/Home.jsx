@@ -30,7 +30,6 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
         setRememberMe(e.target.checked);
     };
 
-
     return (
         <div className="w-full">
             <Head title="Home" />
@@ -213,19 +212,20 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
                                 <GoogleLogo className="w-6 h-6" />
                                 Sign in with Google
                             </a>
-                            <div className="flex ml-4 w-fit px-3 py-1 rounded-lg items-center space-x-3 hover:bg-gray-300 transition-all duration-100">
-                                <input
-                                    type='checkbox'
-                                    id="rememberme"
-                                    className='checked:bg-[#ffb700]'
-                                    checked={rememberMe}
-                                    onChange={handleCheckboxChange}
-                                />
+                            <div className="flex ml-4 w-fit rounded-lg items-center hover:bg-gray-300">
+
                                 <label
                                     htmlFor="rememberme"
-                                    className="select-none cursor-pointer"
+                                    className="select-none cursor-pointer px-3 py-1 space-x-3 flex items-center"
                                 >
-                                    Remember Me
+                                    <input
+                                        type='checkbox'
+                                        id="rememberme"
+                                        className='checked:bg-[#ffb700] cursor-pointer'
+                                        checked={rememberMe}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    <span>Remember Me</span>
                                 </label>
                             </div>
                         </div>
