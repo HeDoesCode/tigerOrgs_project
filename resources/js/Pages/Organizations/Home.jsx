@@ -17,7 +17,7 @@ import {
 import OrganizationLayout from "@/Components/Organizations/OrganizationLayout";
 import { Head } from "@inertiajs/react";
 
-function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData }) {
+function Home({ editing = false, isRecruiting = false, pageData }) {
     pageData = {
         logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
         coverPhoto: "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D",
@@ -83,7 +83,7 @@ function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData 
         ],
     }
 
-    pageLayoutData = {
+    const pageLayoutData = {
         logo: pageData.logo,
         coverPhoto: pageData.coverPhoto,
         metadata: pageData.metadata,
