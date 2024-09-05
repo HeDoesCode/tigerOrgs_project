@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\BackendTestingController;
+use App\Http\Controllers\FormsController;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
