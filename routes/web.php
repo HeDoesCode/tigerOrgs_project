@@ -99,7 +99,7 @@ Route::middleware('auth')->group(function () {
 
 // form builder routes
 Route::get('/admin/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
-Route::post('/admin/form-builder/save', [FormsController::class, 'save']);
+Route::post('/admin/form-builder/save', [FormsController::class, 'saveForm']);
 
 // temporary testing route
 Route::get('/testing', [BackendTestingController::class, 'run']);
