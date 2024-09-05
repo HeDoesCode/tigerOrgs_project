@@ -87,7 +87,7 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
             <div className="max-h-[25rem] min-h-[15rem] h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
                 <img
                     src={
-                        pageLayoutData.find((page) => page.type === "coverPhoto").src
+                        pageLayoutData.CoverPhoto
                     }
                     alt="Organization Cover Photo"
                     className="w-full object-cover"
@@ -105,7 +105,7 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
         return (
             <div className="size-36 md:size-44 rounded-[2rem] overflow-clip relative">
                 <img
-                    src={pageLayoutData.find((page) => page.type === "logo").src}
+                    src={pageLayoutData.logo}
                     alt="Organization Logo"
                     className="size-full object-cover"
                 />
@@ -122,17 +122,10 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
         return (
             <div className="flex-1 relative">
                 <div className="text-lg inter font-extrabold">
-                    {
-                        pageLayoutData.find((page) => page.type === "metadata")
-                            .metadata.organizationName
-                    }
+                    {pageLayoutData.organizationName}
                 </div>
                 <div className="text-sm">
-                    {
-                        pageLayoutData.find((page) => page.type === "metadata")
-                            .metadata.members
-                    }{" "}
-                    members
+                    {pageLayoutData.members}&nbsp;members
                 </div>
             </div>
         );

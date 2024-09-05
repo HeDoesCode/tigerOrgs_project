@@ -18,116 +18,86 @@ import OrganizationLayout from "@/Components/Organizations/OrganizationLayout";
 import { Head } from "@inertiajs/react";
 
 function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData }) {
-    pageData = [
-        {
-            type: "logo",
-            src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
+    pageData = {
+        logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
+        coverPhoto: "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D",
+        metadata: {
+            organizationName:
+                "Society of Information Technology Enthusiasts (SITE)",
+            members: "210",
         },
-        {
-            type: "coverPhoto",
-            src: "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D",
-        },
-        {
-            type: "metadata",
-            metadata: {
-                organizationName:
-                    "Society of Information Technology Enthusiasts (SITE)",
-                members: "210",
+        aboutUs: "Official TigerOrgs™ page of the Society of Information Technology Enthusiasts, the mother organization of the IT students of the University of Santo Tomas.",
+        contacts: [
+            {
+                platform: "email",
+                address: "site.cics@ust.edu.ph",
             },
-        },
-        {
-            type: "aboutUs",
-            data: "Official TigerOrgs™ page of the Society of Information Technology Enthusiasts, the mother organization of the IT students of the University of Santo Tomas.",
-        },
-        {
-            type: "contacts",
-            data: [
-                {
-                    platform: "email",
-                    address: "site.cics@ust.edu.ph",
-                },
-                {
-                    platform: "facebook",
-                    address: "https://www.facebook.com/site.ust",
-                },
-                {
-                    platform: "instagram",
-                    address: "https://www.instagram.com/site.ust",
-                },
-                {
-                    platform: "x",
-                    address: "https://www.x.com/site.ust",
-                },
-            ],
-        },
-        {
-            type: "officers",
-            data: [
-                {
-                    position: "President",
-                    name: "John Doe",
-                },
-                {
-                    position: "Vice President",
-                    name: "Jane Smith",
-                },
-                {
-                    position: "Secretary",
-                    name: "Alex Johnson",
-                },
-                {
-                    position: "Treasurer",
-                    name: "Emily Davis",
-                },
-                {
-                    position: "Auditor",
-                    name: "Michael Brown",
-                },
-                {
-                    position: "PRO",
-                    name: "Sarah Lee",
-                },
-            ],
-        },
-        {
-            type: "photos",
-            data: [
-                {
-                    caption: "CICS Wellness Series",
-                    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
-                },
-                {
-                    caption: "CICS Wellness Series",
-                    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
-                },
-            ],
-        },
-    ];
+            {
+                platform: "facebook",
+                address: "https://www.facebook.com/site.ust",
+            },
+            {
+                platform: "instagram",
+                address: "https://www.instagram.com/site.ust",
+            },
+            {
+                platform: "x",
+                address: "https://www.x.com/site.ust",
+            },
+        ],
+        officers: [
+            {
+                position: "President",
+                name: "John Doe",
+            },
+            {
+                position: "Vice President",
+                name: "Jane Smith",
+            },
+            {
+                position: "Secretary",
+                name: "Alex Johnson",
+            },
+            {
+                position: "Treasurer",
+                name: "Emily Davis",
+            },
+            {
+                position: "Auditor",
+                name: "Michael Brown",
+            },
+            {
+                position: "PRO",
+                name: "Sarah Lee",
+            },
+        ],
+        photos: [
+            {
+                caption: "CICS Wellness Series",
+                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
+            },
+            {
+                caption: "CICS Wellness Series",
+                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
+            },
+        ],
+    },
 
-    pageLayoutData = [
-        {
-            type: "logo",
-            src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
-        },
-        {
-            type: "coverPhoto",
-            src: "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D",
-        },
-        {
-            type: "metadata",
+        pageLayoutData = {
+            logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
+            coverPhoto: "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D",
             metadata: {
                 organizationName:
                     "Society of Information Technology Enthusiasts (SITE)",
                 members: "210",
             },
-        },
-    ]
+        }
 
     return (
         <OrganizationLayout pageLayoutData={pageLayoutData} isRecruiting={isRecruiting} editing={editing}>
             {/* About Us */}
             <AboutUs />
-            <Head title={pageData.find(data => data.type === 'metadata').metadata.organizationName} />
+            <Head title={pageData.metadata.organizationName} />
             <div className="w-full flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-8">
                 <div className="flex flex-col space-y-3 md:space-y-8 wfull md:w-1/2">
                     {/* Contacts and Information */}
@@ -169,7 +139,7 @@ function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData 
     function AboutUs() {
         return (
             <Tile name="About Us">
-                {pageData.find((data) => data.type === "aboutUs").data}
+                {pageData.aboutUs}
                 {editing && (
                     <EditArea title="Set About Us description">
                         <div>text editor</div>
@@ -180,7 +150,7 @@ function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData 
     }
 
     function ContactsContainer() {
-        const data = pageData.find((data) => data.type === "contacts").data;
+        const data = pageData.contacts;
 
         const platformIcons = {
             email: <IconMailFilled />,
@@ -215,7 +185,7 @@ function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData 
     }
 
     function OfficersContainer() {
-        const officers = pageData.find((page) => page.type === "officers").data;
+        const officers = pageData.officers;
 
         return (
             <Tile name="Officers">
@@ -252,7 +222,7 @@ function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData 
     }
 
     function PhotoScrollArea() {
-        const photos = pageData.find((data) => data.type === "photos").data;
+        const photos = pageData.photos;
 
         return (
             <Tile
