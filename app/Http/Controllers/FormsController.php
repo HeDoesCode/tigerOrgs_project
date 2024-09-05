@@ -6,13 +6,14 @@ use App\Models\Form;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class FormBuilderController extends Controller
-{
+class FormsController extends Controller
+{   
+    // strictly for admin
     public function showBuilder() {
         return Inertia::render('Admin/AdminFormBuilder');
     }
     
-    public function save(Request $request) {
+    public function saveForm(Request $request) {
         $formData = json_encode($request->json()->all());
 
         Form::create([

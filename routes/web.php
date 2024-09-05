@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\BackendTestingController;
-use App\Http\Controllers\FormBuilderController;
+use App\Http\Controllers\FormsController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
@@ -103,8 +103,8 @@ Route::middleware('auth')->group(function () {
 });
 
 // form builder routes
-Route::get('/admin/form-builder', [FormBuilderController::class, 'showBuilder'])->name('admin.formbuilder');
-Route::post('/admin/form-builder/save', [FormBuilderController::class, 'save']);
+Route::get('/admin/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
+Route::post('/admin/form-builder/save', [FormsController::class, 'save']);
 
 // temporary testing route
 Route::get('/testing', [BackendTestingController::class, 'run']);
