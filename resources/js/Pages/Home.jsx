@@ -2,13 +2,34 @@ import { Head, Link } from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout.jsx";
 import Logo from "@/Components/Logo";
 import IconSearch from "@/Components/Icons/IconSearch";
-import { Checkbox } from "@/Components/ui/checkbox";
 import Policy from "@/Components/ui/Custom/Policy";
+import { useState } from "react";
 
 function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
     const hideImage = () => {
         this.style.display = "none";
     };
+
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearchEnterKey = (e) => {
+        if (e.key !== "Enter") return;
+        handleSearchQuery();
+    }
+
+    const handleSearchQuery = () => {
+        const queryParameters = {};
+        queryParameters['search'] = searchQuery;
+        router.get(route("organizations"), queryParameters);
+    }
+
+    const [rememberMe, setRememberMe] = useState(false);
+    // console.log(rememberMe);
+
+    const handleCheckboxChange = (e) => {
+        setRememberMe(e.target.checked);
+    };
+
 
     return (
         <div className="w-full">
@@ -186,14 +207,20 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
 
                         <div className="flex flex-col">
                             <a
-                                href="auth/google"
+                                href={`/auth/google?remember_me=${rememberMe}`}
                                 className="flex px-4 py-4 items-center m-4 h-11 border-zinc-400 border justify-center rounded-full bg-slate-200 text-center  text-black hover:bg-slate-300 "
                             >
                                 <GoogleLogo className="w-6 h-6" />
                                 Sign in with Google
                             </a>
                             <div className="flex ml-4 w-fit px-3 py-1 rounded-lg items-center space-x-3 hover:bg-gray-300 transition-all duration-100">
-                                <Checkbox id="rememberme" className='data-[state=checked]:bg-[#fdd56f] data-[state=checked]:text-black' />
+                                <input
+                                    type='checkbox'
+                                    id="rememberme"
+                                    className='checked:bg-[#ffb700]'
+                                    checked={rememberMe}
+                                    onChange={handleCheckboxChange}
+                                />
                                 <label
                                     htmlFor="rememberme"
                                     className="select-none cursor-pointer"

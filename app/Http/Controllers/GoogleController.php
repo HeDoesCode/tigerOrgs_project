@@ -16,6 +16,7 @@ class GoogleController extends Controller
 {
     public function googlepage()
     {
+        session()->put('remember_me', request('remember_me'));
         return Socialite::driver('google')->redirect();
     }
 
@@ -35,20 +36,10 @@ class GoogleController extends Controller
 
         $registeredUser = User::where('email', $googleUser->email)->first();
 
-
-        // if ($registeredUser == null) {
-        //     return redirect()->route('login')->with('error', 'You are not authorized to access this application.');
-        // }
-
         if ($registeredUser == null) {
             return abort(403, 'Only enrolled students of the University of Santo Tomas can use this application.');
         }
-
-
-        // Auth::login($registeredUser, remembermeboolean);
-        Auth::login($registeredUser);
-
-        // remember me
+        Auth::login($registeredUser, session()->pull('remember_me', 'false'));
         return redirect()->intended('/');
     }
 }

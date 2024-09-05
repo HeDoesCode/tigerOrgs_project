@@ -92,6 +92,7 @@ Route::get('/admin/formshistory', function () {
 
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
+// Route::get('/setRemember', [GoogleController::class, 'setRemember']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
 
 
