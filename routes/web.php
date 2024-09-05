@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\BackendTestingController;
+use Inertia\Inertia;
+use App\Http\Middleware\isAdmin;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Middleware\isSuperAdmin;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdminController;
-use App\Http\Middleware\isAdmin;
-use App\Http\Middleware\isSuperAdmin;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\BackendTestingController;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -23,15 +24,9 @@ Route::get('/', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('index');
 
-// Route::get('/organizations', function () {
-//     return Inertia::render('Organizations/Organizations');
-// })->name('organizations');
-
 // temp user routes
 Route::middleware('auth')->group(function () {
-    Route::get('/organizations', function () {
-        return Inertia::render('Organizations/Organizations');
-    })->name('organizations');
+    Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
     // other user-level routes
 });
 
