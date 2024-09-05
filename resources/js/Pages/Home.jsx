@@ -1,13 +1,33 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import UserLayout from "@/Layouts/UserLayout.jsx";
 import Logo from "@/Components/Logo";
 import IconSearch from "@/Components/Icons/IconSearch";
-import { Checkbox } from "@/Components/ui/checkbox";
 import Policy from "@/Components/ui/Custom/Policy";
+import { useState } from "react";
 
 function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
     const hideImage = () => {
         this.style.display = "none";
+    };
+
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearchEnterKey = (e) => {
+        if (e.key !== "Enter") return;
+        handleSearchQuery();
+    }
+
+    const handleSearchQuery = () => {
+        const queryParameters = {};
+        queryParameters['search'] = searchQuery;
+        router.get(route("organizations"), queryParameters);
+    }
+
+    const [rememberMe, setRememberMe] = useState(false);
+    // console.log(rememberMe);
+
+    const handleCheckboxChange = (e) => {
+        setRememberMe(e.target.checked);
     };
 
     return (
@@ -40,8 +60,12 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
                                 type="text"
                                 className="flex-1 rounded-l-full border-gray-400 border-l-[1px] border-y-[1px] border-r-0 pl-6 sm:pl-16 text-base sm:text-lg text-ellipsis overflow-hidden"
                                 placeholder="Search Organizations"
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={handleSearchEnterKey}
                             />
-                            <button className="rounded-r-full h-auto flex items-center justify-center min-w-12 w-24 bg-[#FFCD12] border-gray-400 border-r-[1px] border-y-[1px] border-l-0 nunito font-bold">
+                            <button className="rounded-r-full h-auto flex items-center justify-center min-w-12 w-24 bg-[#FFCD12] border-gray-400 border-r-[1px] border-y-[1px] border-l-0 nunito font-bold"
+                                onClick={handleSearchQuery}
+                            >
                                 <span className="hidden sm:inline">Search</span>
                                 <span className="inline sm:hidden">
                                     <IconSearch size={"22"} />
@@ -60,7 +84,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
             <div className="relative">
                 {isLoggedIn || <GoogleModal />}
                 {isNewUser && (
-                    <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[2147483647]">
+                    <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[50]">
                         <div className="inter fixed bg-white mx-5 max-w-[40rem]  border-gray-400 border rounded-xl p-5 sm:p-10 space-y-5">
                             <div className="overflow-y-auto max-h-[70vh] pr-2 w-full">
                                 <Policy>
@@ -172,7 +196,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
 
     function GoogleModal() {
         return (
-            <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[2147483647]">
+            <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[50]">
                 <div className="bg-white w-[25rem] max-w-[25rem] max-h-[80vh] border-gray-400 border rounded-xl p-2 mx-5">
                     {/* <form onSubmit={submit}> */}
                     <div>
@@ -186,19 +210,26 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
 
                         <div className="flex flex-col">
                             <a
-                                href="auth/google"
+                                href={`/auth/google?remember_me=${rememberMe}`}
                                 className="flex px-4 py-4 items-center m-4 h-11 border-zinc-400 border justify-center rounded-full bg-slate-200 text-center  text-black hover:bg-slate-300 "
                             >
                                 <GoogleLogo className="w-6 h-6" />
                                 Sign in with Google
                             </a>
-                            <div className="flex ml-4 w-fit px-3 py-1 rounded-lg items-center space-x-3 hover:bg-gray-300 transition-all duration-100">
-                                <Checkbox id="rememberme" />
+                            <div className="flex ml-4 w-fit rounded-lg items-center hover:bg-gray-300">
+
                                 <label
                                     htmlFor="rememberme"
-                                    className="select-none cursor-pointer"
+                                    className="select-none cursor-pointer px-3 py-1 space-x-3 flex items-center"
                                 >
-                                    Remember Me
+                                    <input
+                                        type='checkbox'
+                                        id="rememberme"
+                                        className='checked:bg-[#ffb700] cursor-pointer'
+                                        checked={rememberMe}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    <span>Remember Me</span>
                                 </label>
                             </div>
                         </div>
