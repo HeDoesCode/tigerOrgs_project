@@ -23,6 +23,7 @@ function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData 
         logo: pageData.logo,
         coverPhoto: pageData.coverPhoto,
         metadata: pageData.metadata,
+        orgID: pageData.orgID,
     }
 
     return (

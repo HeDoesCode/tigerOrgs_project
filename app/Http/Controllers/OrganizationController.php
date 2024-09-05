@@ -54,6 +54,7 @@ class OrganizationController extends Controller
     {
         $organization = Organization::withCount('members')->find($orgID);
         $pageData = [
+            'orgID' => $organization->orgID,
             'logo' => $organization->logo,
             'coverPhoto' => $organization->cover,
             'metadata' => [
