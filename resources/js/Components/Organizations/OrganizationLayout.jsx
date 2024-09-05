@@ -3,6 +3,17 @@ import IconQR from "../Icons/IconQR";
 import IconUserPlus from "../Icons/IconUserPlus";
 import IconArrowUp from "../Icons/IconArrowUp";
 import EditArea from "./EditArea";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/Components/ui/dialog"
+import { QRCode } from "react-qrcode-logo";
+// import { useRef } from "react";
+
 
 function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData }) {
 
@@ -19,6 +30,14 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
     )
 
     function PageContent() {
+        // const qrRef = useRef(null);
+
+        // console.log(route('organizations.home', { orgID: pageLayoutData.orgID }))
+
+        const qrValue = () => {
+            return route('organizations.home', { orgID: pageLayoutData.orgID });
+        };
+
         return (
             <>
                 <div>
@@ -32,12 +51,9 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
                             <div className="w-full justify-center space-x-3 flex">
                                 <OrganizationMetadata />
                                 <div className="w-fit text-xs font-bold h-min">
-                                    <button>
-                                        <div className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9]">
-                                            View&nbsp;QR&nbsp;
-                                            <IconQR size="20" />
-                                        </div>
-                                    </button>
+                                    {pageLayoutData.orgID && (
+                                        <QRButton />
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -64,12 +80,7 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
                     <div className="w-full px-5 md:px-12 flex md:hidden justify-center space-x-3 my-4">
                         <OrganizationMetadata />
                         <div className="w-fit text-xs font-bold h-min">
-                            <button className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9] hover:bg-[#969696]">
-                                <span className="hidden sm:inline">
-                                    View QR{" "}
-                                </span>
-                                <IconQR size="20" />
-                            </button>
+                            <QRButton />
                         </div>
                     </div>
 
@@ -80,7 +91,32 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
                 </div>
             </>
         );
+
+        function QRButton() {
+            return (
+                <Dialog>
+                    <DialogTrigger className="flex items-center flex-nowrap py-1 px-3 rounded-full bg-[#D9D9D9]">
+                        View&nbsp;QR&nbsp;
+                        <IconQR size="20" />
+                    </DialogTrigger>
+                    <DialogContent className='w-fit p-10'>
+                        <DialogTitle className='text-center hidden'>QR Code</DialogTitle>
+                        <DialogDescription className="hidden">
+                        </DialogDescription>
+                        <div className="flex flex-col items-center space-y-3">
+                            <span>{route('organizations.home', { orgID: pageLayoutData.orgID })}</span>
+                            <button>
+                                <QRCode value={qrValue} size={200} qrStyle='dots' />
+                            </button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
+            )
+        }
+
     }
+
 
     function CoverPhoto() {
         return (
