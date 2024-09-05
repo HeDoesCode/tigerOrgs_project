@@ -122,10 +122,10 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
         return (
             <div className="flex-1 relative">
                 <div className="text-lg inter font-extrabold">
-                    {pageLayoutData.organizationName}
+                    {pageLayoutData.metadata.organizationName}
                 </div>
                 <div className="text-sm">
-                    {pageLayoutData.members}&nbsp;members
+                    {pageLayoutData.metadata.members}&nbsp;members
                 </div>
             </div>
         );
