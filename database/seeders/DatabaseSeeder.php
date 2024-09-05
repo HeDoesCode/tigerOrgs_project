@@ -16,9 +16,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        
-
-
         DB::table('roles')->insert([
             'role_description' => 'superadmin',
         ]);
@@ -47,7 +44,7 @@ class DatabaseSeeder extends Seeder
             'userID' => '2024000001',
             'roleID' => $adminRoleID,
         ]);
-        
+
         DB::table('users')->insert([
             'userID' => '2024000002',
             'email' => 'laurencearvin.arcilla.cics@ust.edu.ph',
@@ -97,7 +94,5 @@ class DatabaseSeeder extends Seeder
 
 
         Organization::factory(10)->create();
-
-        
     }
 }

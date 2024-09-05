@@ -72,6 +72,10 @@ function Organizations({ organizations, queryParameters = null, departments, key
         router.get(route("organizations"));
     }
 
+    // const handleVisitOrganization = (id) => {
+
+    // }
+
     return (
         <div className="w-full">
             <Head title="Browse Organizations" />
@@ -184,7 +188,8 @@ function Organizations({ organizations, queryParameters = null, departments, key
                                         title={org.name}
                                         desc={org.description}
                                         count={org.members_count}
-                                        href={`#linkToOrgId${org.orgId}`}
+                                        // href={`#linkToOrgId${org.orgID}`}
+                                        href={route('organizations.home', { orgID: org.orgID })}
                                     />
                                 ))}
 

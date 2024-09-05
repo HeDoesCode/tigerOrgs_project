@@ -87,7 +87,7 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
             <div className="max-h-[25rem] min-h-[15rem] h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
                 <img
                     src={
-                        pageLayoutData.CoverPhoto
+                        pageLayoutData.coverPhoto
                     }
                     alt="Organization Cover Photo"
                     className="w-full object-cover"
