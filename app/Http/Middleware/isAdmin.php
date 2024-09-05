@@ -17,21 +17,14 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // check if user role is admin
-        // return null if false
-        // return next request if true
-
-        // dd(User::find(Auth::id())->roles[0]->role_description === 'admin');
-
-        if (User::find(Auth::id())->roles[0]->role_description === 'admin')
-            return $next($request);
-        else {
-            // session()->flash('toast', [
-            //     'title' => 'Warning',
-            //     'description' => 'Unauthorized Access',
-            //     'variant' => 'destructive'
-            // ]);
-            abort(401);
+        $user = User::find(Auth::id());
+        
+        foreach($user->roles as $role) {
+            if ($role->roleID === 2) {
+                return $next($request);
+            }
         }
+        
+        abort(401);
     }
 }

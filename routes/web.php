@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\BackendTestingController;
+use App\Http\Controllers\FormsController;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -96,13 +97,11 @@ Route::middleware('auth')->group(function () {
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route::get('/form-builder', [FormBuilderController::class], 'show')->name('formbuilder');
-
-Route::get('/admin/form-builder', function () {
-    return Inertia::render('Admin/AdminFormBuilder');
-})->name('admin.formbuilder');
+// form builder routes
+Route::get('/admin/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
+Route::post('/admin/form-builder/save', [FormsController::class, 'save']);
 
 // temporary testing route
-
 Route::get('/testing', [BackendTestingController::class, 'run']);
+
 require __DIR__ . '/auth.php';
