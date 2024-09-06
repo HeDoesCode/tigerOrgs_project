@@ -28,12 +28,13 @@ Route::get('/', function () {
 // temp user routes
 Route::middleware('auth')->group(function () {
     Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
+    Route::get('/organizations/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
     // other user-level routes
 });
 
-Route::get('organizations/{any}/home', function () {
-    return Inertia::render('Organizations/Home');
-})->name('organizations.home');
+// Route::get('organizations/{any}/home', function () {
+//     return Inertia::render('Organizations/Home');
+// })->name('organizations.home');
 
 // Route::get('/profile', function () {
 //     return Inertia::render('Profile/Edit');

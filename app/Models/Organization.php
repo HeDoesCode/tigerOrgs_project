@@ -24,23 +24,28 @@ class Organization extends Model
         'department',
     ];
 
-    public function members() : BelongsToMany {
+    public function members(): BelongsToMany
+    {
         return $this->belongsToMany(User::class, 'organization_members', 'orgID', 'userID');
     }
 
-    public function followers() : BelongsToMany {
+    public function followers(): BelongsToMany
+    {
         return $this->belongsToMany(User::class, 'organization_followers', 'orgID', 'userID');
     }
 
-    public function keywords() : BelongsToMany {
+    public function keywords(): BelongsToMany
+    {
         return $this->belongsToMany(Keyword::class, 'organization_keywords', 'orgID', 'keyID');
     }
 
-    public function photos() : HasMany {
+    public function photos(): HasMany
+    {
         return $this->hasMany(Photo::class, 'orgID', 'orgID');
     }
-    
-    public function forms() : HasMany {
+
+    public function forms(): HasMany
+    {
         return $this->hasMany(Form::class, 'orgID', 'orgID');
     }
 }
