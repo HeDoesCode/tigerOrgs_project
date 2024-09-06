@@ -26,7 +26,7 @@ function EditSimpleItem({ id, type }) {
     return (
         <form onSubmit={handleSave}>
             <ul>
-                <li className="flex items-center gap-2 p-2">
+                <li className="flex items-center gap-2 p-2 ">
                     <input
                         type="checkbox"
                         id={`required_${id}`}
@@ -34,9 +34,9 @@ function EditSimpleItem({ id, type }) {
                     />
                     <label htmlFor={`required_${id}`}> Required</label>
                 </li>
-                <li className="mb-2">
+                <li className="mb-2  rounded-2xl">
                     <input
-                        className="w-full bg-transparent rounded-2xl border-1 border-x-stone-600"
+                        className="w-full bg-transparent rounded-xl border-[1.5px] border-x-stone-600"
                         type="text"
                         value={data.question}
                         onChange={(e) => setData("question", e.target.value)}

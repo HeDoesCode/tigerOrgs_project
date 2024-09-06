@@ -17,13 +17,13 @@ import BuilderWrap from "./BuilderWrap";
 import { router } from "@inertiajs/react";
 
 const inputTypes = [
-    { type: "text", icon: letterT },
-    { type: "number", icon: number123 },
-    { type: "email", icon: emailIcon },
-    { type: "select", icon: select },
-    { type: "radio", icon: radiobutton },
-    { type: "checkbox", icon: checkbox },
-    { type: "file_upload", icon: Iconfileupload },
+    { type: "Text", icon: letterT },
+    { type: "Number", icon: number123 },
+    { type: "Email", icon: emailIcon },
+    { type: "Select", icon: select },
+    { type: "Radio Group", icon: radiobutton },
+    { type: "Checkbox", icon: checkbox },
+    { type: "File_upload", icon: Iconfileupload },
     { type: "image_upload", icon: IconResume },
 ];
 
@@ -58,7 +58,11 @@ function FormBuilder() {
             required: false,
         };
 
-        if (type === "select" || type === "radio" || type === "checkbox") {
+        if (
+            type === "Select" ||
+            type === "Radio Group" ||
+            type === "Checkbox"
+        ) {
             newItem = {
                 ...newItem,
                 options: [],
@@ -74,9 +78,9 @@ function FormBuilder() {
         );
 
         switch (updatedItems[editedItemIndex].type) {
-            case "select":
-            case "checkbox":
-            case "radio":
+            case "Select":
+            case "Checkbox":
+            case "Radio Group":
                 updatedItems[editedItemIndex] = {
                     ...updatedItems[editedItemIndex],
                     name: data.question,
@@ -111,9 +115,11 @@ function FormBuilder() {
     }
 
     return (
-        <div className="p-5">
-            <div className="flex flex-col justify-center bg-white m-4 p-4 max-w-xl mx-auto">
-                <h1 className="text-3xl mb-4 px-2 font-medium">Create Form</h1>
+        <div className="p-5 ">
+            <div className="flex flex-col justify-center bg-white m-4 p-4 max-w-3xl mx-auto rounded-xl">
+                <h1 className="font-semibold text-3xl mb-4 px-2 text-center">
+                    Create Application Form
+                </h1>
                 <FormActionsContext.Provider
                     value={{ delete: handleDeleteItem, edit: handleEditItem }}
                 >
@@ -128,7 +134,7 @@ function FormBuilder() {
                     {inputTypes.map((input) => (
                         <button
                             key={input.type}
-                            className="rounded-xl hover:bg-gray-300 w-20 p-2"
+                            className="rounded-2xl hover:bg-gray-300 w-full p-2 "
                             onClick={() => handleAddItem(input.type)}
                         >
                             <div className="w-6 h-6 mx-auto mb-2 ">

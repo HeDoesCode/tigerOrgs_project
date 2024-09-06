@@ -60,7 +60,7 @@ function EditMultiChoiceItem({ id, type }) {
                 </li>
                 <li className="mb-2">
                     <input
-                        className="w-full bg-transparent rounded-2xl border-1 border-x-stone-600"
+                        className="w-full bg-transparent rounded-xl border-1 border-x-stone-600"
                         type="text"
                         value={data.question}
                         onChange={(e) => setData("question", e.target.value)}
