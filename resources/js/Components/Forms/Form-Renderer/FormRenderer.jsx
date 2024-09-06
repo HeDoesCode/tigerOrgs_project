@@ -1,11 +1,12 @@
-function FormRenderer() {
-    function handleSubmit() {}
+import RenderFormItem from "./RenderFormItem";
 
+function FormRenderer({ formLayout }) {
     return (
-        <form action="" onSubmit={handleSubmit}>
-            <button type="submit">Submit</button>
-            <button type="reset">Clear Form</button>
-        </form>
+        <ul>
+            {formLayout.map((item, index) => {
+                return <RenderFormItem key={index} item={item} />;
+            })}
+        </ul>
     );
 }
 

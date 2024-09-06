@@ -57,6 +57,6 @@ class BackendTestingController extends Controller
         $formLayout = json_decode($this->org->forms[0]->formLayout);
 
         // dd($formLayout);
-        return Inertia::render("TestingPages/FormRenderer", ['formLayout' =>  $formLayout]);
+        return Inertia::render("TestingPages/Forms", ['formLayout' =>  $formLayout]);
     }
 }
