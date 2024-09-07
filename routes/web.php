@@ -1,12 +1,16 @@
 <?php
 
-use App\Http\Controllers\BackendTestingController;
+use Inertia\Inertia;
+use App\Http\Middleware\isAdmin;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Middleware\isSuperAdmin;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdminController;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\BackendTestingController;
+use App\Http\Controllers\FormsController;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -19,40 +23,33 @@ Route::get('/', function () {
         // 'phpVersion' => PHP_VERSION,
         'isLoggedIn' => Auth::check(),
     ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// Route::get('/organizations', function () {
-//     return Inertia::render('Organizations/Organizations');
-// })->name('organizations');
+})->middleware(['auth', 'verified'])->name('index');
 
 // temp user routes
 Route::middleware('auth')->group(function () {
-    Route::get('/organizations', function () {
-        return Inertia::render('Organizations/Organizations');
-    })->name('organizations');
+    Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
+    Route::get('/organizations/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
     // other user-level routes
 });
 
-Route::get('organizations/{any}/home', function () {
-    return Inertia::render('Organizations/Home');
-})->name('organizations.home');
+// Route::get('organizations/{any}/home', function () {
+//     return Inertia::render('Organizations/Home');
+// })->name('organizations.home');
 
 // Route::get('/profile', function () {
 //     return Inertia::render('Profile/Edit');
 // })->name('profile');
 
-
-
 //superadmin temporary routes
-Route::controller(SuperAdminController::class)->group(function(){
-    //manage page 
+Route::middleware('isSuperAdmin')->controller(SuperAdminController::class)->group(function () {
+    //manage page
     Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
     Route::get('superadmin/status', 'manage')->name('superadmin.status');
     Route::get('/superadmin/status/search-org', 'searchOrg');
 
     //invite page
     Route::get('/superadmin/search-users', 'search');
-    Route::post('/superadmin/update-organizations', 'updateOrganizations')-> name('superadmin.update-organizations');
+    Route::post('/superadmin/update-organizations', 'updateOrganizations')->name('superadmin.update-organizations');
 });
 
 Route::get('/superadmin/loginhistory', function () {
@@ -70,7 +67,7 @@ Route::get('/superadmin/dataupload', function () {
 
 
 //admin temporary routes
-Route::get('/admin/editpage', function () {
+Route::middleware('isAdmin')->get('/admin/editpage', function () {
     return Inertia::render('Admin/AdminEditPage');
 })->name('admin.editpage');
 
@@ -102,13 +99,11 @@ Route::middleware('auth')->group(function () {
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route::get('/form-builder', [FormBuilderController::class], 'show')->name('formbuilder');
-
-Route::get('/admin/form-builder', function (){
-    return Inertia::render('Admin/AdminFormBuilder');
-})->name('admin.formbuilder');
+// form builder routes
+Route::get('/admin/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
+Route::post('/admin/form-builder/save', [FormsController::class, 'saveForm']);
 
 // temporary testing route
-
 Route::get('/testing', [BackendTestingController::class, 'run']);
+
 require __DIR__ . '/auth.php';

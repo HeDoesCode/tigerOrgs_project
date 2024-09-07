@@ -1,6 +1,6 @@
 import IconSearch from "@/Components/Icons/IconSearch";
 import UserLayout from "@/Layouts/UserLayout";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import {
     Select,
     SelectContent,
@@ -13,8 +13,69 @@ import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 import OrganizationJoined from "@/Components/Organizations/OrganizationJoined";
 import OrganizationContainerRow from "@/Components/Organizations/OrganizationContainerRow";
 import OrganizationTile from "@/Components/Organizations/OrganizationTile";
+import Pre from "@/Components/Pre";
+import { useState } from "react";
+import { useEffect } from "react";
 
-function Organizations() {
+function Organizations({ organizations, queryParameters = null, departments, keywords }) {
+    queryParameters = queryParameters || {};
+    const [organizationList, setOrganizationList] = useState({});
+
+    useEffect(() => {
+        const groupedByDepartment = organizations.reduce((acc, organization) => {
+            const department = organization.department;
+            if (!acc[department]) {
+                acc[department] = [];
+            }
+            acc[department].push(organization);
+            return acc;
+        }, {});
+
+        setOrganizationList(groupedByDepartment);
+    }, [organizations]);
+
+    const handleSearch = (e) => {
+        const searchDebounce = setTimeout(() => {
+            if (e.target.value !== '') {
+                queryParameters['search'] = e.target.value;
+            } else {
+                delete queryParameters['search'];
+            }
+            router.get(route("organizations"), queryParameters, {
+                preserveState: true,
+                // replace: true,
+                preserveScroll: true
+            });
+        }, 500);
+
+        return () => clearTimeout(searchDebounce);
+    }
+
+    const handleFilterCategory = (category) => {
+        const filterCategoryDebounce = setTimeout(() => {
+            if (category !== 'All') {
+                queryParameters['category'] = category;
+            } else {
+                delete queryParameters['category'];
+            }
+            router.get(route("organizations"), queryParameters, {
+                preserveState: true,
+                // replace: true,
+                preserveScroll: true
+            });
+        }, 500);
+
+        return () => clearTimeout(filterCategoryDebounce);
+    }
+
+    const handleClearQuery = () => {
+        router.get(route("organizations"));
+    }
+
+    // const handleVisitOrganization = (id) => {
+
+    // }
+
     return (
         <div className="w-full">
             <Head title="Browse Organizations" />
@@ -28,9 +89,11 @@ function Organizations() {
                         <ControlContainer className="relative" name="Search">
                             <input
                                 type="text"
-                                className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-12 pl-10 focus:pl-3 transition-all duration-200"
+                                className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-11 pl-10 focus:pl-3 transition-all duration-200"
+                                defaultValue={queryParameters['search'] || ''}
+                                onChange={handleSearch}
                             />
-                            <div className="absolute text-gray-500 left-0 bottom-0 h-12 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
+                            <div className="absolute text-gray-500 left-0 bottom-0 h-11 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
                                 <IconSearch size="22" />
                             </div>
                         </ControlContainer>
@@ -40,9 +103,9 @@ function Organizations() {
                         </ControlContainer>
 
                         <ControlContainer name="Category">
-                            <Select>
+                            <Select defaultValue="All" onValueChange={handleFilterCategory}>
                                 <SelectTrigger className="w-full h-12 border-gray-500 bg-transparent">
-                                    <SelectValue placeholder="-- Browse Categories --" />
+                                    <SelectValue placeholder="All" />
                                 </SelectTrigger>
                                 <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand"
                                     ref={(ref) => {
@@ -51,20 +114,34 @@ function Organizations() {
                                     }}
                                 >
                                     <SelectItem
-                                        value="light"
+                                        value="All"
                                         className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
                                     >
-                                        University-Wide
+                                        All
                                     </SelectItem>
-                                    <SelectItem
-                                        value="dark"
-                                        className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
-                                    >
-                                        CICS
-                                    </SelectItem>
+                                    {departments.map((department, index) => (
+                                        <SelectItem
+                                            key={index}
+                                            value={department}
+                                            className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
+                                        >
+                                            {department}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </ControlContainer>
+
+                        {/* {Object.keys(queryParameters).length !== 0 && ( */}
+                        <ControlContainer className={`flex items-center !-mb-3 !mt-3 ${Object.keys(queryParameters).length !== 0 ? 'visible' : 'invisible'}`}>
+                            <button
+                                className="w-fit px-3 py-1 bg-[#ffb700] hover:bg-[#f1ad00] rounded-lg text-sm"
+                                onClick={handleClearQuery}
+                            >
+                                Clear All
+                            </button>
+                        </ControlContainer>
+                        {/* )} */}
 
                         <ControlContainer>
                             <ul className="bg-transparent flex flex-col py-3 rounded-md space-y-4">
@@ -95,181 +172,34 @@ function Organizations() {
 
                     {/* orgs panel */}
                     <div className="md:flex-1 space-y-3 overflow-x-hidden">
-                        <OrganizationContainerRow title="Suggested based on your interests">
-                            <Test />
-                        </OrganizationContainerRow>
-                        <OrganizationContainerRow title="Suggested based on your interests">
-                            <Test />
-                        </OrganizationContainerRow>
-                        <OrganizationContainerRow title="Suggested based on your interests">
-                            <OrganizationTile
-                                orgBg={
-                                    "https://www.brandignity.com/wp-content/uploads/2020/12/digital-marketing-photography.jpg"
-                                }
-                                orgIcon={
-                                    "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/379249269_872028557643589_7767519284231773085_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFZKMicf1CYVeO4tuXfLyje4vxiXiyaS5Pi_GJeLJpLkxoQdpaGhxXY4SmR3UK6qiMMC1rZpt805xAUxbdgvAMc&_nc_ohc=waaGroD6R1cQ7kNvgHtcHoo&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYAs3lfS3aOKI2arEPVOaRvbB6MUXpd7KTxLuOGdcKaJgA&oe=66C28011"
-                                }
-                                title="Fotomasino 1"
-                                desc="The Thomasian Photographers Guild"
-                                href="#Fotomasino"
-                            />
-                            <OrganizationTile
-                                orgBg={
-                                    "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                                }
-                                orgIcon={
-                                    "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                                }
-                                title="UST Mountaineering Club"
-                                desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                                isRecruiting
-                            />
-                        </OrganizationContainerRow>
+                        {/* <Pre object={organizationList} /> */}
+
+                        {queryParameters && organizations.length === 0 && (
+                            <div className="w-full flex justify-center font-bold text-gray-400">No Organizations Found</div>
+                        )}
+
+                        {Object.entries(organizationList).map(([department, orgs]) => (
+                            <OrganizationContainerRow key={department} title={department}>
+                                {orgs.map((org, index) => (
+                                    <OrganizationTile
+                                        key={index}
+                                        orgBg={org.photos[0].filename}
+                                        orgIcon={org.logo}
+                                        title={org.name}
+                                        desc={org.description}
+                                        count={org.members_count}
+                                        // href={`#linkToOrgId${org.orgID}`}
+                                        href={route('organizations.home', { orgID: org.orgID })}
+                                    />
+                                ))}
+
+                            </OrganizationContainerRow>
+                        ))}
                     </div>
                 </div>
             </UserLayout>
         </div>
     );
-
-    function Test() {
-        return (
-            <>
-                <OrganizationTile
-                    orgBg={
-                        "https://www.brandignity.com/wp-content/uploads/2020/12/digital-marketing-photography.jpg"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/379249269_872028557643589_7767519284231773085_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFZKMicf1CYVeO4tuXfLyje4vxiXiyaS5Pi_GJeLJpLkxoQdpaGhxXY4SmR3UK6qiMMC1rZpt805xAUxbdgvAMc&_nc_ohc=waaGroD6R1cQ7kNvgHtcHoo&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYAs3lfS3aOKI2arEPVOaRvbB6MUXpd7KTxLuOGdcKaJgA&oe=66C28011"
-                    }
-                    title="Fotomasino 1"
-                    desc="The Thomasian Photographers Guild"
-                    href={route('organizations.home', ['test'])}
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-                <OrganizationTile
-                    orgBg={
-                        "https://i0.wp.com/www.up.edu.ph/wp-content/uploads/2018/07/page26-27-UPM-members-were-ready-to-take-the-ascent-going-to-the-Saulay-campsite-in-Mt.-Sicapoo2-photo-credit-to-Joyce-Belle-Dinglasan.jpg?resize=640%2C480&ssl=1"
-                    }
-                    orgIcon={
-                        "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                    }
-                    title="UST Mountaineering Club"
-                    desc="With over 50 years of existence, The UST Mountaineering Club invites you in scaling the heights to conquer mountains and difficulties with your fellow mountaineers!"
-                    isRecruiting
-                />
-
-            </>
-        )
-    }
 }
 
 export default Organizations;

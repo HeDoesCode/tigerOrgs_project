@@ -1,6 +1,7 @@
 import { Link } from "@inertiajs/react";
 
-function OrganizationTile({ orgBg, orgIcon, title, desc, isRecruiting, href, className }) {
+function OrganizationTile({ orgBg, orgIcon, title, desc, count, isRecruiting, href, className }) {
+    // console.log(orgBg)
     const hideImage = () => {
         this.style.display = "none";
     };
@@ -20,7 +21,7 @@ function OrganizationTile({ orgBg, orgIcon, title, desc, isRecruiting, href, cla
             <div className="space-y-1">
                 <div className="w-full line-clamp-2 poppins text-sm font-bold tracking-wide">{title}</div>
                 <div className="w-full text-xs line-clamp-2">{desc}</div>
-                <div className="w-full text-xs line-clamp-1 text-gray-600 truncate">#### Followers</div>
+                <div className="w-full text-xs line-clamp-1 text-gray-600 truncate">{count} Members</div>
             </div>
         </Link>
     )
