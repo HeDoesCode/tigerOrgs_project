@@ -106,16 +106,7 @@ class OrganizationController extends Controller
                     'name' => "Sarah Lee",
                 ],
             ],
-            'photos' => [
-                [
-                    'caption' => "CICS Wellness Series",
-                    'src' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
-                ],
-                [
-                    'caption' => "CICS Wellness Series",
-                    'src' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
-                ],
-            ],
+            'photos' => $organization->photos,
         ];
 
         // dump($pageData);

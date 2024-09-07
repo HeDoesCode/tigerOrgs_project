@@ -219,6 +219,7 @@ function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData 
 
     function PhotoScrollArea() {
         const photos = pageData.photos;
+        console.log(photos)
 
         return (
             <Tile
@@ -228,11 +229,11 @@ function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData 
             >
                 <div className="h-52 md:h-80 w-full flex flex-row overflow-x-auto gap-x-6 pb-1 relative">
                     {photos.map((photo, index) => (
-                        <Dialog key={index}>
+                        <Dialog key={photo.id}>
                             <DialogTrigger className="contents">
                                 <div className="h-full flex-shrink-0 relative rounded-xl overflow-clip">
                                     <img
-                                        src={photo.src}
+                                        src={photo.filename}
                                         className="h-full object-cover"
                                         alt={photo.caption}
                                     />

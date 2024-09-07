@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('organization_photos', function (Blueprint $table) {
             $table->id('photoID');
             $table->foreignId('orgID')->constrained('organizations', 'orgID')->onDelete('cascade');
+            $table->string('caption');
             $table->string('filename');
         });
     }

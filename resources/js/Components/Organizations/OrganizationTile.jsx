@@ -1,6 +1,7 @@
 import { Link } from "@inertiajs/react";
 
 function OrganizationTile({ orgBg, orgIcon, title, desc, count, isRecruiting, href, className }) {
+    // console.log(orgBg)
     const hideImage = () => {
         this.style.display = "none";
     };
