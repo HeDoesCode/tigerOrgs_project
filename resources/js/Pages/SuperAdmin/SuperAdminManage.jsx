@@ -9,8 +9,12 @@ import IconEdit from "@/Components/Icons/IconEdit";
 import { useState, useEffect } from "react";
 import AdminButton from "@/Components/Admin/AdminButton";
 import AdminOrgCard from "@/Components/Admin/AdminOrgCard";
+import IconSearch from "@/Components/Icons/IconSearch";
+import Searchbar from "@/Components/Searchbar";
 
 export default function SuperAdminManage({ organizations }) {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [orgList, setOrgList] = useState(organizations);
     const [edit, setEdit] = useState(false);
     const [visibleStates, setVisibleStates] = useState(
         organizations.reduce((acc, org) => {
@@ -19,6 +23,23 @@ export default function SuperAdminManage({ organizations }) {
         }, {})
     );
 
+    //for search query
+    const handleChange = async (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+
+        if (query.length > 0) {
+            const response = await axios.get("/superadmin/status/search-org", {
+                params: { query },
+            });
+
+            setOrgList(response.data);
+        } else {
+            setOrgList(organizations);
+        }
+    };
+
+    //for saving forms
     const { data, setData, post, processing, reset } = useForm({
         organizations: organizations.map((org) => ({
             id: org.orgID,
@@ -87,9 +108,16 @@ export default function SuperAdminManage({ organizations }) {
                         },
                     ]}
                     title="Recruitment Enabled"
+                    searchbar={
+                        <Searchbar
+                            value={searchQuery}
+                            onChange={handleChange}
+                            placeholder={"Search for an organization"}
+                        />
+                    }
                 >
                     <div className="w-full">
-                        <div className="flex justify-end mt-5 me-5">
+                        <div className="flex justify-end me-5 mt-5">
                             {!edit ? (
                                 <AdminButton
                                     className="bg-white hover:bg-gray-800 hover:text-white"
@@ -115,23 +143,30 @@ export default function SuperAdminManage({ organizations }) {
                                 </div>
                             )}
                         </div>
-
-                        <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 p-5">
-                            {organizations.map((organization) => (
-                                <AdminOrgCard
-                                    key={organization.orgID}
-                                    edit={edit}
-                                    visible={visibleStates[organization.orgID]}
-                                    setVisible={(newValue) => {
-                                        setVisibleStates((prevState) => ({
-                                            ...prevState,
-                                            [organization.orgID]: newValue,
-                                        }));
-                                    }}
-                                    organization={organization}
-                                />
-                            ))}
-                        </div>
+                        {orgList.length === 0 ? (
+                            <div className="m-14 sm:m-48 text-xl font-thin text-center">
+                                No Organizations Found
+                            </div>
+                        ) : (
+                            <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 p-5">
+                                {orgList.map((organization) => (
+                                    <AdminOrgCard
+                                        key={organization.orgID}
+                                        edit={edit}
+                                        visible={
+                                            visibleStates[organization.orgID]
+                                        }
+                                        setVisible={(newValue) => {
+                                            setVisibleStates((prevState) => ({
+                                                ...prevState,
+                                                [organization.orgID]: newValue,
+                                            }));
+                                        }}
+                                        organization={organization}
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </MainAdminFrame>
             </SuperAdminLayout>

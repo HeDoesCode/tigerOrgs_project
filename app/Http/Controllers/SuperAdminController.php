@@ -21,19 +21,25 @@ class SuperAdminController extends Controller
 
     public function updateOrganizations(Request $request) {
         foreach ($request->organizations as $organization) {
-            Log::info('Updating organization', [
-                'id' => $organization['id'], 
-                'visibility' => $organization['visibility']
-            ]);
-    
-            $updated = Organization::where('orgID', $organization['id'])
+            Organization::where('orgID', $organization['id'])
                 ->update(['visibility' => $organization['visibility']]);
-    
-            Log::info('Update result', ['updated' => $updated]);
         }
     
-        return redirect()->route('superadmin.status')->with('success', 'Organizations Updated Successfully.');
+        return redirect()->route('superadmin.status');
     }
+
+    public function searchOrg(Request $request){
+        $query = $request->input('query');
+
+        $orgs = Organization::where('name', 'LIKE', "%{$query}%")
+        ->orWhere('department', 'LIKE', "%{$query}%")
+        ->get();
+
+        return response()->json($orgs);
+
+
+    }
+    
         
 
     //invite admin functions

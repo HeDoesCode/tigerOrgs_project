@@ -48,6 +48,7 @@ Route::controller(SuperAdminController::class)->group(function(){
     //manage page 
     Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
     Route::get('superadmin/status', 'manage')->name('superadmin.status');
+    Route::get('/superadmin/status/search-org', 'searchOrg');
 
     //invite page
     Route::get('/superadmin/search-users', 'search');
