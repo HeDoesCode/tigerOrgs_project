@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class FormsController extends Controller
@@ -49,15 +51,15 @@ class FormsController extends Controller
                     break;
                     array_push($inputRules, 'email');
                 case "image_upload":
-                    array_push($inputRules, 'file', 'size:4096', 'extensions:jpg,png,jpeg');
+                    array_push($inputRules, 'file', 'max:4096', 'image', 'mimes:png,jpg,jpeg');
                     break;
                 case "file_upload":
-                    array_push($inputRules, 'file', 'size:4096', 'extensions:pdf');
+                    array_push($inputRules, 'file', 'max:4096', 'extensions:pdf');
                     break;
 
             }
-
-            $rules[$this->prepareText($input['name'])] = str_replace(',', '|',implode(",", $inputRules));
+            $fieldName = "userData.".$this->prepareText($input['name']);
+            $rules[$fieldName] = str_replace('_', '|',implode("_", $inputRules));
         }
 
         return $rules;
@@ -67,9 +69,13 @@ class FormsController extends Controller
         $formLayout = $request->formLayout;
 
         $rules = $this->buildRules($formLayout);
+    
+        $request->validate($rules);
+        
+        // do smth with data if properly validated
+        // TO-DO
 
-        $validatedData = $request->validate($rules);
-
-        dd($validatedData);
+        // success gets redirected here
+        return Inertia::render('Admin/AdminFormBuilder');
     }
 }

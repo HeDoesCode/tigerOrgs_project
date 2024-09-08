@@ -2,6 +2,8 @@ import FormRenderer from "@/Components/Forms/Form-Renderer/FormRenderer";
 import { router, usePage } from "@inertiajs/react";
 
 function Forms({ formLayout }) {
+    const { errors } = usePage().props; // Get validation errors from Inertia
+
     function handleSubmit(e) {
         e.preventDefault();
 
@@ -17,12 +19,25 @@ function Forms({ formLayout }) {
             formLayout: formLayout,
         });
     }
+
     return (
-        <form action="" onSubmit={handleSubmit}>
-            <FormRenderer formLayout={formLayout} />;
+        <form onSubmit={handleSubmit}>
+            {Object.keys(errors).length > 0 && (
+                <div className="hi-arvin-alkuino">
+                    <ul>
+                        {Object.keys(errors).map((error, index) => (
+                            <li key={index}>{errors[error]}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+            <FormRenderer formLayout={formLayout} />
+
             <button type="submit">Submit</button>
             <button type="reset">Clear Form</button>
-            <button onClick={() => console.log(formLayout)}>Check Items</button>
+            <button type="button" onClick={() => console.log(errors)}>
+                Yes
+            </button>
         </form>
     );
 }

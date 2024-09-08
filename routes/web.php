@@ -105,7 +105,7 @@ Route::post('/admin/form-builder/save', [FormsController::class, 'saveForm']);
 Route::post('/form/submit', [FormsController::class, 'submitForm']);
 
 // temporary testing route
-Route::get('/testing', [BackendTestingController::class, 'run']);
+Route::get('/testing', [BackendTestingController::class, 'run'])->name('testing');
 Route::get('/testing/form-rendering', [BackendTestingController::class, 'renderForm']);
 
 require __DIR__ . '/auth.php';
