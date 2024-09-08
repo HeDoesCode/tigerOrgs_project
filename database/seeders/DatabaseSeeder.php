@@ -69,51 +69,42 @@ class DatabaseSeeder extends Seeder
 
 
         $studentRecords = [];
-        foreach ($organizations as $organization) {
-            foreach ($students as $studentID) {
-                $studentRecords[] = [
-                    'orgID' => $organization->orgID,
-                    'userID' => $studentID,
-                    'roleID' => 1,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
+        $organizationIDs = $organizations->pluck('orgID')->toArray();  // Get all organization IDs
+
+        foreach ($students as $studentID) {
+            $randomOrgID = $organizationIDs[array_rand($organizationIDs)];  // Randomly select an organization ID
+            $studentRecords[] = [
+                'orgID' => $randomOrgID,
+                'userID' => $studentID,
+                'roleID' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
         }
 
-        foreach (array_chunk($studentRecords, 200) as $t) {
-            DB::table('organization_user_role')->insert($t);
+        // Insert student-role records in chunks
+        foreach (array_chunk($studentRecords, 500) as $chunk) {
+            DB::table('organization_user_role')->insert($chunk);
         }
-
-
-        // for ($i = 0; $i < count($studentRecords); $i++) {
-        //     DB::table('organization_user_role')->insert($studentRecords[$i]);
-        // };
-        // DB::table('organization_user_role')->insert($studentRecords);
 
         // Insert admin-role records
         $adminRecords = [];
-        foreach ($organizations as $organization) {
-            foreach ($admins as $adminID) {
-                $adminRecords[] = [
-                    'orgID' => $organization->orgID,
-                    'userID' => $adminID,
-                    'roleID' => 2,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
+        $organizationIDs = $organizations->pluck('orgID')->toArray();  // Get all organization IDs
+
+        foreach ($admins as $adminID) {
+            $randomOrgID = $organizationIDs[array_rand($organizationIDs)];  // Randomly select an organization ID
+            $adminRecords[] = [
+                'orgID' => $randomOrgID,
+                'userID' => $adminID,
+                'roleID' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
         }
 
-
-        foreach (array_chunk($adminRecords, 200) as $t) {
-            DB::table('organization_user_role')->insert($t);
+        // Insert admin-role records in chunks
+        foreach (array_chunk($adminRecords, 500) as $chunk) {
+            DB::table('organization_user_role')->insert($chunk);
         }
-
-        // for ($i = 0; $i < count($adminRecords); $i++) {
-        //     DB::table('organization_user_role')->insert($adminRecords[$i]);
-        // };
-
-        // DB::table('organization_user_role')->insert($adminRecords);
     }
 }
