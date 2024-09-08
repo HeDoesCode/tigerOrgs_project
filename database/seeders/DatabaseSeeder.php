@@ -7,6 +7,7 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\Photo;
 
 class DatabaseSeeder extends Seeder
 {
@@ -93,6 +94,20 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
 
 
-        Organization::factory(10)->create();
+        Organization::factory()
+            // ->hasPhotos(4)
+            ->count(10)
+            ->create()
+            ->each(function ($organization) {
+                Photo::factory()
+                    ->for($organization, 'organization') // Link to the organization
+                    ->portrait()  // Create portrait photo
+                    ->create();
+
+                Photo::factory()
+                    ->for($organization, 'organization')
+                    ->count(3)  // 9 landscape photos
+                    ->create();
+            });
     }
 }

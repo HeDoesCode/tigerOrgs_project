@@ -183,7 +183,7 @@ function Organizations({ organizations, queryParameters = null, departments, key
                                 {orgs.map((org, index) => (
                                     <OrganizationTile
                                         key={index}
-                                        orgBg={org.photos[0] || 'https:www.brandignity.com/wp-content/uploads/2020/12/digital-marketing-photography.jpg'}// || 'https:www.brandignity.com/wp-content/uploads/2020/12/digital-marketing-photography.jpg'
+                                        orgBg={org.photos[0].filename}
                                         orgIcon={org.logo}
                                         title={org.name}
                                         desc={org.description}

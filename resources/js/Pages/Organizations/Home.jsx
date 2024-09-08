@@ -227,12 +227,12 @@ function Home({ editing = false, isRecruiting = false, pageData, pageLayoutData 
                 className="overflow-x-hidden"
             >
                 <div className="h-52 md:h-80 w-full flex flex-row overflow-x-auto gap-x-6 pb-1 relative">
-                    {photos.map((photo, index) => (
-                        <Dialog key={index}>
+                    {photos.map((photo) => (
+                        <Dialog key={photo.photoID}>
                             <DialogTrigger className="contents">
                                 <div className="h-full flex-shrink-0 relative rounded-xl overflow-clip">
                                     <img
-                                        src={photo.src}
+                                        src={photo.filename}
                                         className="h-full object-cover"
                                         alt={photo.caption}
                                     />
