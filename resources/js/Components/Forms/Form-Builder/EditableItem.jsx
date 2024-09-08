@@ -6,12 +6,12 @@ import EditMultiChoiceItem from "./EditMultiChoiceItem";
 
 // Define a mapping from item types to more descriptive labels
 const typeLabels = {
-    text: "Text Input",
-    number: "Number Input",
-    select: "Select Dropdown",
-    radio: "Multiple Choice",
-    checkbox: "Checkboxes",
-    file_upload: "PDF Upload",
+    Text: "Text Input",
+    Number: "Number Input",
+    Select: "Select Dropdown",
+    Radio: "Multiple Choice",
+    Checkbox: "Checkboxes",
+    File_upload: "PDF Upload",
     image_upload: "Image Upload",
 };
 
@@ -27,24 +27,27 @@ function EditableItem({ id, item }) {
     return (
         <div className="p-2" ref={setNodeRef} {...attributes} style={style}>
             <div
-                className="drag-handle justify-center items-center flex bg-neutral-200 rounded-t-3xl"
+                className="drag-handle justify-center items-center flex bg-neutral-200 rounded-t-2xl"
                 {...listeners}
             >
                 <GripHorizontal />
             </div>
-            <div className="border p-3 bg-white rounded-bl-lg rounded-br-lg">
-                <div className="flex ">
-                    <h3 className="w-fit px-3 py-1 text-zinc-700 text-sm underline">
-                        {typeLabels[item.type] || item.type}
-                    </h3>
+            <div className=" border p-3 bg-[#F3F3F3] rounded-bl-lg rounded-br-lg">
+                <div className="">
+                    <div className="w-44  ">
+                        <h3 className="px-3 py-1 text-black text-sm underline font-medium">
+                            {typeLabels[item.type] || item.type}
+                        </h3>
+                    </div>
+
+                    {item.type === "Select" ||
+                    item.type === "Radio Group" ||
+                    item.type === "Checkbox" ? (
+                        <EditMultiChoiceItem id={id} type={item.type} />
+                    ) : (
+                        <EditSimpleItem id={id} type={item.type} />
+                    )}
                 </div>
-                {item.type === "select" ||
-                item.type === "radio" ||
-                item.type === "checkbox" ? (
-                    <EditMultiChoiceItem id={id} type={item.type} />
-                ) : (
-                    <EditSimpleItem id={id} type={item.type} />
-                )}
             </div>
         </div>
     );
