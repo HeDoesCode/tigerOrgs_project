@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('keywords', function (Blueprint $table) {
             $table->id('keyID');
             $table->string('keyword');
-
         });
     }
 
