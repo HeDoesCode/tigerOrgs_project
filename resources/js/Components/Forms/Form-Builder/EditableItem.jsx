@@ -32,19 +32,22 @@ function EditableItem({ id, item }) {
             >
                 <GripHorizontal />
             </div>
-            <div className="border p-3 bg-[#F3F3F3] rounded-bl-lg rounded-br-lg">
-                <div className="flex ">
-                    <h3 className="w-fit px-3 py-1 text-black text-sm underline font-medium">
-                        {typeLabels[item.type] || item.type}
-                    </h3>
+            <div className=" border p-3 bg-[#F3F3F3] rounded-bl-lg rounded-br-lg">
+                <div className="">
+                    <div className="w-44  ">
+                        <h3 className="px-3 py-1 text-black text-sm underline font-medium">
+                            {typeLabels[item.type] || item.type}
+                        </h3>
+                    </div>
+
+                    {item.type === "Select" ||
+                    item.type === "Radio Group" ||
+                    item.type === "Checkbox" ? (
+                        <EditMultiChoiceItem id={id} type={item.type} />
+                    ) : (
+                        <EditSimpleItem id={id} type={item.type} />
+                    )}
                 </div>
-                {item.type === "Select" ||
-                item.type === "Radio Group" ||
-                item.type === "Checkbox" ? (
-                    <EditMultiChoiceItem id={id} type={item.type} />
-                ) : (
-                    <EditSimpleItem id={id} type={item.type} />
-                )}
             </div>
         </div>
     );
