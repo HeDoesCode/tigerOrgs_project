@@ -2,15 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Organization;
+use App\Models\User;
 use App\Models\Photo;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\User;
-use Database\Seeders\Organization_User_RolesSeeder;
+use App\Models\Organization;
+use Illuminate\Database\Seeder;
 use Database\Seeders\RolesSeeder;
 use Database\Seeders\UsersSeeder;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use GrahamCampbell\ResultType\Success;
+use Database\Seeders\Organization_User_RolesSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,7 +28,6 @@ class DatabaseSeeder extends Seeder
         // $users = \App\Models\User::factory()->count(20)->create();
         // $userCount;
         // $orgCount;
-
         $organizations = Organization::factory()
             ->count(120)
             ->create()
@@ -49,7 +50,14 @@ class DatabaseSeeder extends Seeder
          * 1501 - 2000 are admins randomly assigned to orgs
          */
 
+        // try {
         $users = User::factory()->count(1996)->create();
+        //     die('User creation successful');
+        // } catch (\Exception $e) {
+        //     // Log::error('User creation failed: ' . $e->getMessage());
+        //     die('Caught Error: ' . $e->getMessage());
+        // }
+
         $userIDs = $users->pluck('userID')->toArray();
         shuffle($userIDs);
 
@@ -72,7 +80,16 @@ class DatabaseSeeder extends Seeder
                 ];
             }
         }
-        DB::table('organization_user_role')->insert($studentRecords);
+
+        foreach (array_chunk($studentRecords, 200) as $t) {
+            DB::table('organization_user_role')->insert($t);
+        }
+
+
+        // for ($i = 0; $i < count($studentRecords); $i++) {
+        //     DB::table('organization_user_role')->insert($studentRecords[$i]);
+        // };
+        // DB::table('organization_user_role')->insert($studentRecords);
 
         // Insert admin-role records
         $adminRecords = [];
@@ -87,6 +104,16 @@ class DatabaseSeeder extends Seeder
                 ];
             }
         }
-        DB::table('organization_user_role')->insert($adminRecords);
+
+
+        foreach (array_chunk($adminRecords, 200) as $t) {
+            DB::table('organization_user_role')->insert($t);
+        }
+
+        // for ($i = 0; $i < count($adminRecords); $i++) {
+        //     DB::table('organization_user_role')->insert($adminRecords[$i]);
+        // };
+
+        // DB::table('organization_user_role')->insert($adminRecords);
     }
 }

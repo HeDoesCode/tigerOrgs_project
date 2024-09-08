@@ -34,10 +34,10 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    public function memberOf(): BelongsToMany
-    {
-        return $this->belongsToMany(Organization::class, 'organization_members', 'userID', 'orgID');
-    }
+    // public function memberOf(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Organization::class, 'organization_members', 'userID', 'orgID');
+    // }
 
     public function follows(): BelongsToMany
     {
@@ -49,10 +49,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Keyword::class, 'user_keywords', 'userID', 'keyID');
     }
 
-    // protected $hidden = [
-    //     'password',
-    //     'remember_token',
-    // ];
+    protected $hidden = [
+        // 'password',
+        'remember_token',
+    ];
 
     // protected function casts(): array
     // {
