@@ -72,10 +72,6 @@ function Organizations({ organizations, queryParameters = null, departments, key
         router.get(route("organizations"));
     }
 
-    // const handleVisitOrganization = (id) => {
-
-    // }
-
     return (
         <div className="w-full">
             <Head title="Browse Organizations" />
@@ -99,7 +95,7 @@ function Organizations({ organizations, queryParameters = null, departments, key
                         </ControlContainer>
 
                         <ControlContainer name="Keywords">
-                            <ControlKeywords />
+                            <ControlKeywords keywords={keywords} />
                         </ControlContainer>
 
                         <ControlContainer name="Category">
@@ -172,7 +168,7 @@ function Organizations({ organizations, queryParameters = null, departments, key
 
                     {/* orgs panel */}
                     <div className="md:flex-1 space-y-3 overflow-x-hidden">
-                        {/* <Pre object={organizationList} /> */}
+                        {/* <Pre object={keywords} /> */}
 
                         {queryParameters && organizations.length === 0 && (
                             <div className="w-full flex justify-center font-bold text-gray-400">No Organizations Found</div>
@@ -188,7 +184,6 @@ function Organizations({ organizations, queryParameters = null, departments, key
                                         title={org.name}
                                         desc={org.description}
                                         count={org.members_count}
-                                        // href={`#linkToOrgId${org.orgID}`}
                                         href={route('organizations.home', { orgID: org.orgID })}
                                     />
                                 ))}
