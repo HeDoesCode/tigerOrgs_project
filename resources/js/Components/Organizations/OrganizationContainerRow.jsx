@@ -31,21 +31,21 @@ function OrganizationContainerRow({ children, title, className, index, collegeLe
     // this is not working f***
     function expandSpacing(index) {
         if (index === 0) {
-            return 'mb-20'
+            return 'pb-10'
         } else if (index === collegeLength) {
-            return 'mb-0'
+            return 'pb-0'
         } else {
-            return 'mt-20 mb-20'
+            return 'pt-10 pb-10'
         }
     }
 
 
     return (
-        <div className={`flex flex-col space-y-3 w-full ${className} ${expand && expandSpacing(index)}`}>
+        <div className={`flex flex-col gap-y-3 w-full ${className} ${expand && expandSpacing(index)}`}>
             <div className="flex flex-row justify-between -mb-3">
                 <div className="questrial font-bold tracking-wider">{title}</div>
                 <div className="w-20 relative overflow-visible">
-                    {hasHorizontalOverflow && (
+                    {(hasHorizontalOverflow || expand) && (
                         <button onClick={expandRow} className={`absolute right-0 min-w-max underline text-sm py-1 px-2 hover:bg-gray-800 hover:text-white rounded-lg ${expand ? 'text-blue-500 font-bold' : 'text-gray-500'}`}>
                             {expand ? 'hide all' : 'show all'}
                         </button>
@@ -54,7 +54,7 @@ function OrganizationContainerRow({ children, title, className, index, collegeLe
             </div>
             <div ref={elementRef} className={expand ?
                 (
-                    'w-full select-none max-h-full overflow-y-hidden overflow-x-hidden grid grid-cols-[repeat(auto-fill,_minmax(9rem,1fr))] md:grid-cols-[repeat(auto-fill,_minmax(12rem,1fr))] gap-4 justify-items-center rounded-lg'
+                    'w-full select-none max-h-full overflow-y-hidden overflow-x-hidden grid grid-cols-[repeat(auto-fill,_minmax(9rem,1fr))] md:grid-cols-[repeat(auto-fill,_minmax(12rem,1fr))] gap-4 justify-items-center rounded-lg border border-gray-300'
                 ) :
                 (
                     'flex flex-row space-x-2 w-full overflow-x-auto overflow-y-hidden'
