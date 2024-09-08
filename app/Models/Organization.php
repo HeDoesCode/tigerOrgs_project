@@ -26,7 +26,10 @@ class Organization extends Model
 
     public function members(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'organization_members', 'orgID', 'userID');
+        // return $this->belongsToMany(User::class, 'organization_user_role', 'orgID', 'userID');
+        return $this->belongsToMany(User::class, 'organization_user_role', 'orgID', 'userID')
+            ->withPivot('roleID')
+            ->withTimestamps();
     }
 
     public function followers(): BelongsToMany

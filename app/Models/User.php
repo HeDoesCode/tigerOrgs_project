@@ -26,19 +26,26 @@ class User extends Authenticatable
         'status',
     ];
 
-    public function roles() : BelongsToMany {
-        return $this->belongsToMany(Role::class, 'user_roles', 'userID', 'roleID');
+    public function roles(): BelongsToMany
+    {
+        // return $this->belongsToMany(Role::class, 'user_roles', 'userID', 'roleID');
+        return $this->belongsToMany(Role::class, 'organization_user_role', 'userID', 'roleID')
+            ->withPivot('orgID')
+            ->withTimestamps();
     }
 
-    public function memberOf() : BelongsToMany {
+    public function memberOf(): BelongsToMany
+    {
         return $this->belongsToMany(Organization::class, 'organization_members', 'userID', 'orgID');
     }
 
-    public function follows() : BelongsToMany {
+    public function follows(): BelongsToMany
+    {
         return $this->belongsToMany(Organization::class, 'organization_followers', 'userID', 'orgID');
     }
 
-    public function interests() : BelongsToMany {
+    public function interests(): BelongsToMany
+    {
         return $this->belongsToMany(Keyword::class, 'user_keywords', 'userID', 'keyID');
     }
 

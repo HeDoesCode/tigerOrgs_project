@@ -18,25 +18,25 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolesSeeder::class);
         $this->call(UsersSeeder::class);
-        $this->call(User_RolesSeeder::class);
+        $this->call(Organization_User_RolesSeeder::class);
 
-        User::factory(10)->create();
+        // User::factory(10)->create();
 
-        // each organization has 4 photos. first is portrait
-        Organization::factory()
-            ->count(10)
-            ->create()
-            ->each(function ($organization) {
-                Photo::factory()
-                    ->for($organization, 'organization') // Link to the organization
-                    ->portrait()  // Create portrait photo
-                    ->count(1)
-                    ->create();
+        // // each organization has 4 photos. first is portrait
+        // Organization::factory()
+        //     ->count(10)
+        //     ->create()
+        //     ->each(function ($organization) {
+        //         Photo::factory()
+        //             ->for($organization, 'organization') // Link to the organization
+        //             ->portrait()  // Create portrait photo
+        //             ->count(1)
+        //             ->create();
 
-                Photo::factory()
-                    ->for($organization, 'organization')
-                    ->count(3)  // 9 landscape photos
-                    ->create();
-            });
+        //         Photo::factory()
+        //             ->for($organization, 'organization')
+        //             ->count(3)  // 9 landscape photos
+        //             ->create();
+        //     });
     }
 }
