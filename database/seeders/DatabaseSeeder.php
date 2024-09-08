@@ -2,16 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\Keyword;
 use App\Models\User;
 use App\Models\Photo;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Organization;
 use Illuminate\Database\Seeder;
 use Database\Seeders\RolesSeeder;
 use Database\Seeders\UsersSeeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use GrahamCampbell\ResultType\Success;
+use Database\Seeders\KeywordSeeder;
 use Database\Seeders\Organization_User_RolesSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,11 +22,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolesSeeder::class);
         $this->call(UsersSeeder::class);
-        // $this->call(Organization_User_RolesSeeder::class);
+        $this->call(KeywordSeeder::class);
 
-        // $users = \App\Models\User::factory()->count(20)->create();
-        // $userCount;
-        // $orgCount;
+
         $organizations = Organization::factory()
             ->count(120)
             ->create()
@@ -42,6 +39,10 @@ class DatabaseSeeder extends Seeder
                     ->for($organization, 'organization')
                     ->count(3)  // 9 landscape photos
                     ->create();
+
+                $keywords = Keyword::all()->pluck('keyID')->toArray();
+                $randomKeywords = array_rand(array_flip($keywords), rand(5, 15));
+                $organization->keywords()->attach($randomKeywords);
             });
 
         /**
@@ -50,13 +51,7 @@ class DatabaseSeeder extends Seeder
          * 1501 - 2000 are admins randomly assigned to orgs
          */
 
-        // try {
         $users = User::factory()->count(1996)->create();
-        //     die('User creation successful');
-        // } catch (\Exception $e) {
-        //     // Log::error('User creation failed: ' . $e->getMessage());
-        //     die('Caught Error: ' . $e->getMessage());
-        // }
 
         $userIDs = $users->pluck('userID')->toArray();
         shuffle($userIDs);
