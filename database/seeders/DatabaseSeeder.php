@@ -16,92 +16,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
-        DB::table('roles')->insert([
-            'role_description' => 'superadmin',
-        ]);
-
-        DB::table('roles')->insert([
-            'role_description' => 'admin',
-        ]);
-
-        DB::table('roles')->insert([
-            'role_description' => 'student',
-        ]);
-
-        $adminRoleID = DB::table('roles')->where('role_description', 'admin')->value('roleID');
-
-        DB::table('users')->insert([
-            'userID' => '2024000001',
-            'email' => 'arvin.alkuino.cics@ust.edu.ph',
-            'firstname' => 'arvin',
-            'lastname' => 'alkuino',
-            'middlename' => 'CICS',
-            'college' => 'College of Information and Computing Sciences',
-            'status' => 'student',
-        ]);
-
-        DB::table('user_roles')->insert([
-            'userID' => '2024000001',
-            'roleID' => $adminRoleID,
-        ]);
-
-        DB::table('users')->insert([
-            'userID' => '2024000002',
-            'email' => 'laurencearvin.arcilla.cics@ust.edu.ph',
-            'firstname' => 'laurence arvin',
-            'lastname' => 'arcilla',
-            'middlename' => 'CICS',
-            'college' => 'College of Information and Computing Sciences',
-            'status' => 'student',
-        ]);
-
-        DB::table('user_roles')->insert([
-            'userID' => '2024000002',
-            'roleID' => $adminRoleID,
-        ]);
-
-        DB::table('users')->insert([
-            'userID' => '2024000003',
-            'email' => 'ethanjohn.catacutan.cics@ust.edu.ph',
-            'firstname' => 'ethan john',
-            'lastname' => 'catacutan',
-            'middlename' => 'CICS',
-            'college' => 'College of Information and Computing Sciences',
-            'status' => 'student',
-        ]);
-
-        DB::table('user_roles')->insert([
-            'userID' => '2024000003',
-            'roleID' => $adminRoleID,
-        ]);
-
-        DB::table('users')->insert([
-            'userID' => '2024000004',
-            'email' => 'josephvictor.paduga.cics@ust.edu.ph',
-            'firstname' => 'joseph victor',
-            'lastname' => 'paduga',
-            'middlename' => 'CICS',
-            'college' => 'College of Information and Computing Sciences',
-            'status' => 'student',
-        ]);
-
-        DB::table('user_roles')->insert([
-            'userID' => '2024000004',
-            'roleID' => $adminRoleID,
-        ]);
+        $this->call(RolesSeeder::class);
+        $this->call(UsersSeeder::class);
+        $this->call(User_RolesSeeder::class);
 
         User::factory(10)->create();
 
-
+        // each organization has 4 photos. first is portrait
         Organization::factory()
-            // ->hasPhotos(4)
             ->count(10)
             ->create()
             ->each(function ($organization) {
                 Photo::factory()
                     ->for($organization, 'organization') // Link to the organization
                     ->portrait()  // Create portrait photo
+                    ->count(1)
                     ->create();
 
                 Photo::factory()
