@@ -178,8 +178,8 @@ function Organizations({ organizations, queryParameters = null, departments, key
                             <div className="w-full flex justify-center font-bold text-gray-400">No Organizations Found</div>
                         )}
 
-                        {Object.entries(organizationList).map(([department, orgs]) => (
-                            <OrganizationContainerRow key={department} title={department}>
+                        {Object.entries(organizationList).map(([department, orgs], index) => (
+                            <OrganizationContainerRow key={department} title={department} index={index} collegeLength={Object.keys(organizationList).length}>
                                 {orgs.map((org, index) => (
                                     <OrganizationTile
                                         key={index}
