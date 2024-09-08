@@ -105,6 +105,9 @@ class DatabaseSeeder extends Seeder
             DB::table('organization_user_role')->insert($chunk);
         }
 
+        // add us as admin to all orgs
+        $this->call(Organization_User_RolesSeeder::class);
+
         // DB::table('users')->insert([
         //     'userID' => '2024999999',
         //     'email' => 'super.admin@ust.edu.ph',
