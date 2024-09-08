@@ -97,8 +97,6 @@ class DatabaseSeeder extends Seeder
                 'orgID' => $randomOrgID,
                 'userID' => $adminID,
                 'roleID' => 2,
-                'created_at' => now(),
-                'updated_at' => now(),
             ];
         }
 
@@ -106,5 +104,14 @@ class DatabaseSeeder extends Seeder
         foreach (array_chunk($adminRecords, 500) as $chunk) {
             DB::table('organization_user_role')->insert($chunk);
         }
+
+        // DB::table('users')->insert([
+        //     'userID' => '2024999999',
+        //     'email' => 'super.admin@ust.edu.ph',
+        //     'firstname' => 'super',
+        //     'lastname' => 'admin',
+        //     'college' => 'College of Information and Computing Sciences',
+        //     'status' => 'student',
+        // ]);
     }
 }
