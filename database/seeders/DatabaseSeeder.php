@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Contact;
 use App\Models\Keyword;
+use App\Models\Officer;
 use App\Models\User;
 use App\Models\Photo;
 use App\Models\Organization;
@@ -24,25 +26,43 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersSeeder::class);
         $this->call(KeywordSeeder::class);
 
+        $users = User::factory()->count(1996)->create();
+
+        // dd($users->random());
 
         $organizations = Organization::factory()
             ->count(120)
             ->create()
-            ->each(function ($organization) {
+            ->each(function ($organization) use ($users) {
+                // Photos
                 Photo::factory()
-                    ->for($organization, 'organization') // Link to the organization
-                    ->portrait()  // Create portrait photo
+                    ->for($organization, 'organization')
+                    ->portrait()
                     ->count(1)
                     ->create();
 
                 Photo::factory()
                     ->for($organization, 'organization')
-                    ->count(3)  // 9 landscape photos
+                    ->count(3)
                     ->create();
 
+                // Random Keywords
                 $keywords = Keyword::all()->pluck('keyID')->toArray();
                 $randomKeywords = array_rand(array_flip($keywords), rand(5, 15));
                 $organization->keywords()->attach($randomKeywords);
+
+                // Random Officers
+                Officer::factory()
+                    ->for($organization, 'organization')
+                    ->count(7)
+                    ->create([
+                        'userID' => $users->random()->userID,
+                    ]);
+
+                Contact::factory()
+                    ->for($organization, 'organization')
+                    ->count(rand(3, 6))
+                    ->create();
             });
 
         /**
@@ -50,8 +70,6 @@ class DatabaseSeeder extends Seeder
          * 4-1500 are students randomly assigned to orgs
          * 1501 - 2000 are admins randomly assigned to orgs
          */
-
-        $users = User::factory()->count(1996)->create();
 
         $userIDs = $users->pluck('userID')->toArray();
         shuffle($userIDs);
