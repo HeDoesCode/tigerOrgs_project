@@ -113,11 +113,11 @@ function Home({
         });
     };
 
-    pageLayoutData = {
-        logo: pageData.logo,
-        coverPhoto: pageData.coverPhoto,
-        metadata: pageData.metadata,
-    };
+    // pageLayoutData = {
+    //     logo: pageData.logo,
+    //     coverPhoto: pageData.coverPhoto,
+    //     metadata: pageData.metadata,
+    // };
 
     return (
         <OrganizationLayout

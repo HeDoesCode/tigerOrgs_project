@@ -64,8 +64,6 @@ class OrganizationController extends Controller
             ->with('contacts')
             ->find($orgID);
         $pageData = [
-            'logo' => $organization->logo,
-            'coverPhoto' => $organization->cover,
             'metadata' => [
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,
@@ -76,9 +74,19 @@ class OrganizationController extends Controller
             'photos' => $organization->photos,
         ];
 
+        $pageLayoutData = [
+            'logo' => $organization->logo,
+            'coverPhoto' => $organization->cover,
+            'metadata' => [
+                'organizationName' => $organization->name,
+                'members' => $organization->members_count,
+            ],
+        ];
+
         // dump($pageData);
         return Inertia::render('Organizations/Home', [
             'pageData' => $pageData,
+            'pageLayoutData' => $pageLayoutData,
         ]);
     }
 }
