@@ -10,7 +10,9 @@ import {
 function AdminDropdownMenu({ onSelect, ...props }) {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>{props.triggerContent}</DropdownMenuTrigger>
+            <DropdownMenuTrigger className="w-full">
+                {props.triggerContent}
+            </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-[#f8f8f8] border-gray-300 flex flex-col justify-center space-y-2 p-2">
                 <DropdownMenuLabel className="poppins">
                     {props.title}

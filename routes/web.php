@@ -45,10 +45,15 @@ Route::middleware('isSuperAdmin')->controller(SuperAdminController::class)->grou
     //manage page
     Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
     Route::get('superadmin/status', 'manage')->name('superadmin.status');
+    Route::get('/superadmin/status/search-org', 'searchOrg');
 
     //invite page
     Route::get('/superadmin/search-users', 'search');
     Route::post('/superadmin/update-organizations', 'updateOrganizations')->name('superadmin.update-organizations');
+
+    //upload page
+    Route::get('/superadmin/dataupload', 'fileupload')->name('superadmin.dataupload');
+    Route::post('/superadmin/dataupload/file', 'upload')->name('superadmin.dataupload.file');
 });
 
 Route::get('/superadmin/loginhistory', function () {
@@ -59,9 +64,7 @@ Route::get('/superadmin/invitehistory', function () {
     return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
 })->name('superadmin.invitehistory');
 
-Route::get('/superadmin/dataupload', function () {
-    return Inertia::render('SuperAdmin/SuperAdminDataUpload');
-})->name('superadmin.dataupload');
+
 
 
 

@@ -16,24 +16,48 @@ class SuperAdminController extends Controller
 
         return Inertia::render('SuperAdmin/SuperAdminManage',[
             'organizations'=> Organization::all(),
+            'departments' => Organization::distinct()->pluck('department')
         ]);
     }
 
     public function updateOrganizations(Request $request) {
         foreach ($request->organizations as $organization) {
-            Log::info('Updating organization', [
-                'id' => $organization['id'], 
-                'visibility' => $organization['visibility']
-            ]);
-    
-            $updated = Organization::where('orgID', $organization['id'])
+            Organization::where('orgID', $organization['id'])
                 ->update(['visibility' => $organization['visibility']]);
+        }
+
+        session()->flash('toast', [
+            'title' => 'Success',
+            'description' => 'Organization Updated Successfully!',
+            'variant' => 'success'
+        ]);
     
-            Log::info('Update result', ['updated' => $updated]);
+        return redirect()->route('superadmin.status');
+    }
+
+    public function searchOrg(Request $request){
+        $query = Organization::query();
+        
+        if($request->filled('query')){
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'LIKE', "%" . $request->input('query') . "%")
+                  ->orWhere('department', 'LIKE', "%" . $request->input('query') . "%");
+            });
         }
     
-        return redirect()->route('superadmin.status')->with('success', 'Organizations Updated Successfully.');
+        if($request->filled('category') && $request->input('category') !== 'All'){
+            $query->where('department', $request->input('category'));
+        }
+    
+        $orgs = $query->get();
+        $departments = Organization::distinct()->pluck('department');
+    
+        return response()->json([
+            'organizations' => $orgs,
+            'departments' => $departments
+        ]);
     }
+    
         
 
     //invite admin functions
@@ -60,5 +84,19 @@ class SuperAdminController extends Controller
         ->get();
 
         return response()->json($users);
+    }
+
+
+    //file upload functions
+
+    public function fileupload(){
+        return Inertia::render('SuperAdmin/SuperAdminDataUpload');
+    }
+
+    public function upload(Request $request){
+
+        //ethan john catacutan send help
+        dd($request->all());
+
     }
 }
