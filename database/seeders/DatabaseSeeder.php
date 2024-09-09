@@ -2,11 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
+use App\Models\Photo;
 use App\Models\Contact;
 use App\Models\Keyword;
 use App\Models\Officer;
-use App\Models\User;
-use App\Models\Photo;
+use Illuminate\Support\Arr;
 use App\Models\Organization;
 use Illuminate\Database\Seeder;
 use Database\Seeders\RolesSeeder;
@@ -52,12 +53,18 @@ class DatabaseSeeder extends Seeder
                 $organization->keywords()->attach($randomKeywords);
 
                 // Random Officers
+                $usersArray = $users->pluck('userID')->toArray(); // Get an array of user IDs
+                // dd($usersArray);
                 Officer::factory()
-                    ->for($organization, 'organization')
                     ->count(7)
-                    ->create([
-                        'userID' => $users->random()->userID,
-                    ]);
+                    ->for($organization, 'organization')
+                    ->create()
+                    ->each(function ($officer) use ($usersArray) {
+                        $officer->userID = array_rand(array_flip($usersArray)); // Assign a random user ID
+                        // dd($officer);
+                        // dd($officer);
+                        $officer->save(); // Save the officer with the new user ID
+                    });
 
                 Contact::factory()
                     ->for($organization, 'organization')
