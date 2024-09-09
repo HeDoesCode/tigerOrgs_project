@@ -1,16 +1,9 @@
 import { useState } from "react";
 import { Link, usePage } from "@inertiajs/react";
+import IconSearch from "@/Components/Icons/IconSearch";
+import Searchbar from "./Searchbar";
 
-function MainAdminFrame({
-    children,
-    navItems,
-    title,
-    searchbar,
-    onSelect,
-    filter,
-    dialog,
-    ...props
-}) {
+function MainAdminFrame({ children, navItems, title }) {
     const { url } = usePage();
     const routePath = (routeName) => new URL(route(routeName)).pathname;
 
@@ -21,13 +14,10 @@ function MainAdminFrame({
     };
     return (
         <div>
-            <div className="poppins text-xl p-2 font-light grid lg:grid-cols-10 md:grid-cols-2 ">
-                <div className=" pb-3 flex col-span-5">
-                    {title} {dialog}
-                </div>
+            <div className="poppins text-xl p-2 font-light grid lg:grid-cols-3 md:grid-cols-2 ">
+                <div className="p-2  col-span-2">{title}</div>
 
-                {searchbar}
-                {filter}
+                <Searchbar />
             </div>
             <div className="bg-[#EEEEEE] mt-2 border border-gray-400 rounded-xl grid grid-cols-1 divide-y divide-gray-400">
                 <div className="grid grid-cols-8 gap-4">
