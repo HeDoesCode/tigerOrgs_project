@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             'role_description' => 'student',
         ]);
 
-        $adminRoleID = DB::table('roles')->where('role_description', 'admin')->value('roleID');
+        $adminRoleID = DB::table('roles')->where('role_description', 'superadmin')->value('roleID');
 
         DB::table('users')->insert([
             'userID' => '2024000001',
