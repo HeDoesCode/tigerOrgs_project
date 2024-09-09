@@ -47,10 +47,15 @@ class Organization extends Model
         return $this->hasMany(Photo::class, 'orgID', 'orgID');
     }
 
-    // public function officers(): HasMany
-    // {
-    //     return $this->hasMany(Officers::class, 'orgID', 'orgID');
-    // }
+    public function officers(): HasMany
+    {
+        return $this->hasMany(Officer::class, 'orgID', 'orgID');
+    }
+
+    public function contacts(): HasMany
+    {
+        return $this->hasMany(Contact::class, 'orgID', 'orgID');
+    }
 
     public function forms(): HasMany
     {

@@ -16,6 +16,9 @@ import {
 } from "@/Components/ui/dialog";
 import OrganizationLayout from "@/Components/Organizations/OrganizationLayout";
 import { Head } from "@inertiajs/react";
+import IconPoint from "@/Components/Icons/IconPoint";
+import { Description } from "@radix-ui/react-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 function Home({
     editing = false,
@@ -23,71 +26,89 @@ function Home({
     pageData,
     pageLayoutData,
 }) {
-    pageData = {
-        logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
-        coverPhoto:
-            "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D",
-        metadata: {
-            organizationName:
-                "Society of Information Technology Enthusiasts (SITE)",
-            members: "210",
-        },
-        aboutUs:
-            "Official TigerOrgs™ page of the Society of Information Technology Enthusiasts, the mother organization of the IT students of the University of Santo Tomas.",
-        contacts: [
-            {
-                platform: "email",
-                address: "site.cics@ust.edu.ph",
-            },
-            {
-                platform: "facebook",
-                address: "https://www.facebook.com/site.ust",
-            },
-            {
-                platform: "instagram",
-                address: "https://www.instagram.com/site.ust",
-            },
-            {
-                platform: "x",
-                address: "https://www.x.com/site.ust",
-            },
-        ],
-        officers: [
-            {
-                position: "President",
-                name: "John Doe",
-            },
-            {
-                position: "Vice President",
-                name: "Jane Smith",
-            },
-            {
-                position: "Secretary",
-                name: "Alex Johnson",
-            },
-            {
-                position: "Treasurer",
-                name: "Emily Davis",
-            },
-            {
-                position: "Auditor",
-                name: "Michael Brown",
-            },
-            {
-                position: "PRO",
-                name: "Sarah Lee",
-            },
-        ],
-        photos: [
-            {
-                caption: "CICS Wellness Series",
-                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
-            },
-            {
-                caption: "CICS Wellness Series",
-                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
-            },
-        ],
+    // pageData = {
+    //     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
+    //     coverPhoto:
+    //         "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D",
+    //     metadata: {
+    //         organizationName:
+    //             "Society of Information Technology Enthusiasts (SITE)",
+    //         members: "210",
+    //     },
+    //     aboutUs:
+    //         "Official TigerOrgs™ page of the Society of Information Technology Enthusiasts, the mother organization of the IT students of the University of Santo Tomas.",
+    //     contacts: [
+    //         {
+    //             platform: "email",
+    //             address: "site.cics@ust.edu.ph",
+    //         },
+    //         {
+    //             platform: "facebook",
+    //             address: "https://www.facebook.com/site.ust",
+    //         },
+    //         {
+    //             platform: "instagram",
+    //             address: "https://www.instagram.com/site.ust",
+    //         },
+    //         {
+    //             platform: "x",
+    //             address: "https://www.x.com/site.ust",
+    //         },
+    //     ],
+    //     officers: [
+    //         {
+    //             position: "President",
+    //             name: "John Doe",
+    //         },
+    //         {
+    //             position: "Vice President",
+    //             name: "Jane Smith",
+    //         },
+    //         {
+    //             position: "Secretary",
+    //             name: "Alex Johnson",
+    //         },
+    //         {
+    //             position: "Treasurer",
+    //             name: "Emily Davis",
+    //         },
+    //         {
+    //             position: "Auditor",
+    //             name: "Michael Brown",
+    //         },
+    //         {
+    //             position: "PRO",
+    //             name: "Sarah Lee",
+    //         },
+    //     ],
+    //     photos: [
+    //         {
+    //             caption: "CICS Wellness Series",
+    //             src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
+    //         },
+    //         {
+    //             caption: "CICS Wellness Series",
+    //             src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
+    //         },
+    //     ],
+    // };
+
+    const { toast } = useToast()
+
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            toast({
+                title: 'Text copied to cliboard',
+                description: text,
+                variant: 'success',
+            })
+        }).catch(err => {
+            toast({
+                title: 'Text copy failed',
+                description: text,
+                variant: 'desctructive',
+            })
+        });
     };
 
     pageLayoutData = {
@@ -164,20 +185,18 @@ function Home({
             facebook: <IconFacebookRoundFilled />,
             x: <IconX />,
             linkedin: <IconLinkedIn />,
+            default: <IconPoint />
         };
 
         return (
             <Tile name="Contacts and Information">
                 <ul className="w-full space-y-2 pl-2 relative">
                     {data.map((contact, index) => (
-                        <li key={index} className="flex items-center quicksand">
+                        <li key={index} className="flex items-center quicksand gap-x-2">
                             <div>{platformIcons[contact.platform]}</div>
-                            <a
-                                className="ml-3 truncate flex-1 hover:text-blue-600 hover:underline"
-                                href={contact.address}
-                            >
-                                {contact.address}
-                            </a>
+                            <div>{contact.name}:</div>
+                            {/* <div className="truncate flex-1">{contact.address}</div> */}
+                            <button className="truncate flex-1 text-left hover:outline hover:outline-1 rounded-md hover:outline-gray-500 hover:px-2 transition-all" onClick={() => copyToClipboard(contact.address)}>{contact.address}</button>
                         </li>
                     ))}
                 </ul>
@@ -201,7 +220,7 @@ function Home({
                             <span className="mr-3">•</span>
                             <div>
                                 <div className="nunito font-extrabold text-lg">
-                                    {officer.name}
+                                    {officer.user.firstname}&nbsp;{officer.user.lastname}
                                 </div>
                                 <div className="-mt-1 quicksand text-sm">
                                     {officer.position}
