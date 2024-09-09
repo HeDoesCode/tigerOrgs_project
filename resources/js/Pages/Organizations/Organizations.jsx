@@ -17,12 +17,7 @@ import Pre from "@/Components/Pre";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function Organizations({
-    organizations,
-    queryParameters = null,
-    departments,
-    keywords,
-}) {
+function Organizations({ organizations, queryParameters = null, departments, keywords, myOrganizations }) {
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
 
@@ -79,6 +74,8 @@ function Organizations({
     const handleClearQuery = () => {
         router.get(route("organizations"));
     };
+
+    // const [visibleKeywords, setVisibleKeywords] = useState({});
 
     return (
         <div className="w-full">
@@ -142,13 +139,7 @@ function Organizations({
                         </ControlContainer>
 
                         {/* {Object.keys(queryParameters).length !== 0 && ( */}
-                        <ControlContainer
-                            className={`flex items-center !-mb-3 !mt-3 ${
-                                Object.keys(queryParameters).length !== 0
-                                    ? "visible"
-                                    : "invisible"
-                            }`}
-                        >
+                        <ControlContainer className={`flex items-center !-mb-3 !mt-3 ${Object.keys(queryParameters).length !== 0 ? 'visible' : 'invisible'}`}>
                             <button
                                 className="w-fit px-3 py-1 bg-[#ffb700] hover:bg-[#f1ad00] rounded-lg text-sm"
                                 onClick={handleClearQuery}
