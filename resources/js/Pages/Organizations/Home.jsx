@@ -100,12 +100,14 @@ function Home({
             toast({
                 title: 'Text copied to cliboard',
                 description: text,
+                duration: 2000,
                 variant: 'success',
             })
         }).catch(err => {
             toast({
                 title: 'Text copy failed',
                 description: text,
+                duration: 2000,
                 variant: 'desctructive',
             })
         });
