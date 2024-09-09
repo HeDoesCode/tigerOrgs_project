@@ -17,7 +17,11 @@ class OrganizationController extends Controller
 
         // handle search query
         if (request('search')) {
-            $query->where('name', 'like', '%' . request('search') . '%');
+            $query->where(function ($query) {
+                $searchTerm = '%' . request('search') . '%';
+                $query->where('name', 'like', $searchTerm)
+                    ->orWhere('department', 'like', $searchTerm);
+            });
         }
 
         $departments = $query->distinct()
@@ -43,9 +47,12 @@ class OrganizationController extends Controller
         }
 
 
+        $keywords = Keyword::pluck('keyword', 'keyID');
+
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
             'departments' => $departments,
+            'keywords' => $keywords,
             'queryParameters' => $queryParameters ?: null,
         ]);
     }

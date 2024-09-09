@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +18,43 @@ class OfficerFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            //
+        $organizationPositions = [
+            'President',
+            'Vice President',
+            'Secretary',
+            'Treasurer',
+            'Auditor',
+            'Public Relations Officer',
+            'Membership Officer',
+            'Project Manager',
+            'Marketing Officer',
+            'Creative Director',
+            'Social Media Manager',
+            'Human Resources Officer',
+            'Logistics Officer',
+            'Fundraising Coordinator',
+            'Technical Head',
+            'Research and Development Officer',
+            'Adviser',
+            'Committee Chairperson',
+            'Volunteer Coordinator',
+            'Training Officer'
         ];
+
+
+        return [
+            'orgID' => Organization::factory(),
+            'userID' => User::factory(),
+            'position' => array_rand(array_flip($organizationPositions)),
+        ];
+    }
+
+    public function position(string $position)
+    {
+        return $this->state(function () use ($position) {
+            return [
+                'position' => $position,
+            ];
+        });
     }
 }

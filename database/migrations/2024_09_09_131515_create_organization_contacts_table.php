@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organization_keywords', function (Blueprint $table) {
-            $table->foreignId('keyID')->constrained('keywords', 'keyID')->onDelete('cascade');
+        Schema::create('organization_contacts', function (Blueprint $table) {
+            $table->id('contactID')->primary;
             $table->foreignId('orgID')->constrained('organizations', 'orgID')->onDelete('cascade');
-            $table->primary(['keyID', 'orgID']);
+            $table->string('platform');
+            $table->string('name')->nullable();
+            $table->string('address')->nullable();
         });
     }
 
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organization_keywords');
+        Schema::dropIfExists('organization_contacts');
     }
 };
