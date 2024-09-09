@@ -93,24 +93,27 @@ function Home({
     //     ],
     // };
 
-    const { toast } = useToast()
+    const { toast } = useToast();
 
     const copyToClipboard = (text) => {
-        navigator.clipboard.writeText(text).then(() => {
-            toast({
-                title: 'Text copied to cliboard',
-                description: text,
-                duration: 2000,
-                variant: 'success',
+        navigator.clipboard
+            .writeText(text)
+            .then(() => {
+                toast({
+                    title: "Text copied to cliboard",
+                    description: text,
+                    duration: 2000,
+                    variant: "success",
+                });
             })
-        }).catch(err => {
-            toast({
-                title: 'Text copy failed',
-                description: text,
-                duration: 2000,
-                variant: 'desctructive',
-            })
-        });
+            .catch((err) => {
+                toast({
+                    title: "Text copy failed",
+                    description: text,
+                    duration: 2000,
+                    variant: "desctructive",
+                });
+            });
     };
 
     // pageLayoutData = {
@@ -187,18 +190,26 @@ function Home({
             facebook: <IconFacebookRoundFilled />,
             x: <IconX />,
             linkedin: <IconLinkedIn />,
-            default: <IconPoint />
+            default: <IconPoint />,
         };
 
         return (
             <Tile name="Contacts and Information">
                 <ul className="w-full space-y-2 pl-2 relative">
                     {data.map((contact, index) => (
-                        <li key={index} className="flex items-center quicksand gap-x-2">
+                        <li
+                            key={index}
+                            className="flex items-center quicksand gap-x-2"
+                        >
                             <div>{platformIcons[contact.platform]}</div>
                             <div>{contact.name}:</div>
                             {/* <div className="truncate flex-1">{contact.address}</div> */}
-                            <button className="truncate flex-1 text-left hover:outline hover:outline-1 rounded-md hover:outline-gray-500 hover:px-2 transition-all" onClick={() => copyToClipboard(contact.address)}>{contact.address}</button>
+                            <button
+                                className="truncate flex-1 text-left hover:outline hover:outline-1 rounded-md hover:outline-gray-500 hover:px-2 transition-all"
+                                onClick={() => copyToClipboard(contact.address)}
+                            >
+                                {contact.address}
+                            </button>
                         </li>
                     ))}
                 </ul>
@@ -222,7 +233,8 @@ function Home({
                             <span className="mr-3">•</span>
                             <div>
                                 <div className="nunito font-extrabold text-lg">
-                                    {officer.user.firstname}&nbsp;{officer.user.lastname}
+                                    {officer.user.firstname}&nbsp;
+                                    {officer.user.lastname}
                                 </div>
                                 <div className="-mt-1 quicksand text-sm">
                                     {officer.position}
