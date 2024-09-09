@@ -274,16 +274,18 @@ function Home({
                                     </div>
                                 </div>
                             </DialogTrigger>
-                            <DialogContent className="max-w-5xl">
+                            <DialogContent className="max-w-5xl w-fit max-h-[90%]">
                                 <DialogHeader>
                                     <DialogTitle>{photo.caption}</DialogTitle>
                                     <DialogDescription></DialogDescription>
                                 </DialogHeader>
-                                <img
-                                    src={photo.src}
-                                    className="w-full h-auto"
-                                    alt={photo.caption}
-                                />
+                                <div className="overflow-y-auto flex justify-center">
+                                    <img
+                                        src={photo.filename}
+                                        className="object-contain max-w-full h-full max-h-full"
+                                        alt={photo.caption}
+                                    />
+                                </div>
                             </DialogContent>
                         </Dialog>
                     ))}
