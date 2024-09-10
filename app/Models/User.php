@@ -29,7 +29,15 @@ class User extends Authenticatable
     public function roles(): BelongsToMany
     {
         // return $this->belongsToMany(Role::class, 'user_roles', 'userID', 'roleID');
-        return $this->belongsToMany(Role::class, 'organization_user_role', 'userID', 'roleID')
+        return $this->belongsToMany(Role::class, 'organization_user_role', 'roleID', 'userID')
+            ->withPivot('orgID')
+            ->withTimestamps();
+    }
+
+    public function organizations(): BelongsToMany
+    {
+        // return $this->belongsToMany(Role::class, 'user_roles', 'userID', 'roleID');
+        return $this->belongsToMany(Organization::class, 'organization_user_role', 'orgID', 'userID')
             ->withPivot('orgID')
             ->withTimestamps();
     }
