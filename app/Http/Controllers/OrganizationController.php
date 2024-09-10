@@ -86,6 +86,7 @@ class OrganizationController extends Controller
         ];
 
         $pageLayoutData = [
+            'orgID' => $organization->orgID,
             'logo' => $organization->logo,
             'coverPhoto' => $organization->cover,
             'metadata' => [
