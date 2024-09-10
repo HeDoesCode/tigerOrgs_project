@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import AdminButton from "@/Components/Admin/AdminButton";
 import AdminOrgCard from "@/Components/Admin/AdminOrgCard";
 
-export default function SuperAdminManage({ organizations }) {
+export default function SuperAdminManage({ organizations, memberCount }) {
     const [edit, setEdit] = useState(false);
     const [visibleStates, setVisibleStates] = useState(
         organizations.reduce((acc, org) => {

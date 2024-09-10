@@ -27,7 +27,7 @@ function MainAdminFrame({ children, navItems, title }) {
                                 <Link
                                     key={index}
                                     className={`py-3 rounded-t-xl hover:bg-gray-800 hover:text-white text-md flex justify-center cursor-pointer ${
-                                        url.startsWith(itemUrl)
+                                        route().current() === item.link
                                             ? "border-b-2 border-[#FF9900] text-[#FF9900]"
                                             : ""
                                     }`}

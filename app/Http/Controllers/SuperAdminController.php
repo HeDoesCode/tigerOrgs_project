@@ -13,9 +13,11 @@ class SuperAdminController extends Controller
 {
     //manage org functions
     public function manage(){
+        
+        $organizations = Organization::withCount('members')->get();
 
         return Inertia::render('SuperAdmin/SuperAdminManage',[
-            'organizations'=> Organization::all(),
+            'organizations'=> $organizations,
         ]);
     }
 

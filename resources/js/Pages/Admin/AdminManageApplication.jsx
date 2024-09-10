@@ -13,27 +13,30 @@ import DotsVertical from "@/Components/DotsVertical";
 import AdminDialog from "@/Components/Admin/AdminDialog";
 import AdminDropdownMenu from "@/Components/Admin/AdminDropdownMenu";
 
-function AdminManageApplication() {
+function AdminManageApplication({ orgID }) {
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
-            <AdminLayout>
+            <AdminLayout orgID={orgID}>
                 <MainAdminFrame
                     navItems={[
                         {
                             icon: <IconCheckBox />,
                             label: "Student Applications",
                             link: "admin.applications",
+                            params: { orgID },
                         },
                         {
                             icon: <IconForms />,
                             label: "Recruitment Form",
                             link: "admin.forms",
+                            params: { orgID },
                         },
                         {
                             icon: <IconHistory />,
                             label: "Form History",
                             link: "admin.formhistory",
+                            params: { orgID },
                         },
                     ]}
                     title="Manage Student Applications"

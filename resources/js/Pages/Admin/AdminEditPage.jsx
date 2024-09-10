@@ -12,7 +12,7 @@ function AdminEditPage({ pageData, pageLayoutData, orgID }) {
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
-            <AdminLayout>
+            <AdminLayout orgID={orgID}>
                 <MainAdminFrame
                     navItems={[
                         {

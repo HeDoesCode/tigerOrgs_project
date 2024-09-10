@@ -70,20 +70,12 @@ Route::get('/superadmin/dataupload', function () {
 Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/{orgID}/editpage', 'edit')->name('admin.editpage');
     Route::get('/admin/{orgID}/invite', 'invite')->name('admin.invite');
+    Route::get('/admin/{orgID}/applications', 'applications')->name('admin.applications');
+    Route::get('/admin/{orgID}/forms', 'forms')->name('admin.forms');
+    Route::get('/admin/{orgID}/formhistory', 'formhistory')->name('admin.formhistory');
 });
 
 
-Route::get('/admin/applications', function () {
-    return Inertia::render('Admin/AdminManageApplication');
-})->name('admin.applications');
-
-Route::get('/admin/forms', function () {
-    return Inertia::render('Admin/AdminManageForms');
-})->name('admin.forms');
-
-Route::get('/admin/formshistory', function () {
-    return Inertia::render('Admin/AdminFormHistory');
-})->name('admin.formhistory');
 
 
 
@@ -98,7 +90,10 @@ Route::middleware('auth')->group(function () {
 });
 
 // form builder routes
-Route::get('/admin/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
+Route::get('/admin/{orgID}/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
+
+
+
 Route::post('/admin/form-builder/save', [FormsController::class, 'saveForm']);
 
 // temporary testing route

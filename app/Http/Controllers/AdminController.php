@@ -54,4 +54,30 @@ class AdminController extends Controller
             'orgID' => $organization->orgID,
         ]);
     }
+
+    public function applications($orgID){
+        $organization = Organization::find($orgID);
+
+
+        return Inertia::render('Admin/AdminManageApplication', [
+            'orgID' => $organization->orgID,
+        ]);
+    }
+
+    public function forms($orgID){
+
+        $organization = Organization::find($orgID);
+
+        return Inertia::render('Admin/AdminManageForms', [
+            'orgID' => $organization->orgID,
+        ]);
+    }
+
+    public function formhistory($orgID){
+        $organization = Organization::find($orgID);
+
+        return Inertia::render('Admin/AdminFormHistory', [
+            'orgID' => $organization->orgID,
+        ]);
+    }
 }

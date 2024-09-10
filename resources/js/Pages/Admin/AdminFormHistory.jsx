@@ -12,27 +12,30 @@ import IconHistory from "@/Components/Icons/IconHistory";
 import IconEye from "@/Components/Icons/IconEye";
 import AdminDialog from "@/Components/Admin/AdminDialog";
 
-function AdminFormHistory() {
+function AdminFormHistory({ orgID }) {
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
-            <AdminLayout>
+            <AdminLayout orgID={orgID}>
                 <MainAdminFrame
                     navItems={[
                         {
                             icon: <IconCheckBox />,
                             label: "Student Applications",
                             link: "admin.applications",
+                            params: { orgID },
                         },
                         {
                             icon: <IconForms />,
                             label: "Recruitment Form",
                             link: "admin.forms",
+                            params: { orgID },
                         },
                         {
                             icon: <IconHistory />,
                             label: "Form History",
                             link: "admin.formhistory",
+                            params: { orgID },
                         },
                     ]}
                     title="Browse Previous Forms"
