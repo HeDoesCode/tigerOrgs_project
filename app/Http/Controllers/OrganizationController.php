@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Keyword;
-use App\Models\Organization;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Inertia\Controller;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Keyword;
+use Inertia\Controller;
+use App\Models\Organization;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationController extends Controller
 {
-    public function browse(): Response
+    public function browse(Request $request): Response
     {
         $query = Organization::query();
         $queryParameters = [];
@@ -50,8 +53,9 @@ class OrganizationController extends Controller
             ->withCount('members')
             ->get();
 
+        // get all available keywords
         $keywords = Keyword::pluck('keyword', 'keyID');
-
+        // ... and parse into array of objects
         $keywordsArray = $keywords->map(function ($keyword, $keyID) {
             return [
                 'keyID' => $keyID,
@@ -59,11 +63,21 @@ class OrganizationController extends Controller
             ];
         })->values()->toArray();
 
+        // get all organization this user is a member of
+        $myMemberOrganizations = DB::table('organization_user_role')
+            ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
+            ->join('organizations', 'organization_user_role.orgID', '=', 'organizations.orgID')
+            ->select('organizations.name', 'roles.role_description', 'organizations.orgID')
+            ->inRandomOrder()
+            ->limit(10)
+            ->get()
+            ->sortBy('name');
+
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
             'departments' => $departments,
             'keywords' => $keywordsArray,
-            'myOrganizations' => '',
+            'myMemberOrganizations' => $myMemberOrganizations ?: null,
             'queryParameters' => $queryParameters ?: null,
         ]);
     }
