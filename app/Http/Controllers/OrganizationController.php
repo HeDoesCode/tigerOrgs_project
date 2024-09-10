@@ -29,7 +29,6 @@ class OrganizationController extends Controller
 
         // handle category filter
         if (request('category')) {
-            // $query->where('name', 'like', '%' . request('search') . '%');
             $query->where('department', request('category'));
         }
 
@@ -46,13 +45,25 @@ class OrganizationController extends Controller
             $queryParameters['category'] = request('category');
         }
 
+        // $keywords = Keyword::pluck('keyword', 'keyID');
 
         $keywords = Keyword::pluck('keyword', 'keyID');
+
+        $keywordsArray = $keywords->map(function ($keyword, $keyID) {
+            return [
+                'keyID' => $keyID,
+                'keyword' => $keyword,
+            ];
+        })->values()->toArray();
+
+
+        // dd(count($keywordsArray));
 
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
             'departments' => $departments,
-            'keywords' => $keywords,
+            'keywords' => $keywordsArray,
+            'myOrganizations' => '',
             'queryParameters' => $queryParameters ?: null,
         ]);
     }

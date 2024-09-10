@@ -21,6 +21,16 @@ function Organizations({ organizations, queryParameters = null, departments, key
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
 
+    // console.log(keywords)
+    // Process Keywords from associative array to array of objects and sort
+    // const keywordArray = Object.entries(keywords).map(([id, name]) => ({
+    //     keyID: parseInt(id),
+    //     keyword: name
+    // }));
+
+
+    // const []
+
     useEffect(() => {
         const groupedByDepartment = organizations.reduce(
             (acc, organization) => {
@@ -100,7 +110,7 @@ function Organizations({ organizations, queryParameters = null, departments, key
                         </ControlContainer>
 
                         <ControlContainer name="Keywords">
-                            <ControlKeywords keywords={keywords} />
+                            <ControlKeywords keywords={keywords} queryParameters={queryParameters} />
                         </ControlContainer>
 
                         <ControlContainer name="Category">
