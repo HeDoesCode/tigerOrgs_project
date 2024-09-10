@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Keyword;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Controller;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,6 +15,7 @@ class OrganizationController extends Controller
     public function browse(): Response
     {
         $query = Organization::query();
+        $queryParameters = [];
 
         // handle search query
         if (request('search')) {
@@ -22,30 +24,31 @@ class OrganizationController extends Controller
                 $query->where('name', 'like', $searchTerm)
                     ->orWhere('department', 'like', $searchTerm);
             });
+            $queryParameters['search'] = request('search');
         }
 
+        // show departments that are present in the current search query
         $departments = $query->distinct()
             ->pluck('department');
+
+        // handle keyword filter
+        if ($keywordFilter = request('keyword_filter')) {
+            $query->whereHas('keywords', function ($q) use ($keywordFilter) {
+                $q->whereIn('keyword', $keywordFilter);
+            });
+            $queryParameters['keyword_filter'] = request('keyword_filter');
+        }
 
         // handle category filter
         if (request('category')) {
             $query->where('department', request('category'));
+            $queryParameters['category'] = request('category');
         }
 
         // attach photos
         $organizations = $query->with('photos')
             ->withCount('members')
             ->get();
-
-        $queryParameters = [];
-        if (request('search')) {
-            $queryParameters['search'] = request('search');
-        }
-        if (request('category')) {
-            $queryParameters['category'] = request('category');
-        }
-
-        // $keywords = Keyword::pluck('keyword', 'keyID');
 
         $keywords = Keyword::pluck('keyword', 'keyID');
 
@@ -55,9 +58,6 @@ class OrganizationController extends Controller
                 'keyword' => $keyword,
             ];
         })->values()->toArray();
-
-
-        // dd(count($keywordsArray));
 
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,

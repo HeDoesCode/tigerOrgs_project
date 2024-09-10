@@ -62,7 +62,6 @@ function Organizations({
             }
             router.get(route("organizations"), queryParameters, {
                 preserveState: true,
-                // replace: true,
                 preserveScroll: true,
             });
         }, 500);
@@ -79,7 +78,6 @@ function Organizations({
             }
             router.get(route("organizations"), queryParameters, {
                 preserveState: true,
-                // replace: true,
                 preserveScroll: true,
             });
         }, 500);
@@ -90,8 +88,6 @@ function Organizations({
     const handleClearQuery = () => {
         router.get(route("organizations"));
     };
-
-    // const [visibleKeywords, setVisibleKeywords] = useState({});
 
     return (
         <div className="w-full">
@@ -156,11 +152,10 @@ function Organizations({
 
                         {/* {Object.keys(queryParameters).length !== 0 && ( */}
                         <ControlContainer
-                            className={`flex items-center !-mb-3 !mt-3 ${
-                                Object.keys(queryParameters).length !== 0
-                                    ? "visible"
-                                    : "invisible"
-                            }`}
+                            className={`flex items-center !-mb-3 !mt-3 ${Object.keys(queryParameters).length !== 0
+                                ? "visible"
+                                : "invisible"
+                                }`}
                         >
                             <button
                                 className="w-fit px-3 py-1 bg-[#ffb700] hover:bg-[#f1ad00] rounded-lg text-sm"

@@ -17,44 +17,32 @@ import { router } from "@inertiajs/react";
 function ControlKeywords({ keywords, className, queryParameters }) {
     const sortedKeywords = handleSortKeywords(keywords);
 
-    //test
-    // queryParameters["keyword_filter"] = [
-    //     { keyID: 1, keyword: 'Academic' },
-    //     { keyID: 2, keyword: 'Accounting' },
-    //     { keyID: 3, keyword: 'Adventure' },
-    // ];
-
     function handleSortKeywords(array) {
         return array.sort((a, b) => a.keyword.localeCompare(b.keyword));
     }
 
-    // const [tempQueryHolder, setTempQueryHolder] = useState(queryParameters['keyword_filter'] || null)
-
     const [activeKeywords, setActiveKeywords] = useState([]);
-    // const [keywordBank, setKeywordBank] = useState(sortedKeywords);
     const [keywordBank, setKeywordBank] = useState([]);
 
     useEffect(() => {
-        if (queryParameters['keyword_filter']) {
-            //
-            setActiveKeywords(queryParameters['keyword_filter']);
-            const leftoverKeywords = [];
-            const queryKeywords = queryParameters['keyword_filter'] || [];
+        resetKeywords()
+    }, []);
 
-            keywords.forEach(element1 => {
-                const isMatch = queryKeywords.some(element2 => element1.keyword === element2.keyword);
 
-                if (!isMatch) {
-                    leftoverKeywords.push(element1);
-                }
-            });
-            setKeywordBank(leftoverKeywords);
+    useEffect(() => {
+        if (activeKeywords.length !== 0) {
+            queryParameters['keyword_filter'] = activeKeywords;
+
         } else {
-            setKeywordBank(sortedKeywords);
-            delete queryParameters["keyword_filter"];
+            delete queryParameters['keyword_filter']
         }
 
-    }, [])
+        router.get(route("organizations"), queryParameters, {
+            preserveState: true,
+            // replace: true,
+            preserveScroll: true,
+        });
+    }, [keywordBank])
 
     const [keywordFilter, setKeywordFilter] = useState('');
 
@@ -64,35 +52,50 @@ function ControlKeywords({ keywords, className, queryParameters }) {
 
         if (e.target.value === '' || e.target.value === null) {
             setKeywordBank(handleSortKeywords(keywordBank));
-            return
+            return;
         }
 
-        // returns an array of objects that match the query string
-        const filteredKeywords = handleSortKeywords(
-            keywordBank.filter(item =>
-                item.keyword.toLowerCase().includes(keywordFilter)
+        const filteredKeywords = keywordBank
+            .filter(item =>
+                item.keyword.toLowerCase().includes(e.target.value.toLowerCase())
             )
-        );
+            .sort((a, b) => {
+                const keywordFilterLower = e.target.value.toLowerCase();
+                const aKeyword = a.keyword.toLowerCase();
+                const bKeyword = b.keyword.toLowerCase();
 
-        const nonMatchingKeywords = handleSortKeywords(
-            keywordBank.filter(item =>
-                !item.keyword.toLowerCase().includes(keywordFilter)
-            )
-        );
+                const aStartsWith = aKeyword.startsWith(keywordFilterLower) ? 0 : 1;
+                const bStartsWith = bKeyword.startsWith(keywordFilterLower) ? 0 : 1;
+
+                if (aStartsWith !== bStartsWith) {
+                    return aStartsWith - bStartsWith;
+                }
+
+                return aKeyword.indexOf(keywordFilterLower) - bKeyword.indexOf(keywordFilterLower) ||
+                    aKeyword.localeCompare(bKeyword);
+            });
+
+        const nonMatchingKeywords = keywordBank.filter(item =>
+            !item.keyword.toLowerCase().includes(e.target.value.toLowerCase())
+        ).sort((a, b) => a.keyword.localeCompare(b.keyword));
 
         setKeywordBank([...filteredKeywords, ...nonMatchingKeywords]);
-
     };
 
-    const updateParameters = () => {
+    useEffect(() => {
         if (activeKeywords.length !== 0) {
-            queryParameters["keyword_filter"] = activeKeywords;
+            updateParameters(); // Call the function to update the URL
         } else {
-            delete queryParameters["keyword_filter"];
+            delete queryParameters['keyword_filter']
         }
+    }, [activeKeywords]);
+
+
+    function updateParameters() {
+        queryParameters['keyword_filter'] = null;
+        queryParameters['keyword_filter'] = activeKeywords;
         router.get(route("organizations"), queryParameters, {
             preserveState: true,
-            // replace: true,
             preserveScroll: true,
         });
     }
@@ -103,6 +106,7 @@ function ControlKeywords({ keywords, className, queryParameters }) {
             item,
             ...prevState
         ])
+        updateParameters();
 
         // remove from bank
         setKeywordBank((prevKeywordBank) => {
@@ -119,12 +123,18 @@ function ControlKeywords({ keywords, className, queryParameters }) {
         setActiveKeywords((prevKeywordBank) => {
             return prevKeywordBank.filter(prevItem => prevItem.keyID !== item.keyID)
         });
+        updateParameters();
     }
 
     const resetKeywords = () => {
         setActiveKeywords([]);
         setKeywordBank(handleSortKeywords(keywords));
         setKeywordFilter('');
+        delete queryParameters['keyword_filter'];
+        router.get(route("organizations"), queryParameters, {
+            preserveState: true,
+            preserveScroll: true,
+        });
     }
 
     return (
@@ -145,7 +155,7 @@ function ControlKeywords({ keywords, className, queryParameters }) {
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex gap-x-3">
-                        <input className="w-full rounded-md" type="text" autoComplete="off" placeholder="Search Keywords..." name="keyword_filter" onChange={handleSearchChange} value={keywordFilter} />
+                        <input className="w-full rounded-md" type="text" autoComplete="off" placeholder="Find Keywords..." name="keyword_filter" onChange={handleSearchChange} value={keywordFilter} />
                         <button onClick={resetKeywords} className="h-full px-3 border border-black rounded-md hover:bg-gray-800 hover:text-white transition-all">Reset</button>
                     </div>
                     <div className="w-full flex flex-wrap justify-center sm:justify-start gap-2 border-[1px] rounded-md border-gray-800 p-2 relative text-xs overflow-clip">
@@ -169,7 +179,7 @@ function ControlKeywords({ keywords, className, queryParameters }) {
                             <EditableKeywordTile key={index} name={item.keyword} add onClick={() => enableKeyword(item)} />
                         ))}
                     </div>
-                    <DialogClose asChild>
+                    {/* <DialogClose asChild>
                         <div className="w-full flex justify-end">
                             <Button
                                 type="button"
@@ -179,13 +189,12 @@ function ControlKeywords({ keywords, className, queryParameters }) {
                                 Update
                             </Button>
                         </div>
-                    </DialogClose>
+                    </DialogClose> */}
                 </DialogContent>
             </Dialog>
-            {/* {queryParameters['keyword_filter']?.map((item, index) => (
+            {activeKeywords.map((item, index) => (
                 <KeywordTile key={index} name={item.keyword} />
-            )) || null} */}
-            {console.log(queryParameters['keyword_filter'])}
+            )) || ''}
         </div>
     )
 

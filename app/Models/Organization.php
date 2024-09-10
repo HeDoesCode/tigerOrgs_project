@@ -24,6 +24,8 @@ class Organization extends Model
         'department',
     ];
 
+    // Relationships:
+
     public function members(): BelongsToMany
     {
         // return $this->belongsToMany(User::class, 'organization_user_role', 'orgID', 'userID');
