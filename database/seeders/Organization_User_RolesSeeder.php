@@ -17,7 +17,7 @@ class Organization_User_RolesSeeder extends Seeder
         $userIDs = [2024000001, 2024000002, 2024000003, 2024000004];
 
         // Retrieve all organizations
-        $organizations = Organization::all();
+        $organizations = Organization::inRandomOrder()->limit(10)->get();
 
         // Prepare records to insert
         $records = [];
