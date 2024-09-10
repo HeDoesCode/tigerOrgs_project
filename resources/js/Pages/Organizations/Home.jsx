@@ -22,7 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 
 function Home({
     editing = false,
-    isRecruiting = false,
+    isRecruiting = true,
     pageData,
     pageLayoutData,
 }) {
