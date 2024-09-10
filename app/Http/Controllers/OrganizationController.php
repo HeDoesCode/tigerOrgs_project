@@ -67,7 +67,7 @@ class OrganizationController extends Controller
         $myMemberOrganizations = DB::table('organization_user_role')
             ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
             ->join('organizations', 'organization_user_role.orgID', '=', 'organizations.orgID')
-            ->select('organizations.name', 'roles.role_description', 'organizations.orgID')
+            ->select('organizations.name', 'roles.role_description', 'organizations.orgID', 'organizations.logo')
             ->inRandomOrder()
             ->limit(10)
             ->get()
