@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Organization;
+use Inertia\Controller;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -26,6 +27,7 @@ class AdminController extends Controller
         ];
 
         $pageLayoutData = [
+            'orgID'=>$organization->orgID,
             'logo' => $organization->logo,
             'coverPhoto' => $organization->cover,
             'metadata' => [
@@ -38,6 +40,18 @@ class AdminController extends Controller
         return Inertia::render('Admin/AdminEditPage', [
             'pageData' => $pageData,
             'pageLayoutData' => $pageLayoutData,
+            'orgID' => $orgID, 
+        ]);
+    }
+
+    public function invite($orgID){
+        $organization = Organization::withCount('members')
+            ->with('officers.user')
+            ->with('contacts')
+            ->find($orgID);
+
+        return Inertia::render('Admin/AdminInvite', [
+            'orgID' => $organization->orgID,
         ]);
     }
 }

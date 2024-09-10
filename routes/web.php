@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
 // })->name('profile');
 
 //superadmin temporary routes
-Route::middleware('isSuperAdmin')->controller(SuperAdminController::class)->group(function () {
+Route::controller(SuperAdminController::class)->group(function () {
     //manage page
     Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
     Route::get('superadmin/status', 'manage')->name('superadmin.status');
@@ -67,17 +67,11 @@ Route::get('/superadmin/dataupload', function () {
 
 
 //admin temporary routes
-Route::middleware('isAdmin')->controller(AdminController::class)->group(function(){
+Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/{orgID}/editpage', 'edit')->name('admin.editpage');
+    Route::get('/admin/{orgID}/invite', 'invite')->name('admin.invite');
 });
 
-
-
-
-
-Route::get('/admin/invite', function () {
-    return Inertia::render('Admin/AdminInvite');
-})->name('admin.invite');
 
 Route::get('/admin/applications', function () {
     return Inertia::render('Admin/AdminManageApplication');
