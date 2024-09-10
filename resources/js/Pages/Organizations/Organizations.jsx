@@ -17,64 +17,75 @@ import Pre from "@/Components/Pre";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function Organizations({ organizations, queryParameters = null, departments, keywords }) {
+function Organizations({ organizations, queryParameters = null, departments, keywords, myOrganizations }) {
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
 
+    // console.log(keywords)
+    // Process Keywords from associative array to array of objects and sort
+    // const keywordArray = Object.entries(keywords).map(([id, name]) => ({
+    //     keyID: parseInt(id),
+    //     keyword: name
+    // }));
+
+
+    // const []
+
     useEffect(() => {
-        const groupedByDepartment = organizations.reduce((acc, organization) => {
-            const department = organization.department;
-            if (!acc[department]) {
-                acc[department] = [];
-            }
-            acc[department].push(organization);
-            return acc;
-        }, {});
+        const groupedByDepartment = organizations.reduce(
+            (acc, organization) => {
+                const department = organization.department;
+                if (!acc[department]) {
+                    acc[department] = [];
+                }
+                acc[department].push(organization);
+                return acc;
+            },
+            {}
+        );
 
         setOrganizationList(groupedByDepartment);
     }, [organizations]);
 
     const handleSearch = (e) => {
         const searchDebounce = setTimeout(() => {
-            if (e.target.value !== '') {
-                queryParameters['search'] = e.target.value;
+            if (e.target.value !== "") {
+                queryParameters["search"] = e.target.value;
             } else {
-                delete queryParameters['search'];
+                delete queryParameters["search"];
             }
             router.get(route("organizations"), queryParameters, {
                 preserveState: true,
                 // replace: true,
-                preserveScroll: true
+                preserveScroll: true,
             });
         }, 500);
 
         return () => clearTimeout(searchDebounce);
-    }
+    };
 
     const handleFilterCategory = (category) => {
         const filterCategoryDebounce = setTimeout(() => {
-            if (category !== 'All') {
-                queryParameters['category'] = category;
+            if (category !== "All") {
+                queryParameters["category"] = category;
             } else {
-                delete queryParameters['category'];
+                delete queryParameters["category"];
             }
             router.get(route("organizations"), queryParameters, {
                 preserveState: true,
                 // replace: true,
-                preserveScroll: true
+                preserveScroll: true,
             });
         }, 500);
 
         return () => clearTimeout(filterCategoryDebounce);
-    }
+    };
 
     const handleClearQuery = () => {
         router.get(route("organizations"));
-    }
+    };
 
-    // const handleVisitOrganization = (id) => {
-
-    // }
+    // const [visibleKeywords, setVisibleKeywords] = useState({});
 
     return (
         <div className="w-full">
@@ -90,7 +101,7 @@ function Organizations({ organizations, queryParameters = null, departments, key
                             <input
                                 type="text"
                                 className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-11 pl-10 focus:pl-3 transition-all duration-200"
-                                defaultValue={queryParameters['search'] || ''}
+                                defaultValue={queryParameters["search"] || ""}
                                 onChange={handleSearch}
                             />
                             <div className="absolute text-gray-500 left-0 bottom-0 h-11 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
@@ -99,18 +110,23 @@ function Organizations({ organizations, queryParameters = null, departments, key
                         </ControlContainer>
 
                         <ControlContainer name="Keywords">
-                            <ControlKeywords />
+                            <ControlKeywords keywords={keywords} queryParameters={queryParameters} />
                         </ControlContainer>
 
                         <ControlContainer name="Category">
-                            <Select defaultValue="All" onValueChange={handleFilterCategory}>
+                            <Select
+                                defaultValue="All"
+                                onValueChange={handleFilterCategory}
+                            >
                                 <SelectTrigger className="w-full h-12 border-gray-500 bg-transparent">
                                     <SelectValue placeholder="All" />
                                 </SelectTrigger>
-                                <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand"
+                                <SelectContent
+                                    className="border-gray-500 bg-[#EEEEEE] quicksand"
                                     ref={(ref) => {
                                         if (!ref) return;
-                                        ref.ontouchstart = (e) => e.preventDefault();
+                                        ref.ontouchstart = (e) =>
+                                            e.preventDefault();
                                     }}
                                 >
                                     <SelectItem
@@ -160,7 +176,9 @@ function Organizations({ organizations, queryParameters = null, departments, key
                                     icon="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/379249269_872028557643589_7767519284231773085_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFZKMicf1CYVeO4tuXfLyje4vxiXiyaS5Pi_GJeLJpLkxoQdpaGhxXY4SmR3UK6qiMMC1rZpt805xAUxbdgvAMc&_nc_ohc=waaGroD6R1cQ7kNvgHtcHoo&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYAs3lfS3aOKI2arEPVOaRvbB6MUXpd7KTxLuOGdcKaJgA&oe=66C28011"
                                     title="Fotomasino"
                                     isAdmin
-                                    link={route("admin.editpage")}
+                                    link={route("admin.editpage", {
+                                        orgID: 1,
+                                    })}
                                 />
                                 <OrganizationJoined
                                     icon="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
@@ -172,29 +190,40 @@ function Organizations({ organizations, queryParameters = null, departments, key
 
                     {/* orgs panel */}
                     <div className="md:flex-1 space-y-3 overflow-x-hidden">
-                        {/* <Pre object={organizationList} /> */}
+                        {/* <Pre object={keywords} /> */}
 
                         {queryParameters && organizations.length === 0 && (
-                            <div className="w-full flex justify-center font-bold text-gray-400">No Organizations Found</div>
+                            <div className="w-full flex justify-center font-bold text-gray-400">
+                                No Organizations Found
+                            </div>
                         )}
 
-                        {Object.entries(organizationList).map(([department, orgs]) => (
-                            <OrganizationContainerRow key={department} title={department}>
-                                {orgs.map((org, index) => (
-                                    <OrganizationTile
-                                        key={index}
-                                        orgBg={org.photos[0].filename}
-                                        orgIcon={org.logo}
-                                        title={org.name}
-                                        desc={org.description}
-                                        count={org.members_count}
-                                        // href={`#linkToOrgId${org.orgID}`}
-                                        href={route('organizations.home', { orgID: org.orgID })}
-                                    />
-                                ))}
-
-                            </OrganizationContainerRow>
-                        ))}
+                        {Object.entries(organizationList).map(
+                            ([department, orgs], index) => (
+                                <OrganizationContainerRow
+                                    key={department}
+                                    title={department}
+                                    index={index}
+                                    collegeLength={
+                                        Object.keys(organizationList).length
+                                    }
+                                >
+                                    {orgs.map((org, index) => (
+                                        <OrganizationTile
+                                            key={index}
+                                            orgBg={org.photos[0].filename}
+                                            orgIcon={org.logo}
+                                            title={org.name}
+                                            desc={org.description}
+                                            count={org.members_count}
+                                            href={route("organizations.home", {
+                                                orgID: org.orgID,
+                                            })}
+                                        />
+                                    ))}
+                                </OrganizationContainerRow>
+                            )
+                        )}
                     </div>
                 </div>
             </UserLayout>

@@ -17,7 +17,11 @@ class OrganizationController extends Controller
 
         // handle search query
         if (request('search')) {
-            $query->where('name', 'like', '%' . request('search') . '%');
+            $query->where(function ($query) {
+                $searchTerm = '%' . request('search') . '%';
+                $query->where('name', 'like', $searchTerm)
+                    ->orWhere('department', 'like', $searchTerm);
+            });
         }
 
         $departments = $query->distinct()
@@ -25,7 +29,6 @@ class OrganizationController extends Controller
 
         // handle category filter
         if (request('category')) {
-            // $query->where('name', 'like', '%' . request('search') . '%');
             $query->where('department', request('category'));
         }
 
@@ -42,76 +45,59 @@ class OrganizationController extends Controller
             $queryParameters['category'] = request('category');
         }
 
+        // $keywords = Keyword::pluck('keyword', 'keyID');
+
+        $keywords = Keyword::pluck('keyword', 'keyID');
+
+        $keywordsArray = $keywords->map(function ($keyword, $keyID) {
+            return [
+                'keyID' => $keyID,
+                'keyword' => $keyword,
+            ];
+        })->values()->toArray();
+
+
+        // dd(count($keywordsArray));
 
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
             'departments' => $departments,
+            'keywords' => $keywordsArray,
+            'myOrganizations' => '',
             'queryParameters' => $queryParameters ?: null,
         ]);
     }
 
     public function visit($orgID)
     {
-        $organization = Organization::withCount('members')->find($orgID);
+        $organization = Organization::withCount('members')
+            ->with('officers.user')
+            ->with('contacts')
+            ->find($orgID);
         $pageData = [
+            'metadata' => [
+                'organizationName' => $organization->name,
+                'members' => $organization->members_count,
+            ],
+            'aboutUs' => $organization->description,
+            'contacts' => $organization->contacts,
+            'officers' => $organization->officers,
+            'photos' => $organization->photos,
+        ];
+
+        $pageLayoutData = [
             'logo' => $organization->logo,
             'coverPhoto' => $organization->cover,
             'metadata' => [
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,
             ],
-            'aboutUs' => $organization->description,
-            'contacts' => [
-                // hard-coded for now
-                [
-                    'platform' => "email",
-                    'address' => "site.cics@ust.edu.ph",
-                ],
-                [
-                    'platform' => "facebook",
-                    'address' => "https://www.facebook.com/site.ust",
-                ],
-                [
-                    'platform' => "instagram",
-                    'address' => "https://www.instagram.com/site.ust",
-                ],
-                [
-                    'platform' => "x",
-                    'address' => "https://www.x.com/site.ust",
-                ],
-            ],
-            'officers' => [
-                [
-                    'position' => "President",
-                    'name' => "John Doe",
-                ],
-                [
-                    'position' => "Vice President",
-                    'name' => "Jane Smith",
-                ],
-                [
-                    'position' => "Secretary",
-                    'name' => "Alex Johnson",
-                ],
-                [
-                    'position' => "Treasurer",
-                    'name' => "Emily Davis",
-                ],
-                [
-                    'position' => "Auditor",
-                    'name' => "Michael Brown",
-                ],
-                [
-                    'position' => "PRO",
-                    'name' => "Sarah Lee",
-                ],
-            ],
-            'photos' => $organization->photos,
         ];
 
         // dump($pageData);
         return Inertia::render('Organizations/Home', [
             'pageData' => $pageData,
+            'pageLayoutData' => $pageLayoutData,
         ]);
     }
 }

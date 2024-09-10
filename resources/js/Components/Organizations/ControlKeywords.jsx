@@ -9,20 +9,133 @@ import {
 } from "@/Components/ui/dialog"
 
 import { Button } from "@/Components/ui/button"
+import { useState } from "react"
+import Pre from "../Pre";
+import { useEffect } from "react";
+import { router } from "@inertiajs/react";
 
-function ControlKeywords({ keywordList, className }) {
-    // keywordList = 1;
-    // const availableKeywordsList = { 'test1', 'test2', 'test3', 'test4', 'test5', 'test6'};
+function ControlKeywords({ keywords, className, queryParameters }) {
+    const sortedKeywords = handleSortKeywords(keywords);
+
+    //test
+    // queryParameters["keyword_filter"] = [
+    //     { keyID: 1, keyword: 'Academic' },
+    //     { keyID: 2, keyword: 'Accounting' },
+    //     { keyID: 3, keyword: 'Adventure' },
+    // ];
+
+    function handleSortKeywords(array) {
+        return array.sort((a, b) => a.keyword.localeCompare(b.keyword));
+    }
+
+    // const [tempQueryHolder, setTempQueryHolder] = useState(queryParameters['keyword_filter'] || null)
+
+    const [activeKeywords, setActiveKeywords] = useState([]);
+    // const [keywordBank, setKeywordBank] = useState(sortedKeywords);
+    const [keywordBank, setKeywordBank] = useState([]);
+
+    useEffect(() => {
+        if (queryParameters['keyword_filter']) {
+            //
+            setActiveKeywords(queryParameters['keyword_filter']);
+            const leftoverKeywords = [];
+            const queryKeywords = queryParameters['keyword_filter'] || [];
+
+            keywords.forEach(element1 => {
+                const isMatch = queryKeywords.some(element2 => element1.keyword === element2.keyword);
+
+                if (!isMatch) {
+                    leftoverKeywords.push(element1);
+                }
+            });
+            setKeywordBank(leftoverKeywords);
+        } else {
+            setKeywordBank(sortedKeywords);
+            delete queryParameters["keyword_filter"];
+        }
+
+    }, [])
+
+    const [keywordFilter, setKeywordFilter] = useState('');
+
+    // Every type in search sorts keywordBank
+    const handleSearchChange = (e) => {
+        setKeywordFilter(e.target.value);
+
+        if (e.target.value === '' || e.target.value === null) {
+            setKeywordBank(handleSortKeywords(keywordBank));
+            return
+        }
+
+        // returns an array of objects that match the query string
+        const filteredKeywords = handleSortKeywords(
+            keywordBank.filter(item =>
+                item.keyword.toLowerCase().includes(keywordFilter)
+            )
+        );
+
+        const nonMatchingKeywords = handleSortKeywords(
+            keywordBank.filter(item =>
+                !item.keyword.toLowerCase().includes(keywordFilter)
+            )
+        );
+
+        setKeywordBank([...filteredKeywords, ...nonMatchingKeywords]);
+
+    };
+
+    const updateParameters = () => {
+        if (activeKeywords.length !== 0) {
+            queryParameters["keyword_filter"] = activeKeywords;
+        } else {
+            delete queryParameters["keyword_filter"];
+        }
+        router.get(route("organizations"), queryParameters, {
+            preserveState: true,
+            // replace: true,
+            preserveScroll: true,
+        });
+    }
+
+    const enableKeyword = (item) => {
+        // add to active
+        setActiveKeywords((prevState) => [
+            item,
+            ...prevState
+        ])
+
+        // remove from bank
+        setKeywordBank((prevKeywordBank) => {
+            return prevKeywordBank.filter(prevItem => prevItem.keyID !== item.keyID)
+        });
+    }
+
+    const disableKeyword = (item) => {
+        // return to bank
+        const tempKeywordBank = [item, ...keywordBank];
+        setKeywordBank(handleSortKeywords(tempKeywordBank));
+
+        // remove from active
+        setActiveKeywords((prevKeywordBank) => {
+            return prevKeywordBank.filter(prevItem => prevItem.keyID !== item.keyID)
+        });
+    }
+
+    const resetKeywords = () => {
+        setActiveKeywords([]);
+        setKeywordBank(handleSortKeywords(keywords));
+        setKeywordFilter('');
+    }
+
     return (
         <div className={`w-full flex flex-wrap gap-2 max-h-20 min-h-10 border-[1px] rounded-md border-gray-500 p-2 relative text-xs overflow-clip group ${className}`}>
             <Dialog>
                 <DialogTrigger className="absolute size-full inset-0">
                     <div className="size-full flex items-center justify-center invisible group-hover:visible group-hover:!bg-gray-800 text-black/0 group-hover:!text-white transition-all duration-200 ease-in-out">
-                        {keywordList && 'Edit' || 'Add'}&nbsp;Keyword Filters
+                        {activeKeywords && 'Edit' || 'Add'}&nbsp;Keyword Filters
                     </div>
-
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent className="sm:max-w-[32rem] !h-fit max-h-[90%] w-[90%] sm:h-auto overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>
                             Add/Remove Keyword Filters
@@ -31,11 +144,17 @@ function ControlKeywords({ keywordList, className }) {
                             Filter organizations by adding or removing keywords. Save changes when you're done.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="w-full flex flex-wrap gap-2 max-h-20 min-h-10 border-[1px] rounded-md border-gray-800 p-2 relative text-xs overflow-clip">
-                        <EditableKeywordTile name='Tile&nbsp;1' remove />
-                        <EditableKeywordTile name='Tile&nbsp;a#1' remove />
-                        <EditableKeywordTile name='Ti&nbsp;#1' remove />
-                        <EditableKeywordTile name='Tiasd&nbsp;#1' remove />
+                    <div className="flex gap-x-3">
+                        <input className="w-full rounded-md" type="text" autoComplete="off" placeholder="Search Keywords..." name="keyword_filter" onChange={handleSearchChange} value={keywordFilter} />
+                        <button onClick={resetKeywords} className="h-full px-3 border border-black rounded-md hover:bg-gray-800 hover:text-white transition-all">Reset</button>
+                    </div>
+                    <div className="w-full flex flex-wrap justify-center sm:justify-start gap-2 border-[1px] rounded-md border-gray-800 p-2 relative text-xs overflow-clip">
+                        {activeKeywords.length !== 0 && activeKeywords.map((item, index) => (
+                            <EditableKeywordTile key={index} name={item.keyword} remove onClick={() => disableKeyword(item)} />
+                        ))}
+                        {activeKeywords.length === 0 && (
+                            <div className="pl-1 h-8 flex items-center">(No Keywords Selected)</div>
+                        )}
                     </div>
                     <div className="flex justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up">
@@ -45,29 +164,28 @@ function ControlKeywords({ keywordList, className }) {
                             <path d="M6 11l6 -6" />
                         </svg>
                     </div>
-                    <div className="w-full flex flex-wrap gap-2 max-h-20 min-h-10 border-[1px] rounded-md border-gray-300 p-2 relative text-xs overflow-clip">
-                        <EditableKeywordTile name='Tile&nbsp;1' add />
-                        <EditableKeywordTile name='Tile&nbsp;a#1' add />
-                        <EditableKeywordTile name='Ti&nbsp;#1' add />
-                        <EditableKeywordTile name='Tiasd&nbsp;#1' add />
+                    <div className="w-full flex flex-wrap justify-center sm:justify-start gap-2 border-[1px] rounded-md border-gray-300 p-2 relative text-xs">
+                        {keywordBank.map((item, index) => (
+                            <EditableKeywordTile key={index} name={item.keyword} add onClick={() => enableKeyword(item)} />
+                        ))}
                     </div>
-                    {/* <DialogFooter>
-                        <Button type="submit" className='bg-transparent hover:!bg-gray-800 text-black hover:!text-white border border-black'>Save changes</Button>
-                    </DialogFooter> */}
                     <DialogClose asChild>
-                        {/* <Button type="button" variant="secondary">
-                            Close
-                        </Button> */}
                         <div className="w-full flex justify-end">
-                            <Button type="button" className='bg-transparent hover:!bg-gray-800 text-black hover:!text-white border border-black w-fit'>Save changes</Button>
+                            <Button
+                                type="button"
+                                className='bg-transparent hover:!bg-gray-800 text-black hover:!text-white border border-black w-fit'
+                                onClick={updateParameters}
+                            >
+                                Update
+                            </Button>
                         </div>
                     </DialogClose>
                 </DialogContent>
             </Dialog>
-            <KeywordTile name='Tile&nbsp;1' />
-            <KeywordTile name='Tile&nbsp;a#1' />
-            <KeywordTile name='Ti&nbsp;#1' />
-            <KeywordTile name='Tiasd&nbsp;#1' />
+            {/* {queryParameters['keyword_filter']?.map((item, index) => (
+                <KeywordTile key={index} name={item.keyword} />
+            )) || null} */}
+            {console.log(queryParameters['keyword_filter'])}
         </div>
     )
 
@@ -75,13 +193,13 @@ function ControlKeywords({ keywordList, className }) {
         return <div className="w-min px-2 py-1 bg-[#ffb700] border border-gray-300 h-fit rounded-md cursor-pointer">{name}</div>
     }
 
-    function EditableKeywordTile({ name, remove, add }) {
+    function EditableKeywordTile({ name, remove, add, ...props }) {
         return (
-            <button className="w-min px-2 py-1 bg-gray-200 border border-gray-300 h-8 rounded-md space-x-2 flex items-center hover:bg-gray-300 group">
-                <span>{name}</span>
-                <div className="h-5 aspect-square text-gray-400 group-hover:text-gray-500">
+            <button {...props} className={`select-none w-min px-2 py-1 ${add && 'bg-gray-200'} ${remove && 'bg-[#ffb700]'} border border-gray-300 h-8 rounded-md space-x-2 flex items-center ${add && 'hover:bg-gray-300'} ${remove && 'hover:bg-[#e6a70b]'} group`}>
+                <span className="whitespace-nowrap">{name}</span>
+                <div className="h-5 aspect-square text-gray-400">
                     {remove && (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" className="icon icon-tabler icons-tabler-filled icon-tabler-circle-x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" className="icon icon-tabler icons-tabler-filled icon-tabler-circle-x text-black/70">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-6.489 5.8a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z" />
                         </svg>

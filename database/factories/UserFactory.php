@@ -15,12 +15,12 @@ class UserFactory extends Factory
 {
 
     private static $emailCounter = 1;
-    
+
     public function definition()
     {
         $firstname = strtolower(fake()->firstName());
         $lastname = strtolower(fake()->lastName());
-        $email = $firstname.'.'.$lastname.'.'.'cics@ust.edu.ph';
+        $email = $firstname . '.' . $lastname . '.' . 'cics@ust.edu.ph';
 
         return [
             'userID' => '2024' . fake()->unique()->numberBetween(100000, 999999),
@@ -41,16 +41,16 @@ class UserFactory extends Factory
         return $email;
     }
 
-    public function configure()
-    {
-        return $this->afterCreating(function (User $user) {
-            
-            $roleIDs = Role::whereIn('role_description', ['superadmin', 'admin', 'student'])->pluck('roleID')->toArray();
-            if (!empty($roleIDs)) {
-                $user->roles()->attach($this->faker->randomElement($roleIDs));
-            }
-        });
-    }
+    // public function configure()
+    // {
+    //     return $this->afterCreating(function (User $user) {
+
+    //         $roleIDs = Role::whereIn('role_description', ['superadmin', 'admin', 'student'])->pluck('roleID')->toArray();
+    //         if (!empty($roleIDs)) {
+    //             $user->roles()->attach($this->faker->randomElement($roleIDs));
+    //         }
+    //     });
+    // }
 
     // /**
     //  * The current password being used by the factory.

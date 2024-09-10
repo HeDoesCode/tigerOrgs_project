@@ -8,7 +8,7 @@ import IconDotsVertical from "@/Components/Icons/IconDotsVertical";
 import Home from "../Organizations/Home";
 import IconEdit from "@/Components/Icons/IconEdit";
 
-function AdminEditPage() {
+function AdminEditPage({ pageData }) {
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />

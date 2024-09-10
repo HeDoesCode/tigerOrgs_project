@@ -17,7 +17,11 @@ class Role extends Model
         'role_description',
     ];
 
-    public function users() : BelongsToMany {
-        return $this->belongsToMany(User::class, 'user_roles', 'roleID', 'userID');
+    public function users(): BelongsToMany
+    {
+        // return $this->belongsToMany(User::class, 'user_roles', 'roleID', 'userID');
+        return $this->belongsToMany(User::class, 'organization_user_role', 'roleID', 'userID')
+            ->withPivot('orgID')
+            ->withTimestamps();
     }
 }

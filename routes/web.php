@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Inertia\Inertia;
 use App\Http\Middleware\isAdmin;
 use Illuminate\Support\Facades\Auth;
@@ -66,9 +67,13 @@ Route::get('/superadmin/dataupload', function () {
 
 
 //admin temporary routes
-Route::middleware('isAdmin')->get('/admin/editpage', function () {
-    return Inertia::render('Admin/AdminEditPage');
-})->name('admin.editpage');
+Route::middleware('isAdmin')->controller(AdminController::class)->group(function(){
+    Route::get('/admin/{orgID}/editpage', 'edit')->name('admin.editpage');
+});
+
+
+
+
 
 Route::get('/admin/invite', function () {
     return Inertia::render('Admin/AdminInvite');
