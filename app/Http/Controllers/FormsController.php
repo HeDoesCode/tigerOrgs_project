@@ -66,7 +66,7 @@ class FormsController extends Controller
     }
 
     public function submitForm(Request $request)  {
-        $formLayout = $request->formLayout;
+        $formLayout = $request->formLayout['layout'];
 
         $rules = $this->buildRules($formLayout);
     
