@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Keyword;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -18,12 +17,89 @@ class ProfileController extends Controller
      */
     public function edit()
     {
-        
+
         $userID = Auth::user();
+
+        $keywords = Keyword::pluck('keyword', 'keyID');
+        // ... and parse into array of objects
+        $keywordsArray = $keywords->map(function ($keyword, $keyID) {
+            return [
+                'keyID' => $keyID,
+                'keyword' => $keyword,
+            ];
+        })->values()->toArray();
+
+
+        $userKeywords = DB::table('user_keywords')
+            // ->join('users', 'user_keywords.userID', '=', 'users.userID')
+            ->join('keywords', 'user_keywords.keyID', '=', 'keywords.keyID')
+            ->where('user_keywords.userID', Auth::id())
+            ->select('user_keywords.userID', 'keywords.keyword')
+            ->orderBy('keywords.keyword', 'asc')
+            ->get();
+        // ->toSql();
+        // $userKeywords = $user->updateKeywords;
+        // dd($userKeywords);
         return Inertia::render('Profile/Edit', [
-            'user' => $userID
+            'user' => $userID,
+            'keywords' => $keywordsArray,
+            'userKeywords' => $userKeywords ?: null,
         ]);
     }
+
+    public function updateKeywords(Request $request)
+    {
+        //
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // /**
     //  * Update the user's profile information.
