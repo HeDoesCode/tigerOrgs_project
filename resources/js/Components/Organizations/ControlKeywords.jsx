@@ -192,9 +192,15 @@ function ControlKeywords({ keywords, className, queryParameters }) {
                     </DialogClose> */}
                 </DialogContent>
             </Dialog>
-            {activeKeywords.map((item, index) => (
-                <KeywordTile key={index} name={item.keyword} />
-            )) || ''}
+            {activeKeywords.length !== 0
+                ? activeKeywords.map((item, index) => (
+                    <KeywordTile key={index} name={item.keyword} />
+                ))
+                :
+                <div className="text-gray-500 h-full flex items-center">
+                    Filter by Keywords
+                </div>
+            }
         </div>
     )
 

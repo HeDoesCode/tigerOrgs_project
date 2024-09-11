@@ -29,6 +29,7 @@ function Organizations({
     departments,
     keywords,
     myMemberOrganizations,
+    isAdmin = false
 }) {
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
@@ -95,6 +96,16 @@ function Organizations({
         }
     }
 
+    const getRandomPlaceholder = () => {
+        const placeholders = [
+            "ex. College of Architecture",
+            "ex. SITE",
+            "ex. MUSIKAT",
+        ];
+        const randomIndex = Math.floor(Math.random() * placeholders.length);
+        return placeholders[randomIndex];
+    }
+
     // get this route to remove all filters
     const handleClearQuery = () => {
         router.get(route("organizations"));
@@ -116,6 +127,7 @@ function Organizations({
                                 className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-11 pl-10 focus:pl-3 transition-all duration-200"
                                 defaultValue={queryParameters["search"] || ""}
                                 onChange={handleSearch}
+                                placeholder={getRandomPlaceholder()}
                             />
                             <div className="absolute text-gray-500 left-0 bottom-0 h-11 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
                                 <IconSearch size="22" />
@@ -177,29 +189,35 @@ function Organizations({
                         </ControlContainer>
                         {/* )} */}
 
-                        <ControlContainer>
-                            <ul className="bg-transparent flex flex-col py-3 rounded-md space-y-4">
-                                <OrganizationJoined
-                                    icon="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/379249269_872028557643589_7767519284231773085_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFZKMicf1CYVeO4tuXfLyje4vxiXiyaS5Pi_GJeLJpLkxoQdpaGhxXY4SmR3UK6qiMMC1rZpt805xAUxbdgvAMc&_nc_ohc=waaGroD6R1cQ7kNvgHtcHoo&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYAs3lfS3aOKI2arEPVOaRvbB6MUXpd7KTxLuOGdcKaJgA&oe=66C28011"
-                                    title="Office for Student Affairs"
-                                    isSuperAdmin
-                                    link={route("superadmin.status")}
-                                />
-                            </ul>
-                        </ControlContainer>
-                        <ControlContainer name="Organizations&nbsp;you've&nbsp;joined:" className='!hidden md:!flex'>
-                            <ul className="bg-transparent flex flex-col pt-2 rounded-md space-y-1">
-                                {Object.values(myMemberOrganizations).map((org, index) => (
+                        {isAdmin && (
+                            <ControlContainer>
+                                <ul className="bg-transparent flex flex-col py-3 rounded-md space-y-4">
                                     <OrganizationJoined
-                                        key={index}
-                                        icon={org.logo}
-                                        title={org.name}
-                                        isAdmin={org.role_description === 'admin'}
-                                        link={formatOrgJoinedLink(org.role_description, org.orgID)}
+                                        icon="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/379249269_872028557643589_7767519284231773085_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFZKMicf1CYVeO4tuXfLyje4vxiXiyaS5Pi_GJeLJpLkxoQdpaGhxXY4SmR3UK6qiMMC1rZpt805xAUxbdgvAMc&_nc_ohc=waaGroD6R1cQ7kNvgHtcHoo&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYAs3lfS3aOKI2arEPVOaRvbB6MUXpd7KTxLuOGdcKaJgA&oe=66C28011"
+                                        title="Office for Student Affairs"
+                                        isSuperAdmin
+                                        link={route("superadmin.status")}
                                     />
-                                ))}
-                            </ul>
-                        </ControlContainer>
+                                </ul>
+                            </ControlContainer>
+                        )}
+
+                        {myMemberOrganizations.length !== 0 && (
+                            <ControlContainer name="Organizations&nbsp;you've&nbsp;joined:" className='!hidden md:!flex'>
+                                <ul className="bg-transparent flex flex-col pt-2 rounded-md space-y-1">
+                                    {Object.values(myMemberOrganizations).map((org, index) => (
+                                        <OrganizationJoined
+                                            key={index}
+                                            icon={org.logo}
+                                            title={org.name}
+                                            isAdmin={org.role_description === 'admin'}
+                                            link={formatOrgJoinedLink(org.role_description, org.orgID)}
+                                        />
+                                    ))}
+                                </ul>
+                            </ControlContainer>
+                        )}
+
                         <Accordion type="single" collapsible>
                             <AccordionItem value="item-1">
                                 <AccordionTrigger className='text-left flex md:hidden'>
