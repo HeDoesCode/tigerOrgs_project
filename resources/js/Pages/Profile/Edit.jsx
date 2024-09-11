@@ -9,8 +9,10 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 import ControlKeywords from "@/Components/Organizations/ControlKeywords";
+import Pre from "@/Components/Pre";
 
-function Edit({ user }) {
+function Edit({ user, userKeywords }) {
+    console.log(userKeywords)
     const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
     const handleSectionChange = (e) => {
         setSection(e.target.value);
@@ -65,7 +67,7 @@ function Edit({ user }) {
                             </div>
                             <div className="mt-10">
                                 <InputField title="Interests">
-                                    <ControlKeywords />
+                                    {/* <ControlKeywords /> */}
                                 </InputField>
                             </div>
                             <div className="mt-10">
@@ -77,6 +79,14 @@ function Edit({ user }) {
             </UserLayout>
         </div>
     );
+
+    function KeywordSelector() {
+        return (
+            <>
+
+            </>
+        )
+    }
 
     function InputField({
         title,
@@ -106,9 +116,8 @@ function Edit({ user }) {
                                 </span>
                             </label>
                             <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${
-                                    errorRequired || "invisible"
-                                }`}
+                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
+                                    }`}
                             >
                                 Required
                             </div>
@@ -116,11 +125,10 @@ function Edit({ user }) {
                         <input
                             type={type}
                             className={`w-full h-9
-                            ${
-                                errorRequired
+                            ${errorRequired
                                     ? "border-red-500 rounded-b-lg rounded-l-lg"
                                     : "border-gray-300 rounded-lg"
-                            }`}
+                                }`}
                             min={min}
                             max={max}
                             required={required}
@@ -145,9 +153,8 @@ function Edit({ user }) {
                                 </span>
                             </label>
                             <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${
-                                    errorRequired || "invisible"
-                                }`}
+                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
+                                    }`}
                             >
                                 Required
                             </div>
@@ -155,11 +162,10 @@ function Edit({ user }) {
                         <Select>
                             <SelectTrigger
                                 className={`w-full h-9
-                            ${
-                                errorRequired
-                                    ? "border-red-500 rounded-tr-none rounded-b-lg rounded-l-lg"
-                                    : "border-gray-300 rounded-lg"
-                            }`}
+                            ${errorRequired
+                                        ? "border-red-500 rounded-tr-none rounded-b-lg rounded-l-lg"
+                                        : "border-gray-300 rounded-lg"
+                                    }`}
                             >
                                 <SelectValue placeholder={placeholder} />
                             </SelectTrigger>
@@ -193,9 +199,8 @@ function Edit({ user }) {
                                 </span>
                             </label>
                             <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${
-                                    errorRequired || "invisible"
-                                }`}
+                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
+                                    }`}
                             >
                                 Required
                             </div>
@@ -203,11 +208,10 @@ function Edit({ user }) {
                         <input
                             type={type}
                             className={`w-full h-9
-                            ${
-                                errorRequired
+                            ${errorRequired
                                     ? "border-red-500 rounded-b-lg rounded-l-lg"
                                     : "border-gray-300 rounded-lg"
-                            }`}
+                                }`}
                             required={required}
                             placeholder={placeholder}
                         />
@@ -228,20 +232,18 @@ function Edit({ user }) {
                                 </span>
                             </label>
                             <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${
-                                    errorRequired || "invisible"
-                                }`}
+                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
+                                    }`}
                             >
                                 Required
                             </div>
                         </div>
                         <div
                             className={`w-full min-h-9 border bg-white
-                        ${
-                            errorRequired
-                                ? "border-red-500 rounded-b-lg rounded-l-lg"
-                                : "border-gray-300 rounded-lg"
-                        }`}
+                        ${errorRequired
+                                    ? "border-red-500 rounded-b-lg rounded-l-lg"
+                                    : "border-gray-300 rounded-lg"
+                                }`}
                             required={required}
                             placeholder={placeholder}
                         >
