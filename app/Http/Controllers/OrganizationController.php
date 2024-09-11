@@ -31,7 +31,7 @@ class OrganizationController extends Controller
         }
 
         // show departments that are present in the current search query
-        $departments = $query->distinct()
+        $departments = $query->orderBy('department', 'asc')->distinct()
             ->pluck('department');
 
         // handle keyword filter
