@@ -109,7 +109,7 @@ function Organizations({
                 </div>
                 <div className="flex flex-col md:flex-row gap-6">
                     {/* control panel */}
-                    <div className="flex flex-col w-full md:w-64 space-y-5">
+                    <div className="flex flex-col w-full md:w-64 space-y-2">
                         <ControlContainer className="relative" name="Search">
                             <input
                                 type="text"
@@ -163,9 +163,9 @@ function Organizations({
 
                         {/* {Object.keys(queryParameters).length !== 0 && ( */}
                         <ControlContainer
-                            className={`flex items-center !-mb-3 !mt-3 ${Object.keys(queryParameters).length !== 0
-                                ? "visible"
-                                : "invisible"
+                            className={` items-center !-mb-5 !mt-3 ${Object.keys(queryParameters).length !== 0
+                                ? "flex"
+                                : "hidden"
                                 }`}
                         >
                             <button
