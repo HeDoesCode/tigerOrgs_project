@@ -67,11 +67,13 @@ class OrganizationController extends Controller
         $myMemberOrganizations = DB::table('organization_user_role')
             ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
             ->join('organizations', 'organization_user_role.orgID', '=', 'organizations.orgID')
+            ->where('organization_user_role.userID', Auth::id())
             ->select('organizations.name', 'roles.role_description', 'organizations.orgID', 'organizations.logo')
-            ->inRandomOrder()
-            ->limit(10)
+            // ->limit(10) // remove in production
             ->get()
             ->sortBy('name');
+
+        // dd($myMemberOrganizations);
 
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
