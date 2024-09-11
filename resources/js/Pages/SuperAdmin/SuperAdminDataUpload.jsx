@@ -12,7 +12,6 @@ function SuperAdminDataUpload() {
 
     const { data, setData, post, reset } = useForm({
         studentFile: null,
-        staffFile: null,
         organizationFile: null,
     });
 
@@ -26,7 +25,7 @@ function SuperAdminDataUpload() {
         setSuccessMessage("");
         setErrorMessage("");
 
-        post(route("superadmin.uploadData"), {
+        post(route("superadmin.dataupload.file"), {
             onSuccess: () => {
                 setSuccessMessage("File uploaded successfully!");
                 reset();
@@ -65,16 +64,7 @@ function SuperAdminDataUpload() {
                                 fileType="Student File"
                             />
                         </div>
-                        <div className="p-5 shadow-lg grid gridcol rounded-xl bg-white col-span-12 lg:col-span-7">
-                            <h1 className="font-bold">Staff Information</h1>
-                            <h2 className="text-sm">
-                                Last Date Uploaded: Aug-09-2024
-                            </h2>
-                            <CustomFileInput
-                                handleFileChange={handleFileChange}
-                                fileType="Staff File"
-                            />
-                        </div>
+
                         <div className="p-5 shadow-lg grid gridcol rounded-xl bg-white col-span-12 lg:col-span-7">
                             <h1 className="font-bold">Organization List</h1>
                             <h2 className="text-sm">

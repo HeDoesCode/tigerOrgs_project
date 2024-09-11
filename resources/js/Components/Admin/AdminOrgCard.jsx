@@ -58,7 +58,7 @@ function AdminOrgCard({ edit, visible, setVisible, organization }) {
                         >
                             <AdminDropdownMenu
                                 triggerContent={
-                                    <div className="pl-1 flex content-center poppins">
+                                    <div className="pl-1 flex items-center justify-center poppins">
                                         {visible ? "Visible" : "Not Visible"}
                                         <IconChevronDown size="15" />
                                     </div>
