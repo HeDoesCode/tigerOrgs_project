@@ -182,7 +182,7 @@ function Organizations({
                             </ul>
                         </ControlContainer>
 
-                        <ControlContainer name="Your&nbsp;Organizations">
+                        <ControlContainer name="Organizations&nbsp;you've&nbsp;joined:">
                             <ul className="bg-transparent flex flex-col pt-2 rounded-md space-y-1">
                                 {/* <OrganizationJoined
                                     icon="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/379249269_872028557643589_7767519284231773085_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFZKMicf1CYVeO4tuXfLyje4vxiXiyaS5Pi_GJeLJpLkxoQdpaGhxXY4SmR3UK6qiMMC1rZpt805xAUxbdgvAMc&_nc_ohc=waaGroD6R1cQ7kNvgHtcHoo&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYAs3lfS3aOKI2arEPVOaRvbB6MUXpd7KTxLuOGdcKaJgA&oe=66C28011"
