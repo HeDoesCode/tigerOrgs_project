@@ -80,7 +80,8 @@ class OrganizationController extends Controller
             'organizations' => $organizations,
             'departments' => $departments,
             'keywords' => $keywordsArray,
-            'myMemberOrganizations' => $myMemberOrganizations ?: null,
+            'isAdmin' => true,
+            'myMemberOrganizations' => $myMemberOrganizations ?: [],
             'queryParameters' => $queryParameters ?: null,
         ]);
     }
