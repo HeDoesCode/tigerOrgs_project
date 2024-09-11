@@ -13,10 +13,6 @@ function Layout({
     footer,
     noPadding,
 }) {
-    // const headerHeight_pt = 'pt-[4.5rem]';
-    const headerHeight_h = "h-16";
-    const sideBarWidth_pl = "pl-16";
-
     const { toast } = useToast()
     const { flash } = usePage().props
     useEffect(() => {
@@ -56,7 +52,7 @@ function Layout({
         return (
             <div className="relative">
                 <div
-                    className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 ${headerHeight_h} ${sidebar && sideBarWidth_pl
+                    className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 h-16 ${sidebar && 'pl-16'
                         }
                      bg-[#EEEEEE] px-4 border-gray-400 border-b-[1px] z-40`}
                 >
