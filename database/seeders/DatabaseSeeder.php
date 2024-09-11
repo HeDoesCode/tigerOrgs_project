@@ -27,7 +27,16 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersSeeder::class);
         $this->call(KeywordSeeder::class);
 
-        $users = User::factory()->count(1996)->create();
+        // create users with attached keys
+        $availableKeyIDs = Keyword::all()->pluck('keyID')->toArray();
+        $users = User::factory()
+            ->count(1996)
+            ->create()
+            ->each(function ($user) use ($availableKeyIDs) {
+                $user->keywords()->attach(
+                    array_rand(array_flip($availableKeyIDs), rand(2, 5))
+                );
+            });
 
         // dd($users->random());
 
