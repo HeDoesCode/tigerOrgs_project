@@ -4,6 +4,7 @@ function OrganizationContainerRow({ children, title, className, index, collegeLe
     const [expand, setExpand] = useState(false);
     const [hasHorizontalOverflow, setHasHorizontalOverflow] = useState(false);
     const [isScrolledToEnd, setIsScrolledToEnd] = useState(false);
+    const [isScrolledOffStart, setIsScrolledOffStart] = useState(false);
 
     const elementRef = useRef(null);
 
@@ -18,6 +19,8 @@ function OrganizationContainerRow({ children, title, className, index, collegeLe
 
             const isAtEnd = Math.abs(scrollLeft + offsetWidth - scrollWidth) < 1;
             setIsScrolledToEnd(isAtEnd);
+            const isOffStart = scrollLeft > 0;
+            setIsScrolledOffStart(!isOffStart);
         }
     };
 
@@ -76,6 +79,10 @@ function OrganizationContainerRow({ children, title, className, index, collegeLe
             </div>
             {!expand && hasHorizontalOverflow && (
                 <div className={`absolute right-0 top-6 bottom-0 w-20 bg-gradient-to-r from-transparent to-[#EEEEEE]/70 pointer-events-none transition-all ease-in ${isScrolledToEnd && '!w-0'}`}>
+                </div>
+            )}
+            {!expand && hasHorizontalOverflow && (
+                <div className={`absolute left-0 top-6 bottom-0 w-20 bg-gradient-to-l from-transparent to-[#EEEEEE]/70 pointer-events-none transition-all ease-in ${isScrolledOffStart && '!w-0'}`}>
                 </div>
             )}
         </div >
