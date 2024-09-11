@@ -70,6 +70,7 @@ class OrganizationController extends Controller
             ->where('organization_user_role.userID', Auth::id())
             ->select('organizations.name', 'roles.role_description', 'organizations.orgID', 'organizations.logo')
             // ->limit(10) // remove in production
+            ->orderBy('organizations.name', 'asc')
             ->get()
             ->sortBy('name');
 
