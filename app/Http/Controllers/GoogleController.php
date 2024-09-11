@@ -14,14 +14,21 @@ use Exception;
 
 class GoogleController extends Controller
 {
+
     public function googlepage()
     {
-        session()->put('remember_me', request('remember_me'));
-        return Socialite::driver('google')->redirect();
-    }
+        // Bypass Socialite login in development mode
+        if (app()->isLocal()) {
+            $registeredUser = User::find('2024000004');
 
-    public function googlecallback()
-    {
+            if (!$registeredUser) {
+                return abort(403, 'User not found.');
+            }
+
+            Auth::login($registeredUser, session()->pull('remember_me', 'false'));
+            return redirect()->intended('/');
+        }
+
         try {
             $googleUser = Socialite::driver('google')->user();
         } catch (Exception $e) {
@@ -39,7 +46,39 @@ class GoogleController extends Controller
         if ($registeredUser == null) {
             return abort(403, 'Only enrolled students of the University of Santo Tomas can use this application.');
         }
+
         Auth::login($registeredUser, session()->pull('remember_me', 'false'));
         return redirect()->intended('/');
     }
+
+
+    // Prod Mode
+    // public function googlepage()
+    // {
+    //     session()->put('remember_me', request('remember_me'));
+    //     return Socialite::driver('google')->redirect();
+    // }
+
+    // public function googlecallback()
+    // {
+    //     try {
+    //         $googleUser = Socialite::driver('google')->user();
+    //     } catch (Exception $e) {
+    //         session()->flash('toast', [
+    //             'title' => 'Login Error',
+    //             'description' => 'There was an error logging in. Please try again later.',
+    //             'duration' => 2000,
+    //             'variant' => 'destructive'
+    //         ]);
+    //         return redirect()->route('login');
+    //     }
+
+    //     $registeredUser = User::where('email', $googleUser->email)->first();
+
+    //     if ($registeredUser == null) {
+    //         return abort(403, 'Only enrolled students of the University of Santo Tomas can use this application.');
+    //     }
+    //     Auth::login($registeredUser, session()->pull('remember_me', 'false'));
+    //     return redirect()->intended('/');
+    // }
 }
