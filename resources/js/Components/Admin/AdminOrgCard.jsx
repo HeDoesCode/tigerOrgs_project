@@ -40,7 +40,9 @@ function AdminOrgCard({ edit, visible, setVisible, organization }) {
                         Members:
                     </div>
                     <div className="text-sm font-semibold col-start-4 col-end-7 flex justify-center">
-                        {organization.members_count}
+                        {organization.members_count !== undefined
+                            ? organization.members_count
+                            : "Members not set"}
                     </div>
                 </div>
 

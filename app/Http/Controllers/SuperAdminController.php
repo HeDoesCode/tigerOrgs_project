@@ -17,7 +17,7 @@ class SuperAdminController extends Controller
         $organizations = Organization::withCount('members')->get();
 
         return Inertia::render('SuperAdmin/SuperAdminManage',[
-            'organizations'=> Organization::all(),
+            'organizations'=> $organizations,
             'departments' => Organization::distinct()->pluck('department')
         ]);
     }

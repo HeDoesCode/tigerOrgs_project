@@ -24,7 +24,9 @@ import {
 export default function SuperAdminManage({ organizations, departments }) {
     const [recruitment, setRecruitment] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-    const [orgList, setOrgList] = useState(organizations);
+    const [allOrganizations, setAllOrganizations] = useState(organizations);
+    const [filteredOrganizations, setFilteredOrganizations] =
+        useState(organizations);
     const [selectedDepartment, setSelectedDepartment] = useState("All");
     const [availableDepartments, setAvailableDepartments] =
         useState(departments);
@@ -36,25 +38,33 @@ export default function SuperAdminManage({ organizations, departments }) {
         }, {})
     );
 
-    const fetchOrganizations = async () => {
-        try {
-            const response = await axios.get("/superadmin/status/search-org", {
-                params: {
-                    query: searchQuery,
-                    category:
-                        selectedDepartment === "All" ? "" : selectedDepartment,
-                },
-            });
-            setOrgList(response.data.organizations);
-            setAvailableDepartments(response.data.departments);
-        } catch (error) {
-            console.error("Error fetching organizations:", error);
-        }
-    };
-
     useEffect(() => {
-        fetchOrganizations();
-    }, [searchQuery, selectedDepartment]);
+        const filterOrganizations = () => {
+            let filtered = allOrganizations;
+
+            if (searchQuery) {
+                filtered = filtered.filter(
+                    (org) =>
+                        org.name
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase()) ||
+                        org.department
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase())
+                );
+            }
+
+            if (selectedDepartment !== "All") {
+                filtered = filtered.filter(
+                    (org) => org.department === selectedDepartment
+                );
+            }
+
+            setFilteredOrganizations(filtered);
+        };
+
+        filterOrganizations();
+    }, [searchQuery, selectedDepartment, allOrganizations]);
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
@@ -229,13 +239,13 @@ export default function SuperAdminManage({ organizations, departments }) {
                                 </div>
                             )}
                         </div>
-                        {orgList.length === 0 ? (
+                        {filteredOrganizations.length === 0 ? (
                             <div className="m-14 sm:m-48 text-xl font-thin text-center">
                                 No Organizations Found
                             </div>
                         ) : (
                             <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 p-5">
-                                {orgList.map((organization) => (
+                                {filteredOrganizations.map((organization) => (
                                     <AdminOrgCard
                                         key={organization.orgID}
                                         edit={edit}
