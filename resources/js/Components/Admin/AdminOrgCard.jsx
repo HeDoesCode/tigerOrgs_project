@@ -40,7 +40,9 @@ function AdminOrgCard({ edit, visible, setVisible, organization }) {
                         Members:
                     </div>
                     <div className="text-sm font-semibold col-start-4 col-end-7 flex justify-center">
-                        {organization.members_count}
+                        {organization.members_count !== undefined
+                            ? organization.members_count
+                            : "Members not set"}
                     </div>
                 </div>
 
@@ -58,7 +60,7 @@ function AdminOrgCard({ edit, visible, setVisible, organization }) {
                         >
                             <AdminDropdownMenu
                                 triggerContent={
-                                    <div className="pl-1 flex content-center poppins">
+                                    <div className="pl-1 flex items-center justify-center poppins">
                                         {visible ? "Visible" : "Not Visible"}
                                         <IconChevronDown size="15" />
                                     </div>
