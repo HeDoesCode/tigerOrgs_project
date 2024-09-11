@@ -26,7 +26,7 @@ class Organization_User_RolesSeeder extends Seeder
                 $records[] = [
                     'orgID' => $organization->orgID,
                     'userID' => $userID,
-                    'roleID' => 2,
+                    'roleID' => rand(1, 2),
                 ];
             }
         }

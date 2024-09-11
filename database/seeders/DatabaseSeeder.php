@@ -103,7 +103,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Insert student-role records in chunks
-        foreach (array_chunk($studentRecords, 500) as $chunk) {
+        foreach (array_chunk($studentRecords, 1000) as $chunk) {
             DB::table('organization_user_role')->insert($chunk);
         }
 
@@ -121,7 +121,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Insert admin-role records in chunks
-        foreach (array_chunk($adminRecords, 500) as $chunk) {
+        foreach (array_chunk($adminRecords, 1000) as $chunk) {
             DB::table('organization_user_role')->insert($chunk);
         }
 
