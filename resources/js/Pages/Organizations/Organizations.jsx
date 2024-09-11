@@ -8,6 +8,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/Components/ui/select";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/Components/ui/accordion"
 import ControlContainer from "@/Components/Organizations/ControlContainer";
 import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 import OrganizationJoined from "@/Components/Organizations/OrganizationJoined";
@@ -103,7 +109,7 @@ function Organizations({
                 </div>
                 <div className="flex flex-col md:flex-row gap-6">
                     {/* control panel */}
-                    <div className="flex flex-col w-full md:w-64 space-y-5">
+                    <div className="flex flex-col w-full md:w-64 space-y-2">
                         <ControlContainer className="relative" name="Search">
                             <input
                                 type="text"
@@ -157,9 +163,9 @@ function Organizations({
 
                         {/* {Object.keys(queryParameters).length !== 0 && ( */}
                         <ControlContainer
-                            className={`flex items-center !-mb-3 !mt-3 ${Object.keys(queryParameters).length !== 0
-                                ? "visible"
-                                : "invisible"
+                            className={` items-center !-mb-5 !mt-3 ${Object.keys(queryParameters).length !== 0
+                                ? "flex"
+                                : "hidden"
                                 }`}
                         >
                             <button
@@ -181,21 +187,8 @@ function Organizations({
                                 />
                             </ul>
                         </ControlContainer>
-
-                        <ControlContainer name="Organizations&nbsp;you've&nbsp;joined:">
+                        <ControlContainer name="Organizations&nbsp;you've&nbsp;joined:" className='!hidden md:!flex'>
                             <ul className="bg-transparent flex flex-col pt-2 rounded-md space-y-1">
-                                {/* <OrganizationJoined
-                                    icon="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/379249269_872028557643589_7767519284231773085_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFZKMicf1CYVeO4tuXfLyje4vxiXiyaS5Pi_GJeLJpLkxoQdpaGhxXY4SmR3UK6qiMMC1rZpt805xAUxbdgvAMc&_nc_ohc=waaGroD6R1cQ7kNvgHtcHoo&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYAs3lfS3aOKI2arEPVOaRvbB6MUXpd7KTxLuOGdcKaJgA&oe=66C28011"
-                                    title="Fotomasino"
-                                    isAdmin
-                                    link={route("admin.editpage", {
-                                        orgID: 1,
-                                    })}
-                                />
-                                <OrganizationJoined
-                                    icon="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/304859676_483387727130522_6601973512956713736_n.png?stp=dst-png_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeGFy0kra513HRBsdmazTlo6sOVdYkvlqTGw5V1iS-WpMb6gIP1OH-rT4NoBwfDEb7qyuyvhgUhx6ZUt5lPxUiNr&_nc_ohc=pcExyta6blMQ7kNvgHCXjUw&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYD2e_GFVEEWc2AMJkj5Yaf0EtE70uaiZzT-dB3qBRB1Bg&oe=66C2AC44"
-                                    title="UST Mountaineering Club"
-                                /> */}
                                 {Object.values(myMemberOrganizations).map((org, index) => (
                                     <OrganizationJoined
                                         key={index}
@@ -207,6 +200,27 @@ function Organizations({
                                 ))}
                             </ul>
                         </ControlContainer>
+                        <Accordion type="single" collapsible>
+                            <AccordionItem value="item-1">
+                                <AccordionTrigger className='text-left flex md:hidden'>
+                                    <ControlContainer name="Organizations&nbsp;you've&nbsp;joined:">
+                                    </ControlContainer>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <ul className="bg-transparent flex flex-col pt-2 rounded-md space-y-1">
+                                        {Object.values(myMemberOrganizations).map((org, index) => (
+                                            <OrganizationJoined
+                                                key={index}
+                                                icon={org.logo}
+                                                title={org.name}
+                                                isAdmin={org.role_description === 'admin'}
+                                                link={formatOrgJoinedLink(org.role_description, org.orgID)}
+                                            />
+                                        ))}
+                                    </ul>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
                     </div>
 
                     {/* orgs panel */}
