@@ -62,6 +62,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
                                 placeholder="Search Organizations"
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onKeyDown={handleSearchEnterKey}
+                                name="orgName"
                             />
                             <button className="rounded-r-full h-auto flex items-center justify-center min-w-12 w-24 bg-[#FFCD12] border-gray-400 border-r-[1px] border-y-[1px] border-l-0 nunito font-bold"
                                 onClick={handleSearchQuery}

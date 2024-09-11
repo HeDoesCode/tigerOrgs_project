@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organization_photos', function (Blueprint $table) {
-            $table->id('photoID');
-            $table->foreignId('orgID')->constrained('organizations', 'orgID')->onDelete('cascade');
-            $table->string('caption');
-            $table->string('filename');
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('type');
+            $table->morphs('notifiable');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organization_photos');
+        Schema::dropIfExists('notifications');
     }
 };

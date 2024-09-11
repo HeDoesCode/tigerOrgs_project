@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Inertia\Inertia;
 use App\Http\Middleware\isAdmin;
 use Illuminate\Support\Facades\Auth;
@@ -41,14 +42,19 @@ Route::middleware('auth')->group(function () {
 // })->name('profile');
 
 //superadmin temporary routes
-Route::middleware('isSuperAdmin')->controller(SuperAdminController::class)->group(function () {
+Route::controller(SuperAdminController::class)->group(function () {
     //manage page
     Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
     Route::get('superadmin/status', 'manage')->name('superadmin.status');
+    Route::get('/superadmin/status/search-org', 'searchOrg');
 
     //invite page
     Route::get('/superadmin/search-users', 'search');
     Route::post('/superadmin/update-organizations', 'updateOrganizations')->name('superadmin.update-organizations');
+
+    //upload page
+    Route::get('/superadmin/dataupload', 'fileupload')->name('superadmin.dataupload');
+    Route::post('/superadmin/dataupload/file', 'upload')->name('superadmin.dataupload.file');
 });
 
 Route::get('/superadmin/loginhistory', function () {
@@ -59,32 +65,20 @@ Route::get('/superadmin/invitehistory', function () {
     return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
 })->name('superadmin.invitehistory');
 
-Route::get('/superadmin/dataupload', function () {
-    return Inertia::render('SuperAdmin/SuperAdminDataUpload');
-})->name('superadmin.dataupload');
+
 
 
 
 //admin temporary routes
-Route::middleware('isAdmin')->get('/admin/editpage', function () {
-    return Inertia::render('Admin/AdminEditPage');
-})->name('admin.editpage');
+Route::controller(AdminController::class)->group(function(){
+    Route::get('/admin/{orgID}/editpage', 'edit')->name('admin.editpage');
+    Route::get('/admin/{orgID}/invite', 'invite')->name('admin.invite');
+    Route::get('/admin/{orgID}/applications', 'applications')->name('admin.applications');
+    Route::get('/admin/{orgID}/forms', 'forms')->name('admin.forms');
+    Route::get('/admin/{orgID}/formhistory', 'formhistory')->name('admin.formhistory');
+});
 
-Route::get('/admin/invite', function () {
-    return Inertia::render('Admin/AdminInvite');
-})->name('admin.invite');
 
-Route::get('/admin/applications', function () {
-    return Inertia::render('Admin/AdminManageApplication');
-})->name('admin.applications');
-
-Route::get('/admin/forms', function () {
-    return Inertia::render('Admin/AdminManageForms');
-})->name('admin.forms');
-
-Route::get('/admin/formshistory', function () {
-    return Inertia::render('Admin/AdminFormHistory');
-})->name('admin.formhistory');
 
 
 
@@ -99,7 +93,10 @@ Route::middleware('auth')->group(function () {
 });
 
 // form builder routes
-Route::get('/admin/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
+Route::get('/admin/{orgID}/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
+
+
+
 Route::post('/admin/form-builder/save', [FormsController::class, 'saveForm']);
 
 Route::post('/form/submit', [FormsController::class, 'submitForm']);

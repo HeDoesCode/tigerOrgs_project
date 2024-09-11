@@ -11,9 +11,8 @@ import IconFolderCog from "@/Components/Icons/IconFolderCog";
 import IconOrg from "@/Components/Icons/IconOrg";
 import SideBar from "@/Components/ui/Custom/SideBar";
 
-function AdminLayout({ children }) {
+function AdminLayout({ orgID, children }) {
     const { url } = usePage();
-    const routePath = (routeName) => new URL(route(routeName)).pathname;
     return (
         <Layout headerContent={<HeaderContent />} sidebar={<SideBarContent />}>
             {children}
@@ -34,6 +33,7 @@ function AdminLayout({ children }) {
     }
 
     function SideBarContent() {
+        // const [current, setCurrent] = useState(route().current());
         return (
             <div className="border-gray-300 border-r-[1px] fixed -left-16 hover:left-0 sm:left-0 top-0 bottom-0 min-w-16 w-0 sm:w-16 max-w-52 flex flex-col justify-center bg-[#EEEEEE] transition-all ease-in-out duration-300 group hover:w-52 hover:bg-[#FEFEFE] overflow-clip">
                 <button className="fixed size-16 left-0 top-0 flex sm:hidden items-center justify-center cursor-default">
@@ -59,23 +59,26 @@ function AdminLayout({ children }) {
                 <nav className="flex-1 flex flex-col space-y-3 ml-2 my-2 transition-all group-hover:mr-0 ease-in-out duration-300">
                     <SideBarLink
                         icon={<IconFolderCog size="100%" />}
-                        href={route("admin.editpage")}
+                        href={route("admin.editpage", {
+                            orgID,
+                        })}
                         desc="Manage"
-                        current={
-                            url === routePath("admin.editpage") ||
-                            url === routePath("admin.invite")
-                        }
+                        current={["admin.editpage", "admin.invite"].includes(
+                            route().current()
+                        )}
                     />
                     <SideBarLink
                         icon={<IconOrg size="100%" />}
-                        href={route("admin.applications")}
+                        href={route("admin.applications", {
+                            orgID,
+                        })}
                         desc="Recruitment"
-                        current={
-                            url === routePath("admin.applications") ||
-                            url === routePath("admin.forms") ||
-                            url === routePath("admin.formbuilder") ||
-                            url === routePath("admin.formhistory")
-                        }
+                        current={[
+                            "admin.applications",
+                            "admin.forms",
+                            "admin.formbuilder",
+                            "admin.formhistory",
+                        ].includes(route().current())}
                     />
                 </nav>
             </div>

@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organization_photos', function (Blueprint $table) {
-            $table->id('photoID');
+        Schema::create('organization_officers', function (Blueprint $table) {
+            $table->id('officerID')->primary();
             $table->foreignId('orgID')->constrained('organizations', 'orgID')->onDelete('cascade');
-            $table->string('caption');
-            $table->string('filename');
+            $table->string('userID');
+            $table->foreign('userID')->references('userID')->on('users')->onDelete('cascade');
+            $table->string('position');
+            // $table->timestamps();
         });
     }
 
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organization_photos');
+        Schema::dropIfExists('organization_officers');
     }
 };

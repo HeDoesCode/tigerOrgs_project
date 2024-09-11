@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Form;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -11,8 +12,13 @@ use Inertia\Inertia;
 class FormsController extends Controller
 {   
     // strictly for admin
-    public function showBuilder() {
-        return Inertia::render('Admin/AdminFormBuilder');
+    public function showBuilder($orgID) {
+
+        $organizations = Organization::find($orgID);
+
+        return Inertia::render('Admin/AdminFormBuilder', [
+            'orgID' => $organizations->orgID,
+        ]);
     }
     
     public function saveForm(Request $request) {

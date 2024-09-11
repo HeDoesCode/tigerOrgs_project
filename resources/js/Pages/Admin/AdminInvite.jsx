@@ -9,22 +9,24 @@ import AdminMemberCard from "@/Components/Admin/AdminMemberCard";
 import IconEdit from "@/Components/Icons/IconEdit";
 import AdminDialog from "@/Components/Admin/AdminDialog";
 
-function AdminInvite() {
+function AdminInvite({ orgID }) {
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
-            <AdminLayout>
+            <AdminLayout orgID={orgID}>
                 <MainAdminFrame
                     navItems={[
                         {
                             icon: <IconEdit />,
                             label: "Edit Page",
                             link: "admin.editpage",
+                            params: { orgID },
                         },
                         {
                             icon: <IconInvite />,
                             label: "Members",
                             link: "admin.invite",
+                            params: { orgID },
                         },
                     ]}
                     title="Admin Invitation"

@@ -8,28 +8,35 @@ import IconDotsVertical from "@/Components/Icons/IconDotsVertical";
 import Home from "../Organizations/Home";
 import IconEdit from "@/Components/Icons/IconEdit";
 
-function AdminEditPage() {
+function AdminEditPage({ pageData, pageLayoutData, orgID }) {
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
-            <AdminLayout>
+            <AdminLayout orgID={orgID}>
                 <MainAdminFrame
                     navItems={[
                         {
                             icon: <IconEdit />,
                             label: "Edit Page",
                             link: "admin.editpage",
+                            params: { orgID },
                         },
                         {
                             icon: <IconInvite />,
                             label: "Members",
                             link: "admin.invite",
+                            params: { orgID },
                         },
                     ]}
                     title="Edit Organization's Page"
                 >
                     <div className="p-5">
-                        <Home editing="false" />
+                        <Home
+                            editing={true}
+                            isRecruiting={false} //example lang
+                            pageData={pageData}
+                            pageLayoutData={pageLayoutData}
+                        />
                     </div>
                 </MainAdminFrame>
             </AdminLayout>

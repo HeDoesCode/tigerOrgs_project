@@ -17,14 +17,25 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
+
+        /**
+         * TODO
+         * pass orgID to request
+         * check if user exists in organization_user_role with orgID and roleID
+         * return $next($request) if success
+         * abort 401 if fail
+         */
+
         $user = User::find(Auth::id());
-        
-        foreach($user->roles as $role) {
+
+        foreach ($user->roles as $role) {
             if ($role->roleID === 2) {
                 return $next($request);
             }
         }
-        
+
+        // $
+
         abort(401);
     }
 }

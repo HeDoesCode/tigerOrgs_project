@@ -24,9 +24,14 @@ class Organization extends Model
         'department',
     ];
 
+    // Relationships:
+
     public function members(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'organization_members', 'orgID', 'userID');
+        // return $this->belongsToMany(User::class, 'organization_user_role', 'orgID', 'userID');
+        return $this->belongsToMany(User::class, 'organization_user_role', 'orgID', 'userID')
+            ->withPivot('roleID')
+            ->withTimestamps();
     }
 
     public function followers(): BelongsToMany
@@ -42,6 +47,16 @@ class Organization extends Model
     public function photos(): HasMany
     {
         return $this->hasMany(Photo::class, 'orgID', 'orgID');
+    }
+
+    public function officers(): HasMany
+    {
+        return $this->hasMany(Officer::class, 'orgID', 'orgID');
+    }
+
+    public function contacts(): HasMany
+    {
+        return $this->hasMany(Contact::class, 'orgID', 'orgID');
     }
 
     public function forms(): HasMany
