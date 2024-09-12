@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_keywords', function (Blueprint $table) {
-            $table->foreignId('keyID')->constrained('keywords','keyID')->onDelete('cascade');
             $table->string('userID');
             $table->foreign('userID')->references('userID')->on('users')->onDelete('cascade');
+            $table->foreignId('keyID')->constrained('keywords', 'keyID')->onDelete('cascade');
         });
     }
 

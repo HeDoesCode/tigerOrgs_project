@@ -52,7 +52,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Organization::class, 'organization_followers', 'userID', 'orgID');
     }
 
-    public function interests(): BelongsToMany
+    public function keywords(): BelongsToMany
     {
         return $this->belongsToMany(Keyword::class, 'user_keywords', 'userID', 'keyID');
     }

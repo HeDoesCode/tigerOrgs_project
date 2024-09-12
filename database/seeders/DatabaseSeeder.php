@@ -27,9 +27,11 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersSeeder::class);
         $this->call(KeywordSeeder::class);
 
+        // create users
         $users = User::factory()->count(1996)->create();
 
-        // dd($users->random());
+        // attach keywords to all users
+        $this->call(User_KeywordSeeder::class);
 
         $organizations = Organization::factory()
             ->count(120)
