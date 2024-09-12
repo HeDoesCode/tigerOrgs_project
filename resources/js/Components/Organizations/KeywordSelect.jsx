@@ -118,14 +118,14 @@ function KeywordSelect({ keywords, className, activeUserKeywords }) {
     }
 
     return (
-        <div className={`w-full flex flex-wrap gap-2 max-h-20 min-h-10 border-[1px] rounded-md border-gray-500 p-2 relative text-xs overflow-clip group ${className}`}>
+        <div className={`w-full flex flex-wrap gap-2 min-h-10 border-[1px] rounded-md border-gray-500 p-2 relative text-xs overflow-clip group ${className}`}>
             <Dialog>
                 <DialogTrigger className="absolute size-full inset-0">
                     <div className="size-full flex items-center justify-center invisible group-hover:visible group-hover:!bg-gray-800 text-black/0 group-hover:!text-white transition-all duration-200 ease-in-out">
                         {activeKeywords && 'Edit' || 'Add'}&nbsp;Keyword Filters
                     </div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[32rem] !h-fit max-h-[90%] w-[90%] sm:h-auto overflow-y-auto">
+                <DialogContent className="sm:max-w-[32rem] !h-fit max-h-[90%] w-[90%] sm:h-auto overflow-y-auto select-none">
                     <DialogHeader>
                         <DialogTitle>
                             Add/Remove Keyword Filters
