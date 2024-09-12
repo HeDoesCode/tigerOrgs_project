@@ -127,7 +127,8 @@ function Organizations({
                                 className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-11 pl-10 focus:pl-3 transition-all duration-200"
                                 defaultValue={queryParameters["search"] || ""}
                                 onChange={handleSearch}
-                                placeholder={getRandomPlaceholder()}
+                                // placeholder={getRandomPlaceholder()}
+                                placeholder='College/Organization'
                             />
                             <div className="absolute text-gray-500 left-0 bottom-0 h-11 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
                                 <IconSearch size="22" />
