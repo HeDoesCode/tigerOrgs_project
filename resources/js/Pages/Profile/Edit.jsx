@@ -27,11 +27,13 @@ function Edit({ user, activeUserKeywords, keywords }) {
                 <div className="mt-4 w-full flex justify-center px-5">
                     <div className="w-full max-w-[65rem] flex flex-col items-center drop-shadow shadow-black rounded-[2rem] space-y-3 bg-[#F4F4F4] border border-gray-300">
                         <div className="h-36 w-full flex flex-col justify-center px-12 space-y-3 bg-[#ffd875] rounded-[2rem]">
-                            <span className="poetsen-one text-3xl uppercase ">
+                            <span className="poetsen-one text-xl sm:text-3xl uppercase ">
                                 {fullName}
                             </span>
-                            <div className="flex space-x-3">
-                                <IconMailFilled />
+                            <div className="flex gap-x-3 text-sm sm:textbase">
+                                <div className="hidden sm:contents">
+                                    <IconMailFilled />
+                                </div>
                                 <span>{user.email}</span>
                             </div>
                         </div>
