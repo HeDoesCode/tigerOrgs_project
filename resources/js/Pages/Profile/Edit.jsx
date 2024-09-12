@@ -10,9 +10,9 @@ import {
 } from "@/Components/ui/select";
 import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 import Pre from "@/Components/Pre";
+import KeywordSelect from "@/Components/Organizations/KeywordSelect";
 
-function Edit({ user, userKeywords }) {
-    console.log(userKeywords)
+function Edit({ user, activeUserKeywords, keywords }) {
     const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
     const handleSectionChange = (e) => {
         setSection(e.target.value);
@@ -67,7 +67,10 @@ function Edit({ user, userKeywords }) {
                             </div>
                             <div className="mt-10">
                                 <InputField title="Interests">
-                                    {/* <ControlKeywords /> */}
+                                    <KeywordSelect
+                                        activeUserKeywords={activeUserKeywords}
+                                        keywords={keywords}
+                                    />
                                 </InputField>
                             </div>
                             <div className="mt-10">
@@ -76,17 +79,9 @@ function Edit({ user, userKeywords }) {
                         </div>
                     </div>
                 </div>
-            </UserLayout>
-        </div>
+            </UserLayout >
+        </div >
     );
-
-    function KeywordSelector() {
-        return (
-            <>
-
-            </>
-        )
-    }
 
     function InputField({
         title,
@@ -94,7 +89,8 @@ function Edit({ user, userKeywords }) {
         type,
         required,
         placeholder,
-        errorRequired = true,
+        // errorRequired = true,
+        errorRequired = false,
         contents,
         min,
         max,
@@ -109,11 +105,14 @@ function Edit({ user, userKeywords }) {
                         <div className="w-full flex justify-between h-6">
                             <label className="h-full">
                                 {title}{" "}
-                                <span
-                                    className={`text-red-500 text-xl leading-3`}
-                                >
-                                    *
-                                </span>
+                                {required && (
+                                    <span
+                                        className={`text-red-500 text-xl leading-3`}
+                                    >
+                                        *
+                                    </span>
+
+                                )}
                             </label>
                             <div
                                 className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
@@ -146,11 +145,14 @@ function Edit({ user, userKeywords }) {
                         <div className="w-full flex justify-between h-6">
                             <label className="h-full">
                                 {title}{" "}
-                                <span
-                                    className={`text-red-500 text-xl leading-3`}
-                                >
-                                    *
-                                </span>
+                                {required && (
+                                    <span
+                                        className={`text-red-500 text-xl leading-3`}
+                                    >
+                                        *
+                                    </span>
+
+                                )}
                             </label>
                             <div
                                 className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
@@ -192,11 +194,14 @@ function Edit({ user, userKeywords }) {
                         <div className="w-full flex justify-between h-6">
                             <label className="h-full">
                                 {title}{" "}
-                                <span
-                                    className={`text-red-500 text-xl leading-3`}
-                                >
-                                    *
-                                </span>
+                                {required && (
+                                    <span
+                                        className={`text-red-500 text-xl leading-3`}
+                                    >
+                                        *
+                                    </span>
+
+                                )}
                             </label>
                             <div
                                 className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
@@ -225,11 +230,14 @@ function Edit({ user, userKeywords }) {
                         <div className="w-full flex justify-between h-6">
                             <label className="h-full">
                                 {title}{" "}
-                                <span
-                                    className={`text-red-500 text-xl leading-3`}
-                                >
-                                    *
-                                </span>
+                                {required && (
+                                    <span
+                                        className={`text-red-500 text-xl leading-3`}
+                                    >
+                                        *
+                                    </span>
+
+                                )}
                             </label>
                             <div
                                 className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"

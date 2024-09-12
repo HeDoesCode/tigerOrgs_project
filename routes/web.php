@@ -70,7 +70,7 @@ Route::get('/superadmin/invitehistory', function () {
 
 
 //admin temporary routes
-Route::controller(AdminController::class)->group(function(){
+Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/{orgID}/editpage', 'edit')->name('admin.editpage');
     Route::get('/admin/{orgID}/invite', 'invite')->name('admin.invite');
     Route::get('/admin/{orgID}/applications', 'applications')->name('admin.applications');
@@ -88,6 +88,7 @@ Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback'])
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
