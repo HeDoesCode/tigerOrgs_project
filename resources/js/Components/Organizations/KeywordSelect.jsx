@@ -191,7 +191,7 @@ function KeywordSelect({ keywords, className, activeUserKeywords }) {
     )
 
     function KeywordTile({ name }) {
-        return <div className="w-min px-2 py-1 bg-[#ffb700] border border-gray-300 h-fit rounded-md cursor-pointer">{name}</div>
+        return <div className="w-min px-2 py-1 bg-[#ffb700] border border-gray-300 h-fit rounded-md cursor-pointer whitespace-nowrap">{name}</div>
     }
 
     function EditableKeywordTile({ name, remove, add, ...props }) {
