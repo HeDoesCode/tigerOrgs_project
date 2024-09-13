@@ -14,8 +14,12 @@ import Pre from "../Pre";
 import { useEffect } from "react";
 import { router } from "@inertiajs/react";
 
-function ControlKeywords({ keywords, className, queryParameters }) {
-    const sortedKeywords = handleSortKeywords(keywords);
+function KeywordSelect({ keywords, className, activeUserKeywords }) {
+
+    keywords = handleSortKeywords(keywords);
+    // console.log(activeUserKeywords)
+
+    // const sortedKeywords = handleSortKeywords(keywords);
 
     function handleSortKeywords(array) {
         return array.sort((a, b) => a.keyword.localeCompare(b.keyword));
@@ -23,26 +27,28 @@ function ControlKeywords({ keywords, className, queryParameters }) {
 
     const [activeKeywords, setActiveKeywords] = useState([]);
     const [keywordBank, setKeywordBank] = useState([]);
+    const [updateButtonVisible, setUpdateButtonVisible] = useState(false);
 
     useEffect(() => {
-        resetKeywords()
+        resetKeywords();
+        // setUpdateButtonVisible(activeKeywords !== activeUserKeywords);
     }, []);
 
-
     useEffect(() => {
-        if (activeKeywords.length !== 0) {
-            queryParameters['keyword_filter'] = activeKeywords;
+        setUpdateButtonVisible(activeKeywords !== activeUserKeywords);
+    }, [activeKeywords])
 
-        } else {
-            delete queryParameters['keyword_filter']
-        }
+    const resetKeywords = () => {
+        setActiveKeywords(activeUserKeywords);
 
-        router.get(route("organizations"), queryParameters, {
-            preserveState: true,
-            // replace: true,
-            preserveScroll: true,
-        });
-    }, [keywordBank])
+        const filteredKeywords = keywords.filter(
+            keywordObj => !activeUserKeywords.some(
+                activeKeywordObj => activeKeywordObj.keyword === keywordObj.keyword
+            )
+        );
+
+        setKeywordBank(filteredKeywords);
+    }
 
     const [keywordFilter, setKeywordFilter] = useState('');
 
@@ -82,31 +88,11 @@ function ControlKeywords({ keywords, className, queryParameters }) {
         setKeywordBank([...filteredKeywords, ...nonMatchingKeywords]);
     };
 
-    useEffect(() => {
-        if (activeKeywords.length !== 0) {
-            updateParameters(); // Call the function to update the URL
-        } else {
-            delete queryParameters['keyword_filter']
-        }
-    }, [activeKeywords]);
-
-
-    function updateParameters() {
-        queryParameters['keyword_filter'] = null;
-        queryParameters['keyword_filter'] = activeKeywords;
-        router.get(route("organizations"), queryParameters, {
-            preserveState: true,
-            preserveScroll: true,
-        });
-    }
-
     const enableKeyword = (item) => {
         // add to active
-        setActiveKeywords((prevState) => [
-            item,
-            ...prevState
-        ])
-        updateParameters();
+        const sortedItems = handleSortKeywords([...activeKeywords, item]);
+
+        setActiveKeywords(sortedItems);
 
         // remove from bank
         setKeywordBank((prevKeywordBank) => {
@@ -123,35 +109,30 @@ function ControlKeywords({ keywords, className, queryParameters }) {
         setActiveKeywords((prevKeywordBank) => {
             return prevKeywordBank.filter(prevItem => prevItem.keyID !== item.keyID)
         });
-        updateParameters();
     }
 
-    const resetKeywords = () => {
-        setActiveKeywords([]);
-        setKeywordBank(handleSortKeywords(keywords));
-        setKeywordFilter('');
-        delete queryParameters['keyword_filter'];
-        router.get(route("organizations"), queryParameters, {
-            preserveState: true,
-            preserveScroll: true,
+    const updateUserKeywords = () => {
+        router.patch(route('update.user.keywords'), {
+            activeKeywords
         });
     }
 
     return (
-        <div className={`w-full flex flex-wrap gap-2 max-h-20 min-h-10 border-[1px] rounded-md border-gray-500 p-2 relative text-xs overflow-clip group ${className}`}>
+        <div className={`w-full flex flex-wrap gap-2 min-h-10 border-[1px] rounded-md border-gray-500 p-2 relative text-xs overflow-clip group ${className}`}>
             <Dialog>
                 <DialogTrigger className="absolute size-full inset-0">
                     <div className="size-full flex items-center justify-center invisible group-hover:visible group-hover:!bg-gray-800/70 text-black/0 group-hover:!text-white transition-all duration-200 ease-in-out">
                         {activeKeywords && 'Edit' || 'Add'}&nbsp;Keyword Filters
                     </div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[32rem] !h-fit max-h-[90%] w-[90%] sm:h-auto overflow-y-auto">
+                <DialogContent className="sm:max-w-[32rem] !h-fit max-h-[90%] w-[90%] sm:h-auto overflow-y-auto select-none">
                     <DialogHeader>
                         <DialogTitle>
                             Add/Remove Keyword Filters
                         </DialogTitle>
-                        <DialogDescription>
+                        <DialogDescription className='!-mb-3'>
                             Filter organizations by adding or removing keywords. Save changes when you're done.
+                            <span className={`text-red-500 font-bold ${updateButtonVisible ? 'visible' : 'invisible'}`}><br />You have unsaved changes.</span>
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex gap-x-3">
@@ -179,33 +160,38 @@ function ControlKeywords({ keywords, className, queryParameters }) {
                             <EditableKeywordTile key={index} name={item.keyword} add onClick={() => enableKeyword(item)} />
                         ))}
                     </div>
-                    {/* <DialogClose asChild>
-                        <div className="w-full flex justify-end">
-                            <Button
-                                type="button"
-                                className='bg-transparent hover:!bg-gray-800 text-black hover:!text-white border border-black w-fit'
-                                onClick={updateParameters}
-                            >
-                                Update
-                            </Button>
-                        </div>
-                    </DialogClose> */}
+                    {updateButtonVisible && (
+                        <DialogClose asChild>
+                            <div className="w-full flex justify-end space-x-3">
+                                <div className="text-red-500 font-bold my-auto">
+                                    You have unsaved changes.
+                                </div>
+                                <Button
+                                    type="button"
+                                    className='bg-transparent hover:!bg-gray-800 text-black hover:!text-white border border-black w-fit'
+                                    onClick={updateUserKeywords}
+                                >
+                                    Update
+                                </Button>
+                            </div>
+                        </DialogClose>
+                    )}
                 </DialogContent>
             </Dialog>
-            {activeKeywords.length !== 0
-                ? activeKeywords.map((item, index) => (
+            {activeUserKeywords.length !== 0
+                ? activeUserKeywords.map((item, index) => (
                     <KeywordTile key={index} name={item.keyword} />
                 ))
                 :
-                <div className="text-gray-500 h-full flex items-center">
-                    Filter by Keywords
+                <div className="text-gray-500 my-auto flex items-center">
+                    (None Selected. We'll use this to recommend organizations to you.)
                 </div>
             }
         </div>
     )
 
     function KeywordTile({ name }) {
-        return <div className="w-min px-2 py-1 bg-[#ffb700] border border-gray-300 h-fit rounded-md cursor-pointer">{name}</div>
+        return <div className="w-min px-2 py-1 bg-[#ffb700] border border-gray-300 h-fit rounded-md cursor-pointer whitespace-nowrap">{name}</div>
     }
 
     function EditableKeywordTile({ name, remove, add, ...props }) {
@@ -231,4 +217,4 @@ function ControlKeywords({ keywords, className, queryParameters }) {
     }
 }
 
-export default ControlKeywords
+export default KeywordSelect

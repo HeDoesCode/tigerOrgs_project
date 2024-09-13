@@ -84,10 +84,10 @@ class DatabaseSeeder extends Seeder
         shuffle($userIDs);
 
         // Assign 4-1500 users as students
-        $students = array_slice($userIDs, 0, rand(4, 1500));
+        $students = array_slice($userIDs, 4, 1496);
 
         // Assign remaining 1501-2000 users as admins
-        $admins = array_slice($userIDs, count($students), rand(1501, 2000) - count($students));
+        $admins = array_slice($userIDs, 1500, 500);
 
 
         $studentRecords = [];
@@ -120,6 +120,16 @@ class DatabaseSeeder extends Seeder
                 'userID' => $adminID,
                 'roleID' => 2,
             ];
+
+            // $user = User::find($adminID);  // Assuming you have a User model
+            // $notificationMessage = "You have been invited to be an admin for organization ID {$randomOrgID}";
+        
+            // // Save the notification
+            // Notification::create([
+            //     'userID' => $adminID,
+            //     'message' => $notificationMessage,
+            //     'read' => false,  // Mark as unread initially
+            // ]);
         }
 
         // Insert admin-role records in chunks

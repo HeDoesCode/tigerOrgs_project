@@ -9,8 +9,10 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 import ControlKeywords from "@/Components/Organizations/ControlKeywords";
+import Pre from "@/Components/Pre";
+import KeywordSelect from "@/Components/Organizations/KeywordSelect";
 
-function Edit({ user }) {
+function Edit({ user, activeUserKeywords, keywords }) {
     const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
     const handleSectionChange = (e) => {
         setSection(e.target.value);
@@ -25,11 +27,13 @@ function Edit({ user }) {
                 <div className="mt-4 w-full flex justify-center px-5">
                     <div className="w-full max-w-[65rem] flex flex-col items-center drop-shadow shadow-black rounded-[2rem] space-y-3 bg-[#F4F4F4] border border-gray-300">
                         <div className="h-36 w-full flex flex-col justify-center px-12 space-y-3 bg-[#ffd875] rounded-[2rem]">
-                            <span className="poetsen-one text-3xl uppercase ">
+                            <span className="poetsen-one text-xl sm:text-3xl uppercase ">
                                 {fullName}
                             </span>
-                            <div className="flex space-x-3">
-                                <IconMailFilled />
+                            <div className="flex gap-x-3 text-sm sm:textbase">
+                                <div className="hidden sm:contents">
+                                    <IconMailFilled />
+                                </div>
                                 <span>{user.email}</span>
                             </div>
                         </div>
@@ -65,7 +69,10 @@ function Edit({ user }) {
                             </div>
                             <div className="mt-10">
                                 <InputField title="Interests">
-                                    <ControlKeywords />
+                                    <KeywordSelect
+                                        activeUserKeywords={activeUserKeywords}
+                                        keywords={keywords}
+                                    />
                                 </InputField>
                             </div>
                             <div className="mt-10">
@@ -74,8 +81,8 @@ function Edit({ user }) {
                         </div>
                     </div>
                 </div>
-            </UserLayout>
-        </div>
+            </UserLayout >
+        </div >
     );
 
     function InputField({
@@ -84,7 +91,8 @@ function Edit({ user }) {
         type,
         required,
         placeholder,
-        errorRequired = true,
+        // errorRequired = true,
+        errorRequired = false,
         contents,
         min,
         max,
@@ -99,16 +107,18 @@ function Edit({ user }) {
                         <div className="w-full flex justify-between h-6">
                             <label className="h-full">
                                 {title}{" "}
-                                <span
-                                    className={`text-red-500 text-xl leading-3`}
-                                >
-                                    *
-                                </span>
+                                {required && (
+                                    <span
+                                        className={`text-red-500 text-xl leading-3`}
+                                    >
+                                        *
+                                    </span>
+
+                                )}
                             </label>
                             <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${
-                                    errorRequired || "invisible"
-                                }`}
+                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
+                                    }`}
                             >
                                 Required
                             </div>
@@ -116,11 +126,10 @@ function Edit({ user }) {
                         <input
                             type={type}
                             className={`w-full h-9
-                            ${
-                                errorRequired
+                            ${errorRequired
                                     ? "border-red-500 rounded-b-lg rounded-l-lg"
                                     : "border-gray-300 rounded-lg"
-                            }`}
+                                }`}
                             min={min}
                             max={max}
                             required={required}
@@ -138,16 +147,18 @@ function Edit({ user }) {
                         <div className="w-full flex justify-between h-6">
                             <label className="h-full">
                                 {title}{" "}
-                                <span
-                                    className={`text-red-500 text-xl leading-3`}
-                                >
-                                    *
-                                </span>
+                                {required && (
+                                    <span
+                                        className={`text-red-500 text-xl leading-3`}
+                                    >
+                                        *
+                                    </span>
+
+                                )}
                             </label>
                             <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${
-                                    errorRequired || "invisible"
-                                }`}
+                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
+                                    }`}
                             >
                                 Required
                             </div>
@@ -155,11 +166,10 @@ function Edit({ user }) {
                         <Select>
                             <SelectTrigger
                                 className={`w-full h-9
-                            ${
-                                errorRequired
-                                    ? "border-red-500 rounded-tr-none rounded-b-lg rounded-l-lg"
-                                    : "border-gray-300 rounded-lg"
-                            }`}
+                            ${errorRequired
+                                        ? "border-red-500 rounded-tr-none rounded-b-lg rounded-l-lg"
+                                        : "border-gray-300 rounded-lg"
+                                    }`}
                             >
                                 <SelectValue placeholder={placeholder} />
                             </SelectTrigger>
@@ -186,16 +196,18 @@ function Edit({ user }) {
                         <div className="w-full flex justify-between h-6">
                             <label className="h-full">
                                 {title}{" "}
-                                <span
-                                    className={`text-red-500 text-xl leading-3`}
-                                >
-                                    *
-                                </span>
+                                {required && (
+                                    <span
+                                        className={`text-red-500 text-xl leading-3`}
+                                    >
+                                        *
+                                    </span>
+
+                                )}
                             </label>
                             <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${
-                                    errorRequired || "invisible"
-                                }`}
+                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
+                                    }`}
                             >
                                 Required
                             </div>
@@ -203,11 +215,10 @@ function Edit({ user }) {
                         <input
                             type={type}
                             className={`w-full h-9
-                            ${
-                                errorRequired
+                            ${errorRequired
                                     ? "border-red-500 rounded-b-lg rounded-l-lg"
                                     : "border-gray-300 rounded-lg"
-                            }`}
+                                }`}
                             required={required}
                             placeholder={placeholder}
                         />
@@ -221,27 +232,28 @@ function Edit({ user }) {
                         <div className="w-full flex justify-between h-6">
                             <label className="h-full">
                                 {title}{" "}
-                                <span
-                                    className={`text-red-500 text-xl leading-3`}
-                                >
-                                    *
-                                </span>
+                                {required && (
+                                    <span
+                                        className={`text-red-500 text-xl leading-3`}
+                                    >
+                                        *
+                                    </span>
+
+                                )}
                             </label>
                             <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${
-                                    errorRequired || "invisible"
-                                }`}
+                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
+                                    }`}
                             >
                                 Required
                             </div>
                         </div>
                         <div
                             className={`w-full min-h-9 border bg-white
-                        ${
-                            errorRequired
-                                ? "border-red-500 rounded-b-lg rounded-l-lg"
-                                : "border-gray-300 rounded-lg"
-                        }`}
+                        ${errorRequired
+                                    ? "border-red-500 rounded-b-lg rounded-l-lg"
+                                    : "border-gray-300 rounded-lg"
+                                }`}
                             required={required}
                             placeholder={placeholder}
                         >

@@ -42,41 +42,59 @@ Route::middleware('auth')->group(function () {
 // })->name('profile');
 
 //superadmin temporary routes
-Route::controller(SuperAdminController::class)->group(function () {
-    //manage page
-    Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
-    Route::get('superadmin/status', 'manage')->name('superadmin.status');
-    Route::get('/superadmin/status/search-org', 'searchOrg');
+Route::prefix('/superadmin/')
+    ->name('superadmin.')
+    // ->middleware(['auth','isSuperAdmin'])
+    ->controller(SuperAdminController::class)->group(function () {
+        //manage page
+        Route::get('invite', 'invite')->name('invite');;
+        Route::get('status', 'manage')->name('status');
+        Route::get('status/search-org', 'searchOrg');
+        Route::post('update-organizations', 'updateOrganizations')->name('update-organizations');
 
-    //invite page
-    Route::get('/superadmin/search-users', 'search');
-    Route::post('/superadmin/update-organizations', 'updateOrganizations')->name('superadmin.update-organizations');
+        //invite page
+        Route::get('search-users', 'search');
+        Route::post('addadmin', 'addAdmin')->name('add-admin');
 
-    //upload page
-    Route::get('/superadmin/dataupload', 'fileupload')->name('superadmin.dataupload');
-    Route::post('/superadmin/dataupload/file', 'upload')->name('superadmin.dataupload.file');
-});
+        //upload page
+        Route::get('dataupload', 'fileupload')->name('dataupload');
+        Route::post('dataupload/file', 'upload')->name('dataupload.file');
 
-Route::get('/superadmin/loginhistory', function () {
-    return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
-})->name('superadmin.loginhistory');
+        Route::get('loginhistory', function () {
+            return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
+        })->name('loginhistory');
 
-Route::get('/superadmin/invitehistory', function () {
-    return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
-})->name('superadmin.invitehistory');
+        Route::get('invitehistory', function () {
+            return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
+        })->name('invitehistory');
+    });
+
+    
+
+
+// Route::get('/superadmin/loginhistory', function () {
+//     return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
+// })->name('superadmin.loginhistory');
+
+// Route::get('/superadmin/invitehistory', function () {
+//     return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
+// })->name('superadmin.invitehistory');
 
 
 
 
 
 //admin temporary routes
-Route::controller(AdminController::class)->group(function(){
-    Route::get('/admin/{orgID}/editpage', 'edit')->name('admin.editpage');
-    Route::get('/admin/{orgID}/invite', 'invite')->name('admin.invite');
-    Route::get('/admin/{orgID}/applications', 'applications')->name('admin.applications');
-    Route::get('/admin/{orgID}/forms', 'forms')->name('admin.forms');
-    Route::get('/admin/{orgID}/formhistory', 'formhistory')->name('admin.formhistory');
-});
+Route::middleware(['auth', 'isAdmin'])
+    ->prefix('/admin/{orgID}/')
+    ->name('admin.')
+    ->controller(AdminController::class)->group(function () {
+        Route::get('editpage', 'edit')->name('editpage');
+        Route::get('invite', 'invite')->name('invite');
+        Route::get('applications', 'applications')->name('applications');
+        Route::get('forms', 'forms')->name('forms');
+        Route::get('formhistory', 'formhistory')->name('formhistory');
+    });
 
 
 
@@ -88,6 +106,7 @@ Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback'])
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

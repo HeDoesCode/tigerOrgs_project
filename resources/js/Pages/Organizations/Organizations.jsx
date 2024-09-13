@@ -29,7 +29,7 @@ function Organizations({
     departments,
     keywords,
     myMemberOrganizations,
-    isAdmin = false
+    isSuperAdmin = false
 }) {
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
@@ -127,7 +127,8 @@ function Organizations({
                                 className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-11 pl-10 focus:pl-3 transition-all duration-200"
                                 defaultValue={queryParameters["search"] || ""}
                                 onChange={handleSearch}
-                                placeholder={getRandomPlaceholder()}
+                                // placeholder={getRandomPlaceholder()}
+                                placeholder='College/Organization'
                             />
                             <div className="absolute text-gray-500 left-0 bottom-0 h-11 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
                                 <IconSearch size="22" />
@@ -173,9 +174,8 @@ function Organizations({
                             </Select>
                         </ControlContainer>
 
-                        {/* {Object.keys(queryParameters).length !== 0 && ( */}
                         <ControlContainer
-                            className={` items-center !-mb-5 !mt-3 ${Object.keys(queryParameters).length !== 0
+                            className={` items-center !mt-3 ${Object.keys(queryParameters).length !== 0
                                 ? "flex"
                                 : "hidden"
                                 }`}
@@ -187,9 +187,8 @@ function Organizations({
                                 Clear All
                             </button>
                         </ControlContainer>
-                        {/* )} */}
 
-                        {isAdmin && (
+                        {isSuperAdmin && (
                             <ControlContainer>
                                 <ul className="bg-transparent flex flex-col py-3 rounded-md space-y-4">
                                     <OrganizationJoined

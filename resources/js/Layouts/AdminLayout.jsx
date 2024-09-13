@@ -10,8 +10,11 @@ import IconHistory from "@/Components/Icons/IconHistory";
 import IconFolderCog from "@/Components/Icons/IconFolderCog";
 import IconOrg from "@/Components/Icons/IconOrg";
 import SideBar from "@/Components/ui/Custom/SideBar";
+import axios from "axios";
+import { useEffect } from "react";
 
 function AdminLayout({ orgID, children }) {
+    const { orgLogo } = usePage().props;
     const { url } = usePage();
     return (
         <Layout headerContent={<HeaderContent />} sidebar={<SideBarContent />}>
@@ -44,7 +47,8 @@ function AdminLayout({ orgID, children }) {
                         className={`min-h-16 min-w-16 size-16 flex items-center justify-center p-2`}
                     >
                         <img
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s"
+                            // src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s"
+                            src={orgLogo}
                             alt="test"
                             className="bg-cover rounded-full"
                         />
@@ -88,10 +92,9 @@ function AdminLayout({ orgID, children }) {
             return (
                 <div className="flex">
                     <Link
-                        className={`flex items-center py-2 pl-3 rounded-l-full overflow-x-clip w-full ${
-                            (current && "bg-[#FFBC58]") ||
+                        className={`flex items-center py-2 pl-3 rounded-l-full overflow-x-clip w-full ${(current && "bg-[#FFBC58]") ||
                             "hover:bg-gray-800 hover:text-white"
-                        }`}
+                            }`}
                         href={href}
                     >
                         <div className="min-h-7 min-w-7 size-7">{icon}</div>

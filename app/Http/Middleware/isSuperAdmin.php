@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,14 +18,18 @@ class isSuperAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = User::find(Auth::id());
+        $userID = Auth::id();
 
-        foreach ($user->roles as $role) {
-            if ($role->roleID === 1) {
-                return $next($request);
-            }
+        $checkRole = DB::table('organization_user_role')
+            ->where('userID', $userID)
+            ->where('roleID', 3)
+            ->select('*')
+            ->first();
+
+        if ($checkRole) {
+            return $next($request);
+        } else {
+            abort(401);
         }
-
-        abort(401);
     }
 }
