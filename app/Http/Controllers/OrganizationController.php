@@ -76,11 +76,18 @@ class OrganizationController extends Controller
 
         // dd($myMemberOrganizations);
 
+        $isSuperAdmin = DB::table('organization_user_role')
+            ->where('userID', Auth::id())
+            ->where('roleID', 3)
+            ->select('*')
+            ->first();
+
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
             'departments' => $departments,
             'keywords' => $keywordsArray,
-            'isAdmin' => true,
+            // 'isSuperAdmin' => $isSuperAdmin,
+            'isSuperAdmin' => true,
             'myMemberOrganizations' => $myMemberOrganizations ?: [],
             'queryParameters' => $queryParameters ?: null,
         ]);
