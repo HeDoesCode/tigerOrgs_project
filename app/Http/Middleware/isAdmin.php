@@ -41,10 +41,10 @@ class isAdmin
 
         if ($checkRole) {
             // dd($checkRole->roleID);
-            Inertia::share(
-                'orgLogo',
-                Organization::where('orgID', $orgID)->value('logo')
-            );
+            Inertia::share([
+                'orgLogo' => Organization::where('orgID', $orgID)->value('logo'),
+                'orgName' => Organization::where('orgID', $orgID)->value('name'),
+            ]);
             return $next($request);
         } else {
             // abort(response('You are not assigned an admin role to this page', 401));
