@@ -50,10 +50,11 @@ Route::prefix('/superadmin/')
         Route::get('invite', 'invite')->name('invite');;
         Route::get('status', 'manage')->name('status');
         Route::get('status/search-org', 'searchOrg');
+        Route::post('update-organizations', 'updateOrganizations')->name('update-organizations');
 
         //invite page
         Route::get('search-users', 'search');
-        Route::post('update-organizations', 'updateOrganizations')->name('update-organizations');
+        Route::post('addadmin', 'addAdmin')->name('add-admin');
 
         //upload page
         Route::get('dataupload', 'fileupload')->name('dataupload');
@@ -67,6 +68,9 @@ Route::prefix('/superadmin/')
             return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
         })->name('invitehistory');
     });
+
+    
+
 
 // Route::get('/superadmin/loginhistory', function () {
 //     return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
