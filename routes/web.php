@@ -47,14 +47,18 @@ Route::controller(SuperAdminController::class)->group(function () {
     Route::get('/superadmin/invite', 'invite')->name('superadmin.invite');;
     Route::get('superadmin/status', 'manage')->name('superadmin.status');
     Route::get('/superadmin/status/search-org', 'searchOrg');
+    Route::post('/superadmin/update-organizations', 'updateOrganizations')->name('superadmin.update-organizations');
 
     //invite page
     Route::get('/superadmin/search-users', 'search');
-    Route::post('/superadmin/update-organizations', 'updateOrganizations')->name('superadmin.update-organizations');
+    Route::post('/superadmin/addadmin', 'addAdmin')->name('superadmin.add-admin');
 
     //upload page
     Route::get('/superadmin/dataupload', 'fileupload')->name('superadmin.dataupload');
     Route::post('/superadmin/dataupload/file', 'upload')->name('superadmin.dataupload.file');
+
+
+    
 });
 
 Route::get('/superadmin/loginhistory', function () {
