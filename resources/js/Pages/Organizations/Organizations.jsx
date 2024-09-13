@@ -29,7 +29,7 @@ function Organizations({
     departments,
     keywords,
     myMemberOrganizations,
-    isAdmin = false
+    isSuperAdmin = false
 }) {
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
@@ -174,9 +174,8 @@ function Organizations({
                             </Select>
                         </ControlContainer>
 
-                        {/* {Object.keys(queryParameters).length !== 0 && ( */}
                         <ControlContainer
-                            className={` items-center !-mb-5 !mt-3 ${Object.keys(queryParameters).length !== 0
+                            className={` items-center !mt-3 ${Object.keys(queryParameters).length !== 0
                                 ? "flex"
                                 : "hidden"
                                 }`}
@@ -188,9 +187,8 @@ function Organizations({
                                 Clear All
                             </button>
                         </ControlContainer>
-                        {/* )} */}
 
-                        {isAdmin && (
+                        {isSuperAdmin && (
                             <ControlContainer>
                                 <ul className="bg-transparent flex flex-col py-3 rounded-md space-y-4">
                                     <OrganizationJoined
