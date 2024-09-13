@@ -20,8 +20,8 @@ function AdminInvite() {
 
     return (
         <div className="w-full">
-            <Head title={`Admin Dashboard - ${organizationName}`} />
-            <AdminLayout>
+            <Head title="Admin Dashboard" />
+            <AdminLayout orgID={orgID}>
                 <MainAdminFrame
                     navItems={[
                         {
