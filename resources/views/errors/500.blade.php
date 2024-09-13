@@ -2,4 +2,4 @@
 
 @section('title', __('Server Error'))
 @section('code', '500')
-@section('message', __('Server Error'))
+@section('message', __('An unexpected error occurred on our end. Please try again later'))
