@@ -121,15 +121,15 @@ class DatabaseSeeder extends Seeder
                 'roleID' => 2,
             ];
 
-            $user = User::find($adminID);  // Assuming you have a User model
-            $notificationMessage = "You have been invited to be an admin for organization ID {$randomOrgID}";
+            // $user = User::find($adminID);  // Assuming you have a User model
+            // $notificationMessage = "You have been invited to be an admin for organization ID {$randomOrgID}";
         
-            // Save the notification
-            Notification::create([
-                'userID' => $adminID,
-                'message' => $notificationMessage,
-                'read' => false,  // Mark as unread initially
-            ]);
+            // // Save the notification
+            // Notification::create([
+            //     'userID' => $adminID,
+            //     'message' => $notificationMessage,
+            //     'read' => false,  // Mark as unread initially
+            // ]);
         }
 
         // Insert admin-role records in chunks
