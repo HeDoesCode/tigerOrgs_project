@@ -535,7 +535,7 @@
 </head>
 
 <body class="antialiased">
-    <div class="relative flex justify-center min-h-screen bg-gray-300 items-center sm:pt-0">
+    <div class="h-screen flex justify-center min-h-screen bg-gray-300 items-center">
         <div class="max-w-xl mx-auto px-4">
             <div class="w-full flex justify-center mb-6 text-6xl font-bold tracking-wider">@yield('code')</div>
             <div class="flex items-center">
