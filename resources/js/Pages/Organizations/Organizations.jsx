@@ -124,7 +124,7 @@ function Organizations({
                         <ControlContainer className="relative" name="Search">
                             <input
                                 type="text"
-                                className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-11 pl-10 focus:pl-3 transition-all duration-200"
+                                className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-11 pl-10 focus:pl-3 transition-all duration-200 shadow-md"
                                 defaultValue={queryParameters["search"] || ""}
                                 onChange={handleSearch}
                                 // placeholder={getRandomPlaceholder()}
@@ -144,7 +144,7 @@ function Organizations({
                                 defaultValue="All"
                                 onValueChange={handleFilterCategory}
                             >
-                                <SelectTrigger className="w-full h-12 border-gray-500 bg-transparent">
+                                <SelectTrigger className="w-full h-12 border-gray-500 bg-transparent shadow-md">
                                     <SelectValue placeholder="All" />
                                 </SelectTrigger>
                                 <SelectContent

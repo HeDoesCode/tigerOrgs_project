@@ -138,7 +138,7 @@ function ControlKeywords({ keywords, className, queryParameters }) {
     }
 
     return (
-        <div className={`w-full flex flex-wrap gap-2 max-h-20 min-h-10 border-[1px] rounded-md border-gray-500 p-2 relative text-xs overflow-clip group ${className}`}>
+        <div className={`w-full flex flex-wrap gap-2 max-h-20 min-h-10 border-[1px] rounded-md border-gray-500 p-2 relative text-xs overflow-clip group ${className} shadow-md`}>
             <Dialog>
                 <DialogTrigger className="absolute size-full inset-0">
                     <div className="size-full flex items-center justify-center invisible group-hover:visible group-hover:!bg-gray-800/70 text-black/0 group-hover:!text-white transition-all duration-200 ease-in-out">
