@@ -98,7 +98,10 @@ class OrganizationController extends Controller
         $organization = Organization::withCount('members')
             ->with('officers.user')
             ->with('contacts')
-            ->find($orgID);
+            ->findOrFail($orgID);
+        // try {
+
+        // }
         $pageData = [
             'metadata' => [
                 'organizationName' => $organization->name,
