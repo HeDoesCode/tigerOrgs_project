@@ -40,6 +40,7 @@ class isAdmin
             ->first();
 
         if ($checkRole) {
+            // dd($checkRole->roleID);
             Inertia::share(
                 'orgLogo',
                 Organization::where('orgID', $orgID)->value('logo')
@@ -47,7 +48,8 @@ class isAdmin
             return $next($request);
         } else {
             // abort(response('You are not assigned an admin role to this page', 401));
-            abort(403);
+            // abort(403, 'Sorry, you are not allowed to access this page/');
+            abort(403, 'Sorry, this page is inaccessible');
         }
     }
 }
