@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Models\User;
+use Inertia\Inertia;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +40,10 @@ class isAdmin
             ->first();
 
         if ($checkRole) {
+            Inertia::share(
+                'orgLogo',
+                Organization::where('orgID', $orgID)->value('logo')
+            );
             return $next($request);
         } else {
             // abort(response('You are not assigned an admin role to this page', 401));
