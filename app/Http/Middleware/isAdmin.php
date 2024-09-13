@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,16 +27,21 @@ class isAdmin
          * abort 401 if fail
          */
 
-        $user = User::find(Auth::id());
+        $userID = Auth::id();
+        $orgID = $request->route('orgID');
 
-        foreach ($user->roles as $role) {
-            if ($role->roleID === 2) {
-                return $next($request);
-            }
+        $checkRole = DB::table('organization_user_role')
+            ->where('userID', $userID)
+            ->where('roleID', 2)
+            ->where('orgID', $orgID)
+            ->select('*')
+            ->first();
+
+        if ($checkRole) {
+            return $next($request);
+        } else {
+            // abort(response('You are not assigned an admin role to this page', 401));
+            abort(401, 'You are not assigned an admin role to this page');
         }
-
-        // $
-
-        abort(401);
     }
 }

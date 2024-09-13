@@ -70,13 +70,15 @@ Route::get('/superadmin/invitehistory', function () {
 
 
 //admin temporary routes
-Route::controller(AdminController::class)->group(function () {
-    Route::get('/admin/{orgID}/editpage', 'edit')->name('admin.editpage');
-    Route::get('/admin/{orgID}/invite', 'invite')->name('admin.invite');
-    Route::get('/admin/{orgID}/applications', 'applications')->name('admin.applications');
-    Route::get('/admin/{orgID}/forms', 'forms')->name('admin.forms');
-    Route::get('/admin/{orgID}/formhistory', 'formhistory')->name('admin.formhistory');
-});
+Route::middleware('isAdmin')
+    ->prefix('/admin/{orgID}/')
+    ->controller(AdminController::class)->group(function () {
+        Route::get('editpage', 'edit')->name('admin.editpage');
+        Route::get('invite', 'invite')->name('admin.invite');
+        Route::get('applications', 'applications')->name('admin.applications');
+        Route::get('forms', 'forms')->name('admin.forms');
+        Route::get('formhistory', 'formhistory')->name('admin.formhistory');
+    });
 
 
 
