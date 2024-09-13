@@ -47,7 +47,7 @@ class isAdmin
             return $next($request);
         } else {
             // abort(response('You are not assigned an admin role to this page', 401));
-            abort(401, 'You are not assigned an admin role to this page');
+            abort(403);
         }
     }
 }
