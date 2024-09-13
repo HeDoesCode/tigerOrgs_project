@@ -43,43 +43,53 @@ Route::middleware('auth')->group(function () {
 
 //superadmin temporary routes
 Route::prefix('/superadmin/')
-    // ->middleware('isSuperAdmin')
+    ->name('superadmin.')
+    // ->middleware(['auth','isSuperAdmin'])
     ->controller(SuperAdminController::class)->group(function () {
         //manage page
-        Route::get('invite', 'invite')->name('superadmin.invite');;
-        Route::get('status', 'manage')->name('superadmin.status');
+        Route::get('invite', 'invite')->name('invite');;
+        Route::get('status', 'manage')->name('status');
         Route::get('status/search-org', 'searchOrg');
 
         //invite page
         Route::get('search-users', 'search');
-        Route::post('update-organizations', 'updateOrganizations')->name('superadmin.update-organizations');
+        Route::post('update-organizations', 'updateOrganizations')->name('update-organizations');
 
         //upload page
-        Route::get('dataupload', 'fileupload')->name('superadmin.dataupload');
-        Route::post('dataupload/file', 'upload')->name('superadmin.dataupload.file');
+        Route::get('dataupload', 'fileupload')->name('dataupload');
+        Route::post('dataupload/file', 'upload')->name('dataupload.file');
+
+        Route::get('loginhistory', function () {
+            return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
+        })->name('loginhistory');
+
+        Route::get('invitehistory', function () {
+            return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
+        })->name('invitehistory');
     });
 
-Route::get('/superadmin/loginhistory', function () {
-    return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
-})->name('superadmin.loginhistory');
+// Route::get('/superadmin/loginhistory', function () {
+//     return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
+// })->name('superadmin.loginhistory');
 
-Route::get('/superadmin/invitehistory', function () {
-    return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
-})->name('superadmin.invitehistory');
+// Route::get('/superadmin/invitehistory', function () {
+//     return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
+// })->name('superadmin.invitehistory');
 
 
 
 
 
 //admin temporary routes
-Route::middleware('isAdmin')
+Route::middleware(['auth', 'isAdmin'])
     ->prefix('/admin/{orgID}/')
+    ->name('admin.')
     ->controller(AdminController::class)->group(function () {
-        Route::get('editpage', 'edit')->name('admin.editpage');
-        Route::get('invite', 'invite')->name('admin.invite');
-        Route::get('applications', 'applications')->name('admin.applications');
-        Route::get('forms', 'forms')->name('admin.forms');
-        Route::get('formhistory', 'formhistory')->name('admin.formhistory');
+        Route::get('editpage', 'edit')->name('editpage');
+        Route::get('invite', 'invite')->name('invite');
+        Route::get('applications', 'applications')->name('applications');
+        Route::get('forms', 'forms')->name('forms');
+        Route::get('formhistory', 'formhistory')->name('formhistory');
     });
 
 
