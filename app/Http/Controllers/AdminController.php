@@ -52,6 +52,10 @@ class AdminController extends Controller
 
         return Inertia::render('Admin/AdminInvite', [
             'orgID' => $organization->orgID,
+            'organizationName' => $organization->name,
+            'members' => $organization->members, 
+            'officers' => $organization->officers, 
+            'contacts' => $organization->contacts, 
         ]);
     }
 
