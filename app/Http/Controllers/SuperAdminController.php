@@ -154,10 +154,66 @@ class SuperAdminController extends Controller
         return Inertia::render('SuperAdmin/SuperAdminDataUpload');
     }
 
+    private function handleStudentUpload($studentFile) {
+        $studentData = fopen($studentFile, 'r');            
+        $studentChunks = [];
+
+        try {
+            $dumpHeader = fgetcsv($studentData); // skip the header in the csv file
+            
+            while ($data = fgetcsv($studentData)) {
+                $existingUser = User::find($data[0]);
+
+                if ($existingUser != null) {         
+                    if ($existingUser->email != $data[1]) {  // to check if user has changed their email 
+                        $existingUser->email = $data[1];
+                        $existingUser->save();
+                    }
+                } else {
+                    $studentChunks[] = [
+                        "userID" => $data[0],   
+                        "email" => $data[1],
+                        "firstname" => $data[2],
+                        "lastname" => $data[3],
+                        "middlename" => $data[4],
+                        "remember_token" => NULL,
+                        "status" => "student",
+                        "college" => $data[7],
+                    ];
+                }
+
+                if (count($studentChunks) === 1000) {
+                    User::insert($studentChunks);
+                    $studentChunks = [];
+                }
+            }
+
+            if (!empty($studentChunks)) { // insert the rest in studentChunks
+                User::insert($studentChunks);
+            }    
+        } catch (Exception $e) {
+            // TO-DO: return with proper error
+            dd($e->getMessage());
+        }
+
+        fclose($studentData);
+    }
+
+    private function handleOrganizationUpload() {
+        // TO-DO: process upload of organization data from ESORR
+    }
+
     public function upload(Request $request){
+        if ($request->studentFile == null && $request->organizationFile == null) {
+            // TO-DO: return with proper error
+            dd($request);
+        }
 
-        //ethan john catacutan send help
-        dd($request->all());
-
+        if ($request->studentFile != null) {
+            $this->handleStudentUpload($request->studentFile);
+        } 
+        if ($request->organizationFile != null) { 
+            $this->handleOrganizationUpload();
+        } 
     }
 }
