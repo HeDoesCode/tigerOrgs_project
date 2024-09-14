@@ -19,6 +19,8 @@ class ProfileController extends Controller
     {
 
         $user = Auth::user();
+        // dd($user->section);
+        // dd($user);
 
         $keywords = Keyword::pluck('keyword', 'keyID');
         // ... and parse into array of objects
@@ -84,9 +86,35 @@ class ProfileController extends Controller
         $this->edit();
     }
 
-    public function updateKeywords(Request $request)
+    public function updateUserSection(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'section' => 'string'
+        ]);
+
+        $user = User::where('userID', Auth::id())->first();
+
+        $user->section = $validatedData['section'] ?: null;
+
+        $user->save();
+
+        if ($user->save()) {
+            session()->flash('toast', [
+                'title' => 'Section Update Successful',
+                // 'description' => "$queryResult",
+                'variant' => 'success',
+                'duration' => 2000,
+            ]);
+        } else {
+            session()->flash('toast', [
+                'title' => 'Section Update Failed',
+                'description' => "An error occurred while updating your section.",
+                'variant' => 'destructive',
+                'duration' => 2000,
+            ]);
+        }
+
+        $this->edit();
     }
 
 

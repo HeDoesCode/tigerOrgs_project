@@ -27,11 +27,21 @@ Route::get('/', function () {
 })->middleware(['auth', 'verified'])->name('index');
 
 // temp user routes
+// Route::middleware('auth')->group(function () {
+//     // other user-level routes
+// });
+
 Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
+    Route::patch('/update-user-section', [ProfileController::class, 'updateUserSection'])->name('update.user.section');
+
     Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
     Route::get('/organizations/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
-    // other user-level routes
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 // Route::get('organizations/{any}/home', function () {
 //     return Inertia::render('Organizations/Home');
@@ -69,7 +79,7 @@ Route::prefix('/superadmin/')
         })->name('invitehistory');
     });
 
-    
+
 
 
 // Route::get('/superadmin/loginhistory', function () {
@@ -102,14 +112,6 @@ Route::middleware(['auth', 'isAdmin'])
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
-
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 // form builder routes
 Route::get('/admin/{orgID}/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
