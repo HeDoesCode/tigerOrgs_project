@@ -548,6 +548,11 @@
                     @yield('message')
                 </div>
             </div>
+            @hasSection('action')
+                <div class="mt-6 flex justify-center">
+                    @yield('action')
+                </div>
+            @endif
         </div>
     </div>
 </body>
