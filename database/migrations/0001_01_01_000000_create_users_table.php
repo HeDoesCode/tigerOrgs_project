@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->string('middlename');
+            $table->string('section')->nullable();
             $table->string('remember_token', 100)->nullable();
             $table->string('status');
             $table->string('college');
