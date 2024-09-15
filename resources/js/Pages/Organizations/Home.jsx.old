@@ -20,9 +20,9 @@ import IconX from "@/Components/Icons/Social/IconX";
 import IconLinkedIn from "@/Components/Icons/Social/IconLinkedIn";
 import IconPencil from "@/Components/Icons/IconPencil";
 
-function Home({ editing, isRecruiting }) {
+function Home({ editing, recruiting }) {
     // editing = false;
-    // isRecruiting = false;
+    // recruiting = false;
 
     const pageData = [
 
@@ -141,7 +141,7 @@ function Home({ editing, isRecruiting }) {
                             </div>
                         </div>
                         <div className="pt-8 space-y-2 inter font-bold">
-                            {isRecruiting && (
+                            {recruiting && (
                                 <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative">
                                     Apply
                                     <div className="inline rotate-45">

@@ -12,11 +12,11 @@ import {
     DialogTrigger,
 } from "@/Components/ui/dialog"
 import { QRCode } from "react-qrcode-logo";
+import { Link } from "@inertiajs/react";
 // import { useRef } from "react";
 
 
-function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData }) {
-
+function OrganizationLayout({ editing, children, pageLayoutData, withFollow }) {
     return (
         <div className="w-full">
             {editing ? (
@@ -58,22 +58,26 @@ function OrganizationLayout({ editing, children, isRecruiting, pageLayoutData })
                             </div>
                         </div>
                         <div className="pt-8 space-y-2 inter font-bold">
-                            {isRecruiting && (
-                                <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative">
-                                    Apply
-                                    <div className="inline rotate-45">
-                                        <IconArrowUp size="20" />
+                            {pageLayoutData.recruiting && !editing && (
+                                <Link className="contents" href={route('organizations.process', pageLayoutData.orgID)}>
+                                    <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative">
+                                        Apply
+                                        <div className="inline rotate-45">
+                                            <IconArrowUp size="20" />
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
                             )}
 
                             {/* remove route if editing */}
-                            <a className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-500 cursor-pointer">
-                                Follow
-                                <div className="inline">
-                                    <IconUserPlus size="20" />
-                                </div>
-                            </a>
+                            {withFollow === 1 && editing && (
+                                <a className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-500 cursor-pointer">
+                                    Follow
+                                    <div className="inline">
+                                        <IconUserPlus size="20" />
+                                    </div>
+                                </a>
+                            )}
                         </div>
                     </div>
 
