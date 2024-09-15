@@ -26,11 +26,6 @@ Route::get('/', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('index');
 
-// temp user routes
-// Route::middleware('auth')->group(function () {
-//     // other user-level routes
-// });
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
@@ -40,20 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/organizations/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
     Route::get('/organizations/{orgID}/process', [OrganizationController::class, 'process'])->name('organizations.process');
     Route::get('/organizations/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
-    // Route::patch('/organizations/{orgID}/unfollow', [OrganizationController::class, 'setUnfollow'])->name('organizations.unfollow');
-
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-
-// Route::get('organizations/{any}/home', function () {
-//     return Inertia::render('Organizations/Home');
-// })->name('organizations.home');
-
-// Route::get('/profile', function () {
-//     return Inertia::render('Profile/Edit');
-// })->name('profile');
 
 //superadmin temporary routes
 Route::prefix('/superadmin/')
@@ -82,21 +64,6 @@ Route::prefix('/superadmin/')
             return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
         })->name('invitehistory');
     });
-
-
-
-
-// Route::get('/superadmin/loginhistory', function () {
-//     return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
-// })->name('superadmin.loginhistory');
-
-// Route::get('/superadmin/invitehistory', function () {
-//     return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
-// })->name('superadmin.invitehistory');
-
-
-
-
 
 //admin temporary routes
 Route::middleware(['auth', 'isAdmin'])
