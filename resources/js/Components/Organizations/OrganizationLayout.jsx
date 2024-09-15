@@ -12,11 +12,20 @@ import {
     DialogTrigger,
 } from "@/Components/ui/dialog"
 import { QRCode } from "react-qrcode-logo";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
+import IconUserCancel from "../Icons/IconUserCancel";
 // import { useRef } from "react";
 
 
 function OrganizationLayout({ editing, children, pageLayoutData, withFollow }) {
+
+    const toggleFollow = () => {
+        router.get(route("organizations.follow", pageLayoutData.orgID), {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    }
+
     return (
         <div className="w-full">
             {editing ? (
@@ -57,28 +66,48 @@ function OrganizationLayout({ editing, children, pageLayoutData, withFollow }) {
                                 </div>
                             </div>
                         </div>
-                        <div className="pt-8 space-y-2 inter font-bold">
-                            {pageLayoutData.recruiting && !editing && (
-                                <Link className="contents" href={route('organizations.process', pageLayoutData.orgID)}>
-                                    <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative">
-                                        Apply
-                                        <div className="inline rotate-45">
-                                            <IconArrowUp size="20" />
+                        {!editing && (
+                            <div className="pt-8 space-y-2 inter font-bold">
+                                {pageLayoutData.recruiting && (
+                                    <Link className="contents" href={route('organizations.process', pageLayoutData.orgID)}>
+                                        <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative">
+                                            Apply
+                                            <div className="inline rotate-45">
+                                                <IconArrowUp size="20" />
+                                            </div>
                                         </div>
-                                    </div>
-                                </Link>
-                            )}
+                                    </Link>
+                                )}
 
-                            {/* remove route if editing */}
-                            {withFollow === 1 && editing && (
-                                <a className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-500 cursor-pointer">
-                                    Follow
-                                    <div className="inline">
-                                        <IconUserPlus size="20" />
-                                    </div>
-                                </a>
-                            )}
-                        </div>
+                                {/* remove route if editing */}
+                                {withFollow && withFollow ? (
+                                    // not following org
+                                    <button
+                                        onClick={toggleFollow}
+                                        className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-400 cursor-pointer">
+                                        Follow
+                                        <div className="inline">
+                                            <IconUserPlus size="20" />
+                                        </div>
+                                    </button>
+                                ) : (
+                                    // already following org
+                                    <button
+                                        onClick={toggleFollow}
+                                        className="group flex flex-nowrap text-sm justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-sky-400 hover:bg-orange-400 cursor-pointer">
+                                        <span className="group-hover:hidden w-16">Followed</span>
+                                        <span className="hidden group-hover:inline w-16">Unfollow</span>
+                                        <div className="inline group-hover:hidden">
+                                            <IconUserPlus size="20" />
+                                        </div>
+                                        <div className="hidden group-hover:inline">
+                                            <IconUserCancel size="20" />
+                                        </div>
+                                    </button>
+                                )
+                                }
+                            </div>
+                        )}
                     </div>
 
                     <div className="w-full px-5 md:px-12 flex md:hidden justify-center space-x-3 my-4">

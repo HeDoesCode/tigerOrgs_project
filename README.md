@@ -1,5 +1,13 @@
 php artisan serve --host 0.0.0.0
 
+session()->flash('toast', [
+    'title' => 'oh no',
+    'description' => 'ang daming bugs pare :(',
+    'variant' => 'destructive'
+]);
+
+
+
 
 <!-- <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 

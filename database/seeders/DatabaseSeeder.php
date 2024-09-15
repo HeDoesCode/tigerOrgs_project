@@ -74,6 +74,8 @@ class DatabaseSeeder extends Seeder
                     ->create();
             });
 
+        $this->call(Organization_FollowersSeeder::class);
+
         /**
          * create 1996 users (4 from seeders totaling to 2000)
          * 4-1500 are students randomly assigned to orgs
@@ -123,7 +125,7 @@ class DatabaseSeeder extends Seeder
 
             // $user = User::find($adminID);  // Assuming you have a User model
             // $notificationMessage = "You have been invited to be an admin for organization ID {$randomOrgID}";
-        
+
             // // Save the notification
             // Notification::create([
             //     'userID' => $adminID,

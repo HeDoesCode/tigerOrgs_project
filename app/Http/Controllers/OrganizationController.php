@@ -124,11 +124,55 @@ class OrganizationController extends Controller
         // ];
 
         // dump($pageData);
+
+        $followButton = !DB::table('organization_followers')
+            ->where('userID', Auth::id())
+            ->where('orgID', $orgID)
+            ->exists();
+
         return Inertia::render('Organizations/Home', [
             'pageData' => $pageData,
             'pageLayoutData' => $this->getPageLayoutData($orgID),
-            'withFollow' => 1, // values: 1(can follow), 0(cannot follow/is already following), null or none(no display)
+            'withFollow' => $followButton, // values: 1(can follow), 0(cannot follow/is already following), no parameter(not displayed)
         ]);
+    }
+
+    public function toggleFollow($orgID)
+    {
+        $following = DB::table('organization_followers')
+            ->where('userID', Auth::id())
+            ->where('orgID', $orgID)
+            ->select('*')
+            ->get();
+
+        $organizationName = Organization::find($orgID)->value('name');
+
+        if ($following->isNotEmpty()) { // User is following org
+            DB::table('organization_followers')
+                ->where('userID', Auth::id())
+                ->where('orgID', $orgID)
+                ->delete();
+
+            session()->flash('toast', [
+                'title' => "You unfollowed {$organizationName}!",
+                'description' => 'You will no longer receive public notifications from this organization.',
+                'duration' => 5000,
+            ]);
+        } else {  // User is not following org
+            DB::table('organization_followers')->insert([
+                'userID' => Auth::id(),
+                'orgID' => $orgID,
+            ]);
+
+            session()->flash('toast', [
+                'title' => "You are now following {$organizationName}!",
+                'description' => 'You will now receive public notifications from this organization.',
+                'variant' => 'success',
+                'duration' => 5000,
+            ]);
+        }
+
+        $this->visit($orgID);
     }
 
     public function process($orgID)
