@@ -29,7 +29,7 @@ function Organizations({
     departments,
     keywords,
     myMemberOrganizations,
-    isSuperAdmin = false
+    isSuperAdmin
 }) {
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});

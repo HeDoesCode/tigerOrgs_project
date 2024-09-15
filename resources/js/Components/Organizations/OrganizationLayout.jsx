@@ -14,6 +14,7 @@ import {
 import { QRCode } from "react-qrcode-logo";
 import { Link, router } from "@inertiajs/react";
 import IconUserCancel from "../Icons/IconUserCancel";
+import IconUserCheck from "../Icons/IconUserCheck";
 // import { useRef } from "react";
 
 
@@ -70,7 +71,7 @@ function OrganizationLayout({ editing, children, pageLayoutData, withFollow }) {
                             <div className="pt-8 space-y-2 inter font-bold">
                                 {pageLayoutData.recruiting && (
                                     <Link className="contents" href={route('organizations.process', pageLayoutData.orgID)}>
-                                        <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative">
+                                        <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative h-12">
                                             Apply
                                             <div className="inline rotate-45">
                                                 <IconArrowUp size="20" />
@@ -84,7 +85,7 @@ function OrganizationLayout({ editing, children, pageLayoutData, withFollow }) {
                                     // not following org
                                     <button
                                         onClick={toggleFollow}
-                                        className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-400 cursor-pointer">
+                                        className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-[#EEEEEE] hover:bg-sky-400 cursor-pointer h-12">
                                         Follow
                                         <div className="inline">
                                             <IconUserPlus size="20" />
@@ -94,11 +95,11 @@ function OrganizationLayout({ editing, children, pageLayoutData, withFollow }) {
                                     // already following org
                                     <button
                                         onClick={toggleFollow}
-                                        className="group flex flex-nowrap text-sm justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-sky-400 hover:bg-orange-400 cursor-pointer">
+                                        className="group flex flex-nowrap text-sm justify-center items-center px-4 py-2 rounded-full border-[0.15rem] border-[#AAAAAA] relative bg-sky-400 hover:bg-orange-400 cursor-pointer h-12">
                                         <span className="group-hover:hidden w-16">Followed</span>
                                         <span className="hidden group-hover:inline w-16">Unfollow</span>
                                         <div className="inline group-hover:hidden">
-                                            <IconUserPlus size="20" />
+                                            <IconUserCheck size="20" />
                                         </div>
                                         <div className="hidden group-hover:inline">
                                             <IconUserCancel size="20" />
