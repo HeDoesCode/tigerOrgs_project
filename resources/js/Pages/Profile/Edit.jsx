@@ -21,7 +21,7 @@ function Edit({ user, activeUserKeywords, keywords }) {
 
 
     const handleSectionOnKeyDown = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && e.target.value !== '') {
             const section = e.target.value
             patchSection(section)
         }
@@ -78,7 +78,7 @@ function Edit({ user, activeUserKeywords, keywords }) {
                                     <input
                                         type="text"
                                         placeholder={user.section || "[YEAR]-[SECTION] ex. 3-ITG"}
-                                        className={`w-full ${user.section ? 'placeholder-black focus:placeholder-transparent' : ''}`}
+                                        className={`w-full ${user.section ? 'placeholder-black focus:placeholder-transparent rounded-lg focus:border-black' : ''}`}
                                         onKeyDown={handleSectionOnKeyDown}
                                     />
                                 </InputContainer>
