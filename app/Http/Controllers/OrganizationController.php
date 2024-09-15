@@ -113,7 +113,36 @@ class OrganizationController extends Controller
             'photos' => $organization->photos,
         ];
 
-        $pageLayoutData = [
+        // $pageLayoutData = [
+        //     'orgID' => $organization->orgID,
+        //     'logo' => $organization->logo,
+        //     'coverPhoto' => $organization->cover,
+        //     'metadata' => [
+        //         'organizationName' => $organization->name,
+        //         'members' => $organization->members_count,
+        //     ],
+        // ];
+
+        // dump($pageData);
+        return Inertia::render('Organizations/Home', [
+            'pageData' => $pageData,
+            'pageLayoutData' => $this->getPageLayoutData($orgID),
+            'withFollow' => 1, // values: 1(can follow), 0(cannot follow/is already following), null or none(no display)
+        ]);
+    }
+
+    public function process($orgID)
+    {
+        return Inertia::render('Organizations/Process', [
+            'pageLayoutData' => $this->getPageLayoutData($orgID),
+        ]);
+    }
+
+    public function getPageLayoutData($orgID)
+    {
+        $organization = Organization::withCount('members')
+            ->findOrFail($orgID);
+        return [
             'orgID' => $organization->orgID,
             'logo' => $organization->logo,
             'coverPhoto' => $organization->cover,
@@ -121,12 +150,8 @@ class OrganizationController extends Controller
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,
             ],
+            // 'recruiting' => $organization->recruiting,
+            'recruiting' => 1,
         ];
-
-        // dump($pageData);
-        return Inertia::render('Organizations/Home', [
-            'pageData' => $pageData,
-            'pageLayoutData' => $pageLayoutData,
-        ]);
     }
 }
