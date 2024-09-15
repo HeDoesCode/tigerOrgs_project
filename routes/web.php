@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
     Route::get('/organizations/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
+    Route::get('/organizations/{orgID}/process', [OrganizationController::class, 'process'])->name('organizations.process');
+
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
