@@ -52,14 +52,27 @@ class AdminController extends Controller
             ->with('officers.user')
             ->with('contacts')
             ->find($orgID);
-
+    
+        // Get the users with their roles in the organization
+        $members = \DB::table('organization_user_role')
+            ->join('users', 'organization_user_role.userID', '=', 'users.userID')
+            ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
+            ->select('users.*', 'roles.roleID')
+            ->where('organization_user_role.orgID', $orgID)
+            ->get();
+    
+        $admins = $members->filter(fn($member) => $member->roleID == 2);
+        $students = $members->filter(fn($member) => $member->roleID == 1); 
+    
         return Inertia::render('Admin/AdminInvite', [
             'orgID' => $organization->orgID,
             'organizationName' => $organization->name,
-            'members' => $organization->members,
-            'officers' => $organization->officers,
-            'contacts' => $organization->contacts,
+            'members' => $students->values(), 
+            'admins' => $admins->values(), 
+            'officers' => $organization->officers, 
+            'contacts' => $organization->contacts, 
         ]);
+        
     }
 
     public function applications($orgID)
@@ -90,4 +103,5 @@ class AdminController extends Controller
             'orgID' => $organization->orgID,
         ]);
     }
+    
 }

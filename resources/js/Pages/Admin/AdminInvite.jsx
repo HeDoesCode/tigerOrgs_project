@@ -1,4 +1,4 @@
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import MainAdminFrame from "@/Components/MainAdminFrame";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
@@ -9,14 +9,9 @@ import AdminMemberCard from "@/Components/Admin/AdminMemberCard";
 import IconEdit from "@/Components/Icons/IconEdit";
 import AdminDialog from "@/Components/Admin/AdminDialog";
 import React from "react";
-import { usePage } from "@inertiajs/react";
 
 function AdminInvite() {
-    const { orgID, organizationName, members, officers } = usePage().props;
-    console.log("Members:", members);
-
-    const admin = members.filter((member) => member.roleID === 2);
-    const member = members.filter((member) => member.roleID === 1);
+    const { orgID, organizationName, members, admins } = usePage().props;
 
     return (
         <div className="w-full">
@@ -72,25 +67,14 @@ function AdminInvite() {
                         </div>
 
                         <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-4 p-5">
-                            {officers.map((officer) => (
+                            {admins.map((admin, index) => (
                                 <AdminMemberCard
-                                    key={
-                                        officer.user?.userID ||
-                                        `officer-${index}`
-                                    }
+                                    key={admin.userID || `admin-${index}`}
                                     isAdmin={true}
-                                    name={`${officer.user?.firstname || ""} ${
-                                        officer.user?.lastname || ""
-                                    }`}
-                                    position={officer.position || "N/A"}
-                                    email={
-                                        officer.user?.email ||
-                                        "No email available"
-                                    }
-                                    college={
-                                        officer.user?.college ||
-                                        "Unknown College"
-                                    }
+                                    name={`${admin.firstname} ${admin.lastname}`}
+                                    position="Admin"
+                                    email={admin.email || "No email available"}
+                                    college={admin.college || "N/A"}
                                 />
                             ))}
                         </div>
@@ -101,24 +85,13 @@ function AdminInvite() {
                         <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-4 p-5">
                             {members.map((member, index) => (
                                 <AdminMemberCard
-                                    key={
-                                        member.user?.userID || `member-${index}`
-                                    } // Fallback to index if userID is missing
-                                    isAdmin={officers.some(
-                                        (officer) =>
-                                            officer.user?.userID ===
-                                            member.user?.userID
-                                    )}
-                                    name={`${member.user?.firstname || ""} ${
-                                        member.user?.lastname || ""
-                                    }`}
-                                    email={
-                                        member.user?.email ||
-                                        "No email available"
-                                    }
+                                    key={member.userID || `member-${index}`}
+                                    isAdmin={false}
+                                    name={`${member.firstname} ${member.lastname}`}
+                                    position="Student"
+                                    email={member.email || "No email available"}
                                     college={
-                                        member.user?.college ||
-                                        "Unknown College"
+                                        member.college || "Unknown College"
                                     }
                                 />
                             ))}
