@@ -74,6 +74,19 @@ class AdminController extends Controller
         ]);
         
     }
+    public function updateRole(Request $request)
+    {
+        $userID = $request->input('userID');
+        $orgID = $request->input('orgID');
+        $roleID = $request->input('roleID'); 
+    
+        DB::table('organization_user_role')
+            ->where('userID', $userID)
+            ->where('orgID', $orgID)
+            ->update(['roleID' => $roleID]);
+    
+        return redirect()->back()->with('success', 'User role has been updated successfully.');
+    }
 
     public function applications($orgID)
     {

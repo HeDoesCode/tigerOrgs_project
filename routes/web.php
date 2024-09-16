@@ -75,6 +75,8 @@ Route::middleware(['auth', 'isAdmin'])
         Route::get('applications', 'applications')->name('applications');
         Route::get('forms', 'forms')->name('forms');
         Route::get('formhistory', 'formhistory')->name('formhistory');
+        Route::post('/admin/make-admin', [AdminController::class, 'makeAdmin'])->name('admin.makeAdmin');
+
     });
 
 

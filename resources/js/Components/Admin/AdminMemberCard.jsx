@@ -9,6 +9,7 @@ import IconEmail from "@/Components/Icons/IconEmail";
 import VerticalCard from "@/Components/VerticalCard";
 import IconSave from "@/Components/Icons/IconSave";
 import IconCancel from "@/Components/Icons/IconCancel";
+import AdminEditMenu from "./AdminEditMenu";
 
 function AdminMemberCard({
     isAdmin,
@@ -39,7 +40,7 @@ function AdminMemberCard({
                 {showActions && (
                     <div className="flex">
                         <div className="mx-1 text-gray-500 cursor-pointer">
-                            <IconEdit />
+                            <AdminEditMenu />
                         </div>
                         <div className="mx-1 text-gray-500 cursor-pointer">
                             <IconDelete />

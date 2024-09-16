@@ -90,9 +90,7 @@ function AdminInvite() {
                                     name={`${member.firstname} ${member.lastname}`}
                                     position="Student"
                                     email={member.email || "No email available"}
-                                    college={
-                                        member.college || "Unknown College"
-                                    }
+                                    college={member.college || "N/A"}
                                 />
                             ))}
                         </div>
