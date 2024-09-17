@@ -18,8 +18,9 @@ class UserFactory extends Factory
 
     public function definition()
     {
-        $firstname = strtolower(fake()->firstName());
-        $lastname = strtolower(fake()->lastName());
+        $firstname = strtoupper(fake()->firstName());
+        $lastname = strtoupper(fake()->lastName());
+        $middlename = strtoupper(fake()->firstName());
         $email = $firstname . '.' . $lastname . '.' . 'cics@ust.edu.ph';
 
         return [
@@ -27,7 +28,8 @@ class UserFactory extends Factory
             'email' => $this->generateUniqueEmail($firstname, $lastname),
             'firstname' => $firstname,
             'lastname' => $lastname,
-            'middlename' => 'CICS',
+            // 'middlename' => 'CICS',
+            'middlename' => $middlename,
             'college' => 'College of Information and Computing Sciences',
             'status' => 'student',
         ];
