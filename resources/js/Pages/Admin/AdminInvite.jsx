@@ -11,7 +11,10 @@ import AdminDialog from "@/Components/Admin/AdminDialog";
 import React from "react";
 
 function AdminInvite() {
-    const { orgID, organizationName, members, admins, officers } = usePage().props;
+    const { orgID, organizationName, members, admins, officers } =
+        usePage().props;
+    console.log(admins);
+    console.log(members);
 
     return (
         <div className="w-full">
@@ -61,24 +64,21 @@ function AdminInvite() {
                                 }
                             />
                         </div>
-
                         <div className="pt-5 pl-5 flex justify-between">
                             <div className="poppins">Current Admin(s):</div>
                         </div>
-
                         <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-4 p-5">
                             {admins.map((admin, index) => (
                                 <AdminMemberCard
                                     key={admin.userID || `admin-${index}`}
                                     isAdmin={true}
                                     name={`${admin.firstname} ${admin.lastname}`}
-                                    position={admin.position || "N/A"}
+                                    position={admin.position}
                                     email={admin.email || "No email available"}
                                     college={admin.college || "N/A"}
                                 />
                             ))}
                         </div>
-
                         <div className="pt-5 pl-5 flex justify-between">
                             <div className="poppins">Other Members:</div>
                         </div>
@@ -88,7 +88,7 @@ function AdminInvite() {
                                     key={member.userID || `member-${index}`}
                                     isAdmin={false}
                                     name={`${member.firstname} ${member.lastname}`}
-                                    position={members.position || "N/A"}
+                                    position={member.position}
                                     email={member.email || "No email available"}
                                     college={member.college || "N/A"}
                                 />

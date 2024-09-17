@@ -47,33 +47,42 @@ class AdminController extends Controller
     }
 
     public function invite($orgID)
-    {
-        $organization = Organization::withCount('members')
-            ->with('officers.user')
-            ->with('contacts')
-            ->find($orgID);
-    
-        // Get the users with their roles in the organization
-        $members = \DB::table('organization_user_role')
-            ->join('users', 'organization_user_role.userID', '=', 'users.userID')
-            ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
-            ->select('users.*', 'roles.roleID')
-            ->where('organization_user_role.orgID', $orgID)
-            ->get();
-    
-        $admins = $members->filter(fn($member) => $member->roleID == 2);
-        $students = $members->filter(fn($member) => $member->roleID == 1); 
-    
-        return Inertia::render('Admin/AdminInvite', [
-            'orgID' => $organization->orgID,
-            'organizationName' => $organization->name,
-            'members' => $students->values(), 
-            'admins' => $admins->values(), 
-            'officers' => $organization->officers, 
-            'contacts' => $organization->contacts, 
-        ]);
-        
-    }
+{
+    $membersWithPositions = \DB::table('organization_user_role')
+    ->join('users', 'organization_user_role.userID', '=', 'users.userID')
+    ->leftJoin('organization_officers', function ($join) use ($orgID) {
+        $join->on('organization_user_role.userID', '=', 'organization_officers.userID')
+             ->where('organization_officers.orgID', '=', $orgID);
+    })
+    ->select(
+        'users.userID',
+        'users.firstname',
+        'users.lastname',
+        'users.email',
+        'users.college',
+        'organization_user_role.roleID',
+        'organization_officers.position'
+    )
+    ->where('organization_user_role.orgID', $orgID)
+    ->get();
+
+    $admins = $membersWithPositions->filter(fn($member) => $member->roleID == 2);
+    $students = $membersWithPositions->filter(fn($member) => $member->roleID == 1);
+
+    $organization = Organization::withCount('members')
+        ->with('contacts')
+        ->find($orgID);
+
+    return Inertia::render('Admin/AdminInvite', [
+        'orgID' => $organization->orgID,
+        'organizationName' => $organization->name,
+        'members' => $students->values(),
+        'admins' => $admins->values(),
+        'contacts' => $organization->contacts,
+    ]);
+}
+
+
     public function updateRole(Request $request)
     {
         $userID = $request->input('userID');
