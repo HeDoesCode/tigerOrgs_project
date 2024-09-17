@@ -263,7 +263,7 @@ function Organizations({
                                     {orgs.map((org, index) => (
                                         <OrganizationTile
                                             key={index}
-                                            orgBg={org.photos[0].filename}
+                                            orgBg={org.photos && org.photos.length > 0 ? org.photos[0].filename : 'https://placehold.co/500x800'}
                                             orgIcon={org.logo}
                                             title={org.name}
                                             desc={org.description}
