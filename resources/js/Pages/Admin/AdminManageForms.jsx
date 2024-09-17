@@ -11,7 +11,7 @@ import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import { Button } from "@/Components/ui/button";
 import IconPlus from "@/Components/Icons/IconPlus";
-import AdminDropdownMenu from "@/Components/Admin/AdminDropdownMenu";
+import AdminDropdownMenu from "@/Components/Admin/AdminInvDropdownMenu";
 
 function AdminManageForms({ orgID }) {
     return (

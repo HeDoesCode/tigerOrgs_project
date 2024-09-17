@@ -9,6 +9,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use PDO;
+use PhpParser\Node\Expr\PostDec;
 
 class SuperAdminController extends Controller
 {
@@ -146,6 +148,33 @@ class SuperAdminController extends Controller
        
 
     }
+
+    public function deleteAdmin(Request $request)
+{
+    $validated = $request->validate([
+        'userID' => 'required|exists:users,userID',
+    ]);
+
+    try {
+        // Delete all records related to the given userID from the organization_user_role table
+        DB::table('organization_user_role')
+            ->where('userID', $validated['userID'])
+            ->delete();
+
+        session()->flash('toast', [
+            'title' => 'Success',
+            'description' => 'Admin privileges revoked successfully!',
+            'variant' => 'success'
+        ]);
+
+        return redirect()->route('superadmin.invite');
+
+    } catch (Exception $e) {
+        dd($e);
+        return redirect()->back()->with('error', 'An error occurred while revoking admin privileges.');
+    }
+}
+
 
 
     //file upload functions
