@@ -48,7 +48,20 @@ function Organizations({
             {}
         );
 
-        setOrganizationList(groupedByDepartment);
+        // Move 'University-Wide' organizations to the start of the array
+        if (groupedByDepartment['University-Wide']) {
+            const universityWideOrgs = groupedByDepartment['University-Wide'];
+            delete groupedByDepartment['University-Wide']; // Remove from its original position
+
+            // Prepend University-Wide organizations to the start
+            setOrganizationList({
+                'University-Wide': universityWideOrgs,
+                ...groupedByDepartment, // Spread the rest of the grouped organizations
+            });
+        } else {
+            // If there are no 'University-Wide' organizations, just set normally
+            setOrganizationList(groupedByDepartment);
+        }
     }, [organizations]);
 
     // call server for search query every change
