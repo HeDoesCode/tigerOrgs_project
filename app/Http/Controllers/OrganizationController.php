@@ -86,8 +86,8 @@ class OrganizationController extends Controller
             'organizations' => $organizations,
             'departments' => $departments,
             'keywords' => $keywordsArray,
-            // 'isSuperAdmin' => $isSuperAdmin,
-            'isSuperAdmin' => true,
+            'isSuperAdmin' => $isSuperAdmin,
+            // 'isSuperAdmin' => true,
             'myMemberOrganizations' => $myMemberOrganizations ?: [],
             'queryParameters' => $queryParameters ?: null,
         ]);
