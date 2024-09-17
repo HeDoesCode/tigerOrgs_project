@@ -30,6 +30,49 @@ class DatabaseSeeder extends Seeder
         // create users
         $users = User::factory()->count(1996)->create();
 
+        // $this->call(OrganizationSeeder::class);
+        Organization::factory()->create([
+            'orgID' => 9999, // Specify your custom orgID here
+            'name' => 'Office for Student Affairs',
+            'department' => 'University-Wide',
+        ])->each(function ($organization) use ($users) {
+            // Photos
+            Photo::factory()
+                ->for($organization, 'organization')
+                ->portrait()
+                ->count(1)
+                ->create();
+
+            Photo::factory()
+                ->for($organization, 'organization')
+                ->count(3)
+                ->create();
+
+            // Random Keywords
+            $keywords = Keyword::all()->pluck('keyID')->toArray();
+            $randomKeywords = array_rand(array_flip($keywords), rand(5, 15));
+            $organization->keywords()->attach($randomKeywords);
+
+            // Random Officers
+            $usersArray = $users->pluck('userID')->toArray(); // Get an array of user IDs
+            // dd($usersArray);
+            Officer::factory()
+                ->count(7)
+                ->for($organization, 'organization')
+                ->create()
+                ->each(function ($officer) use ($usersArray) {
+                    $officer->userID = array_rand(array_flip($usersArray)); // Assign a random user ID
+                    // dd($officer);
+                    // dd($officer);
+                    $officer->save(); // Save the officer with the new user ID
+                });
+
+            Contact::factory()
+                ->for($organization, 'organization')
+                ->count(rand(3, 6))
+                ->create();
+        });
+
         // attach keywords to all users
         $this->call(User_KeywordSeeder::class);
 
@@ -105,7 +148,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ];
         }
-        
+
         // Insert student-role records in chunks
         foreach (array_chunk($studentRecords, 1000) as $chunk) {
             DB::table('organization_user_role')->insert($chunk);
@@ -125,7 +168,7 @@ class DatabaseSeeder extends Seeder
 
             // $user = User::find($adminID);  // Assuming you have a User model
             // $notificationMessage = "You have been invited to be an admin for organization ID {$randomOrgID}";
-        
+
             // // Save the notification
             // Notification::create([
             //     'userID' => $adminID,
