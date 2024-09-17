@@ -27,6 +27,11 @@ class isSuperAdmin
             ->first();
 
         if ($checkRole) {
+            // dd(now());
+            DB::table('superadmin_login_history')->insert([
+                'userID' => Auth::id(),
+                'login_time' => now(),
+            ]);
             return $next($request);
         } else {
             abort(403);
