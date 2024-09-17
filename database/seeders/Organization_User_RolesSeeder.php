@@ -14,7 +14,7 @@ class Organization_User_RolesSeeder extends Seeder
      */
     public function run(): void
     {
-        $userIDs = [2024000001, 2024000002, 2024000003, 2024000004];
+        $userIDs = ['2024000001', '2024000002', '2024000003', '2024000004'];
 
         // Retrieve all organizations
         $organizations = Organization::inRandomOrder()->limit(10)->get();
@@ -29,6 +29,17 @@ class Organization_User_RolesSeeder extends Seeder
                     'roleID' => rand(1, 2),
                 ];
             }
+        }
+
+        // Add this user as superadmin to the first organization found with the specified name
+        $officeForStudentAffairsOrgID = Organization::where('name', 'Office for Student Affairs')->pluck('orgID')->first();
+
+        if ($officeForStudentAffairsOrgID) {
+            $records[] = [
+                'userID' => '2024000004',
+                'orgID' => $officeForStudentAffairsOrgID,
+                'roleID' => 3,
+            ];
         }
 
         // Insert records into the `organization_user_role` table
