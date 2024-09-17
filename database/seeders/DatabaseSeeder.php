@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolesSeeder::class);
         $this->call(UsersSeeder::class);
+        $this->call(SuperAdminLoginHistorySeeder::class);
         $this->call(KeywordSeeder::class);
 
         // create users
@@ -105,7 +106,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ];
         }
-        
+
         // Insert student-role records in chunks
         foreach (array_chunk($studentRecords, 1000) as $chunk) {
             DB::table('organization_user_role')->insert($chunk);
@@ -125,7 +126,7 @@ class DatabaseSeeder extends Seeder
 
             // $user = User::find($adminID);  // Assuming you have a User model
             // $notificationMessage = "You have been invited to be an admin for organization ID {$randomOrgID}";
-        
+
             // // Save the notification
             // Notification::create([
             //     'userID' => $adminID,
@@ -138,6 +139,9 @@ class DatabaseSeeder extends Seeder
         foreach (array_chunk($adminRecords, 1000) as $chunk) {
             DB::table('organization_user_role')->insert($chunk);
         }
+
+        // add OSA to list of fake orgs
+        $this->call(OrganizationsSeeder::class);
 
         // add us as admin to all orgs
         $this->call(Organization_User_RolesSeeder::class);
