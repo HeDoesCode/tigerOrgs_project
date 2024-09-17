@@ -202,8 +202,14 @@ class SuperAdminController extends Controller
     // Activity log tab functions
     public function viewLoginHistory(): Response
     {
-        return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
+        $loginEntries = DB::table('superadmin_login_history')
+            ->join('users', 'superadmin_login_history.userID', '=', 'users.userID')
+            ->select('users.firstname', 'users.middlename', 'users.lastname', 'superadmin_login_history.login_time')
+            ->orderByDesc('superadmin_login_history.loginID')
+            ->get();
+        // dd($loginEntries);
+        return Inertia::render('SuperAdmin/SuperAdminLoginHistory', [
+            'login_entries' => $loginEntries,
+        ]);
     }
-    // ----------------------------
-
 }
