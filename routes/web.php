@@ -51,7 +51,7 @@ Route::prefix('/superadmin/')
         //invite page
         Route::get('search-users', 'search');
         Route::post('addadmin', 'addAdmin')->name('add-admin');
-        Route::delete('deleteadmin/{id}', 'deleteAdmin')->name('delete');
+        Route::delete('deleteadmin/{userID}', 'deleteAdmin')->name('delete-admin');
 
         //upload page
         Route::get('dataupload', 'fileupload')->name('dataupload');

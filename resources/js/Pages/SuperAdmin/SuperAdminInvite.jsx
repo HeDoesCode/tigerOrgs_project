@@ -110,7 +110,10 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
     //delete admin logic
 
     const handleDelete = (userID) => {
-        router.delete(route("superadmin.delete-admin", userID));
+        router.delete(route("superadmin.delete-admin", userID), {
+            preserveState: true,
+            preserveScroll: true,
+        });
     };
 
     return (

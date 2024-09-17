@@ -149,16 +149,18 @@ class SuperAdminController extends Controller
 
     }
 
-    public function deleteAdmin(Request $request)
+    public function deleteAdmin($userID)
 {
-    $validated = $request->validate([
-        'userID' => 'required|exists:users,userID',
-    ]);
+    
+    // $validated = $request->validate([
+    //     'userID' => 'required|exists:users,userID',
+    // ]);
 
     try {
         // Delete all records related to the given userID from the organization_user_role table
         DB::table('organization_user_role')
-            ->where('userID', $validated['userID'])
+            ->where('userID', $userID)
+
             ->delete();
 
         session()->flash('toast', [
@@ -171,7 +173,13 @@ class SuperAdminController extends Controller
 
     } catch (Exception $e) {
         dd($e);
-        return redirect()->back()->with('error', 'An error occurred while revoking admin privileges.');
+
+        session()->flash('toast', [
+            'title' => 'Failed',
+            'description' => 'Changes Unsuccessful.',
+            'variant' => 'destructive'
+        ]);
+        return redirect()->back();
     }
 }
 

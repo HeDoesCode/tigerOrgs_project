@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,9 +12,18 @@ import {
 } from "@/Components/ui/alert-dialog";
 
 function AdminAlertDialog({ children, onclick, ...props }) {
+    const [open, setOpen] = useState(false);
+
+    // const handleAction = () => {
+    //     onclick();
+    //     setOpen(false);
+    // };
+
     return (
-        <AlertDialog>
-            <AlertDialogTrigger>{props.trigger}</AlertDialogTrigger>
+        <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogTrigger asChild>
+                <button>{props.trigger}</button>
+            </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>{props.title}</AlertDialogTitle>
@@ -23,7 +33,11 @@ function AdminAlertDialog({ children, onclick, ...props }) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={console.log("hello")}>
+                    <AlertDialogAction
+                        onClick={() => {
+                            onclick();
+                        }}
+                    >
                         {props.accept}
                     </AlertDialogAction>
                 </AlertDialogFooter>
