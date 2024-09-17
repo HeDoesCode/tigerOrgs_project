@@ -48,8 +48,11 @@ class OrganizationController extends Controller
             $queryParameters['category'] = request('category');
         }
 
-        // attach photos
-        $organizations = $query->with('photos')
+        $organizations = $query
+            // only visible orgs included
+            ->where('visibility', 1)
+            // attach photos
+            ->with('photos')
             ->withCount('members')
             ->get();
 
