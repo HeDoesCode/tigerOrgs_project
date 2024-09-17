@@ -7,6 +7,8 @@ import {
     DropdownMenuLabel,
 } from "@/Components/ui/dropdown-menu";
 
+import AdminDialog from "./AdminDialog";
+
 function AdminInvDropdownMenu({ onSelect, ...props }) {
     return (
         <DropdownMenu>

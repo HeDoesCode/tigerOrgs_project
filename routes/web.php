@@ -52,6 +52,7 @@ Route::controller(SuperAdminController::class)->group(function () {
     //invite page
     Route::get('/superadmin/search-users', 'search');
     Route::post('/superadmin/addadmin', 'addAdmin')->name('superadmin.add-admin');
+    Route::delete('/superadmin/deleteadmin/{id}', 'deleteAdmin')->name('superadmin.delete-admin');
 
     //upload page
     Route::get('/superadmin/dataupload', 'fileupload')->name('superadmin.dataupload');

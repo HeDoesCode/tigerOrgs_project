@@ -1,6 +1,6 @@
 import MainAdminFrame from "@/Components/MainAdminFrame";
 import SuperAdminLayout from "@/Layouts/SuperAdminLayout";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import IconInvite from "@/Components/Icons/IconInvite";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
 import IconDotsVertical from "@/Components/Icons/IconDotsVertical";
@@ -14,6 +14,7 @@ import AdminDialog from "@/Components/Admin/AdminDialog";
 import AdminInvDropdownMenu from "@/Components/Admin/AdminInvDropdownMenu";
 import AdminOrgInvCard from "@/Components/Admin/AdminOrgInvCard";
 import axios from "axios";
+import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
 
 function SuperAdminInvite({ users, organizations, userRoles }) {
     //for searching and filtering of user and organization
@@ -104,6 +105,12 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
         e.preventDefault();
 
         post(route("superadmin.add-admin"));
+    };
+
+    //delete admin logic
+
+    const handleDelete = (userID) => {
+        router.delete(route("superadmin.delete-admin", userID));
     };
 
     return (
@@ -412,8 +419,19 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                 ),
                                             },
                                             {
-                                                name: "Delete Role",
-                                                value: false,
+                                                name: (
+                                                    <AdminAlertDialog
+                                                        trigger="Delete Role"
+                                                        title={`Remove ${user.firstname} ${user.lastname} as admin?`}
+                                                        description="This will remove all the admin roles of this user to his/her assigned organization."
+                                                        accept="Confirm"
+                                                        onclick={() => {
+                                                            handleDelete(
+                                                                user.userID
+                                                            );
+                                                        }}
+                                                    ></AdminAlertDialog>
+                                                ),
                                             },
                                         ]}
                                     />
