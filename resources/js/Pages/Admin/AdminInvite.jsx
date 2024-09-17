@@ -11,7 +11,7 @@ import AdminDialog from "@/Components/Admin/AdminDialog";
 import React from "react";
 
 function AdminInvite() {
-    const { orgID, organizationName, members, admins } = usePage().props;
+    const { orgID, organizationName, members, admins, officers } = usePage().props;
 
     return (
         <div className="w-full">
@@ -72,7 +72,7 @@ function AdminInvite() {
                                     key={admin.userID || `admin-${index}`}
                                     isAdmin={true}
                                     name={`${admin.firstname} ${admin.lastname}`}
-                                    position="Admin"
+                                    position={admin.position || "N/A"}
                                     email={admin.email || "No email available"}
                                     college={admin.college || "N/A"}
                                 />
@@ -88,7 +88,7 @@ function AdminInvite() {
                                     key={member.userID || `member-${index}`}
                                     isAdmin={false}
                                     name={`${member.firstname} ${member.lastname}`}
-                                    position="Student"
+                                    position={members.position || "N/A"}
                                     email={member.email || "No email available"}
                                     college={member.college || "N/A"}
                                 />
