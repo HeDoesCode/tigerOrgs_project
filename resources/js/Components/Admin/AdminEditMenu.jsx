@@ -1,18 +1,62 @@
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
     DropdownMenuItem,
-    DropdownMenuLabel,
 } from "@/Components/ui/dropdown-menu";
 import IconEdit from "../Icons/IconEdit";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 function AdminEditMenu({ userID, orgID }) {
-    const makeAdmin = () => {
-        // Assuming the route for invite page exists, and you handle this action within the same page
-        Inertia.post(route("invite.updateRole"), { userID, orgID, roleID: 2 });
+    const { addToast } = useToast();
+
+    const makeAdmin = async () => {
+        console.log("Making admin with:", { userID, orgID });
+
+        try {
+            const response = await axios.post(
+                route("admin.make-admin", { orgID }),
+                { userID }
+            );
+
+            console.log("Success:", response.data);
+            addToast("User has been made an Admin!", "success");
+        } catch (error) {
+            console.error("Error making admin:", error.response?.data || error);
+            addToast(
+                "Error making admin: " +
+                    (error.response?.data.message || "Unknown error"),
+                "error"
+            );
+        }
     };
+
+    const makeMember = async () => {
+        console.log("Making member with:", { userID, orgID });
+
+        try {
+            const response = await axios.post(
+                route("admin.make-member", { orgID }),
+                { userID }
+            );
+
+            console.log("Success:", response.data);
+            addToast("User has been made a Member!", "success");
+        } catch (error) {
+            console.error(
+                "Error making member:",
+                error.response?.data || error
+            );
+            addToast(
+                "Error making member: " +
+                    (error.response?.data.message || "Unknown error"),
+                "error"
+            );
+        }
+    };
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="w-full">
@@ -21,9 +65,15 @@ function AdminEditMenu({ userID, orgID }) {
             <DropdownMenuContent>
                 <DropdownMenuItem
                     className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
-                    onClick={makeAdmin} // Trigger role update
+                    onClick={makeAdmin} // Trigger role update to admin
                 >
                     Make Admin
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
+                    onClick={makeMember} // Trigger role update to member
+                >
+                    Make Member
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

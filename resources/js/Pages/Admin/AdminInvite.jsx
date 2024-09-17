@@ -73,9 +73,11 @@ function AdminInvite() {
                                     key={admin.userID || `admin-${index}`}
                                     isAdmin={true}
                                     name={`${admin.firstname} ${admin.lastname}`}
-                                    position={admin.position}
+                                    position={admin.position || "Member"}
                                     email={admin.email || "No email available"}
                                     college={admin.college || "N/A"}
+                                    userID={admin.userID}
+                                    orgID={orgID}
                                 />
                             ))}
                         </div>
@@ -88,9 +90,11 @@ function AdminInvite() {
                                     key={member.userID || `member-${index}`}
                                     isAdmin={false}
                                     name={`${member.firstname} ${member.lastname}`}
-                                    position={member.position}
+                                    position={member.position || "Member"}
                                     email={member.email || "No email available"}
                                     college={member.college || "N/A"}
+                                    userID={member.userID}
+                                    orgID={orgID}
                                 />
                             ))}
                         </div>

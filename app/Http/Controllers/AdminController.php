@@ -83,19 +83,56 @@ class AdminController extends Controller
 }
 
 
-    public function updateRole(Request $request)
-    {
-        $userID = $request->input('userID');
-        $orgID = $request->input('orgID');
-        $roleID = $request->input('roleID'); 
-    
-        DB::table('organization_user_role')
+public function makeAdmin(Request $request, $orgID)
+{
+    $userID = $request->input('userID'); 
+
+    $exists = \DB::table('organization_user_role')
+        ->where('userID', $userID)
+        ->where('orgID', $orgID)
+        ->exists();
+
+    if ($exists) {
+        \DB::table('organization_user_role')
             ->where('userID', $userID)
             ->where('orgID', $orgID)
-            ->update(['roleID' => $roleID]);
-    
-        return redirect()->back()->with('success', 'User role has been updated successfully.');
+            ->update(['roleID' => 2]);
+
+        session()->flash('toast', [
+            'title' => 'Success',
+            'description' => 'User has been made an Admin!',
+            'variant' => 'success'
+        ]);
+
+        return response()->json(['message' => 'User role updated to admin successfully.']);
+    } else {
+        return response()->json(['message' => 'User is not a member of the organization.'], 400);
     }
+}
+public function makeMember(Request $request, $orgID)
+{
+    $userID = $request->input('userID'); 
+    $exists = \DB::table('organization_user_role')
+        ->where('userID', $userID)
+        ->where('orgID', $orgID)
+        ->exists();
+
+    if ($exists) {
+        \DB::table('organization_user_role')
+            ->where('userID', $userID)
+            ->where('orgID', $orgID)
+            ->update(['roleID' => 1]);
+
+            session()->flash('toast', [
+                'title' => 'Success',
+                'description' => 'User has been made a Member!',
+                'variant' => 'success'
+            ]);    } else {
+        return response()->json(['message' => 'User is not a member of the organization.'], 400);
+    }
+}
+
+
 
     public function applications($orgID)
     {

@@ -6,19 +6,20 @@ import IconProfile from "@/Components/Icons/IconProfile";
 import IconPosition from "@/Components/Icons/IconPosition";
 import IconDepartment from "@/Components/Icons/IconDepartment";
 import IconEmail from "@/Components/Icons/IconEmail";
-import VerticalCard from "@/Components/VerticalCard";
-import IconSave from "@/Components/Icons/IconSave";
-import IconCancel from "@/Components/Icons/IconCancel";
 import AdminEditMenu from "./AdminEditMenu";
 
 function AdminMemberCard({
-    isAdmin,
     name,
     position,
     college,
     email,
+    userID,
+    orgID,
+    roleID, // Role ID will determine if user is admin or member
     showActions = true,
 }) {
+    const isAdmin = roleID === 2; // Admin if roleID is 2, otherwise Member
+
     return (
         <div className="hover:scale-[1.02] transition-all duration-300 ease-in-out shadow-lg hover:bg-gray-100 p-3 w-full bg-white rounded-xl">
             {/* Admin or Member Badge */}
@@ -31,7 +32,7 @@ function AdminMemberCard({
                     <div className="mx-1 text-gray-800">
                         <IconAdmin />
                     </div>
-                    <div className="ml-2  poppins">
+                    <div className="ml-2 poppins">
                         {isAdmin ? "Admin" : "Member"}
                     </div>
                 </div>
@@ -40,7 +41,11 @@ function AdminMemberCard({
                 {showActions && (
                     <div className="flex">
                         <div className="mx-1 text-gray-500 cursor-pointer">
-                            <AdminEditMenu />
+                            <AdminEditMenu
+                                userID={userID}
+                                orgID={orgID}
+                                currentRoleID={roleID} // Pass roleID to AdminEditMenu
+                            />
                         </div>
                         <div className="mx-1 text-gray-500 cursor-pointer">
                             <IconDelete />
