@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
 //superadmin temporary routes
 Route::prefix('/superadmin/')
     ->name('superadmin.')
-    // ->middleware(['auth','isSuperAdmin'])
+    ->middleware(['auth', 'isSuperAdmin'])
     ->controller(SuperAdminController::class)->group(function () {
         //manage page
         Route::get('invite', 'invite')->name('invite');;
@@ -57,9 +57,8 @@ Route::prefix('/superadmin/')
         Route::get('dataupload', 'fileupload')->name('dataupload');
         Route::post('dataupload/file', 'upload')->name('dataupload.file');
 
-        Route::get('loginhistory', function () {
-            return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
-        })->name('loginhistory');
+        // routes for activity log tab
+        Route::get('loginhistory', 'viewLoginHistory')->name('loginhistory');
 
         Route::get('invitehistory', function () {
             return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
