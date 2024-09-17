@@ -47,6 +47,8 @@ class AuthenticatedSessionController extends Controller
             $request->user()->remember_token = null;
             $request->user()->save();
         }
+        $request->session()->forget('superadminIsLogged');
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
