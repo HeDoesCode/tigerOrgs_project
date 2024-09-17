@@ -9,23 +9,26 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Inertia\Response;
 use PDO;
 use PhpParser\Node\Expr\PostDec;
 
 class SuperAdminController extends Controller
 {
     //manage org functions
-    public function manage(){
-        
+    public function manage()
+    {
+
         $organizations = Organization::withCount('members')->get();
 
-        return Inertia::render('SuperAdmin/SuperAdminManage',[
-            'organizations'=> $organizations,
+        return Inertia::render('SuperAdmin/SuperAdminManage', [
+            'organizations' => $organizations,
             'departments' => Organization::distinct()->pluck('department')
         ]);
     }
 
-    public function updateOrganizations(Request $request) {
+    public function updateOrganizations(Request $request)
+    {
         foreach ($request->organizations as $organization) {
             Organization::where('orgID', $organization['id'])
                 ->update(['visibility' => $organization['visibility']]);
@@ -36,80 +39,83 @@ class SuperAdminController extends Controller
             'description' => 'Organization Updated Successfully!',
             'variant' => 'success'
         ]);
-    
+
         return redirect()->route('superadmin.status');
     }
 
-    public function searchOrg(Request $request){
+    public function searchOrg(Request $request)
+    {
         $query = Organization::query();
-        
-        if($request->filled('query')){
-            $query->where(function($q) use ($request) {
+
+        if ($request->filled('query')) {
+            $query->where(function ($q) use ($request) {
                 $q->where('name', 'LIKE', "%" . $request->input('query') . "%")
-                  ->orWhere('department', 'LIKE', "%" . $request->input('query') . "%");
+                    ->orWhere('department', 'LIKE', "%" . $request->input('query') . "%");
             });
         }
-    
-        if($request->filled('category') && $request->input('category') !== 'All'){
+
+        if ($request->filled('category') && $request->input('category') !== 'All') {
             $query->where('department', $request->input('category'));
         }
-    
+
         $orgs = $query->get();
         $departments = Organization::distinct()->pluck('department');
-    
+
         return response()->json([
             'organizations' => $orgs,
             'departments' => $departments
         ]);
     }
-    
-        
+
+
 
     //invite admin functions
 
     public function invite()
-{
-    $admins = User::join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
-         
-        ->where('organization_user_role.roleID', 2) 
-        ->select('users.userID', 'users.email', 'users.firstname', 'users.lastname', 'users.college', 'users.status')
-        ->distinct()
-        ->withCount('organizations')
-        ->get();
+    {
+        $admins = User::join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
+
+            ->where('organization_user_role.roleID', 2)
+            ->select('users.userID', 'users.email', 'users.firstname', 'users.lastname', 'users.college', 'users.status')
+            ->distinct()
+            ->withCount('organizations')
+            ->get();
 
 
 
         $userRoles = DB::table('organization_user_role')
-        ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
-        ->join('organizations', 'organization_user_role.orgID', '=', 'organizations.orgID')
-        ->get();
-
-    
-
-    return Inertia::render('SuperAdmin/SuperAdminInvite', [
-        'users' => $admins,
-        'userRoles' => $userRoles,
-        'organizations' => Organization::all()
-    ]);
-}
+            ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
+            ->join('organizations', 'organization_user_role.orgID', '=', 'organizations.orgID')
+            ->get();
 
 
-    public function search(Request $request){
+
+        return Inertia::render('SuperAdmin/SuperAdminInvite', [
+            'users' => $admins,
+            'userRoles' => $userRoles,
+            'organizations' => Organization::all()
+        ]);
+    }
+
+
+    public function search(Request $request)
+    {
         $query = $request->input('query');
 
         $users = User::where('firstname', 'LIKE', "%{$query}%")
-        ->orWhere('lastname', 'LIKE', "%{$query}%")
-        ->orWhere('email', 'LIKE', "%{$query}%")
-        ->orWhere(DB::raw("CONCAT(firstname, ' ', lastname)"), 'LIKE', "%{$query}%")
-        ->orWhere(DB::raw("CONCAT(lastname, ' ', firstname)"), 'LIKE', "%{$query}%")
-        ->take(3)
-        ->get();
+            ->orWhere('lastname', 'LIKE', "%{$query}%")
+            ->orWhere('email', 'LIKE', "%{$query}%")
+            ->orWhere(DB::raw("CONCAT(firstname, ' ', lastname)"), 'LIKE', "%{$query}%")
+            ->orWhere(DB::raw("CONCAT(lastname, ' ', firstname)"), 'LIKE', "%{$query}%")
+            ->take(3)
+            ->get();
 
         return response()->json($users);
     }
 
 
-    public function addAdmin(Request $request){
+    public function addAdmin(Request $request)
+    {
         $validated = $request->validate([
             'userID' => 'required|exists:users,userID',
             'orgID' => 'required|exists:organizations,orgID',
@@ -136,65 +142,68 @@ class SuperAdminController extends Controller
                 'description' => 'User Assigned as Admin.',
                 'variant' => 'success'
             ]);
-    
-            return to_route('superadmin.invite');
 
-        }catch(Exception $e){
+            return to_route('superadmin.invite');
+        } catch (Exception $e) {
 
             return redirect()->back()->with('error', 'An error occurred while assigning the admin role.');
-
         }
-
-       
-
     }
 
     public function deleteAdmin($userID)
-{
-    
-    // $validated = $request->validate([
-    //     'userID' => 'required|exists:users,userID',
-    // ]);
+    {
 
-    try {
-        // Delete all records related to the given userID from the organization_user_role table
-        DB::table('organization_user_role')
-            ->where('userID', $userID)
+        // $validated = $request->validate([
+        //     'userID' => 'required|exists:users,userID',
+        // ]);
 
-            ->delete();
+        try {
+            // Delete all records related to the given userID from the organization_user_role table
+            DB::table('organization_user_role')
+                ->where('userID', $userID)
 
-        session()->flash('toast', [
-            'title' => 'Success',
-            'description' => 'Admin privileges revoked successfully!',
-            'variant' => 'success'
-        ]);
+                ->delete();
 
-        return redirect()->route('superadmin.invite');
+            session()->flash('toast', [
+                'title' => 'Success',
+                'description' => 'Admin privileges revoked successfully!',
+                'variant' => 'success'
+            ]);
 
-    } catch (Exception $e) {
-        dd($e);
+            return redirect()->route('superadmin.invite');
+        } catch (Exception $e) {
+            dd($e);
 
-        session()->flash('toast', [
-            'title' => 'Failed',
-            'description' => 'Changes Unsuccessful.',
-            'variant' => 'destructive'
-        ]);
-        return redirect()->back();
+            session()->flash('toast', [
+                'title' => 'Failed',
+                'description' => 'Changes Unsuccessful.',
+                'variant' => 'destructive'
+            ]);
+            return redirect()->back();
+        }
     }
-}
 
 
 
     //file upload functions
 
-    public function fileupload(){
+    public function fileupload()
+    {
         return Inertia::render('SuperAdmin/SuperAdminDataUpload');
     }
 
-    public function upload(Request $request){
+    public function upload(Request $request)
+    {
 
         //ethan john catacutan send help
         dd($request->all());
-
     }
+
+    // Activity log tab functions
+    public function viewLoginHistory(): Response
+    {
+        return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
+    }
+    // ----------------------------
+
 }
