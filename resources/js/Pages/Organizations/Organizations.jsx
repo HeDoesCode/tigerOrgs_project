@@ -25,6 +25,7 @@ import { useEffect } from "react";
 
 function Organizations({
     organizations,
+    recommendedOrganizations,
     queryParameters = null,
     departments,
     keywords,
@@ -261,6 +262,29 @@ function Organizations({
                             <div className="w-full flex justify-center font-bold text-gray-400">
                                 No Organizations Found
                             </div>
+                        )}
+
+                        {recommendedOrganizations.length !== 0 && (
+                            <OrganizationContainerRow
+                                title={'Recommended based on your interests'}
+                                collegeLength={
+                                    Object.keys(organizationList).length
+                                }
+                            >
+                                {recommendedOrganizations.map((org, index) => (
+                                    <OrganizationTile
+                                        key={index}
+                                        orgBg={org.photos && org.photos.length > 0 ? org.photos[0].filename : 'https://placehold.co/500x800'}
+                                        orgIcon={org.logo}
+                                        title={org.name}
+                                        desc={org.description}
+                                        count={org.members_count}
+                                        href={route("organizations.home", {
+                                            orgID: org.orgID,
+                                        })}
+                                    />
+                                ))}
+                            </OrganizationContainerRow>
                         )}
 
                         {Object.entries(organizationList).map(
