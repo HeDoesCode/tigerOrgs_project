@@ -70,12 +70,18 @@ Route::prefix('/superadmin/')
 Route::middleware(['auth', 'isAdmin'])
     ->prefix('/admin/{orgID}/')
     ->name('admin.')
-    ->controller(AdminController::class)->group(function () {
+    ->controller(AdminController::class)
+    ->group(function () {
         Route::get('editpage', 'edit')->name('editpage');
         Route::get('invite', 'invite')->name('invite');
         Route::get('applications', 'applications')->name('applications');
         Route::get('forms', 'forms')->name('forms');
         Route::get('formhistory', 'formhistory')->name('formhistory');
+        Route::post('make-admin', 'makeAdmin')->name('make-admin');
+        Route::post('make-member', 'makeMember')->name('make-member');
+
+        
+
     });
 
 
