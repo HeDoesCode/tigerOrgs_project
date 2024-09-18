@@ -19,7 +19,6 @@ import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 import OrganizationJoined from "@/Components/Organizations/OrganizationJoined";
 import OrganizationContainerRow from "@/Components/Organizations/OrganizationContainerRow";
 import OrganizationTile from "@/Components/Organizations/OrganizationTile";
-import Pre from "@/Components/Pre";
 import { useState } from "react";
 import { useEffect } from "react";
 
