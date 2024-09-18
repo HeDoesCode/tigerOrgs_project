@@ -75,7 +75,6 @@ function OrganizationContainerRow({ children, title, className, index, collegeLe
                 )
             }>
                 {children}
-
             </div>
             {!expand && hasHorizontalOverflow && (
                 <div className={`absolute right-0 top-6 bottom-0 w-20 bg-gradient-to-r from-transparent to-[#EEEEEE]/70 pointer-events-none transition-all ease-in ${isScrolledToEnd && '!w-0'}`}>
@@ -83,6 +82,13 @@ function OrganizationContainerRow({ children, title, className, index, collegeLe
             )}
             {!expand && hasHorizontalOverflow && (
                 <div className={`absolute left-0 top-6 bottom-0 w-20 bg-gradient-to-l from-transparent to-[#EEEEEE]/70 pointer-events-none transition-all ease-in ${isScrolledOffStart && '!w-0'}`}>
+                </div>
+            )}
+            {(hasHorizontalOverflow && expand) && (
+                <div className="w-full flex justify-end">
+                    <button onClick={expandRow} className={`underline text-sm py-1 px-2 hover:bg-gray-800 hover:text-white rounded-lg text-blue-500 font-bold`}>
+                        hide all
+                    </button>
                 </div>
             )}
         </div >
