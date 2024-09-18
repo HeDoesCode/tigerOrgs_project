@@ -11,7 +11,7 @@ import AdminDialog from "@/Components/Admin/AdminDialog";
 import React from "react";
 
 function AdminInvite() {
-    const { orgID, organizationName, members, admins, officers } =
+    const { orgID, organizationName, members, admins, roleID, officers } =
         usePage().props;
     console.log(admins);
     console.log(members);
@@ -78,6 +78,7 @@ function AdminInvite() {
                                     college={admin.college || "N/A"}
                                     userID={admin.userID}
                                     orgID={orgID}
+                                    roleID={2}
                                 />
                             ))}
                         </div>
@@ -95,6 +96,7 @@ function AdminInvite() {
                                     college={member.college || "N/A"}
                                     userID={member.userID}
                                     orgID={orgID}
+                                    roleID={1}
                                 />
                             ))}
                         </div>

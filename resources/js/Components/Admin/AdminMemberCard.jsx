@@ -15,10 +15,12 @@ function AdminMemberCard({
     email,
     userID,
     orgID,
-    roleID, // Role ID will determine if user is admin or member
+    roleID,
     showActions = true,
 }) {
-    const isAdmin = roleID === 2; // Admin if roleID is 2, otherwise Member
+    const isAdmin = roleID === 2;
+    const isMember = roleID === 1;
+    console.log(roleID);
 
     return (
         <div className="hover:scale-[1.02] transition-all duration-300 ease-in-out shadow-lg hover:bg-gray-100 p-3 w-full bg-white rounded-xl">
@@ -33,10 +35,9 @@ function AdminMemberCard({
                         <IconAdmin />
                     </div>
                     <div className="ml-2 poppins">
-                        {isAdmin ? "Admin" : "Member"}
+                        {isAdmin ? "Admin" : isMember ? "Member" : "Unknown"}
                     </div>
                 </div>
-
                 {/* Conditionally show Edit/Delete buttons */}
                 {showActions && (
                     <div className="flex">
@@ -44,7 +45,7 @@ function AdminMemberCard({
                             <AdminEditMenu
                                 userID={userID}
                                 orgID={orgID}
-                                currentRoleID={roleID} // Pass roleID to AdminEditMenu
+                                currentRoleID={roleID}
                             />
                         </div>
                         <div className="mx-1 text-gray-500 cursor-pointer">

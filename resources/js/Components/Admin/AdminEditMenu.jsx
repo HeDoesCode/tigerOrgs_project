@@ -9,16 +9,17 @@ import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
-function AdminEditMenu({ userID, orgID }) {
+function AdminEditMenu({ userID, orgID, roleID }) {
     const { addToast } = useToast();
 
     const makeAdmin = async () => {
-        console.log("Making admin with:", { userID, orgID });
+        console.log("Making admin with:", { userID, orgID, roleID });
 
         try {
             const response = await axios.post(
                 route("admin.make-admin", { orgID }),
-                { userID }
+                { userID },
+                { orgID }
             );
 
             console.log("Success:", response.data);
@@ -34,12 +35,13 @@ function AdminEditMenu({ userID, orgID }) {
     };
 
     const makeMember = async () => {
-        console.log("Making member with:", { userID, orgID });
+        console.log("Making member with:", { userID, orgID, roleID });
 
         try {
             const response = await axios.post(
                 route("admin.make-member", { orgID }),
-                { userID }
+                { userID },
+                { roleID }
             );
 
             console.log("Success:", response.data);
