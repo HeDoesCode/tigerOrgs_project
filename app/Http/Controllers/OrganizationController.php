@@ -86,8 +86,8 @@ class OrganizationController extends Controller
             'organizations' => $organizations,
             'departments' => $departments,
             'keywords' => $keywordsArray,
-            // 'isSuperAdmin' => $isSuperAdmin,
-            'isSuperAdmin' => true,
+            'isSuperAdmin' => $isSuperAdmin,
+            // 'isSuperAdmin' => true,
             'myMemberOrganizations' => $myMemberOrganizations ?: [],
             'queryParameters' => $queryParameters ?: null,
         ]);
@@ -98,7 +98,10 @@ class OrganizationController extends Controller
         $organization = Organization::withCount('members')
             ->with('officers.user')
             ->with('contacts')
-            ->find($orgID);
+            ->findOrFail($orgID);
+        // try {
+
+        // }
         $pageData = [
             'metadata' => [
                 'organizationName' => $organization->name,
@@ -110,7 +113,80 @@ class OrganizationController extends Controller
             'photos' => $organization->photos,
         ];
 
-        $pageLayoutData = [
+        // $pageLayoutData = [
+        //     'orgID' => $organization->orgID,
+        //     'logo' => $organization->logo,
+        //     'coverPhoto' => $organization->cover,
+        //     'metadata' => [
+        //         'organizationName' => $organization->name,
+        //         'members' => $organization->members_count,
+        //     ],
+        // ];
+
+        // dump($pageData);
+
+        $followButton = !DB::table('organization_followers')
+            ->where('userID', Auth::id())
+            ->where('orgID', $orgID)
+            ->exists();
+
+        return Inertia::render('Organizations/Home', [
+            'pageData' => $pageData,
+            'pageLayoutData' => $this->getPageLayoutData($orgID),
+            'withFollow' => $followButton, // values: 1(can follow), 0(cannot follow/is already following), no parameter(not displayed)
+        ]);
+    }
+
+    public function toggleFollow($orgID)
+    {
+        $following = DB::table('organization_followers')
+            ->where('userID', Auth::id())
+            ->where('orgID', $orgID)
+            ->select('*')
+            ->get();
+
+        $organizationName = Organization::find($orgID)->value('name');
+
+        if ($following->isNotEmpty()) { // User is following org
+            DB::table('organization_followers')
+                ->where('userID', Auth::id())
+                ->where('orgID', $orgID)
+                ->delete();
+
+            session()->flash('toast', [
+                'title' => "You unfollowed {$organizationName}!",
+                'description' => 'You will no longer receive public notifications from this organization.',
+                'duration' => 5000,
+            ]);
+        } else {  // User is not following org
+            DB::table('organization_followers')->insert([
+                'userID' => Auth::id(),
+                'orgID' => $orgID,
+            ]);
+
+            session()->flash('toast', [
+                'title' => "You are now following {$organizationName}!",
+                'description' => 'You will now receive public notifications from this organization.',
+                'variant' => 'success',
+                'duration' => 5000,
+            ]);
+        }
+
+        $this->visit($orgID);
+    }
+
+    public function process($orgID)
+    {
+        return Inertia::render('Organizations/Process', [
+            'pageLayoutData' => $this->getPageLayoutData($orgID),
+        ]);
+    }
+
+    public function getPageLayoutData($orgID)
+    {
+        $organization = Organization::withCount('members')
+            ->findOrFail($orgID);
+        return [
             'orgID' => $organization->orgID,
             'logo' => $organization->logo,
             'coverPhoto' => $organization->cover,
@@ -118,12 +194,8 @@ class OrganizationController extends Controller
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,
             ],
+            // 'recruiting' => $organization->recruiting,
+            'recruiting' => 1,
         ];
-
-        // dump($pageData);
-        return Inertia::render('Organizations/Home', [
-            'pageData' => $pageData,
-            'pageLayoutData' => $pageLayoutData,
-        ]);
     }
 }

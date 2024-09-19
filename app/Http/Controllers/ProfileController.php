@@ -9,6 +9,7 @@ use App\Models\Keyword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
@@ -19,6 +20,8 @@ class ProfileController extends Controller
     {
 
         $user = Auth::user();
+        // dd($user->section);
+        // dd($user);
 
         $keywords = Keyword::pluck('keyword', 'keyID');
         // ... and parse into array of objects
@@ -84,9 +87,63 @@ class ProfileController extends Controller
         $this->edit();
     }
 
-    public function updateKeywords(Request $request)
+    public function updateUserSection(Request $request)
     {
-        //
+        // $request->merge([
+        //     'section' => strtoupper($request->input('section'))
+        // ]);
+
+        // $validatedData = $request->validate([
+        //     // 'section' => 'string'
+        //     'section' => ['required', 'regex:/^\d-[A-Z]+$/']
+
+        // ]);
+
+        $request->merge([
+            'section' => strtoupper($request->input('section'))
+        ]);
+
+        // Create the validator instance
+        $validator = Validator::make($request->all(), [
+            // 'section' => ['required', 'regex:/^\d-[A-Z]+$/'],
+            'section' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            session()->flash('toast', [
+                'title' => 'Section Update Failed',
+                'description' => "Please follow the correct format: [YEAR]-[SECTION] ex. 3-ITG.",
+                'variant' => 'destructive',
+                'duration' => 5000,
+            ]);
+            return null;
+        }
+
+        // return dd($validator->fails());
+
+        $user = User::where('userID', Auth::id())->first();
+
+        $user->section = $request->input('section') ?: null;
+
+        $user->save();
+
+        if ($user->save()) {
+            session()->flash('toast', [
+                'title' => 'Section Update Successful',
+                // 'description' => "$queryResult",
+                'variant' => 'success',
+                'duration' => 2000,
+            ]);
+        } else {
+            session()->flash('toast', [
+                'title' => 'Section Update Failed',
+                'description' => "An error occurred while updating your section.",
+                'variant' => 'destructive',
+                'duration' => 2000,
+            ]);
+        }
+
+        $this->edit();
     }
 
 

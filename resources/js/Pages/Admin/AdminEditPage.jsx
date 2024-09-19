@@ -33,7 +33,7 @@ function AdminEditPage({ pageData, pageLayoutData, orgID }) {
                     <div className="p-5">
                         <Home
                             editing={true}
-                            isRecruiting={false} //example lang
+                            recruiting={false} //example lang
                             pageData={pageData}
                             pageLayoutData={pageLayoutData}
                         />

@@ -1,6 +1,6 @@
 import MainAdminFrame from "@/Components/MainAdminFrame";
 import SuperAdminLayout from "@/Layouts/SuperAdminLayout";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import IconInvite from "@/Components/Icons/IconInvite";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
 import IconDotsVertical from "@/Components/Icons/IconDotsVertical";
@@ -11,9 +11,10 @@ import DotsVertical from "@/Components/DotsVertical";
 import { useState, useEffect } from "react";
 import Searchbar from "@/Components/Searchbar";
 import AdminDialog from "@/Components/Admin/AdminDialog";
-import AdminDropdownMenu from "@/Components/Admin/AdminDropdownMenu";
+import AdminInvDropdownMenu from "@/Components/Admin/AdminInvDropdownMenu";
 import AdminOrgInvCard from "@/Components/Admin/AdminOrgInvCard";
 import axios from "axios";
+import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
 
 function SuperAdminInvite({ users, organizations, userRoles }) {
     //for searching and filtering of user and organization
@@ -104,6 +105,15 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
         e.preventDefault();
 
         post(route("superadmin.add-admin"));
+    };
+
+    //delete admin logic
+
+    const handleDelete = (userID) => {
+        router.delete(route("superadmin.delete-admin", userID), {
+            preserveState: true,
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -294,17 +304,137 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                             {user.organizations_count} Org
                                         </h1>
                                     </div>
-                                    <AdminDropdownMenu
+                                    <AdminInvDropdownMenu
                                         triggerContent={<DotsVertical />}
                                         title="Select Action"
                                         dropdownItems={[
                                             {
-                                                name: "Assign to Another Org",
-                                                value: true,
+                                                name: (
+                                                    <AdminDialog
+                                                        title="Assign Role for Student"
+                                                        description={
+                                                            <div>
+                                                                Asssign{" "}
+                                                                <span className="font-bold">
+                                                                    {
+                                                                        user.firstname
+                                                                    }{" "}
+                                                                    {
+                                                                        user.lastname
+                                                                    }{" "}
+                                                                </span>
+                                                                to what
+                                                                organization?
+                                                            </div>
+                                                        }
+                                                        trigger={
+                                                            //change this
+                                                            <div
+                                                                role="button"
+                                                                className="mr-2 bg-white flex px-9  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white"
+                                                                name="Assign"
+                                                                onClick={() => {
+                                                                    getUser(
+                                                                        user.userID
+                                                                    );
+                                                                }}
+                                                            >
+                                                                <IconInvite />
+                                                                <span className="ml-2 poppins hidden truncate sm:block">
+                                                                    Assign
+                                                                </span>
+                                                            </div>
+                                                        }
+                                                    >
+                                                        <form
+                                                            onSubmit={
+                                                                handleInvite
+                                                            }
+                                                        >
+                                                            <Searchbar
+                                                                className={
+                                                                    "col-span-3"
+                                                                }
+                                                                value={
+                                                                    orgSearchQuery
+                                                                }
+                                                                onChange={
+                                                                    handleOrgSearchChange
+                                                                }
+                                                                placeholder={
+                                                                    "Search for an organization"
+                                                                }
+                                                            />
+                                                            <div className="max-h-[400px] overflow-auto">
+                                                                {filteredOrganizations.length !==
+                                                                0 ? (
+                                                                    <div className="grid sm:grid-cols-2 overflow-auto grid-cols-1 gap-4 p-5">
+                                                                        {filteredOrganizations.map(
+                                                                            (
+                                                                                organization
+                                                                            ) => (
+                                                                                <AdminOrgInvCard
+                                                                                    key={
+                                                                                        organization.orgID
+                                                                                    }
+                                                                                    userRoles={
+                                                                                        currentUserRoles
+                                                                                    }
+                                                                                    organization={
+                                                                                        organization
+                                                                                    }
+                                                                                    onClick={() => {
+                                                                                        getOrg(
+                                                                                            organization.orgID
+                                                                                        );
+                                                                                    }}
+                                                                                    selectedOrg={
+                                                                                        selectedOrg
+                                                                                    }
+                                                                                />
+                                                                            )
+                                                                        )}
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="m-14 sm:m-48 text-xl font-thin text-center">
+                                                                        No
+                                                                        Organization
+                                                                        Found
+                                                                    </div>
+                                                                )}
+                                                            </div>
+
+                                                            <div className="grid justify-items-end">
+                                                                <AdminButton
+                                                                    className="mr-2 mt-5  bg-white hover:bg-green-800 hover:text-white"
+                                                                    icon={
+                                                                        <IconInvite />
+                                                                    }
+                                                                    name="Save"
+                                                                    type="submit"
+                                                                    disabled={
+                                                                        processing
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </form>
+                                                    </AdminDialog>
+                                                ),
                                             },
                                             {
-                                                name: "Delete Role",
-                                                value: false,
+                                                name: (
+                                                    <AdminAlertDialog
+                                                        trigger="Delete Role"
+                                                        title={`Remove ${user.firstname} ${user.lastname} as admin?`}
+                                                        description="This will remove all the admin roles of this user to his/her assigned organization."
+                                                        accept="Confirm"
+                                                        onclick={() => {
+                                                            handleDelete(
+                                                                user.userID
+                                                            );
+                                                        }}
+                                                    ></AdminAlertDialog>
+                                                ),
                                             },
                                         ]}
                                     />
@@ -316,6 +446,12 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
             </SuperAdminLayout>
         </div>
     );
+
+    // function InviteDialog({ user }) {
+    //     return (
+
+    //     );
+    // }
 }
 
 export default SuperAdminInvite;

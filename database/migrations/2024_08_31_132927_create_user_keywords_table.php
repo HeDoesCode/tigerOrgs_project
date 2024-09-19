@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('userID');
             $table->foreign('userID')->references('userID')->on('users')->onDelete('cascade');
             $table->foreignId('keyID')->constrained('keywords', 'keyID')->onDelete('cascade');
+            $table->primary(['userID', 'keyID']);
         });
     }
 

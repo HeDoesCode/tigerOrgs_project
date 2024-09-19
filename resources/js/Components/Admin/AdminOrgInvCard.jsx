@@ -2,7 +2,7 @@ import IconUser from "@/Components/Icons/IconUser";
 import IconEye from "@/Components/Icons/IconEye";
 import IconStatus from "@/Components/Icons/IconStatus";
 import IconChevronDown from "@/Components/Icons/IconChevronDown";
-import AdminDropdownMenu from "@/Components/Admin/AdminDropdownMenu";
+import AdminDropdownMenu from "@/Components/Admin/AdminInvDropdownMenu";
 
 function AdminOrgInvCard({ organization, onClick, selectedOrg, userRoles }) {
     console.log(userRoles);

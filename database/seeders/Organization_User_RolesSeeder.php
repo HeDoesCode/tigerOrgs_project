@@ -31,6 +31,15 @@ class Organization_User_RolesSeeder extends Seeder
             }
         }
 
+        foreach ($userIDs as $userID) {
+            $records[] = [
+                'orgID' => 9999,
+                'userID' => $userID,
+                'roleID' => 3,
+            ];
+        }
+
+
         // Insert records into the `organization_user_role` table
         DB::table('organization_user_role')->insert($records);
     }

@@ -1,4 +1,35 @@
-php artisan serve --host 0.0.0.0
+<!-- php artisan serve --host 0.0.0.0
+
+session()->flash('toast', [
+    'title' => 'oh no',
+    'description' => 'ang daming bugs pare :(',
+    'variant' => 'destructive'
+]); -->
+
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
+
+## Application Screenshots
+![Screenshot](pictures/459157014_842040444775458_9006623979984151585_n.jpg?raw=true "Screenshot")
+![Screenshot](pictures/458156555_442606012145715_3045795471527554897_n.jpg?raw=true "Screenshot")
+![Screenshot](pictures/457625336_1347966519921983_2971242882572005108_n.jpg?raw=true "Screenshot")
+![Screenshot](pictures/Screenshot2024-09-15213134.png?raw=true "Screenshot")
+![Screenshot](pictures/Screenshot2024-09-15213216.png?raw=true "Screenshot")
+![Screenshot](pictures/Screenshot2024-09-16124808.png?raw=true "Screenshot")
+
+## Technology Stack
+- Laravel
+- ReactJS
+- InertiaJS
+- TailwindCSS
+- shadcn
+
 
 
 <!-- <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
