@@ -13,8 +13,11 @@ import {
     CardHeader,
     CardTitle,
 } from "@/Components/ui/card";
+import Pre from "@/Components/Pre";
 
-export default function SuperAdminLoginHistory() {
+export default function SuperAdminLoginHistory({ login_entries }) {
+    // const []
+
     return (
         <div className="w-full">
             <Head title="OSA Dashboard" />
@@ -34,8 +37,38 @@ export default function SuperAdminLoginHistory() {
                     ]}
                     title="Activity Log"
                 >
+                    {/* <Pre object={login_entries} /> */}
                     <div className="grid grid-rows-1 p-5 gap-2">
-                        <VerticalCard gridcol="sm:grid-cols-7">
+                        {login_entries.map((entry, index) => {
+                            return (
+                                <>
+                                    {entry.login_time}
+                                    <VerticalCard gridcol="sm:grid-cols-7" key={index}>
+                                        <div className=" col-span-1 ">
+                                            <h1 className="ml-2  text-center font-semibold text-gray-500">
+                                                Aug-15-2024
+                                            </h1>
+                                        </div>
+                                        <div className=" col-span-5 ">
+                                            <h1 className="ml-2  text-center">
+                                                <span className="font-bold text-gray-500">
+                                                    {`${entry.firstname} ${entry.lastname}`}
+                                                </span>{" "}
+                                                <span className="text-gray-500 font-medium">
+                                                    accessed the Super Admin Dashboard
+                                                </span>
+                                            </h1>
+                                        </div>
+                                        <div className=" col-span-1 ">
+                                            <h1 className="ml-2 text-center font-semibold text-gray-500">
+                                                1:04 PM
+                                            </h1>
+                                        </div>
+                                    </VerticalCard>
+                                </>
+                            )
+                        })}
+                        {/* <VerticalCard gridcol="sm:grid-cols-7">
                             <div className=" col-span-1 ">
                                 <h1 className="ml-2  text-center font-semibold text-gray-500">
                                     Aug-15-2024
@@ -56,7 +89,7 @@ export default function SuperAdminLoginHistory() {
                                     1:04 PM
                                 </h1>
                             </div>
-                        </VerticalCard>
+                        </VerticalCard> */}
                     </div>
                 </MainAdminFrame>
             </SuperAdminLayout>
