@@ -31,15 +31,17 @@ class Organization_User_RolesSeeder extends Seeder
             }
         }
 
-        // Add this user as superadmin to the first organization found with the specified name
+        // Add these users as superadmin to the first organization found with the specified name
         $officeForStudentAffairsOrgID = Organization::where('name', 'Office for Student Affairs')->pluck('orgID')->first();
 
         if ($officeForStudentAffairsOrgID) {
-            $records[] = [
-                'userID' => '2024000004',
-                'orgID' => $officeForStudentAffairsOrgID,
-                'roleID' => 3,
-            ];
+            foreach ($userIDs as $userID) {
+                $records[] = [
+                    'userID' => $userID,
+                    'orgID' => $officeForStudentAffairsOrgID,
+                    'roleID' => 3,
+                ];
+            }
         }
 
 
