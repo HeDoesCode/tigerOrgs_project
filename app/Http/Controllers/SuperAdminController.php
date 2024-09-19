@@ -203,20 +203,44 @@ class SuperAdminController extends Controller
     // Activity log tab functions
     public function viewLoginHistory(): Response
     {
+        // $loginEntries = DB::table('superadmin_login_history')
+        //     ->join('users', 'superadmin_login_history.userID', '=', 'users.userID')
+        //     ->select('users.firstname', 'users.middlename', 'users.lastname', 'superadmin_login_history.login_timestamp')
+        //     ->orderByDesc('superadmin_login_history.loginID')
+        //     ->get()
+        //     ->map(function ($entry) {
+        //         $loginTime = Carbon::parse($entry->login_timestamp);
+        //         $entry->login_date = $loginTime->format('M-d-Y'); // "2024-09-19"
+        //         $entry->login_time = $loginTime->format('h:i A'); // "07:56 PM"
+        //         return $entry;
+        //     });
+
+        // $loginEntries = DB::table('superadmin_login_history')
+        // ->join('users', 'superadmin_login_history.userID', '=', 'users.userID')
+        // ->select('users.firstname', 'users.middlename', 'users.lastname', 'superadmin_login_history.login_timestamp')
+        // ->orderByDesc('superadmin_login_history.loginID')
+        // ->paginate(10);
+
+
         $loginEntries = DB::table('superadmin_login_history')
             ->join('users', 'superadmin_login_history.userID', '=', 'users.userID')
             ->select('users.firstname', 'users.middlename', 'users.lastname', 'superadmin_login_history.login_timestamp')
             ->orderByDesc('superadmin_login_history.loginID')
-            ->get()
-            ->map(function ($entry) {
-                $loginTime = Carbon::parse($entry->login_timestamp);
-                $entry->login_date = $loginTime->format('M-d-Y'); // "2024-09-19"
-                $entry->login_time = $loginTime->format('h:i A'); // "07:56 PM"
-                return $entry;
-            });
+            ->paginate(10); // Use paginate() instead of get()
+
+        // Apply the formatting to each entry
+        // HINDI ERROR YUNG map() IGNORE
+        $loginEntries->map(function ($entry) {
+            $loginTime = Carbon::parse($entry->login_timestamp);
+            $entry->login_date = $loginTime->format('M-d-Y'); // "Aug-15-2024"
+            $entry->login_time = $loginTime->format('h:i A'); // "07:56 PM"
+            return $entry;
+        });
+
+
         // dd($loginEntries);
         return Inertia::render('SuperAdmin/SuperAdminLoginHistory', [
-            'login_entries' => $loginEntries,
+            'loginEntries' => $loginEntries,
         ]);
     }
 }
