@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, usePage } from "@inertiajs/react";
+import Paginate from "./Paginate";
 
 function MainAdminFrame({
     children,

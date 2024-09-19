@@ -157,7 +157,7 @@ class SuperAdminController extends Controller
     // ]);
 
     try {
-        // Delete all records related to the given userID from the organization_user_role table
+        
         DB::table('organization_user_role')
             ->where('userID', $userID)
 
