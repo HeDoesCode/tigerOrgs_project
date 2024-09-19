@@ -226,7 +226,7 @@ class SuperAdminController extends Controller
             ->join('users', 'superadmin_login_history.userID', '=', 'users.userID')
             ->select('users.firstname', 'users.middlename', 'users.lastname', 'superadmin_login_history.login_timestamp')
             ->orderByDesc('superadmin_login_history.loginID')
-            ->paginate(10); // Use paginate() instead of get()
+            ->paginate(20); // Use paginate() instead of get()
 
         // Apply the formatting to each entry
         // HINDI ERROR YUNG map() IGNORE
