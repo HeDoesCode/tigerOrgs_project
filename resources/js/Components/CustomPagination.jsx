@@ -31,14 +31,14 @@ function CustomPagination({ page }) {
     }
 
     return (
-        <div className="max-w-full w-fit flex justify-between shadow-md shadow-black/40 py-1 bg-[#EEEEEE] rounded-full">
+        <div className="max-w-full w-fit flex justify-between shadow-md shadow-black/40 py-1 bg-[#EEEEEE] rounded-full overflow-clip px-1">
             <Pagination className='contents'>
                 <PaginationContent className='contents'>
                     <div className="w-fit my-auto">
                         <PaginationItem>
                             <PaginationPrevious
                                 onClick={() => handlePaging(page.links[0].url)}
-                                className={page.current_page === 1 && 'cursor-not-allowed hover:bg-transparent'} />
+                                className={`rounded-l-full ${page.current_page === 1 && 'cursor-not-allowed hover:bg-transparent'}`} />
                         </PaginationItem>
                     </div>
 
@@ -71,7 +71,7 @@ function CustomPagination({ page }) {
                         <PaginationItem>
                             <PaginationNext
                                 onClick={() => handlePaging(page.links[page.links.length - 1].url)}
-                                className={page.current_page === page.last_page && 'cursor-not-allowed hover:bg-transparent'}
+                                className={`rounded-r-full ${page.current_page === page.last_page && 'cursor-not-allowed hover:bg-transparent'}`}
                             />
                         </PaginationItem>
                     </div>
