@@ -31,7 +31,7 @@ class SuperAdminLoginHistorySeeder extends Seeder
             $records[] = [
                 'loginID' => $i,
                 'userID' => '2024000004',
-                'login_time' => $startDate->format('Y-m-d H:i:s'),
+                'login_timestamp' => $startDate->format('Y-m-d H:i:s'),
             ];
 
             $startDate->modify('+1 day');

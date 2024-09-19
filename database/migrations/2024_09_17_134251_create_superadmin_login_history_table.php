@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('loginID');
             $table->string('userID');
             $table->foreign('userID')->references('userID')->on('users')->onDelete('cascade');
-            $table->timestamp('login_time')->useCurrent();
+            $table->timestamp('login_timestamp')->useCurrent();
         });
     }
 

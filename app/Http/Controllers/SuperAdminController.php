@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use PDO;
+use Exception;
+use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Organization;
-use Exception;
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\PostDec;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Inertia\Response;
-use PDO;
-use PhpParser\Node\Expr\PostDec;
 
 class SuperAdminController extends Controller
 {
@@ -204,9 +205,15 @@ class SuperAdminController extends Controller
     {
         $loginEntries = DB::table('superadmin_login_history')
             ->join('users', 'superadmin_login_history.userID', '=', 'users.userID')
-            ->select('users.firstname', 'users.middlename', 'users.lastname', 'superadmin_login_history.login_time')
+            ->select('users.firstname', 'users.middlename', 'users.lastname', 'superadmin_login_history.login_timestamp')
             ->orderByDesc('superadmin_login_history.loginID')
-            ->get();
+            ->get()
+            ->map(function ($entry) {
+                $loginTime = Carbon::parse($entry->login_timestamp);
+                $entry->login_date = $loginTime->format('M-d-Y'); // "2024-09-19"
+                $entry->login_time = $loginTime->format('h:i A'); // "07:56 PM"
+                return $entry;
+            });
         // dd($loginEntries);
         return Inertia::render('SuperAdmin/SuperAdminLoginHistory', [
             'login_entries' => $loginEntries,
