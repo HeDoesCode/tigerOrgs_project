@@ -16,18 +16,12 @@ class GoogleController extends Controller
 {
     public function googlepage()
     {
-        // Bypass Socialite login in development mode
-        if (app()->isLocal()) {
-            $registeredUser = User::find('2024000004');
+        session()->put('remember_me', request('remember_me'));
+        return Socialite::driver('google')->redirect();
+    }
 
-            if (!$registeredUser) {
-                return abort(403, 'User not found.');
-            }
-
-            Auth::login($registeredUser, session()->pull('remember_me', 'false'));
-            return redirect()->intended('/');
-        }
-
+    public function googlecallback()
+    {
         try {
             $googleUser = Socialite::driver('google')->user();
         } catch (Exception $e) {
@@ -45,7 +39,6 @@ class GoogleController extends Controller
         if ($registeredUser == null) {
             return abort(403, 'Only enrolled students of the University of Santo Tomas can use this application.');
         }
-
         Auth::login($registeredUser, session()->pull('remember_me', 'false'));
         return redirect()->intended('/');
     }

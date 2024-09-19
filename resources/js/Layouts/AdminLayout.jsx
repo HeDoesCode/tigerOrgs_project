@@ -14,7 +14,7 @@ import axios from "axios";
 import { useEffect } from "react";
 
 function AdminLayout({ orgID, children }) {
-    const { orgLogo } = usePage().props;
+    const { orgLogo, orgName } = usePage().props;
     const { url } = usePage();
     return (
         <Layout headerContent={<HeaderContent />} sidebar={<SideBarContent />}>
@@ -55,8 +55,9 @@ function AdminLayout({ orgID, children }) {
                     </div>
                     <div className="text-center mr-3 font-bold text-xs leading-4 line-clamp-3 h-min my-auto w-32 overflow-clip">
                         <div className="w-32 min-w-32">
-                            Placeholder Society of Information Technology
-                            Enthusiasts (SITE)
+                            {/* Placeholder Society of Information Technology
+                            Enthusiasts (SITE) */}
+                            {orgName}
                         </div>
                     </div>
                 </div>

@@ -22,9 +22,10 @@ import { useToast } from "@/hooks/use-toast";
 
 function Home({
     editing = false,
-    isRecruiting = true,
+    recruiting = true,
     pageData,
     pageLayoutData,
+    withFollow
 }) {
     // pageData = {
     //     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
@@ -125,8 +126,9 @@ function Home({
     return (
         <OrganizationLayout
             pageLayoutData={pageLayoutData}
-            isRecruiting={isRecruiting}
+            recruiting={recruiting}
             editing={editing}
+            withFollow={withFollow}
         >
             {/* About Us */}
             <AboutUs />

@@ -26,20 +26,16 @@ Route::get('/', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('index');
 
-// temp user routes
 Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
+    Route::patch('/update-user-section', [ProfileController::class, 'updateUserSection'])->name('update.user.section');
+
     Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
     Route::get('/organizations/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
-    // other user-level routes
+    Route::get('/organizations/{orgID}/process', [OrganizationController::class, 'process'])->name('organizations.process');
+    Route::get('/organizations/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
 });
-
-// Route::get('organizations/{any}/home', function () {
-//     return Inertia::render('Organizations/Home');
-// })->name('organizations.home');
-
-// Route::get('/profile', function () {
-//     return Inertia::render('Profile/Edit');
-// })->name('profile');
 
 //superadmin temporary routes
 Route::prefix('/superadmin/')
@@ -55,6 +51,7 @@ Route::prefix('/superadmin/')
         //invite page
         Route::get('search-users', 'search');
         Route::post('addadmin', 'addAdmin')->name('add-admin');
+        Route::delete('deleteadmin/{userID}', 'deleteAdmin')->name('delete-admin');
 
         //upload page
         Route::get('dataupload', 'fileupload')->name('dataupload');
@@ -69,31 +66,22 @@ Route::prefix('/superadmin/')
         })->name('invitehistory');
     });
 
-    
-
-
-// Route::get('/superadmin/loginhistory', function () {
-//     return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
-// })->name('superadmin.loginhistory');
-
-// Route::get('/superadmin/invitehistory', function () {
-//     return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
-// })->name('superadmin.invitehistory');
-
-
-
-
-
 //admin temporary routes
 Route::middleware(['auth', 'isAdmin'])
     ->prefix('/admin/{orgID}/')
     ->name('admin.')
-    ->controller(AdminController::class)->group(function () {
+    ->controller(AdminController::class)
+    ->group(function () {
         Route::get('editpage', 'edit')->name('editpage');
         Route::get('invite', 'invite')->name('invite');
         Route::get('applications', 'applications')->name('applications');
         Route::get('forms', 'forms')->name('forms');
         Route::get('formhistory', 'formhistory')->name('formhistory');
+        Route::post('make-admin', 'makeAdmin')->name('make-admin');
+        Route::post('make-member', 'makeMember')->name('make-member');
+
+        
+
     });
 
 
@@ -102,14 +90,6 @@ Route::middleware(['auth', 'isAdmin'])
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
-
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 // form builder routes
 Route::get('/admin/{orgID}/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');

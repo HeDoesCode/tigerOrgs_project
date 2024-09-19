@@ -11,7 +11,7 @@ import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import DotsVertical from "@/Components/DotsVertical";
 import AdminDialog from "@/Components/Admin/AdminDialog";
-import AdminDropdownMenu from "@/Components/Admin/AdminDropdownMenu";
+import AdminDropdownMenu from "@/Components/Admin/AdminInvDropdownMenu";
 
 function AdminManageApplication({ orgID }) {
     return (

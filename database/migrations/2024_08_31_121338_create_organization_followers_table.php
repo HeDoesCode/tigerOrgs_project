@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('organization_followers', function (Blueprint $table) {
             $table->string('userID');
             $table->foreign('userID')->references('userID')->on('users')->onDelete('cascade');
-            $table->foreignId('orgID')->constrained('organizations','orgID')->onDelete('cascade');
+            $table->foreignId('orgID')->constrained('organizations', 'orgID')->onDelete('cascade');
+            $table->primary(['userID', 'orgID']);
         });
     }
 

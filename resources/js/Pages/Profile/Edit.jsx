@@ -1,6 +1,6 @@
 import IconMailFilled from "@/Components/Icons/IconMailFilled";
 import UserLayout from "@/Layouts/UserLayout";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import {
     Select,
     SelectContent,
@@ -11,12 +11,28 @@ import {
 import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 import Pre from "@/Components/Pre";
 import KeywordSelect from "@/Components/Organizations/KeywordSelect";
+import React from "react";
+import TextInput from "@/Components/ui/TextInput";
+// import { useState } from "react";
 
 function Edit({ user, activeUserKeywords, keywords }) {
     const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
-    const handleSectionChange = (e) => {
-        setSection(e.target.value);
-    };
+    const userSectionError = user.section != null ? null : 'Specify Section'; // if section exists, no error
+
+
+    const handleSectionOnKeyDown = (e) => {
+        if (e.key === 'Enter' && e.target.value !== '') {
+            const section = e.target.value
+            patchSection(section)
+        }
+    }
+
+    const patchSection = (section) => {
+        router.patch(route('update.user.section'), {
+            section
+        });
+    }
+
     return (
         <div className="w-full">
             <Head title="Profile" />
@@ -58,25 +74,23 @@ function Edit({ user, activeUserKeywords, keywords }) {
                                     </div>
                                 </div>
 
-                                <InputField
-                                    type="text"
-                                    required
-                                    title="Section"
-                                    placeholder="[YEAR]-[SECTION] ex. 3-ITG"
-                                    // value={"value"}
-                                    onChange={handleSectionChange}
-                                />
+                                <InputContainer title='Section' error={userSectionError}>
+                                    <input
+                                        type="text"
+                                        placeholder={user.section || "[YEAR]-[SECTION] ex. 3-ITG"}
+                                        className={`w-full ${user.section ? 'placeholder-black focus:placeholder-transparent rounded-lg focus:border-black' : ''}`}
+                                        onKeyDown={handleSectionOnKeyDown}
+                                    />
+                                </InputContainer>
+
                             </div>
                             <div className="mt-10">
-                                <InputField title="Interests">
+                                <InputContainer title='Interests' className='min-h-11'>
                                     <KeywordSelect
                                         activeUserKeywords={activeUserKeywords}
                                         keywords={keywords}
                                     />
-                                </InputField>
-                            </div>
-                            <div className="mt-10">
-                                <InputField title="CV/Resume"></InputField>
+                                </InputContainer>
                             </div>
                         </div>
                     </div>
@@ -85,184 +99,57 @@ function Edit({ user, activeUserKeywords, keywords }) {
         </div >
     );
 
-    function InputField({
-        title,
-        children,
-        type,
-        required,
-        placeholder,
-        // errorRequired = true,
-        errorRequired = false,
-        contents,
-        min,
-        max,
-        onChange,
-        value,
-    }) {
-        switch (type) {
-            case "number": {
-                return (
-                    <div className="flex flex-col">
-                        {/* <div className="w-full"></div> */}
-                        <div className="w-full flex justify-between h-6">
-                            <label className="h-full">
-                                {title}{" "}
-                                {required && (
-                                    <span
-                                        className={`text-red-500 text-xl leading-3`}
-                                    >
-                                        *
-                                    </span>
+    function InputContainer({ children, className, error, title, ...props }) {
+        const hasRequiredChild = React.Children.toArray(children).some(child =>
+            React.isValidElement(child) && child.props.required
+        );
 
-                                )}
-                            </label>
-                            <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
-                                    }`}
-                            >
-                                Required
-                            </div>
-                        </div>
-                        <input
-                            type={type}
-                            className={`w-full h-9
-                            ${errorRequired
-                                    ? "border-red-500 rounded-b-lg rounded-l-lg"
-                                    : "border-gray-300 rounded-lg"
-                                }`}
-                            min={min}
-                            max={max}
-                            required={required}
-                            placeholder={placeholder}
-                            value={value}
-                            onChange={onChange}
-                        />
-                    </div>
-                );
+        const modifiedChildren = React.Children.map(children, child => {
+            if (React.isValidElement(child)) {
+                if (child.type === 'input') {
+                    // Append the additional class to the existing className
+                    const existingClassName = child.props.className || '';
+                    return React.cloneElement(child, {
+                        className: `${existingClassName} border-none h-full`.trim()
+                    });
+                }
+                // If not an input, just return the child as is
+                return child;
             }
-            case "select": {
-                return (
-                    <div className="flex flex-col">
-                        {/* <div className="w-full"></div> */}
-                        <div className="w-full flex justify-between h-6">
-                            <label className="h-full">
-                                {title}{" "}
-                                {required && (
-                                    <span
-                                        className={`text-red-500 text-xl leading-3`}
-                                    >
-                                        *
-                                    </span>
+            return child;
+        });
 
-                                )}
-                            </label>
-                            <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
-                                    }`}
-                            >
-                                Required
-                            </div>
-                        </div>
-                        <Select>
-                            <SelectTrigger
-                                className={`w-full h-9
-                            ${errorRequired
-                                        ? "border-red-500 rounded-tr-none rounded-b-lg rounded-l-lg"
-                                        : "border-gray-300 rounded-lg"
-                                    }`}
-                            >
-                                <SelectValue placeholder={placeholder} />
-                            </SelectTrigger>
-                            <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand">
-                                {contents.map((content, index) => (
-                                    <SelectItem
-                                        value={content.value}
-                                        className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
-                                    >
-                                        <div className="!text-center">
-                                            {content.name}
-                                        </div>
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                );
-            }
-            case "text": {
-                return (
-                    <div className="flex flex-col">
-                        {/* <div className="w-full"></div> */}
-                        <div className="w-full flex justify-between h-6">
-                            <label className="h-full">
-                                {title}{" "}
-                                {required && (
-                                    <span
-                                        className={`text-red-500 text-xl leading-3`}
-                                    >
-                                        *
-                                    </span>
 
-                                )}
-                            </label>
-                            <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
-                                    }`}
+        return (
+            <div className="flex flex-col">
+                {/* <div className="w-full"></div> */}
+                <div className="w-full flex justify-between gap-x-1 items-end">
+                    <label className="h-fit flex-1 flex-wrap leading-[1.15rem]">
+                        {title} {hasRequiredChild && (
+                            <span
+                                className={`text-red-500 text-xl leading-3`}
                             >
-                                Required
-                            </div>
-                        </div>
-                        <input
-                            type={type}
-                            className={`w-full h-9
-                            ${errorRequired
-                                    ? "border-red-500 rounded-b-lg rounded-l-lg"
-                                    : "border-gray-300 rounded-lg"
-                                }`}
-                            required={required}
-                            placeholder={placeholder}
-                        />
-                    </div>
-                );
-            }
-            default: {
-                return (
-                    <div className="flex flex-col">
-                        {/* <div className="w-full"></div> */}
-                        <div className="w-full flex justify-between h-6">
-                            <label className="h-full">
-                                {title}{" "}
-                                {required && (
-                                    <span
-                                        className={`text-red-500 text-xl leading-3`}
-                                    >
-                                        *
-                                    </span>
+                                *
+                            </span>
 
-                                )}
-                            </label>
-                            <div
-                                className={`mt-2 flex items-end text-[0.7rem] px-3 text-white rounded-t-lg bg-red-500 w-fit min-w-fit ${errorRequired || "invisible"
-                                    }`}
-                            >
-                                Required
-                            </div>
-                        </div>
-                        <div
-                            className={`w-full min-h-9 border bg-white
-                        ${errorRequired
-                                    ? "border-red-500 rounded-b-lg rounded-l-lg"
-                                    : "border-gray-300 rounded-lg"
-                                }`}
-                            required={required}
-                            placeholder={placeholder}
-                        >
-                            {children}
-                        </div>
+                        )}
+                    </label>
+                    <div
+                        className={`mt-2 flex items-end text-[0.7rem] leading-[0.8rem] py-1 px-2 max-w-32 h-fit text-white rounded-t-lg bg-red-500 ${error ? '' : "invisible"
+                            }`}
+                    >
+                        {error}
                     </div>
-                );
-            }
-        }
+                </div>
+                <div className={`w-full min-h-9 bg-white border overflow-clip ${error
+                    ? "border-red-500 rounded-b-lg rounded-l-lg"
+                    : "border-gray-300 rounded-lg"
+                    } ${className}`}
+                >
+                    {modifiedChildren}
+                </div>
+            </div>
+        )
     }
 }
 
