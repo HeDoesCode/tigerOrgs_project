@@ -16,7 +16,14 @@ function SuperAdminDataUpload() {
     });
 
     const handleFileChange = (event, key) => {
-        setData(key, event.target.files[0]);
+        switch (key) {
+            case "Student File":
+                setData("studentFile", event.target.files[0]);
+                break;
+            case "Organization File":
+                setData("organizationFile", event.target.files[0]);
+                break;
+        }
     };
 
     const handleUpload = (e) => {
@@ -30,7 +37,7 @@ function SuperAdminDataUpload() {
                 setSuccessMessage("File uploaded successfully!");
                 reset();
             },
-            onError: () => {
+            onError: (errors) => {
                 setErrorMessage("Failed to upload file. Please try again.");
             },
             onFinish: () => {
