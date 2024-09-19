@@ -8,8 +8,21 @@ import {
     PaginationPrevious,
 } from "@/Components/ui/pagination";
 import { router } from "@inertiajs/react";
+import { useEffect } from "react";
 
 function CustomPagination({ page }) {
+
+    useEffect(() => {
+        // Execute scrolling logic when the component mounts
+        const element = document.getElementById('scroll-target');
+        if (element) {
+            element.scrollIntoView({
+                block: 'center',
+                inline: 'center'
+            });
+        }
+    }, [page]); // Empty dependency array ensures this runs once on mount
+
 
     function handlePaging(href = false) {
         if (href) {
@@ -40,7 +53,7 @@ function CustomPagination({ page }) {
                                     )
                                 } else {
                                     return (
-                                        <PaginationItem key={index}>
+                                        <PaginationItem key={index} id={link.active !== false ? 'scroll-target' : ''}>
                                             <PaginationLink
                                                 onClick={() => handlePaging(link.url)}
                                                 isActive={link.active}
