@@ -25,7 +25,7 @@ class OrganizationFactory extends Factory
             // 'Graduate School of Law',
             // 'University wide',
 
-
+            'University-Wide',
             'College of Information and Computing Sciences',
             'Faculty of Engineering',
             'Faculty of Arts and Letters',

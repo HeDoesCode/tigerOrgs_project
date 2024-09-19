@@ -42,6 +42,7 @@ class Organization_User_RolesSeeder extends Seeder
             ];
         }
 
+
         // Insert records into the `organization_user_role` table
         DB::table('organization_user_role')->insert($records);
     }
