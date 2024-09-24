@@ -188,43 +188,7 @@ public function makeMember(Request $request, $orgID)
         DB::table('organization_user_role')
             ->where('userID', $userID)
             ->where('orgID', $orgID)
-            ->exists();
-
-        if ($exists) {
-            \DB::table('organization_user_role')
-                ->where('userID', $userID)
-                ->where('orgID', $orgID)
-                ->update(['roleID' => 2]);
-
-            $user = User::find($userID);
-
-            $user->notify(new AdminPromotionNotification());
-
-            session()->flash('toast', [
-                'title' => 'Success',
-                'description' => 'User has been made an Admin!',
-                'variant' => 'success'
-            ]);
-
-            return response()->json(['message' => 'User role updated to admin successfully.']);
-        } else {
-            return response()->json(['message' => 'User is not a member of the organization.'], 400);
-        }
-    }
-
-    public function makeMember(Request $request, $orgID)
-    {
-        $userID = $request->input('userID');
-        $exists = \DB::table('organization_user_role')
-            ->where('userID', $userID)
-            ->where('orgID', $orgID)
-            ->exists();
-
-        if ($exists) {
-            \DB::table('organization_user_role')
-                ->where('userID', $userID)
-                ->where('orgID', $orgID)
-                ->update(['roleID' => 1]);
+            ->update(['roleID' => 1]);
 
         session()->flash('toast', [
             'title' => 'Success',
@@ -276,7 +240,6 @@ public function removeStudent(Request $request, $orgID)
 
     return to_route('admin.invite', ['orgID' => $orgID]);
 }
-
 
 
     public function applications($orgID)
