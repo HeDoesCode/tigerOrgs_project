@@ -6,12 +6,12 @@ import EditMultiChoiceItem from "./EditMultiChoiceItem";
 
 // Define a mapping from item types to more descriptive labels
 const typeLabels = {
-    Text: "Text Input",
-    Number: "Number Input",
-    Select: "Select Dropdown",
-    Radio: "Multiple Choice",
-    Checkbox: "Checkboxes",
-    File_upload: "PDF Upload",
+    text: "Text Input",
+    number: "Number Input",
+    select: "Select Dropdown",
+    radio: "Multiple Choice",
+    checkbox: "Checkboxes",
+    file_upload: "PDF Upload",
     image_upload: "Image Upload",
 };
 
@@ -40,9 +40,9 @@ function EditableItem({ id, item }) {
                         </h3>
                     </div>
 
-                    {item.type === "Select" ||
-                    item.type === "Radio Group" ||
-                    item.type === "Checkbox" ? (
+                    {item.type === "select" ||
+                    item.type === "radio" ||
+                    item.type === "checkbox" ? (
                         <EditMultiChoiceItem id={id} type={item.type} />
                     ) : (
                         <EditSimpleItem id={id} type={item.type} />
