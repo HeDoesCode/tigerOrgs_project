@@ -30,6 +30,7 @@ function AdminDialogForInvite({ ...props }) {
                                         props.getOrg(organization.orgID);
                                     }}
                                     selectedOrg={props.selectedOrg}
+                                    onDelete={props.onDelete}
                                 />
                             ))}
                         </div>

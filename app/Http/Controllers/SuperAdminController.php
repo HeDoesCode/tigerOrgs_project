@@ -184,6 +184,34 @@ class SuperAdminController extends Controller
         }
     }
 
+    //for specific org
+
+    public function deleteAdminRole($userID, $orgID)
+{
+    try {
+        DB::table('organization_user_role')
+            ->where('userID', $userID)
+            ->where('orgID', $orgID)
+            ->where('roleID', 2)
+            ->delete();
+
+        session()->flash('toast', [
+            'title' => 'Success',
+            'description' => 'Admin role removed successfully!',
+            'variant' => 'success'
+        ]);
+
+        return redirect()->route('superadmin.invite');
+    } catch (Exception $e) {
+        session()->flash('toast', [
+            'title' => 'Failed',
+            'description' => 'Failed to remove admin role.',
+            'variant' => 'destructive'
+        ]);
+        return redirect()->back();
+    }
+}
+
 
 
     //file upload functions
