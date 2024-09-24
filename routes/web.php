@@ -24,9 +24,9 @@ Route::get('/', function () {
         // 'phpVersion' => PHP_VERSION,
         'isLoggedIn' => Auth::check(),
     ]);
-})->middleware(['auth', 'verified'])->name('index');
+})->middleware(['auth', 'verified', 'isSuperAdmin:block'])->name('index');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
     Route::patch('/update-user-section', [ProfileController::class, 'updateUserSection'])->name('update.user.section');
@@ -42,8 +42,12 @@ Route::prefix('/superadmin/')
     ->name('superadmin.')
     ->middleware(['auth', 'isSuperAdmin'])
     ->controller(SuperAdminController::class)->group(function () {
+        Route::get('/', function () {
+            return redirect('superadmin/status');
+        });
+
         //manage page
-        Route::get('invite', 'invite')->name('invite');;
+        Route::get('invite', 'invite')->name('invite');
         Route::get('status', 'manage')->name('status');
         Route::get('status/search-org', 'searchOrg');
         Route::post('update-organizations', 'updateOrganizations')->name('update-organizations');
@@ -66,7 +70,7 @@ Route::prefix('/superadmin/')
     });
 
 //admin temporary routes
-Route::middleware(['auth', 'isAdmin'])
+Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
     ->prefix('/admin/{orgID}/')
     ->name('admin.')
     ->controller(AdminController::class)
@@ -78,9 +82,6 @@ Route::middleware(['auth', 'isAdmin'])
         Route::get('formhistory', 'formhistory')->name('formhistory');
         Route::post('make-admin', 'makeAdmin')->name('make-admin');
         Route::post('make-member', 'makeMember')->name('make-member');
-
-        
-
     });
 
 

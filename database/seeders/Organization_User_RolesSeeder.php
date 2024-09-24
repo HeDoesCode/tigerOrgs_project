@@ -14,7 +14,12 @@ class Organization_User_RolesSeeder extends Seeder
      */
     public function run(): void
     {
-        $userIDs = ['2024000001', '2024000002', '2024000003', '2024000004'];
+        $userIDs = [
+            '2024000001',
+            '2024000002',
+            '2024000003',
+            // '2024000004'
+        ];
 
         // Retrieve all organizations
         $organizations = Organization::inRandomOrder()->limit(10)->get();

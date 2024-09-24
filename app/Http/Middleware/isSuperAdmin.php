@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\AuthBypassEnum;
 use Closure;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,20 +17,29 @@ class isSuperAdmin
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, string $type = null): Response
     {
-        $userID = Auth::id();
+        $user = Auth::user();
+        $userIsSuperAdmin = AuthBypassEnum::bypassCheck($user->email);
 
-        $isSuperAdmin = DB::table('organization_user_role')
-            ->where('userID', $userID)
-            ->where('roleID', 3)
-            ->select('*')
-            ->first();
+        if ($type === 'block') {
+            if ($userIsSuperAdmin) {
+                // session()->flash('toast', [
+                //     'title' => 'Unauthorized',
+                //     'description' => 'Superadmins are not allowed to access that page.',
+                //     'duration' => 5000,
+                //     'variant' => 'destructive'
+                // ]);
+                // dd('toasted');
+                return redirect('superadmin');
+            }
+        }
+        if ($userIsSuperAdmin) {
+            // dd(session()->all());
 
-        // if ($isSuperAdmin && session()->has('superadminIsLogged')) {
-        if ($isSuperAdmin) {
             if (!session()->has('superadminIsLogged')) { // if it is first time session
-                session(['superadminIsLogged' => true]); // log the login activity
+                session(['superadminIsLogged' => true]);
+                // log the login activity
                 DB::table('superadmin_login_history')->insert([ // insert the log to db
                     'userID' => Auth::id(),
                     'login_timestamp' => now(),
@@ -37,7 +47,14 @@ class isSuperAdmin
             } // else (it is already logged), continue request
             return $next($request);
         } else {
-            abort(403);
+            // session()->flash('toast', [
+            //     'title' => 'Unauthorized',
+            //     'description' => 'Superadmins are not allowed to access that page.',
+            //     'duration' => 5000,
+            //     'variant' => 'destructive'
+            // ]);
+            return abort(401);
         }
+        // abort(500);
     }
 }
