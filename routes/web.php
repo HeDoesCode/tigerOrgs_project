@@ -75,6 +75,7 @@ Route::middleware(['auth', 'isAdmin'])
     ->group(function () {
         Route::get('editpage', 'edit')->name('editpage');
         Route::get('invite', 'invite')->name('invite');
+        Route::post('addadmin', 'addAdmin')->name('add-admin');
         Route::get('applications', 'applications')->name('applications');
         Route::get('forms', 'forms')->name('forms');
         Route::get('formhistory', 'formhistory')->name('formhistory');
@@ -84,6 +85,9 @@ Route::middleware(['auth', 'isAdmin'])
 
 
     });
+
+    
+
 
 
 
