@@ -40,7 +40,7 @@ function Layout({
                         } ${noPadding || "pl-4 pr-0"} select-text flex flex-col`}
                     style={bgImage ? bgStyle : {}}
                 >
-                    <div className="flex flex-col h-full w-full overflow-y-auto pr-2">
+                    <div className="flex flex-col h-full w-full overflow-y-auto overflow-x-clip pr-2">
                         {children}
                         {footer && <Footer />}
                     </div>

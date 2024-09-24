@@ -33,7 +33,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
     return (
         <div className="w-full">
             <Head title="Home" />
-            <UserLayout bgImage={bgImage}>
+            <UserLayout bgImage={bgImage} noPadding>
                 <div className="w-full flex-1 flex justify-center items-center relative">
                     <img
                         className="absolute bottom-[-3.3rem] sm:bottom-[-4.3rem] right-[3%] h-36 sm:h-56"
