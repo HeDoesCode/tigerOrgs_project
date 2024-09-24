@@ -79,8 +79,8 @@ Route::middleware(['auth', 'isAdmin'])
         Route::get('formhistory', 'formhistory')->name('formhistory');
         Route::post('make-admin', 'makeAdmin')->name('make-admin');
         Route::post('make-member', 'makeMember')->name('make-member');
+        Route::post('remove-student', 'removeStudent')->name('remove-student');
 
-        
 
     });
 
