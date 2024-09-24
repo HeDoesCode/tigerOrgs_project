@@ -1,3 +1,4 @@
+import { useForm } from "@inertiajs/react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -6,105 +7,53 @@ import {
     DropdownMenuSeparator,
 } from "@/Components/ui/dropdown-menu";
 import IconEdit from "../Icons/IconEdit";
-import axios from "axios";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
 
-function AdminEditMenu({ userID, orgID, roleID }) {
-    const { addToast } = useToast();
+function AdminEditMenu({ userID, orgID, roleID, onRoleChange }) {
+    const { data, setData, post, processing } = useForm({
+        userID,
+    });
 
-    const makeAdmin = async () => {
-        console.log("Making admin with:", { userID, orgID, roleID });
-
-        try {
-            const response = await axios.post(
-                route("admin.make-admin", { orgID }),
-                { userID }
-            );
-
-            console.log("Success:", response.data);
-            addToast("User has been made an Admin!", "success");
-        } catch (error) {
-            console.error("Error making admin:", error.response?.data || error);
-            addToast(
-                "Error making admin: " +
-                    (error.response?.data.message || "Unknown error"),
-                "error"
-            );
-        }
-    };
-
-    const makeMember = async () => {
-        console.log("Making member with:", { userID, orgID, roleID });
-
-        try {
-            const response = await axios.post(
-                route("admin.make-member", { orgID }),
-                { userID },
-                { roleID }
-            );
-
-            console.log("Success:", response.data);
-            addToast("User has been made a Member!", "success");
-        } catch (error) {
-            console.error(
-                "Error making member:",
-                error.response?.data || error
-            );
-            addToast(
-                "Error making member: " +
-                    (error.response?.data.message || "Unknown error"),
-                "error"
-            );
-        }
-    };
-
-    const removeStudent = async () => {
-        console.log("Removing student with:", { userID, orgID });
-
-        try {
-            const response = await axios.post(
-                route("admin.remove-student", { orgID }),
-                { userID }
-            );
-
-            console.log("Success:", response.data);
-            addToast("User has been removed from the organization!", "success");
-        } catch (error) {
-            console.error(
-                "Error removing student:",
-                error.response?.data || error
-            );
-            addToast(
-                "Error removing student: " +
-                    (error.response?.data.message || "Unknown error"),
-                "error"
-            );
-        }
+    const handleAction = (action) => {
+        post(route(`admin.${action}`, { orgID }), {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                // Handle success and call onRoleChange
+                if (action === "make-admin") {
+                    onRoleChange(2); // 2 represents Admin role
+                } else if (action === "make-member") {
+                    onRoleChange(1); // 1 represents Member role
+                }
+            },
+        });
     };
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="w-full">
+            <DropdownMenuTrigger className="w-full" disabled={processing}>
                 <IconEdit />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem
-                    className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
-                    onClick={makeAdmin}
-                >
-                    Make Admin
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                    className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
-                    onClick={makeMember}
-                >
-                    Make Member
-                </DropdownMenuItem>
+                {roleID === 2 ? (
+                    <DropdownMenuItem
+                        className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
+                        onClick={() => handleAction("make-member")}
+                    >
+                        Make Member
+                    </DropdownMenuItem>
+                ) : (
+                    <DropdownMenuItem
+                        className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
+                        onClick={() => handleAction("make-admin")}
+                    >
+                        Make Admin
+                    </DropdownMenuItem>
+                )}
+
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                    className="bg-[#f8f8f8] border-gray-300 cursor-pointer "
-                    onClick={removeStudent}
+                    className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
+                    onClick={() => handleAction("remove-student")}
                 >
                     Remove Student
                 </DropdownMenuItem>
