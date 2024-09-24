@@ -17,6 +17,50 @@ use Illuminate\Support\Facades\Log;
 class SuperAdminController extends Controller
 {
     //manage org functions
+
+    public function addOrg(Request $request){
+        $validated = $request-> validate([
+            'name' => 'required|unique:organizations',
+            'department' => 'required',
+
+        ]);
+
+        
+
+        try {
+            
+
+            DB::table('organizations')->updateOrInsert([
+                'recruiting'=> false,
+                'name'=> $validated['name'],
+                'department' => $validated['department'],
+                'visibility' => 1,
+                
+            ]);
+
+            session()->flash('toast', [
+                'title' => 'Saved',
+                'description' => 'Organization added successfully!',
+                'variant' => 'success'
+            ]);
+
+            return to_route('superadmin.status');
+        } catch (Exception $e) {
+
+            session()->flash('toast', [
+                'title' => 'Failed',
+                'description' => 'Organization was not added',
+                'variant' => 'destructive'
+            ]);
+
+
+            return redirect()->back()->with('error', 'An error occurred while assigning the admin role.');
+        }
+   
+    }
+
+    
+
     public function manage()
     {
 

@@ -1,4 +1,4 @@
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import SuperAdminLayout from "@/Layouts/SuperAdminLayout";
 import IconInvite from "@/Components/Icons/IconInvite";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
@@ -124,6 +124,50 @@ export default function SuperAdminManage({ organizations, departments }) {
         reset();
     };
 
+    //for manual adding of org
+    const [orgs, setOrgs] = useState({
+        name: "",
+        department: "",
+    });
+
+    function handleChangeForNewOrg(e) {
+        const key = e.target.id;
+        const value = e.target.value;
+        setOrgs((orgs) => ({
+            ...orgs,
+            [key]: value,
+        }));
+    }
+
+    function handleSubmitForNewOrg(e) {
+        e.preventDefault();
+        router.post("/superadmin/addOrg", orgs, {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                // Reset the form
+                setOrgs({ name: "", department: "" });
+
+                // Update allOrganizations with the new data
+                const updatedOrganizations = page.props.organizations;
+                setAllOrganizations(updatedOrganizations);
+
+                // Update availableDepartments if necessary
+                const updatedDepartments = page.props.departments;
+                if (updatedDepartments) {
+                    setAvailableDepartments(updatedDepartments);
+                }
+
+                // Update visibleStates for the new organization
+                setVisibleStates((prevState) => ({
+                    ...prevState,
+                    [updatedOrganizations[updatedOrganizations.length - 1]
+                        .orgID]: true,
+                }));
+            },
+        });
+    }
+
     return (
         <div className="w-full">
             <Head title="OSA Dashboard" />
@@ -215,12 +259,80 @@ export default function SuperAdminManage({ organizations, departments }) {
                     <div className="w-full">
                         <div className="flex justify-end me-5 mt-5">
                             {!edit ? (
-                                <AdminButton
-                                    className="bg-white hover:bg-gray-800 hover:text-white"
-                                    onClick={toggleEdit}
-                                    icon={<IconEdit />}
-                                    name="Edit"
-                                />
+                                <div className="flex">
+                                    <AdminDialog
+                                        title="Manually Add Organization"
+                                        description="Enter the name and the department/college/faculty of the organization you want to add."
+                                        trigger={
+                                            <AdminButton
+                                                className="mr-2 bg-white hover:bg-gray-800 hover:text-white"
+                                                icon={<IconEdit />}
+                                                name=" Add Organization"
+                                            />
+                                        }
+                                    >
+                                        <form
+                                            onSubmit={handleSubmitForNewOrg}
+                                            className="space-y-4"
+                                        >
+                                            <div className="space-y-2">
+                                                <label
+                                                    htmlFor="name"
+                                                    className="block  font-medium text-gray-700"
+                                                >
+                                                    Name of the Organization:
+                                                </label>
+                                                <input
+                                                    id="name"
+                                                    value={orgs.name}
+                                                    onChange={
+                                                        handleChangeForNewOrg
+                                                    }
+                                                    className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                    placeholder="Enter organization name"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <label
+                                                    htmlFor="department"
+                                                    className="block  font-medium text-gray-700"
+                                                >
+                                                    Department:
+                                                </label>
+                                                <input
+                                                    id="department"
+                                                    value={orgs.department}
+                                                    onChange={
+                                                        handleChangeForNewOrg
+                                                    }
+                                                    className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                    placeholder="Enter department"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="mt-4 grid justify-items-end">
+                                                <button
+                                                    type="submit"
+                                                    className="flex px-9  shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white"
+                                                >
+                                                    <span className="ml-2  poppins hidden truncate sm:block">
+                                                        Submit
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </AdminDialog>
+
+                                    <AdminButton
+                                        className="bg-white hover:bg-gray-800 hover:text-white"
+                                        onClick={toggleEdit}
+                                        icon={<IconEdit />}
+                                        name="Edit"
+                                    />
+                                </div>
                             ) : (
                                 <div className="flex">
                                     <AdminButton
