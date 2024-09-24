@@ -11,27 +11,14 @@ import {
 import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 import Pre from "@/Components/Pre";
 import KeywordSelect from "@/Components/Organizations/KeywordSelect";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TextInput from "@/Components/ui/TextInput";
+import { buttonVariants } from "@/Components/ui/button";
 // import { useState } from "react";
 
 function Edit({ user, activeUserKeywords, keywords }) {
     const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
     const userSectionError = user.section != null ? null : 'Specify Section'; // if section exists, no error
-
-
-    const handleSectionOnKeyDown = (e) => {
-        if (e.key === 'Enter' && e.target.value !== '') {
-            const section = e.target.value
-            patchSection(section)
-        }
-    }
-
-    const patchSection = (section) => {
-        router.patch(route('update.user.section'), {
-            section
-        });
-    }
 
     return (
         <div className="w-full">
@@ -74,14 +61,7 @@ function Edit({ user, activeUserKeywords, keywords }) {
                                     </div>
                                 </div>
 
-                                <InputContainer title='Section' error={userSectionError}>
-                                    <input
-                                        type="text"
-                                        placeholder={user.section || "[YEAR]-[SECTION] ex. 3-ITG"}
-                                        className={`w-full ${user.section ? 'placeholder-black focus:placeholder-transparent rounded-lg focus:border-black' : ''}`}
-                                        onKeyDown={handleSectionOnKeyDown}
-                                    />
-                                </InputContainer>
+                                <SectionInput />
 
                             </div>
                             <div className="mt-10">
@@ -99,6 +79,55 @@ function Edit({ user, activeUserKeywords, keywords }) {
         </div >
     );
 
+    function SectionInput() {
+        const [sectionString, setSectionString] = useState(user.section || '');
+
+        const handleSectionStringChange = (e) => {
+            setSectionString(e.target.value);
+        }
+
+        const handleSectionKeyDown = (e) => {
+            if (e.key === 'Enter') patchSection(sectionString)
+        }
+
+        const patchSection = (section) => {
+            if (section === '' || sectionString === user.section) {
+                return;
+            } else {
+                router.patch(route('update.user.section'), {
+                    section
+                });
+            }
+        }
+
+        return (
+            <InputContainer title='Section' error={userSectionError || sectionString !== user.section ? 'Unsaved' : ''}>
+                <div className="flex">
+                    <input
+                        type="text"
+                        maxLength={10}
+                        placeholder={"[YEAR]-[SECTION] ex. 3-ITG"}
+                        className='w-full rounded-l-lg focus:border-black border-transparent'
+                        value={sectionString}
+                        onChange={handleSectionStringChange}
+                        onKeyDown={handleSectionKeyDown}
+                    // onBlur={() => setSectionString(user.section || '')}
+                    />
+                    {sectionString !== user.section && (
+                        <button className="px-3 border-l border-l-gray-200" onClick={() => setSectionString(user.section || '')}>
+                            Cancel
+                        </button>
+                    )}
+                    <button className={`rounded-r-lg border-l border-l-gray-200 px-3 ${sectionString !== user.section ? 'hover:bg-black/5 text-black' : 'cursor-not-allowed text-gray-500'}`}
+                        disabled={sectionString === user.section} onClick={() => patchSection(sectionString)}
+                    >
+                        Save
+                    </button>
+                </div>
+            </InputContainer>
+        )
+    }
+
     function InputContainer({ children, className, error, title, ...props }) {
         const hasRequiredChild = React.Children.toArray(children).some(child =>
             React.isValidElement(child) && child.props.required
@@ -107,13 +136,11 @@ function Edit({ user, activeUserKeywords, keywords }) {
         const modifiedChildren = React.Children.map(children, child => {
             if (React.isValidElement(child)) {
                 if (child.type === 'input') {
-                    // Append the additional class to the existing className
                     const existingClassName = child.props.className || '';
                     return React.cloneElement(child, {
                         className: `${existingClassName} border-none h-full`.trim()
                     });
                 }
-                // If not an input, just return the child as is
                 return child;
             }
             return child;
@@ -122,7 +149,6 @@ function Edit({ user, activeUserKeywords, keywords }) {
 
         return (
             <div className="flex flex-col">
-                {/* <div className="w-full"></div> */}
                 <div className="w-full flex justify-between gap-x-1 items-end">
                     <label className="h-fit flex-1 flex-wrap leading-[1.15rem]">
                         {title} {hasRequiredChild && (
@@ -131,7 +157,6 @@ function Edit({ user, activeUserKeywords, keywords }) {
                             >
                                 *
                             </span>
-
                         )}
                     </label>
                     <div
