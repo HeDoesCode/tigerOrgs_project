@@ -47,122 +47,123 @@ class AdminController extends Controller
     }
 
     public function invite($orgID)
-{
-    $membersWithPositions = \DB::table('organization_user_role')
-    ->join('users', 'organization_user_role.userID', '=', 'users.userID')
-    ->leftJoin('organization_officers', function ($join) use ($orgID) {
-        $join->on('organization_user_role.userID', '=', 'organization_officers.userID')
-             ->where('organization_officers.orgID', '=', $orgID);
-    })
-    ->select(
-        'users.userID',
-        'users.firstname',
-        'users.lastname',
-        'users.email',
-        'users.college',
-        'organization_user_role.roleID',
-        'organization_officers.position'
-    )
-    ->where('organization_user_role.orgID', $orgID)
-    ->get();
+    {
+        $membersWithPositions = \DB::table('organization_user_role')
+            ->join('users', 'organization_user_role.userID', '=', 'users.userID')
+            ->leftJoin('organization_officers', function ($join) use ($orgID) {
+                $join->on('organization_user_role.userID', '=', 'organization_officers.userID')
+                    ->where('organization_officers.orgID', '=', $orgID);
+            })
+            ->select(
+                'users.userID',
+                'users.firstname',
+                'users.lastname',
+                'users.email',
+                'users.college',
+                'organization_user_role.roleID',
+                'organization_officers.position'
+            )
+            ->where('organization_user_role.orgID', $orgID)
+            ->get();
 
-    $admins = $membersWithPositions->filter(fn($member) => $member->roleID == 2);
-    $students = $membersWithPositions->filter(fn($member) => $member->roleID == 1);
+        $admins = $membersWithPositions->filter(fn($member) => $member->roleID == 2);
+        $students = $membersWithPositions->filter(fn($member) => $member->roleID == 1);
 
-    $organization = Organization::withCount('members')
-        ->with('contacts')
-        ->find($orgID);
+        $organization = Organization::withCount('members')
+            ->with('contacts')
+            ->find($orgID);
 
-    return Inertia::render('Admin/AdminInvite', [
-        'orgID' => $organization->orgID,
-        'organizationName' => $organization->name,
-        'members' => $students->values(),
-        'admins' => $admins->values(),
-        'contacts' => $organization->contacts,
-    ]);
-}
-
-
-public function makeAdmin(Request $request, $orgID)
-{
-    $userID = $request->input('userID'); 
-
-    $exists = \DB::table('organization_user_role')
-        ->where('userID', $userID)
-        ->where('orgID', $orgID)
-        ->exists();
-
-    if ($exists) {
-        \DB::table('organization_user_role')
-            ->where('userID', $userID)
-            ->where('orgID', $orgID)
-            ->update(['roleID' => 2]);
-
-        $user = User::find($userID);
-
-        $user->notify(new AdminPromotionNotification());
-
-        session()->flash('toast', [
-            'title' => 'Success',
-            'description' => 'User has been made an Admin!',
-            'variant' => 'success'
+        return Inertia::render('Admin/AdminInvite', [
+            'orgID' => $organization->orgID,
+            'organizationName' => $organization->name,
+            'members' => $students->values(),
+            'admins' => $admins->values(),
+            'contacts' => $organization->contacts,
         ]);
-
-        return response()->json(['message' => 'User role updated to admin successfully.']);
-    } else {
-        return response()->json(['message' => 'User is not a member of the organization.'], 400);
     }
-}
 
-public function makeMember(Request $request, $orgID)
-{
-    $userID = $request->input('userID'); 
-    $exists = \DB::table('organization_user_role')
-        ->where('userID', $userID)
-        ->where('orgID', $orgID)
-        ->exists();
 
-    if ($exists) {
-        \DB::table('organization_user_role')
+    public function makeAdmin(Request $request, $orgID)
+    {
+        $userID = $request->input('userID');
+
+        $exists = \DB::table('organization_user_role')
             ->where('userID', $userID)
             ->where('orgID', $orgID)
-            ->update(['roleID' => 1]);
+            ->exists();
+
+        if ($exists) {
+            \DB::table('organization_user_role')
+                ->where('userID', $userID)
+                ->where('orgID', $orgID)
+                ->update(['roleID' => 2]);
+
+            $user = User::find($userID);
+
+            $user->notify(new AdminPromotionNotification());
+
+            session()->flash('toast', [
+                'title' => 'Success',
+                'description' => 'User has been made an Admin!',
+                'variant' => 'success'
+            ]);
+
+            return response()->json(['message' => 'User role updated to admin successfully.']);
+        } else {
+            return response()->json(['message' => 'User is not a member of the organization.'], 400);
+        }
+    }
+
+    public function makeMember(Request $request, $orgID)
+    {
+        $userID = $request->input('userID');
+        $exists = \DB::table('organization_user_role')
+            ->where('userID', $userID)
+            ->where('orgID', $orgID)
+            ->exists();
+
+        if ($exists) {
+            \DB::table('organization_user_role')
+                ->where('userID', $userID)
+                ->where('orgID', $orgID)
+                ->update(['roleID' => 1]);
 
             session()->flash('toast', [
                 'title' => 'Success',
                 'description' => 'User has been made a Member!',
                 'variant' => 'success'
-            ]);    } else {
-        return response()->json(['message' => 'User is not a member of the organization.'], 400);
+            ]);
+        } else {
+            return response()->json(['message' => 'User is not a member of the organization.'], 400);
+        }
     }
-}
 
-public function removeStudent(Request $request, $orgID)
-{
-    $userID = $request->input('userID'); 
+    public function removeStudent(Request $request, $orgID)
+    {
+        $userID = $request->input('userID');
 
-    $exists = \DB::table('organization_user_role')
-        ->where('userID', $userID)
-        ->where('orgID', $orgID)
-        ->exists();
-
-    if ($exists) {
-        \DB::table('organization_user_role')
+        $exists = \DB::table('organization_user_role')
             ->where('userID', $userID)
             ->where('orgID', $orgID)
-            ->delete(); 
+            ->exists();
 
-        session()->flash('toast', [
-            'title' => 'Success',
-            'description' => 'User has been removed from the organization!',
-            'variant' => 'success'
-        ]);
+        if ($exists) {
+            \DB::table('organization_user_role')
+                ->where('userID', $userID)
+                ->where('orgID', $orgID)
+                ->delete();
 
-        return response()->json(['message' => 'User removed successfully.']);
-    } else {
-        return response()->json(['message' => 'User is not a member of the organization.'], 400);
+            session()->flash('toast', [
+                'title' => 'Success',
+                'description' => 'User has been removed from the organization!',
+                'variant' => 'success'
+            ]);
+
+            return response()->json(['message' => 'User removed successfully.']);
+        } else {
+            return response()->json(['message' => 'User is not a member of the organization.'], 400);
+        }
     }
-}
 
 
 
@@ -194,5 +195,4 @@ public function removeStudent(Request $request, $orgID)
             'orgID' => $organization->orgID,
         ]);
     }
-    
 }

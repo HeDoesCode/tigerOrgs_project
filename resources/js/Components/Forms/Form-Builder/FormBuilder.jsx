@@ -27,7 +27,7 @@ const inputTypes = [
     { type: "Image Upload", icon: IconResume },
 ];
 
-function FormBuilder() {
+function FormBuilder({ orgID }) {
     const [items, setItems] = useState([]);
 
     function getItemPos(id) {
@@ -107,7 +107,7 @@ function FormBuilder() {
     function handleSave() {
         let dataToBeSent = JSON.stringify(items);
 
-        router.post("/admin/form-builder/save", dataToBeSent, {
+        router.post(`/admin/${orgID}/form-builder/save`, dataToBeSent, {
             headers: {
                 "Content-Type": "application/json",
             },

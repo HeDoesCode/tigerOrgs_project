@@ -34,7 +34,7 @@ function AdminFormBuilder({ orgID }) {
                     ]}
                     title="Manage Recruitment Form"
                 >
-                    <FormBuilder />
+                    <FormBuilder orgID={orgID} />
                 </MainAdminFrame>
             </AdminLayout>
         </div>

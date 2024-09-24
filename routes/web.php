@@ -82,22 +82,13 @@ Route::middleware(['auth', 'isAdmin'])
         Route::post('make-member', 'makeMember')->name('make-member');
         Route::post('remove-student', 'removeStudent')->name('remove-student');
 
-
+        // form builder routes
+        Route::get('/form-builder', [FormsController::class, 'showBuilder'])->name('formbuilder');
+        Route::post('/form-builder/save', [FormsController::class, 'saveForm']);
     });
-
-
-
-
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
-
-// form builder routes
-Route::get('/admin/{orgID}/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
-
-
-
-Route::post('/admin/form-builder/save', [FormsController::class, 'saveForm']);
 
 // temporary testing route
 Route::get('/testing', [BackendTestingController::class, 'run']);
