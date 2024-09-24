@@ -40,26 +40,27 @@ Route::middleware('auth')->group(function () {
 //superadmin temporary routes
 Route::prefix('/superadmin/')
     ->name('superadmin.')
-    // ->middleware(['auth','isSuperAdmin'])
+    ->middleware(['auth', 'isSuperAdmin'])
     ->controller(SuperAdminController::class)->group(function () {
         //manage page
         Route::get('invite', 'invite')->name('invite');;
         Route::get('status', 'manage')->name('status');
         Route::get('status/search-org', 'searchOrg');
         Route::post('update-organizations', 'updateOrganizations')->name('update-organizations');
+        Route::post('addOrg', 'addOrg')->name('addOrg');
 
         //invite page
         Route::get('search-users', 'search');
         Route::post('addadmin', 'addAdmin')->name('add-admin');
         Route::delete('deleteadmin/{userID}', 'deleteAdmin')->name('delete-admin');
+        Route::delete('delete-admin-role/{userID}/{orgID}', 'deleteAdminRole')->name('delete-admin-role');
 
         //upload page
         Route::get('dataupload', 'fileupload')->name('dataupload');
         Route::post('dataupload/file', 'upload')->name('dataupload.file');
 
-        Route::get('loginhistory', function () {
-            return Inertia::render('SuperAdmin/SuperAdminLoginHistory');
-        })->name('loginhistory');
+        // routes for activity log tab
+        Route::get('loginhistory', 'viewLoginHistory')->name('loginhistory');
 
         Route::get('invitehistory', function () {
             return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
@@ -79,26 +80,15 @@ Route::middleware(['auth', 'isAdmin'])
         Route::get('formhistory', 'formhistory')->name('formhistory');
         Route::post('make-admin', 'makeAdmin')->name('make-admin');
         Route::post('make-member', 'makeMember')->name('make-member');
+        Route::post('remove-student', 'removeStudent')->name('remove-student');
 
-        
-
+        // form builder routes
+        Route::get('/form-builder', [FormsController::class, 'showBuilder'])->name('formbuilder');
+        Route::post('/form-builder/save', [FormsController::class, 'saveForm']);
     });
-
-
-
-
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
-
-// form builder routes
-Route::get('/admin/{orgID}/form-builder', [FormsController::class, 'showBuilder'])->name('admin.formbuilder');
-
-
-
-Route::post('/admin/form-builder/save', [FormsController::class, 'saveForm']);
-
-Route::post('/form/submit', [FormsController::class, 'submitForm']);
 
 // temporary testing route
 Route::get('/testing', [BackendTestingController::class, 'run'])->name('testing');

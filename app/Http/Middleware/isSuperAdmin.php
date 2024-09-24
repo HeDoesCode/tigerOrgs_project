@@ -20,13 +20,21 @@ class isSuperAdmin
     {
         $userID = Auth::id();
 
-        $checkRole = DB::table('organization_user_role')
+        $isSuperAdmin = DB::table('organization_user_role')
             ->where('userID', $userID)
             ->where('roleID', 3)
             ->select('*')
             ->first();
 
-        if ($checkRole) {
+        // if ($isSuperAdmin && session()->has('superadminIsLogged')) {
+        if ($isSuperAdmin) {
+            if (!session()->has('superadminIsLogged')) { // if it is first time session
+                session(['superadminIsLogged' => true]); // log the login activity
+                DB::table('superadmin_login_history')->insert([ // insert the log to db
+                    'userID' => Auth::id(),
+                    'login_timestamp' => now(),
+                ]);
+            } // else (it is already logged), continue request
             return $next($request);
         } else {
             abort(403);

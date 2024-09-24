@@ -19,12 +19,12 @@ import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 import OrganizationJoined from "@/Components/Organizations/OrganizationJoined";
 import OrganizationContainerRow from "@/Components/Organizations/OrganizationContainerRow";
 import OrganizationTile from "@/Components/Organizations/OrganizationTile";
-import Pre from "@/Components/Pre";
 import { useState } from "react";
 import { useEffect } from "react";
 
 function Organizations({
     organizations,
+    recommendedOrganizations,
     queryParameters = null,
     departments,
     keywords,
@@ -48,19 +48,20 @@ function Organizations({
             {}
         );
 
+        // Move 'University-Wide' organizations to the start of the array
         if (groupedByDepartment['University-Wide']) {
             const universityWideOrgs = groupedByDepartment['University-Wide'];
-            delete groupedByDepartment['University-Wide'];
+            delete groupedByDepartment['University-Wide']; // Remove from its original position
 
+            // Prepend University-Wide organizations to the start
             setOrganizationList({
                 'University-Wide': universityWideOrgs,
-                ...groupedByDepartment,
+                ...groupedByDepartment, // Spread the rest of the grouped organizations
             });
         } else {
+            // If there are no 'University-Wide' organizations, just set normally
             setOrganizationList(groupedByDepartment);
         }
-
-        // setOrganizationList(groupedByDepartment);
     }, [organizations]);
 
     // call server for search query every change
@@ -262,6 +263,29 @@ function Organizations({
                             </div>
                         )}
 
+                        {recommendedOrganizations.length !== 0 && (
+                            <OrganizationContainerRow
+                                title={'Recommended based on your interests'}
+                                collegeLength={
+                                    Object.keys(organizationList).length
+                                }
+                            >
+                                {recommendedOrganizations.map((org, index) => (
+                                    <OrganizationTile
+                                        key={index}
+                                        orgBg={org.photos && org.photos.length > 0 ? org.photos[0].filename : 'https://placehold.co/500x800'}
+                                        orgIcon={org.logo}
+                                        title={org.name}
+                                        desc={org.description}
+                                        count={org.members_count}
+                                        href={route("organizations.home", {
+                                            orgID: org.orgID,
+                                        })}
+                                    />
+                                ))}
+                            </OrganizationContainerRow>
+                        )}
+
                         {Object.entries(organizationList).map(
                             ([department, orgs], index) => (
                                 <OrganizationContainerRow
@@ -275,7 +299,7 @@ function Organizations({
                                     {orgs.map((org, index) => (
                                         <OrganizationTile
                                             key={index}
-                                            orgBg={org.photos[0].filename}
+                                            orgBg={org.photos && org.photos.length > 0 ? org.photos[0].filename : 'https://placehold.co/500x800'}
                                             orgIcon={org.logo}
                                             title={org.name}
                                             desc={org.description}

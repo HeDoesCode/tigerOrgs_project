@@ -3,6 +3,7 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
     DropdownMenuItem,
+    DropdownMenuSeparator,
 } from "@/Components/ui/dropdown-menu";
 import IconEdit from "../Icons/IconEdit";
 import axios from "axios";
@@ -18,8 +19,7 @@ function AdminEditMenu({ userID, orgID, roleID }) {
         try {
             const response = await axios.post(
                 route("admin.make-admin", { orgID }),
-                { userID },
-                { orgID }
+                { userID }
             );
 
             console.log("Success:", response.data);
@@ -59,6 +59,30 @@ function AdminEditMenu({ userID, orgID, roleID }) {
         }
     };
 
+    const removeStudent = async () => {
+        console.log("Removing student with:", { userID, orgID });
+
+        try {
+            const response = await axios.post(
+                route("admin.remove-student", { orgID }),
+                { userID }
+            );
+
+            console.log("Success:", response.data);
+            addToast("User has been removed from the organization!", "success");
+        } catch (error) {
+            console.error(
+                "Error removing student:",
+                error.response?.data || error
+            );
+            addToast(
+                "Error removing student: " +
+                    (error.response?.data.message || "Unknown error"),
+                "error"
+            );
+        }
+    };
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="w-full">
@@ -67,15 +91,22 @@ function AdminEditMenu({ userID, orgID, roleID }) {
             <DropdownMenuContent>
                 <DropdownMenuItem
                     className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
-                    onClick={makeAdmin} // Trigger role update to admin
+                    onClick={makeAdmin}
                 >
                     Make Admin
                 </DropdownMenuItem>
                 <DropdownMenuItem
                     className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
-                    onClick={makeMember} // Trigger role update to member
+                    onClick={makeMember}
                 >
                     Make Member
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                    className="bg-[#f8f8f8] border-gray-300 cursor-pointer "
+                    onClick={removeStudent}
+                >
+                    Remove Student
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

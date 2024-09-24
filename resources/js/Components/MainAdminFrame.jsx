@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, usePage } from "@inertiajs/react";
+import Paginate from "./Paginate";
 
 function MainAdminFrame({
     children,
@@ -19,7 +20,7 @@ function MainAdminFrame({
         setSelectedNav(label);
     };
     return (
-        <div>
+        <div className="pt-2">
             <div className="poppins text-xl p-2 font-light grid lg:grid-cols-10 md:grid-cols-2 ">
                 <div className=" pb-3 flex col-span-5">
                     {title} {dialog}
@@ -36,11 +37,10 @@ function MainAdminFrame({
                             return (
                                 <Link
                                     key={index}
-                                    className={`py-3 rounded-t-xl hover:bg-gray-800 hover:text-white text-md flex justify-center cursor-pointer ${
-                                        route().current() === item.link
-                                            ? "border-b-2 border-[#FF9900] text-[#FF9900]"
-                                            : ""
-                                    }`}
+                                    className={`py-3 rounded-t-xl hover:bg-gray-800 hover:text-white text-md flex justify-center cursor-pointer ${route().current() === item.link
+                                        ? "border-b-2 border-[#FF9900] text-[#FF9900]"
+                                        : ""
+                                        }`}
                                     onClick={() => handleNavClick(item.label)}
                                     href={itemUrl}
                                 >

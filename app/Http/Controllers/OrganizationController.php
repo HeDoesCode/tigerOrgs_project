@@ -2,23 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Keyword;
 use Inertia\Controller;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class OrganizationController extends Controller
 {
+    public function getRecommendations(): Collection
+    {
+        return DB::table('organization_keywords')
+            ->join('user_keywords', 'organization_keywords.keyID', '=', 'user_keywords.keyID')
+            ->join('organizations', 'organization_keywords.orgID', '=', 'organizations.orgID')
+            ->leftJoin('organization_user_role', 'organizations.orgID', '=', 'organization_user_role.orgID') // Consider a left join to include organizations with 0 members
+            ->where('user_keywords.userID', '=', Auth::id())
+            ->select(
+                'organizations.logo',
+                'organizations.name',
+                'organizations.description',
+                DB::raw('COUNT(organization_user_role.userID) as members_count'),
+                'organizations.orgID'
+            )
+            ->groupBy(
+                'organizations.logo',
+                'organizations.name',
+                'organizations.description',
+                'organizations.orgID'
+            )
+            ->distinct()
+            ->get()
+            ->map(function ($organization) {
+                $organization->photos = DB::table('organization_photos')
+                    ->where('orgID', '=', $organization->orgID)
+                    ->select('*')->get();
+                return $organization;
+            });
+    }
+
     public function browse(Request $request): Response
     {
+        $this->getRecommendations();
         $query = Organization::query();
         $queryParameters = [];
+
+        $recommendedOrganizations = [];
+        if (!request()->all()) {
+            $recommendedOrganizations = $this->getRecommendations();
+        }
 
         // handle search query
         if (request('search')) {
@@ -48,8 +83,11 @@ class OrganizationController extends Controller
             $queryParameters['category'] = request('category');
         }
 
-        // attach photos
-        $organizations = $query->with('photos')
+        $organizations = $query
+            // only visible orgs included
+            ->where('visibility', 1)
+            // attach photos
+            ->with('photos')
             ->withCount('members')
             ->get();
 
@@ -84,6 +122,7 @@ class OrganizationController extends Controller
 
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
+            'recommendedOrganizations' => $recommendedOrganizations,
             'departments' => $departments,
             'keywords' => $keywordsArray,
             'isSuperAdmin' => $isSuperAdmin,

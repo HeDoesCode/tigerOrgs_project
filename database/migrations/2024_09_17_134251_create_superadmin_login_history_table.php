@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organization_officers', function (Blueprint $table) {
-            $table->id('officerID')->primary();
-            $table->foreignId('orgID')->constrained('organizations', 'orgID')->onDelete('cascade');
+        Schema::create('superadmin_login_history', function (Blueprint $table) {
+            $table->id('loginID');
             $table->string('userID');
             $table->foreign('userID')->references('userID')->on('users')->onDelete('cascade');
-            $table->string('position');
-            // $table->primary(['orgID', 'userID']);
-            // $table->timestamps();
+            $table->timestamp('login_timestamp')->useCurrent();
         });
     }
 
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organization_officers');
+        Schema::dropIfExists('superadmin_login_history');
     }
 };

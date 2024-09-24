@@ -27,7 +27,7 @@ const inputTypes = [
     { type: "image_upload", icon: IconResume },
 ];
 
-function FormBuilder() {
+function FormBuilder({ orgID }) {
     const [items, setItems] = useState([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -113,7 +113,7 @@ function FormBuilder() {
             layout: items,
         };
 
-        router.post("/admin/form-builder/save", JSON.stringify(createdForm), {
+        router.post(`/admin/${orgID}/form-builder/save`, dataToBeSent, {
             headers: {
                 "Content-Type": "application/json",
             },

@@ -89,10 +89,9 @@ function SuperAdminLayout({ children }) {
             return (
                 <div className="flex">
                     <Link
-                        className={`flex items-center py-2 pl-3 rounded-l-full overflow-x-clip w-full ${
-                            (current && "bg-[#FFBC58]") ||
+                        className={`flex items-center py-2 pl-3 rounded-l-full overflow-x-clip w-full ${(current && "bg-[#FFBC58]") ||
                             "hover:bg-gray-800 hover:text-white"
-                        }`}
+                            }`}
                         href={href}
                     >
                         <div className="min-h-7 min-w-7 size-7">{icon}</div>

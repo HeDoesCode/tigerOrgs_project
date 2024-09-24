@@ -36,12 +36,14 @@ function Layout({
                 <Header />
                 <div className="z-50">{sidebar}</div>
                 <main
-                    className={`w-full overflow-x-clip overflow-y-auto h-screen ${noPadding ? "pt-16" : "pt-[4.5rem]"
-                        } ${noPadding || "px-4"} select-text flex flex-col`}
+                    className={`w-full overflow-x-hidden h-screen ${noPadding ? "pt-16" : "pt-[4rem]"
+                        } ${noPadding || "pl-4 pr-0"} select-text flex flex-col`}
                     style={bgImage ? bgStyle : {}}
                 >
-                    {children}
-                    {footer && <Footer />}
+                    <div className="flex flex-col h-full w-full overflow-y-auto overflow-x-clip pr-2">
+                        {children}
+                        {footer && <Footer />}
+                    </div>
                 </main>
             </div>
             <Toaster className='z-[+1]' />

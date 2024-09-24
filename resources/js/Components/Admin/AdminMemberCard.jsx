@@ -48,9 +48,9 @@ function AdminMemberCard({
                                 currentRoleID={roleID}
                             />
                         </div>
-                        <div className="mx-1 text-gray-500 cursor-pointer">
+                        {/* <div className="mx-1 text-gray-500 cursor-pointer">
                             <IconDelete />
-                        </div>
+                        </div> */}
                     </div>
                 )}
             </div>

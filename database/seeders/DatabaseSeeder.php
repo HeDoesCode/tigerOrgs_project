@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolesSeeder::class);
         $this->call(UsersSeeder::class);
+        $this->call(SuperAdminLoginHistorySeeder::class);
         $this->call(KeywordSeeder::class);
 
         // create users
@@ -181,6 +182,9 @@ class DatabaseSeeder extends Seeder
         foreach (array_chunk($adminRecords, 1000) as $chunk) {
             DB::table('organization_user_role')->insert($chunk);
         }
+
+        // add OSA to list of fake orgs
+        $this->call(OrganizationsSeeder::class);
 
         // add us as admin to all orgs
         $this->call(Organization_User_RolesSeeder::class);
