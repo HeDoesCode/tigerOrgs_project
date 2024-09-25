@@ -19,13 +19,14 @@ import { Head } from "@inertiajs/react";
 import IconPoint from "@/Components/Icons/IconPoint";
 import { Description } from "@radix-ui/react-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 function Home({
     editing = false,
     recruiting = true,
     pageData,
     pageLayoutData,
-    withFollow
+    withFollow,
 }) {
     // pageData = {
     //     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
@@ -123,9 +124,14 @@ function Home({
     //     metadata: pageData.metadata,
     // };
 
+    const [editableData, setEditableData] = useState(pageData);
+    const [editableLayoutData, setEditableLayoutData] =
+        useState(pageLayoutData);
+
     return (
         <OrganizationLayout
-            pageLayoutData={pageLayoutData}
+            pageLayoutData={editableLayoutData}
+            setEditableLayoutData={setEditableLayoutData}
             recruiting={recruiting}
             editing={editing}
             withFollow={withFollow}
@@ -153,6 +159,20 @@ function Home({
                     <button className="px-3 py-2 bg-cyan-400 rounded-lg">
                         Save Changes
                     </button>
+                    <button
+                        type="button"
+                        onClick={() => console.log(editableData)}
+                        className="px-3 py-2 bg-cyan-400 rounded-lg"
+                    >
+                        Check page data
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => console.log(editableLayoutData)}
+                        className="px-3 py-2 bg-cyan-400 rounded-lg"
+                    >
+                        Check page layout data
+                    </button>
                 </div>
             )}
         </OrganizationLayout>
@@ -170,13 +190,34 @@ function Home({
         );
     }
 
+    //done
     function AboutUs() {
+        const [localData, setLocalData] = useState(editableData.aboutUs);
+
         return (
             <Tile name="About Us">
-                {pageData.aboutUs}
+                {editableData.aboutUs}
                 {editing && (
                     <EditArea title="Set About Us description">
-                        <div>text editor</div>
+                        <textarea
+                            name=""
+                            id=""
+                            placeholder="Your description here..."
+                            value={localData}
+                            onChange={(e) => setLocalData(e.target.value)}
+                        ></textarea>
+                        <button
+                            type="button"
+                            className="px-3 py-2 bg-cyan-400 rounded-lg"
+                            onClick={() =>
+                                setEditableData({
+                                    ...editableData,
+                                    aboutUs: localData,
+                                })
+                            }
+                        >
+                            Save
+                        </button>
                     </EditArea>
                 )}
             </Tile>
@@ -250,12 +291,32 @@ function Home({
     }
 
     function SocialIFrame() {
+        const [localData, setLocalData] = useState(editableData.fb_link);
+
         return (
             <Tile className="h-full" name="Social Activities">
-                facebook iframe
+                <span>Facebook Iframe: {editableData.fb_link}</span>
                 {editing && (
                     <EditArea title="Set IFrame link">
-                        <div>text editor</div>
+                        <textarea
+                            name=""
+                            id=""
+                            placeholder="Your description here..."
+                            value={localData}
+                            onChange={(e) => setLocalData(e.target.value)}
+                        ></textarea>
+                        <button
+                            type="button"
+                            className="px-3 py-2 bg-cyan-400 rounded-lg"
+                            onClick={() =>
+                                setEditableData({
+                                    ...editableData,
+                                    fb_link: localData,
+                                })
+                            }
+                        >
+                            Save
+                        </button>
                     </EditArea>
                 )}
             </Tile>

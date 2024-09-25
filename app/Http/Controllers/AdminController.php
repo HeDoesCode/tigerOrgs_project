@@ -21,6 +21,7 @@ class AdminController extends Controller
                 'members' => $organization->members_count,
             ],
             'aboutUs' => $organization->description,
+            'fb_link' => $organization->fb_link,
             'contacts' => $organization->contacts,
             'officers' => $organization->officers,
             'photos' => $organization->photos,
