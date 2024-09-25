@@ -74,6 +74,7 @@ Route::middleware(['auth', 'isAdmin'])
     ->controller(AdminController::class)
     ->group(function () {
         Route::get('editpage', 'edit')->name('editpage');
+        Route::post('save', 'saveEdit');
         Route::get('invite', 'invite')->name('invite');
         Route::post('addadmin', 'addAdmin')->name('add-admin');
         Route::get('applications', 'applications')->name('applications');

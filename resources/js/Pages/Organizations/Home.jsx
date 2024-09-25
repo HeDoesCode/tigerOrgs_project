@@ -15,11 +15,12 @@ import {
     DialogTrigger,
 } from "@/Components/ui/dialog";
 import OrganizationLayout from "@/Components/Organizations/OrganizationLayout";
-import { Head } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import IconPoint from "@/Components/Icons/IconPoint";
 import { Description } from "@radix-ui/react-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { useEffect } from "react";
 
 function Home({
     editing = false,
@@ -28,74 +29,11 @@ function Home({
     pageLayoutData,
     withFollow,
 }) {
-    // pageData = {
-    //     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s",
-    //     coverPhoto:
-    //         "https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-6/440157037_826883462808874_1884542927338964791_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF-iHA5tGGTjllKkngWhNwzZBy86ZNOkCFkHLzpk06QIWlW9y_IZDIa9gnqO4TmlORRLq8_A0Bay2SPO8SKF0Om&_nc_ohc=wnM1T6HPwUQQ7kNvgHPD7_-&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYDCQrliXzWlGMjKz1N0123SJwpAXflH8hyNnkmRfjdB0Q&oe=66C65C2D",
-    //     metadata: {
-    //         organizationName:
-    //             "Society of Information Technology Enthusiasts (SITE)",
-    //         members: "210",
-    //     },
-    //     aboutUs:
-    //         "Official TigerOrgs™ page of the Society of Information Technology Enthusiasts, the mother organization of the IT students of the University of Santo Tomas.",
-    //     contacts: [
-    //         {
-    //             platform: "email",
-    //             address: "site.cics@ust.edu.ph",
-    //         },
-    //         {
-    //             platform: "facebook",
-    //             address: "https://www.facebook.com/site.ust",
-    //         },
-    //         {
-    //             platform: "instagram",
-    //             address: "https://www.instagram.com/site.ust",
-    //         },
-    //         {
-    //             platform: "x",
-    //             address: "https://www.x.com/site.ust",
-    //         },
-    //     ],
-    //     officers: [
-    //         {
-    //             position: "President",
-    //             name: "John Doe",
-    //         },
-    //         {
-    //             position: "Vice President",
-    //             name: "Jane Smith",
-    //         },
-    //         {
-    //             position: "Secretary",
-    //             name: "Alex Johnson",
-    //         },
-    //         {
-    //             position: "Treasurer",
-    //             name: "Emily Davis",
-    //         },
-    //         {
-    //             position: "Auditor",
-    //             name: "Michael Brown",
-    //         },
-    //         {
-    //             position: "PRO",
-    //             name: "Sarah Lee",
-    //         },
-    //     ],
-    //     photos: [
-    //         {
-    //             caption: "CICS Wellness Series",
-    //             src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
-    //         },
-    //         {
-    //             caption: "CICS Wellness Series",
-    //             src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1JyKAmPjMMDpas4R8piV_Q6DHSjTBXgd3Q&s",
-    //         },
-    //     ],
-    // };
-
     const { toast } = useToast();
+    const { errors = {} } = usePage().props;
+    const [editableData, setEditableData] = useState(pageData);
+    const [editableLayoutData, setEditableLayoutData] =
+        useState(pageLayoutData);
 
     const copyToClipboard = (text) => {
         navigator.clipboard
@@ -118,15 +56,42 @@ function Home({
             });
     };
 
-    // pageLayoutData = {
-    //     logo: pageData.logo,
-    //     coverPhoto: pageData.coverPhoto,
-    //     metadata: pageData.metadata,
-    // };
+    const handleSave = () => {
+        console.log(editableData, editableLayoutData);
 
-    const [editableData, setEditableData] = useState(pageData);
-    const [editableLayoutData, setEditableLayoutData] =
-        useState(pageLayoutData);
+        const formData = new FormData();
+
+        formData.append("orgID", editableLayoutData.orgID);
+        formData.append("aboutUs", editableData.aboutUs);
+        formData.append("fb_link", editableData.fb_link);
+
+        if (editableLayoutData.logo instanceof File) {
+            formData.append("logo", editableLayoutData.logo);
+        }
+
+        if (editableLayoutData.coverPhoto instanceof File) {
+            formData.append("coverPhoto", editableLayoutData.coverPhoto);
+        }
+
+        router.post("save", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+    };
+
+    useEffect(() => {
+        if (Object.keys(errors).length !== 0) {
+            Object.entries(errors).forEach(([key, value]) => {
+                toast({
+                    title: "Error:",
+                    description: value,
+                    duration: 10000,
+                    variant: "destructive",
+                });
+            });
+        }
+    }, [errors]);
 
     return (
         <OrganizationLayout
@@ -156,7 +121,10 @@ function Home({
             <PhotoScrollArea />
             {editing && (
                 <div className="flex justify-end px-5 md:px-12 mt-6">
-                    <button className="px-3 py-2 bg-cyan-400 rounded-lg">
+                    <button
+                        className="px-3 py-2 bg-cyan-400 rounded-lg"
+                        onClick={handleSave}
+                    >
                         Save Changes
                     </button>
                     <button

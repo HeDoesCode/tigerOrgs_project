@@ -213,7 +213,7 @@ function OrganizationLayout({
                         <label>Select an image:</label>
                         <input
                             type="file"
-                            accept="image/*"
+                            accept="image/png, image/jpg, image/jpeg"
                             onChange={handleImageChange}
                         />
                         {previewUrl && (
@@ -278,7 +278,7 @@ function OrganizationLayout({
                         <label>Select an image:</label>
                         <input
                             type="file"
-                            accept="image/*"
+                            accept="image/png, image/jpg, image/jpeg"
                             onChange={handleImageChange}
                         />
                         {previewUrl && (
