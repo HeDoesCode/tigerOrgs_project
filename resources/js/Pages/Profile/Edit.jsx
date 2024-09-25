@@ -1,23 +1,10 @@
 import IconMailFilled from "@/Components/Icons/IconMailFilled";
 import UserLayout from "@/Layouts/UserLayout";
 import { Head, router } from "@inertiajs/react";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/Components/ui/select";
-import ControlKeywords from "@/Components/Organizations/ControlKeywords";
-import Pre from "@/Components/Pre";
 import KeywordSelect from "@/Components/Organizations/KeywordSelect";
-import React, { useEffect, useState } from "react";
-// import TextInput from "@/Components/ui/TextInput";
-import { buttonVariants } from "@/Components/ui/button";
-// import { useState } from "react";
+import React, { useState } from "react";
 
 function Edit({ user, activeUserKeywords, keywords }) {
-    user.section = user.section || ''
     const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
     const userSectionError = user.section != null ? null : 'Specify Section'; // if section exists, no error
 
