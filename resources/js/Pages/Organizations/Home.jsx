@@ -193,7 +193,7 @@ function Home({
     }
 
     function ContactsContainer() {
-        const data = pageData.contacts;
+        const [localData, setLocalData] = useState(pageData.contacts);
 
         const platformIcons = {
             email: <IconMailFilled />,
@@ -204,17 +204,36 @@ function Home({
             default: <IconPoint />,
         };
 
+        const handleAddNewContact = () => {
+            setLocalData([
+                ...localData,
+                { platform: "email", name: "", address: "" },
+            ]);
+        };
+
+        const handleEditContact = (index, data) => {
+            let updatedData = [...localData];
+            updatedData[index] = {
+                ...updatedData[index],
+                address: data.address,
+                platform: data.platform,
+            };
+            return updatedData;
+        };
+
+        const handleSave = () => {
+            setEditableData({ ...editableData, contacts: localData });
+        };
+
         return (
             <Tile name="Contacts and Information">
                 <ul className="w-full space-y-2 pl-2 relative">
-                    {data.map((contact, index) => (
+                    {editableData.contacts.map((contact, index) => (
                         <li
                             key={index}
                             className="flex items-center quicksand gap-x-2"
                         >
                             <div>{platformIcons[contact.platform]}</div>
-                            <div>{contact.name}:</div>
-                            {/* <div className="truncate flex-1">{contact.address}</div> */}
                             <button
                                 className="truncate flex-1 text-left hover:outline hover:outline-1 rounded-md hover:outline-gray-500 hover:px-2 transition-all"
                                 onClick={() => copyToClipboard(contact.address)}
@@ -227,6 +246,80 @@ function Home({
                 {editing && (
                     <EditArea title="Set contacts list">
                         <div>complex bullet text editor</div>
+                        <div>
+                            <ul>
+                                {localData.map((contact, index) => {
+                                    return (
+                                        <li key={index}>
+                                            <select
+                                                onChange={(e) =>
+                                                    setLocalData(
+                                                        handleEditContact(
+                                                            index,
+                                                            {
+                                                                ...contact,
+                                                                platform:
+                                                                    e.target
+                                                                        .value,
+                                                            }
+                                                        )
+                                                    )
+                                                }
+                                            >
+                                                <option value="email">
+                                                    Email
+                                                </option>
+                                                <option value="facebook">
+                                                    Facebook
+                                                </option>
+                                                <option value="x">X</option>
+                                                <option value="linkedin">
+                                                    Linked In
+                                                </option>
+                                                <option value="instagram">
+                                                    Instagram
+                                                </option>
+                                                <option value="other">
+                                                    Other
+                                                </option>
+                                            </select>
+                                            <input
+                                                type="text"
+                                                value={contact.address}
+                                                onChange={(e) =>
+                                                    setLocalData(
+                                                        handleEditContact(
+                                                            index,
+                                                            {
+                                                                ...contact,
+                                                                address:
+                                                                    e.target
+                                                                        .value,
+                                                            }
+                                                        )
+                                                    )
+                                                }
+                                            />
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                            <button
+                                type="button"
+                                className="px-3 py-2 bg-cyan-400 rounded-lg"
+                                onClick={handleAddNewContact}
+                            >
+                                Add New Contact
+                            </button>
+
+                            <button
+                                type="button"
+                                className="px-3 py-2 bg-cyan-400 rounded-lg"
+                                onClick={handleSave}
+                            >
+                                Save
+                            </button>
+                        </div>
                     </EditArea>
                 )}
             </Tile>
