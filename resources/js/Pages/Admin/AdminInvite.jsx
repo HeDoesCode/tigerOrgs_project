@@ -1,20 +1,74 @@
-import { Head, usePage } from "@inertiajs/react";
+import { Head, usePage, useForm } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import MainAdminFrame from "@/Components/MainAdminFrame";
-import IconCheckBox from "@/Components/Icons/IconCheckBox";
-import IconInvite from "@/Components/Icons/IconInvite";
 import AdminButton from "@/Components/Admin/AdminButton";
-import IconBellFilled from "@/Components/Icons/IconBellFilled";
 import AdminMemberCard from "@/Components/Admin/AdminMemberCard";
-import IconEdit from "@/Components/Icons/IconEdit";
 import AdminDialog from "@/Components/Admin/AdminDialog";
+import IconBellFilled from "@/Components/Icons/IconBellFilled";
+import IconInvite from "@/Components/Icons/IconInvite";
+import IconEdit from "@/Components/Icons/IconEdit";
+import Searchbar from "@/Components/Searchbar";
 import React from "react";
+import { useState } from "react";
+import VerticalCard from "@/Components/VerticalCard";
+import AdminDialogForInvite from "@/Components/Admin/AdminDialogForInvite";
+import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
 
-function AdminInvite() {
-    const { orgID, organizationName, members, admins, roleID, officers } =
-        usePage().props;
-    console.log(admins);
-    console.log(members);
+function AdminInvite({ members, admins, orgID, organizationName }) {
+    //searching users
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+
+    //search for users
+    const handleSearchChange = async (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+
+        if (query.length > 0) {
+            try {
+                const response = await axios.get("/superadmin/search-users", {
+                    params: { query },
+                });
+
+                setSearchResults(response.data);
+            } catch (error) {
+                console.error("Error fetching result:", error);
+            }
+        } else {
+            setSearchResults([]);
+        }
+    };
+
+    //invite
+    const handleInvite = (e) => {
+        post(route("admin.add-admin", orgID), {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
+    //form for inviting member
+    const { data, setData, post, processing, errors } = useForm({
+        userID: "",
+        orgID: orgID,
+        roleID: 1,
+    });
+
+    const getUser = (userID) => {
+        setData("userID", userID);
+    };
+
+    // const { data, setData } = useForm({
+    //     allMembers: members,
+    //     allAdmins: admins,
+    // });
+
+    // const [currentMembers, setCurrentMembers] = useState()
+
+    // const updateAllMembers = (updatedMembers) =>
+    //     setData("allMembers", updatedMembers);
+    // const updateAllAdmins = (updatedAdmins) =>
+    //     setData("allAdmins", updatedAdmins);
 
     return (
         <div className="w-full">
@@ -52,6 +106,7 @@ function AdminInvite() {
                                 }
                             />
                             {/* Dialog for Adding Member Manually */}
+
                             <AdminDialog
                                 title="Add Member Manually"
                                 description="Search to add manually to the Organization"
@@ -62,7 +117,54 @@ function AdminInvite() {
                                         name="Add Member Manually"
                                     />
                                 }
-                            />
+                            >
+                                <Searchbar
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
+                                    placeholder={"Search by name or email"}
+                                />
+                                <div>
+                                    {searchResults.map((user) => (
+                                        <VerticalCard
+                                            key={user.userID}
+                                            gridcol="grid-cols-4"
+                                        >
+                                            <div className="text-sm font-bold content-center text-center">
+                                                {user.firstname} {user.lastname}
+                                            </div>
+                                            <div className="truncate col-span-2 content-center text-sm font-semibold text-center">
+                                                {user.email}
+                                            </div>
+                                            <div className="sm px-4 text-sm content-center ">
+                                                <AdminAlertDialog
+                                                    trigger={
+                                                        <div
+                                                            role="button"
+                                                            className="mr-2 bg-white flex items-center justify-center px-9  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white"
+                                                            name="Assign"
+                                                            onClick={() => {
+                                                                getUser(
+                                                                    user.userID
+                                                                );
+                                                            }}
+                                                            // onClick={handleInvite}
+                                                        >
+                                                            <IconInvite />
+                                                            <span className="ml-2 poppins hidden truncate sm:block">
+                                                                Assign
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                    title={`Add ${user.firstname} ${user.lastname} to the organization?`}
+                                                    description="This adds the chosen user to the organization."
+                                                    accept="Confirm"
+                                                    onclick={handleInvite}
+                                                />
+                                            </div>
+                                        </VerticalCard>
+                                    ))}
+                                </div>
+                            </AdminDialog>
                         </div>
                         <div className="pt-5 pl-5 flex justify-between">
                             <div className="poppins">Current Admin(s):</div>
