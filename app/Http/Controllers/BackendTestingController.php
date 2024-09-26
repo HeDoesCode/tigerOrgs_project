@@ -7,11 +7,23 @@ use App\Models\Organization;
 use App\Models\Photo;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class BackendTestingController extends Controller
 {
+
+    public $user;
+    public $org;
+
+    public function __construct()
+    {
+        $this->user = User::find('2024000003');
+        $this->org = Organization::find(1);
+    }
+
+
     public function run() {
-        $user = User::find('2024000003');
+        
         // dd($user);
 
         // $user->roles()->attach(3);
@@ -21,8 +33,6 @@ class BackendTestingController extends Controller
         //     'name' => 'SITE',
         //     'department' => 'CICS',
         // ]);
-
-        $org = Organization::find(1);
         
         // $user->follows()->attach(1);
 
@@ -31,14 +41,25 @@ class BackendTestingController extends Controller
         //     'filename' => 'logo.png', 
         // ]);
 
-        Form::create([
-            'orgID' => $org->orgID,
-            'formLayout' => '[{id: 1, title: "task 1"},]',
-        ]);
+        // Form::create([
+        //     'orgID' => $org->orgID,
+        //     'formLayout' => '[{id: 1, title: "task 1"},]',
+        // ]);
 
         
-        foreach ($org->forms as $form) {
-            echo $form->formLayout;
-        }
+        // foreach ($org->forms as $form) {
+        //     echo $form->formLayout;
+        // }
+
+    }
+
+    public function renderForm() {
+        $formLayout = json_decode($this->org->forms[0]->formLayout);
+
+        return Inertia::render("TestingPages/Forms", ['formLayout' =>  $formLayout]);
+    }
+
+    public function showBuilder() {
+        return Inertia::render("TestingPages/FormBuilding");
     }
 }

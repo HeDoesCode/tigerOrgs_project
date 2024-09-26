@@ -17,6 +17,50 @@ use Illuminate\Support\Facades\Log;
 class SuperAdminController extends Controller
 {
     //manage org functions
+
+    public function addOrg(Request $request){
+        $validated = $request-> validate([
+            'name' => 'required|unique:organizations',
+            'department' => 'required',
+
+        ]);
+
+        
+
+        try {
+            
+
+            DB::table('organizations')->updateOrInsert([
+                'recruiting'=> false,
+                'name'=> $validated['name'],
+                'department' => $validated['department'],
+                'visibility' => 1,
+                
+            ]);
+
+            session()->flash('toast', [
+                'title' => 'Saved',
+                'description' => 'Organization added successfully!',
+                'variant' => 'success'
+            ]);
+
+            return to_route('superadmin.status');
+        } catch (Exception $e) {
+
+            session()->flash('toast', [
+                'title' => 'Failed',
+                'description' => 'Organization was not added',
+                'variant' => 'destructive'
+            ]);
+
+
+            return redirect()->back()->with('error', 'An error occurred while assigning the admin role.');
+        }
+   
+    }
+
+    
+
     public function manage()
     {
 
@@ -184,6 +228,34 @@ class SuperAdminController extends Controller
         }
     }
 
+    //for specific org
+
+    public function deleteAdminRole($userID, $orgID)
+{
+    try {
+        DB::table('organization_user_role')
+            ->where('userID', $userID)
+            ->where('orgID', $orgID)
+            ->where('roleID', 2)
+            ->delete();
+
+        session()->flash('toast', [
+            'title' => 'Success',
+            'description' => 'Admin role removed successfully!',
+            'variant' => 'success'
+        ]);
+
+        return redirect()->route('superadmin.invite');
+    } catch (Exception $e) {
+        session()->flash('toast', [
+            'title' => 'Failed',
+            'description' => 'Failed to remove admin role.',
+            'variant' => 'destructive'
+        ]);
+        return redirect()->back();
+    }
+}
+
 
 
     //file upload functions
@@ -193,11 +265,67 @@ class SuperAdminController extends Controller
         return Inertia::render('SuperAdmin/SuperAdminDataUpload');
     }
 
-    public function upload(Request $request)
-    {
+    private function handleStudentUpload($studentFile) {
+        $studentData = fopen($studentFile, 'r');            
+        $studentChunks = [];
 
-        //ethan john catacutan send help
-        dd($request->all());
+        try {
+            $dumpHeader = fgetcsv($studentData); // skip the header in the csv file
+            
+            while ($data = fgetcsv($studentData)) {
+                $existingUser = User::find($data[0]);
+
+                if ($existingUser != null) {         
+                    if ($existingUser->email != $data[1]) {  // to check if user has changed their email 
+                        $existingUser->email = $data[1];
+                        $existingUser->save();
+                    }
+                } else {
+                    $studentChunks[] = [
+                        "userID" => $data[0],   
+                        "email" => $data[1],
+                        "firstname" => $data[2],
+                        "lastname" => $data[3],
+                        "middlename" => $data[4],
+                        "remember_token" => NULL,
+                        "status" => "student",
+                        "college" => $data[7],
+                    ];
+                }
+
+                if (count($studentChunks) === 1000) {
+                    User::insert($studentChunks);
+                    $studentChunks = [];
+                }
+            }
+
+            if (!empty($studentChunks)) { // insert the rest in studentChunks
+                User::insert($studentChunks);
+            }    
+        } catch (Exception $e) {
+            // TO-DO: return with proper error
+            dd($e->getMessage());
+        }
+
+        fclose($studentData);
+    }
+
+    private function handleOrganizationUpload() {
+        // TO-DO: process upload of organization data from ESORR
+    }
+
+    public function upload(Request $request){
+        if ($request->studentFile == null && $request->organizationFile == null) {
+            // TO-DO: return with proper error
+            dd($request);
+        }
+
+        if ($request->studentFile != null) {
+            $this->handleStudentUpload($request->studentFile);
+        } 
+        if ($request->organizationFile != null) { 
+            $this->handleOrganizationUpload();
+        } 
     }
 
     // Activity log tab functions

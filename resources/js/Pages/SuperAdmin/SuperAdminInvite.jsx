@@ -25,6 +25,9 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
         useState(organizations);
     const [orgSearchQuery, setOrgSearchQuery] = useState("");
 
+    //for deleting specific user to that org
+    const [currentUserOrgs, setCurrentUserOrgs] = useState([]);
+
     //for highlighting the org card
     const [selectedOrg, setSelectedOrg] = useState(0);
 
@@ -60,6 +63,34 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
             setSearchResults([]);
         }
     };
+
+    //deleting specific org to user
+    const handleDeleteRole = (orgID) => {
+        router.delete(
+            route("superadmin.delete-admin-role", {
+                userID: currentUserID,
+                orgID: orgID,
+            }),
+            {
+                preserveState: true,
+                preserveScroll: true,
+            }
+        );
+    };
+
+    //triggers to check the only org that is assigned to the user
+    useEffect(() => {
+        if (currentUserID) {
+            const userOrgs = organizations.filter((org) =>
+                userRoles.some(
+                    (role) =>
+                        role.userID === currentUserID &&
+                        role.orgID === org.orgID
+                )
+            );
+            setCurrentUserOrgs(userOrgs);
+        }
+    }, [currentUserID, organizations, userRoles]);
 
     //search for org
     useEffect(() => {
@@ -245,19 +276,24 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                     }}
                                                     className="px-4 text-center font-semibold rounded-xl poppins bg-green-50 border-2 border-green-600 text-green-800"
                                                 >
-                                                    Assigned to{" "}
+                                                    Joined{" "}
                                                     {user.organizations_count}{" "}
-                                                    Org
+                                                    {user.organizations_count >
+                                                    1
+                                                        ? "Organizations"
+                                                        : "Organization"}
                                                 </h1>
                                             }
-                                            title={`Assigned Organization to ${user.firstname} ${user.lastname}`}
+                                            title={`Assigned Organizations for ${user.firstname} ${user.lastname}`}
                                         >
-                                            {filteredOrganizations.length !==
-                                            0 ? (
+                                            {currentUserOrgs.length !== 0 ? (
                                                 <div className="grid sm:grid-cols-2 overflow-auto grid-cols-1 gap-4 p-5">
-                                                    {filteredOrganizations.map(
+                                                    {currentUserOrgs.map(
                                                         (organization) => (
                                                             <AdminOrgInvCard
+                                                                isDeleting={
+                                                                    true
+                                                                }
                                                                 key={
                                                                     organization.orgID
                                                                 }
@@ -267,13 +303,12 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                                 organization={
                                                                     organization
                                                                 }
-                                                                onClick={() => {
-                                                                    getOrg(
-                                                                        organization.orgID
-                                                                    );
-                                                                }}
+                                                                onClick={() => {}}
                                                                 selectedOrg={
                                                                     selectedOrg
+                                                                }
+                                                                onDelete={
+                                                                    handleDeleteRole
                                                                 }
                                                             />
                                                         )
@@ -319,7 +354,8 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                                     );
                                                                 }}
                                                             >
-                                                                Assign Role
+                                                                Assign Another
+                                                                Role
                                                             </div>
                                                         }
                                                         handleInvite={
@@ -345,7 +381,7 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                             {
                                                 name: (
                                                     <AdminAlertDialog
-                                                        trigger="Delete Role"
+                                                        trigger="Delete All Roles"
                                                         title={`Remove ${user.firstname} ${user.lastname} as admin?`}
                                                         description="This will remove all the admin roles of this user to his/her assigned organization."
                                                         accept="Confirm"

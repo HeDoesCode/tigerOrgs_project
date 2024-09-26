@@ -17,18 +17,20 @@ import BuilderWrap from "./BuilderWrap";
 import { router } from "@inertiajs/react";
 
 const inputTypes = [
-    { type: "Text", icon: letterT },
-    { type: "Number", icon: number123 },
-    { type: "Email", icon: emailIcon },
-    { type: "Select", icon: select },
-    { type: "Radio Group", icon: radiobutton },
-    { type: "Checkbox", icon: checkbox },
-    { type: "File Upload", icon: Iconfileupload },
-    { type: "Image Upload", icon: IconResume },
+    { type: "text", icon: letterT },
+    { type: "number", icon: number123 },
+    { type: "email", icon: emailIcon },
+    { type: "select", icon: select },
+    { type: "radio", icon: radiobutton },
+    { type: "checkbox", icon: checkbox },
+    { type: "file_upload", icon: Iconfileupload },
+    { type: "image_upload", icon: IconResume },
 ];
 
-function FormBuilder() {
+function FormBuilder({ orgID }) {
     const [items, setItems] = useState([]);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
 
     function getItemPos(id) {
         return items.findIndex((item) => item.id === id);
@@ -78,9 +80,9 @@ function FormBuilder() {
         );
 
         switch (updatedItems[editedItemIndex].type) {
-            case "Select":
-            case "Checkbox":
-            case "Radio Group":
+            case "select":
+            case "checkbox":
+            case "radio":
                 updatedItems[editedItemIndex] = {
                     ...updatedItems[editedItemIndex],
                     name: data.question,
@@ -105,9 +107,13 @@ function FormBuilder() {
     }
 
     function handleSave() {
-        let dataToBeSent = JSON.stringify(items);
+        let createdForm = {
+            name: title,
+            desc: description,
+            layout: items,
+        };
 
-        router.post("/admin/form-builder/save", dataToBeSent, {
+        router.post(`/admin/${orgID}/form-builder/save`, dataToBeSent, {
             headers: {
                 "Content-Type": "application/json",
             },
@@ -118,8 +124,23 @@ function FormBuilder() {
         <div className=" bg-white min-h-screen ">
             <div className="flex flex-col justify-center m-4 p-4 max-w-3xl mx-auto rounded-xl">
                 <h1 className="font-semibold text-3xl mb-4 px-2 text-center">
-                    Recruitment Form
+                    Create Form
                 </h1>
+                <input
+                    type="text"
+                    className="w-full bg-transparent rounded-xl border-[1.5px] border-x-stone-600 mb-4 p-2"
+                    placeholder="Form title..."
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                />
+                <input
+                    type="text"
+                    className="w-full bg-transparent rounded-xl border-[1.5px] border-x-stone-600 mb-2"
+                    placeholder="Form description..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
                 <FormActionsContext.Provider
                     value={{ delete: handleDeleteItem, edit: handleEditItem }}
                 >

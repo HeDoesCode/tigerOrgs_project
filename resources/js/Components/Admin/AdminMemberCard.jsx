@@ -17,6 +17,11 @@ function AdminMemberCard({
     orgID,
     roleID,
     showActions = true,
+    admins,
+    setAllAdmins,
+    members,
+    setAllMembers,
+    allAdmins,
 }) {
     const isAdmin = roleID === 2;
     const isMember = roleID === 1;
@@ -45,12 +50,52 @@ function AdminMemberCard({
                             <AdminEditMenu
                                 userID={userID}
                                 orgID={orgID}
-                                currentRoleID={roleID}
+                                roleID={roleID}
+                                onRoleChange={(newRoleID) => {
+                                    // Update the local state here
+                                    if (newRoleID === 2) {
+                                        setAllAdmins((prev) => [
+                                            ...prev,
+                                            {
+                                                userID,
+                                                firstname,
+                                                lastname,
+                                                email,
+                                                college,
+                                                roleID: 2,
+                                            },
+                                        ]);
+                                        setAllMembers((prev) =>
+                                            prev.filter(
+                                                (member) =>
+                                                    member.userID !== userID
+                                            )
+                                        );
+                                    } else {
+                                        setAllMembers((prev) => [
+                                            ...prev,
+                                            {
+                                                userID,
+                                                firstname,
+                                                lastname,
+                                                email,
+                                                college,
+                                                roleID: 1,
+                                            },
+                                        ]);
+                                        setAllAdmins((prev) =>
+                                            prev.filter(
+                                                (admin) =>
+                                                    admin.userID !== userID
+                                            )
+                                        );
+                                    }
+                                }}
                             />
                         </div>
-                        <div className="mx-1 text-gray-500 cursor-pointer">
+                        {/* <div className="mx-1 text-gray-500 cursor-pointer">
                             <IconDelete />
-                        </div>
+                        </div> */}
                     </div>
                 )}
             </div>
