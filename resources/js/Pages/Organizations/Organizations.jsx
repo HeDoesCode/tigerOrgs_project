@@ -152,7 +152,7 @@ function Organizations({
                             <ControlKeywords keywords={keywords} queryParameters={queryParameters} />
                         </ControlContainer>
 
-                        <ControlContainer name="Category">
+                        <ControlContainer name="Department">
                             <Select
                                 defaultValue="All"
                                 onValueChange={handleFilterCategory}
