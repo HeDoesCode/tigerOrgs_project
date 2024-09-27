@@ -18,7 +18,7 @@ class Organization_User_RolesSeeder extends Seeder
             '2024000001',
             '2024000002',
             '2024000003',
-            // '2024000004'
+            '2024000004'
         ];
 
         // Retrieve all organizations

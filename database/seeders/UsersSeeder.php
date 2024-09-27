@@ -41,15 +41,15 @@ class UsersSeeder extends Seeder
                 'college' => 'College of Information and Computing Sciences',
                 'status' => 'student',
             ],
-            // [
-            //     'userID' => '2024000004',
-            //     'email' => 'josephvictor.paduga.cics@ust.edu.ph',
-            //     'firstname' => 'JOSEPH VICTOR',
-            //     'lastname' => 'PADUGA',
-            //     'middlename' => 'CICS',
-            //     'college' => 'College of Information and Computing Sciences',
-            //     'status' => 'student',
-            // ]
+            [
+                'userID' => '2024000004',
+                'email' => 'josephvictor.paduga.cics@ust.edu.ph',
+                'firstname' => 'JOSEPH VICTOR',
+                'lastname' => 'PADUGA',
+                'middlename' => 'CICS',
+                'college' => 'College of Information and Computing Sciences',
+                'status' => 'student',
+            ]
         ]);
     }
 }
