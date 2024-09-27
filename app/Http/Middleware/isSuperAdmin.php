@@ -32,6 +32,8 @@ class isSuperAdmin
                 // ]);
                 // dd('toasted');
                 return redirect('superadmin');
+            } else {
+                return $next($request);
             }
         }
         if ($userIsSuperAdmin) {
