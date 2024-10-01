@@ -28,12 +28,12 @@ export default function SuperAdminLoginHistory({ loginEntries }) {
                     title="Activity Log"
                 >
                     <div className="grid grid-rows-1 p-5 gap-2">
-                        <div className="-mt-4 text-sm w-full flex justify-end">
+                        {/* <div className="-mt-4 text-sm w-full flex justify-end">
                             {`Showing ${loginEntries.current_page === 1 ?
                                 loginEntries.current_page * loginEntries.per_page :
                                 `${((loginEntries.current_page - 1) * loginEntries.per_page) + 1}-${loginEntries.current_page * loginEntries.per_page}`
                                 }/${loginEntries.total}`}
-                        </div>
+                        </div> */}
                         {loginEntries.data.map((entry, index) => (
                             <VerticalCard gridcol="sm:grid-cols-7" key={index}>
                                 <div className=" col-span-1 ">

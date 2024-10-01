@@ -9,6 +9,7 @@ import IconList from "@/Components/Icons/IconList";
 import IconHistory from "@/Components/Icons/IconHistory";
 import IconDataUpload from "@/Components/Icons/IconDataUpload";
 import { usePage } from "@inertiajs/react";
+import { Inertia } from "@inertiajs/inertia";
 
 function SuperAdminLayout({ children }) {
     const { url } = usePage();
@@ -20,14 +21,19 @@ function SuperAdminLayout({ children }) {
     );
 
     function HeaderContent() {
+
+        const handleLogout = () => {
+            Inertia.post('/logout');
+        };
+
         return (
             <div className="flex-1 flex justify-end">
-                <Link
-                    href={route("organizations")}
+                <button
+                    onClick={handleLogout}
                     className="p-3 -m-3 hover:bg-gray-800 hover:text-white rounded-xl"
                 >
                     <IconExit size="27" />
-                </Link>
+                </button>
             </div>
         );
     }

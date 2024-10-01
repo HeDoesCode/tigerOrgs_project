@@ -14,7 +14,12 @@ class Organization_FollowersSeeder extends Seeder
      */
     public function run(): void
     {
-        $userIDs = [2024000001, 2024000002, 2024000003, 2024000004];
+        $userIDs = [
+            2024000001,
+            2024000002,
+            2024000003,
+            2024000004
+        ];
 
         $organizationIDs = Organization::all()->pluck('orgID');
         $records = [];
