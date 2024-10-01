@@ -26,14 +26,12 @@ Route::get('/', function () {
    ]);
 })->middleware(['auth', 'verified', 'isSuperAdmin:block'])->name('index');
 
-Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
-
 Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
    Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
    Route::patch('/update-user-section', [ProfileController::class, 'updateUserSection'])->name('update.user.section');
 
-   
+   Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
    Route::get('/organizations/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
    Route::get('/organizations/{orgID}/process', [OrganizationController::class, 'process'])->name('organizations.process');
    Route::get('/organizations/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
