@@ -7,6 +7,7 @@ use App\Models\Organization;
 use App\Models\User;
 use Inertia\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -23,29 +24,50 @@ class AdminController extends Controller
                 'members' => $organization->members_count,
             ],
             'aboutUs' => $organization->description,
+            'fb_link' => $organization->fb_link,
             'contacts' => $organization->contacts,
             'officers' => $organization->officers,
             'photos' => $organization->photos,
         ];
 
-        // $pageLayoutData = [
-        //     'orgID'=>$organization->orgID,
-        //     'logo' => $organization->logo,
-        //     'coverPhoto' => $organization->cover,
-        //     'metadata' => [
-        //         'organizationName' => $organization->name,
-        //         'members' => $organization->members_count,
-        //     ],
-        // ];
         $organization_controller = new OrganizationController();
         $pageLayoutData = $organization_controller->getPageLayoutData($organization->orgID);
 
-        // dump($pageData);
         return Inertia::render('Admin/AdminEditPage', [
             'pageData' => $pageData,
             'pageLayoutData' => $pageLayoutData,
             'orgID' => $orgID,
         ]);
+    }
+
+    public function saveEdit(Request $request)
+    {
+        $request->validate([
+            'aboutUs' => ['nullable', 'string'],
+            'fb_link' => ['nullable', 'string', 'url'],
+            'logo' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
+            'coverPhoto' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
+        ]);
+
+        $editedOrg = Organization::find($request->orgID);
+        $editedOrg->description = $request->aboutUs;
+        $editedOrg->fb_link = $request->fb_link;
+
+        if ($request->hasFile('logo')) {
+            $logo = Storage::disk('logos')->put('/', $request->file('logo'));
+            $editedOrg->logo = $logo;
+        }
+
+        if ($request->hasFile('coverPhoto')) {
+            $cover = Storage::disk('covers')->put('/', $request->file('coverPhoto'));
+            $editedOrg->cover = $cover;
+        }
+
+
+        $editedOrg->save();
+
+
+        dd("update success");
     }
 
     public function invite($orgID)

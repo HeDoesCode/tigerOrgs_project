@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class OrganizationController extends Controller
 {
@@ -227,8 +228,8 @@ class OrganizationController extends Controller
             ->findOrFail($orgID);
         return [
             'orgID' => $organization->orgID,
-            'logo' => $organization->logo,
-            'coverPhoto' => $organization->cover,
+            'logo' => Storage::url("public/logos/".$organization->logo),
+            'coverPhoto' => Storage::url("public/covers/".$organization->cover),
             'metadata' => [
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,

@@ -71,13 +71,13 @@ Route::prefix('/superadmin/')
       })->name('invitehistory');
    });
 
-//admin temporary routes
 Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
    ->prefix('/admin/{orgID}/')
    ->name('admin.')
    ->controller(AdminController::class)
    ->group(function () {
       Route::get('editpage', 'edit')->name('editpage');
+      Route::post('save', 'saveEdit');
       Route::get('invite', 'invite')->name('invite');
       Route::post('addadmin', 'addAdmin')->name('add-admin');
       Route::get('applications', 'applications')->name('applications');
