@@ -9,7 +9,9 @@ function Footer() {
             <div className="flex space-x-2 mx-10 sm:mx-24 md:mx-52 border-gray-300 border-t-[1px] pt-3 pb-5 w-full max-w-[70rem] h-fit">
                 <div className="flex-1">
                     <p className="leading-6">No Copyright 2024 © TigerOrgs Project <br />
-                        In partnership with the <Link><span className="underline">University of Santo Tomas</span></Link>.</p>
+                        In partnership with the <Link><span className="underline">University of Santo Tomas</span></Link>.
+                    </p>
+                    <span className="text-xs invisible">Devs: Joseph Paduga, Laurence Arcilla, Arvin Alkuino, Ethan Catacutan</span>
                 </div>
                 <div className="flex flex-col w-min">
                     <ul>
