@@ -11,7 +11,7 @@ function Footer() {
                     <p className="leading-6">No Copyright 2024 © TigerOrgs Project <br />
                         In partnership with the <Link><span className="underline">University of Santo Tomas</span></Link>.
                     </p>
-                    <span className="text-xs invisible">Devs: Joseph Paduga, Laurence Arcilla, Arvin Alkuino, Ethan Catacutan</span>
+                    <span className="text-xs text-transparent select-none">Devs: Joseph Paduga, Laurence Arcilla, Arvin Alkuino, Ethan Catacutan</span>
                 </div>
                 <div className="flex flex-col w-min">
                     <ul>
