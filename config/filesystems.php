@@ -56,6 +56,22 @@ return [
             'throw' => false,
         ],
 
+        'logos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/logos'),
+            'url' => env('APP_URL').'/storage/logos',
+            'visibility' => 'public',
+            'throw' => false,
+        ], 
+        
+        'covers' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/covers'),
+            'url' => env('APP_URL').'/storage/covers',
+            'visibility' => 'public',
+            'throw' => false,
+        ], 
+
     ],
 
     /*
