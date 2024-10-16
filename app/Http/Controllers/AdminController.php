@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Organization;
 use App\Models\User;
+use Exception;
 use Inertia\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -134,7 +135,7 @@ class AdminController extends Controller
             'roleID' => 'required|exists:roles,roleID',
         ]);
 
-        
+
 
         try {
             DB::table('organization_user_role')->updateOrInsert(
@@ -165,103 +166,103 @@ class AdminController extends Controller
 
     //actions for admin
     public function makeAdmin(Request $request, $orgID)
-{
-    $userID = $request->input('userID');
+    {
+        $userID = $request->input('userID');
 
-    $exists = DB::table('organization_user_role')
-        ->where('userID', $userID)
-        ->where('orgID', $orgID)
-        ->exists();
-
-    if ($exists) {
-        DB::table('organization_user_role')
+        $exists = DB::table('organization_user_role')
             ->where('userID', $userID)
             ->where('orgID', $orgID)
-            ->update(['roleID' => 2]);
+            ->exists();
+
+        if ($exists) {
+            DB::table('organization_user_role')
+                ->where('userID', $userID)
+                ->where('orgID', $orgID)
+                ->update(['roleID' => 2]);
+
+            session()->flash('toast', [
+                'title' => 'Success',
+                'description' => 'User has been made an Admin!',
+                'variant' => 'success',
+            ]);
+
+            return to_route('admin.invite', ['orgID' => $orgID]);
+        }
 
         session()->flash('toast', [
-            'title' => 'Success',
-            'description' => 'User has been made an Admin!',
-            'variant' => 'success',
+            'title' => 'Error',
+            'description' => 'User is not a member of the organization.',
+            'variant' => 'destructive',
         ]);
 
         return to_route('admin.invite', ['orgID' => $orgID]);
     }
 
-    session()->flash('toast', [
-        'title' => 'Error',
-        'description' => 'User is not a member of the organization.',
-        'variant' => 'destructive',
-    ]);
+    public function makeMember(Request $request, $orgID)
+    {
+        $userID = $request->input('userID');
 
-    return to_route('admin.invite', ['orgID' => $orgID]);
-}
-
-public function makeMember(Request $request, $orgID)
-{
-    $userID = $request->input('userID');
-
-    $exists = DB::table('organization_user_role')
-        ->where('userID', $userID)
-        ->where('orgID', $orgID)
-        ->exists();
-
-    if ($exists) {
-        DB::table('organization_user_role')
+        $exists = DB::table('organization_user_role')
             ->where('userID', $userID)
             ->where('orgID', $orgID)
-            ->update(['roleID' => 1]);
+            ->exists();
+
+        if ($exists) {
+            DB::table('organization_user_role')
+                ->where('userID', $userID)
+                ->where('orgID', $orgID)
+                ->update(['roleID' => 1]);
+
+            session()->flash('toast', [
+                'title' => 'Success',
+                'description' => 'User was removed as Admin!',
+                'variant' => 'success',
+            ]);
+
+            return to_route('admin.invite', ['orgID' => $orgID]);
+        }
 
         session()->flash('toast', [
-            'title' => 'Success',
-            'description' => 'User was removed as Admin!',
-            'variant' => 'success',
+            'title' => 'Error',
+            'description' => 'User is not a member of the organization.',
+            'variant' => 'destructive',
         ]);
 
         return to_route('admin.invite', ['orgID' => $orgID]);
     }
 
-    session()->flash('toast', [
-        'title' => 'Error',
-        'description' => 'User is not a member of the organization.',
-        'variant' => 'destructive',
-    ]);
+    public function removeStudent(Request $request, $orgID)
+    {
+        $userID = $request->input('userID');
 
-    return to_route('admin.invite', ['orgID' => $orgID]);
-}
-
-public function removeStudent(Request $request, $orgID)
-{
-    $userID = $request->input('userID');
-
-    $exists = DB::table('organization_user_role')
-        ->where('userID', $userID)
-        ->where('orgID', $orgID)
-        ->exists();
-
-    if ($exists) {
-        DB::table('organization_user_role')
+        $exists = DB::table('organization_user_role')
             ->where('userID', $userID)
             ->where('orgID', $orgID)
-            ->delete();
+            ->exists();
+
+        if ($exists) {
+            DB::table('organization_user_role')
+                ->where('userID', $userID)
+                ->where('orgID', $orgID)
+                ->delete();
+
+            session()->flash('toast', [
+                'title' => 'Success',
+                'description' => 'User has been removed from the organization!',
+                'variant' => 'success',
+            ]);
+
+            return to_route('admin.invite', ['orgID' => $orgID]);
+        }
 
         session()->flash('toast', [
-            'title' => 'Success',
-            'description' => 'User has been removed from the organization!',
-            'variant' => 'success',
+            'title' => 'Error',
+            'description' => 'User is not a member of the organization.',
+            'variant' => 'destructive',
         ]);
 
         return to_route('admin.invite', ['orgID' => $orgID]);
     }
-
-    session()->flash('toast', [
-        'title' => 'Error',
-        'description' => 'User is not a member of the organization.',
-        'variant' => 'destructive',
-    ]);
-
-    return to_route('admin.invite', ['orgID' => $orgID]);
-}
 
 
     public function applications($orgID)
