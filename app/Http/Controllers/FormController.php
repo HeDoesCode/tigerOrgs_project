@@ -24,12 +24,13 @@ class FormController extends Controller
 
     public function saveForm(Request $request, $orgID)
     {
+        // dd(json_encode($request->input('layout')));
         try {
-            $formData = json_encode($request->json()->all());
+            // $formData = json_encode($request->json()->all());
 
             Form::create([
                 'orgID' => $orgID,
-                'formLayout' => $formData,
+                'formLayout' => json_encode($request->input('layout')),
             ]);
 
             session()->flash('toast', [
@@ -39,12 +40,14 @@ class FormController extends Controller
                 'variant' => 'success'
             ]);
         } catch (Exception $e) {
+            dd($e);
             session()->flash('toast', [
                 'title' => 'Save Error',
                 'description' => 'There was an error saving the form. Please try again later.',
                 'duration' => 5000,
                 'variant' => 'destructive'
             ]);
+            return redirect()->back();
         }
 
         return redirect(route('admin.forms', $orgID));
