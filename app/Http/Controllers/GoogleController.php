@@ -3,57 +3,51 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use Laravel\Socialite\Facades\Socialite;
+
 use App\Models\User;
+
 use Illuminate\Support\Facades\Auth;
+
 use Exception;
-use App\AuthBypassEnum;
 
 class GoogleController extends Controller
 {
     public function googlepage()
     {
-        session()->put('remember_me', request('remember_me'));
-        return Socialite::driver('google')->redirect();
-    }
+        // Bypass Socialite login in development mode
+        if (app()->isLocal()) {
+            session()->put('remember_me', request('remember_me'));
 
-    public function googlecallback()
-    {
+            $registeredUser = User::find('2024000004');
+
+            if (!$registeredUser) {
+                return abort(403, 'User not found.');
+            }
+
+            Auth::login($registeredUser, session()->pull('remember_me', 'false'));
+            return redirect()->intended('/');
+        }
+
         try {
             $googleUser = Socialite::driver('google')->user();
         } catch (Exception $e) {
             session()->flash('toast', [
                 'title' => 'Login Error',
                 'description' => 'There was an error logging in. Please try again later.',
-                'duration' => 5000,
+                'duration' => 2000,
                 'variant' => 'destructive'
             ]);
             return redirect()->route('login');
         }
 
-        if (AuthBypassEnum::bypassCheck($googleUser->email)) {
-            if (!User::where('email', $googleUser->email)->first()) {
-                User::create([
-                    'userID' => '0000000001',
-                    'email' => $googleUser->email,
-                    'firstname' => 'OSA',
-                    'lastname' => 'admin',
-                    'status' => 'osa',
-                    'college' => 'osa'
-                ]);
-            }
-            Auth::login(
-                User::where('email', $googleUser->email)->first(),
-                session()->pull('remember_me', 'false')
-            );
-            return redirect('superadmin');
-        }
-
         $registeredUser = User::where('email', $googleUser->email)->first();
 
         if ($registeredUser == null) {
-            return abort(403, 'Only currently registered/enrolled students of the University of Santo Tomas can use this application.');
+            return abort(403, 'Only enrolled students of the University of Santo Tomas can use this application.');
         }
+
         Auth::login($registeredUser, session()->pull('remember_me', 'false'));
         return redirect()->intended('/');
     }
