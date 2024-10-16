@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
-class FormsController extends Controller
+class FormController extends Controller
 {
     // strictly for admin
     public function showBuilder($orgID)
@@ -50,14 +50,16 @@ class FormsController extends Controller
         return redirect(route('admin.forms', $orgID));
     }
 
-    private function prepareText($text) {
+    private function prepareText($text)
+    {
         $text = strtolower($text);
         $text = trim($text);
         $text = str_replace(" ", "_", $text);
         return $text;
     }
 
-    private function buildRules($formLayout) {
+    private function buildRules($formLayout)
+    {
         $rules = [];
 
         foreach ($formLayout as $input) {
@@ -82,22 +84,22 @@ class FormsController extends Controller
                 case "file_upload":
                     array_push($inputRules, 'file', 'max:4096', 'extensions:pdf');
                     break;
-
             }
-            $fieldName = "userData.".$this->prepareText($input['name']);
-            $rules[$fieldName] = str_replace('_', '|',implode("_", $inputRules));
+            $fieldName = "userData." . $this->prepareText($input['name']);
+            $rules[$fieldName] = str_replace('_', '|', implode("_", $inputRules));
         }
 
         return $rules;
     }
 
-    public function submitForm(Request $request)  {
+    public function submitForm(Request $request)
+    {
         $formLayout = $request->formLayout['layout'];
 
         $rules = $this->buildRules($formLayout);
-    
+
         $request->validate($rules);
-        
+
         // do smth with data if properly validated
         // TO-DO
 
