@@ -9,6 +9,8 @@ use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Organization;
+use App\Notifications\MakeAdminNotification;
+use App\Notifications\RemoveAdminNotification;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\PostDec;
 use Illuminate\Support\Facades\DB;
@@ -188,6 +190,12 @@ class SuperAdminController extends Controller
                 'variant' => 'success'
             ]);
 
+
+            $user = User::find($validated['userID']);
+            $org = Organization::find($validated['orgID']);
+
+            $user->notify(new MakeAdminNotification($org, $user));
+
             return to_route('superadmin.invite');
         } catch (Exception $e) {
 
@@ -239,11 +247,18 @@ class SuperAdminController extends Controller
             ->where('roleID', 2)
             ->delete();
 
+            $user = User::find($userID);
+            $org = Organization::find($orgID);
+
+            $user->notify(new RemoveAdminNotification($org, $user));
+
         session()->flash('toast', [
             'title' => 'Success',
             'description' => 'Admin role removed successfully!',
             'variant' => 'success'
         ]);
+
+
 
         return redirect()->route('superadmin.invite');
     } catch (Exception $e) {

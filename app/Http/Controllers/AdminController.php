@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Organization;
 use App\Models\User;
+use App\Notifications\MakeAdminNotification;
+use App\Notifications\RemoveAdminNotification;
 use Exception;
 use Inertia\Controller;
 use Illuminate\Support\Facades\DB;
@@ -156,6 +158,11 @@ class AdminController extends Controller
                 'variant' => 'success'
             ]);
 
+            $user = User::find($validated['userID']);
+            $org = Organization::find($validated['orgID']);
+
+            $user->notify(new MakeAdminNotification($org, $user));
+
             return to_route('admin.invite', ['orgID' => $orgID]);
         } catch (Exception $e) {
 
@@ -186,6 +193,11 @@ class AdminController extends Controller
                 'variant' => 'success',
             ]);
 
+            $user = User::find($userID);
+            $org = Organization::find($orgID);
+
+            $user->notify(new MakeAdminNotification($org, $user));
+
             return to_route('admin.invite', ['orgID' => $orgID]);
         }
 
@@ -194,6 +206,8 @@ class AdminController extends Controller
             'description' => 'User is not a member of the organization.',
             'variant' => 'destructive',
         ]);
+
+            
 
         return to_route('admin.invite', ['orgID' => $orgID]);
     }
@@ -218,6 +232,11 @@ class AdminController extends Controller
                 'description' => 'User was removed as Admin!',
                 'variant' => 'success',
             ]);
+            
+            $user = User::find($userID);
+            $org = Organization::find($orgID);
+
+            $user->notify(new RemoveAdminNotification($org, $user));
 
             return to_route('admin.invite', ['orgID' => $orgID]);
         }

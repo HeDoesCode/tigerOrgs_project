@@ -4,6 +4,9 @@ import IconBellFilled from "@/Components/Icons/IconBellFilled";
 import IconProfile from "@/Components/Icons/IconProfile";
 import IconMenu3 from "@/Components/Icons/IconMenu3";
 import IconExit from "@/Components/Icons/IconExit";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { useState, useEffect } from "react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,6 +14,8 @@ import {
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
+
+dayjs.extend(relativeTime);
 
 function UserLayout({ children, bgImage, noPadding }) {
     const footer_minHeight = "";
@@ -29,6 +34,10 @@ function UserLayout({ children, bgImage, noPadding }) {
     );
 
     function HeaderContent() {
+        const { props } = usePage();
+        const { unreadNotificationsCount: initialCount, notifications } = props;
+        const [count, setCount] = useState(initialCount);
+
         return (
             <nav className="flex-1">
                 {/* content for large */}
@@ -71,43 +80,15 @@ function UserLayout({ children, bgImage, noPadding }) {
                         </Link>
                     </li>
 
-                    {/* <li
-                        className={
-                            url === "put the status route here"
-                                ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
-                                : "hover:text-white"
-                        }
-                    >
-                        <HeaderDropdownMenu
-                            triggerContent={"Status"}
-                            dropdownContent={
-                                // <>
-                                //     <div>appplication 1</div>
-                                //     <div>appplication 1</div>
-                                //     <div>appplication 1</div>
-                                //     <div>appplication 1</div>
-                                // </>
-                                <div className="oc w-72">
-                                    <div>Application Status</div>
-                                    <div className="flex flex-col">
-                                        <div className="flex items-start">
-                                            <div className="size-16 flex items-center justify-center">icon</div>
-                                            <div className="flex flex-col">
-                                                <div>title</div>
-                                                <div>details</div>
-                                                <div>buttons</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        />
-                    </li> */}
                     <li className="flex items-center">
                         <div className="w-0 border-gray-400 border-r-[1px] h-5"></div>
                     </li>
                     <li>
-                        <Notifications count="15" />
+                        <Notifications
+                            unreadNotificationsCount={count}
+                            setUnreadNotificationsCount={setCount}
+                            notifications={notifications}
+                        />
                     </li>
                     <li>
                         {/* <Link className='inline-block' href='#profilepage'><div className='p-3 -m-3 hover:bg-gray-800 hover:text-white rounded-xl'><IconProfile /></div></Link> */}
@@ -137,7 +118,9 @@ function UserLayout({ children, bgImage, noPadding }) {
 
                 {/* content for narrow */}
                 <div className="flex w-full sm:hidden justify-end space-x-4">
-                    <Notifications count="15" />
+                    <Notifications
+                        count={`$page.props.unreadNotificationsCount`}
+                    />
                     <HeaderDropdownMenu
                         triggerContent={
                             <div className="p-3 -m-3 hover:bg-gray-800 hover:text-white rounded-xl">
@@ -194,12 +177,36 @@ function UserLayout({ children, bgImage, noPadding }) {
             );
         }
 
-        function Notifications({ count, notifications = [] }) {
+        function Notifications({
+            unreadNotificationsCount,
+            notifications = [],
+            setUnreadNotificationsCount,
+        }) {
+            const markAllAsRead = async () => {
+                try {
+                    console.log("Marked as read");
+                    await axios.post(route("notifications.markAllRead"));
+                    setUnreadNotificationsCount(0);
+                } catch (error) {
+                    console.error("Error marking notifications as read", error);
+                }
+            };
+
             return (
                 <HeaderDropdownMenu
                     triggerContent={
-                        <NotificationsIcon count={12 + 15} size="24" />
+                        <NotificationsIcon
+                            count={unreadNotificationsCount}
+                            size="24"
+                        />
                     }
+                    rootProps={{
+                        onOpenChange: (open) => {
+                            if (open) {
+                                markAllAsRead();
+                            }
+                        },
+                    }}
                 >
                     <Tabs defaultValue="notifications" className="w-96">
                         <TabsList className="flex items-center">
@@ -209,9 +216,13 @@ function UserLayout({ children, bgImage, noPadding }) {
                             >
                                 <div className="relative">
                                     Notifications
-                                    <span className="absolute -right-3 -top-1 text-[0.6rem] rounded-full bg-red-600 size-4 flex justify-center items-center text-white font-normal">
-                                        12
-                                    </span>
+                                    {unreadNotificationsCount > 0 ? (
+                                        <span className="absolute -right-3 -top-1 text-[0.6rem] rounded-full bg-red-600 size-4 flex justify-center items-center text-white font-normal">
+                                            {unreadNotificationsCount}
+                                        </span>
+                                    ) : (
+                                        ""
+                                    )}
                                 </div>
                             </TabsTrigger>
                             <TabsTrigger
@@ -233,14 +244,23 @@ function UserLayout({ children, bgImage, noPadding }) {
                                     {notifications.length > 0 ? (
                                         notifications.map(
                                             (notification, index) => (
-                                                <div
+                                                <Link
+                                                    href={route(
+                                                        "admin.editpage",
+                                                        {
+                                                            id: notification
+                                                                .data.orgID,
+                                                        }
+                                                    )}
                                                     key={index}
                                                     className="flex space-x-3"
                                                 >
                                                     <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
                                                         <img
                                                             src={
-                                                                notification.image
+                                                                notification
+                                                                    .data
+                                                                    .org_logo
                                                             }
                                                             alt=""
                                                             className="size-full object-cover"
@@ -250,30 +270,34 @@ function UserLayout({ children, bgImage, noPadding }) {
                                                         <div className="flex items-center">
                                                             <div className="font-bold">
                                                                 {
-                                                                    notification.sender
+                                                                    notification
+                                                                        .data
+                                                                        .org_name
                                                                 }
                                                             </div>
-                                                            <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">
-                                                                {
-                                                                    notification.timeAgo
-                                                                }
+                                                            <div className="flex-1 flex justify-end poppins text-[0.7rem] text-gray-500 ml-3 w-max">
+                                                                {dayjs(
+                                                                    notification.created_at
+                                                                ).fromNow()}
                                                             </div>
                                                         </div>
                                                         <div className="poppins text-sm font-light mt-1">
                                                             {
-                                                                notification.message
+                                                                notification
+                                                                    .data
+                                                                    .message
                                                             }
                                                         </div>
-                                                        <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
+                                                        {/* <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
                                                             <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">
                                                                 Accept
                                                             </div>
                                                             <div className="px-8 py-2 bg-[#F44336] font-semibold rounded-full">
                                                                 Decline
                                                             </div>
-                                                        </div>
+                                                        </div> */}
                                                     </div>
-                                                </div>
+                                                </Link>
                                             )
                                         )
                                     ) : (
@@ -366,17 +390,21 @@ function UserLayout({ children, bgImage, noPadding }) {
                 return (
                     <div className="relative">
                         <IconBellFilled size={size} />
-                        <span className="absolute -right-1 -top-1 text-[0.6rem] rounded-full bg-red-600 size-4 flex justify-center items-center text-white font-normal">
-                            {count}
-                        </span>
+                        {count > 0 ? (
+                            <span className="absolute -right-1 -top-1 text-[0.6rem] rounded-full bg-red-600 size-4 flex justify-center items-center text-white font-normal">
+                                {count}
+                            </span>
+                        ) : (
+                            ""
+                        )}
                     </div>
                 );
             }
         }
 
-        function HeaderDropdownMenu({ triggerContent, children }) {
+        function HeaderDropdownMenu({ triggerContent, children, rootProps }) {
             return (
-                <DropdownMenu>
+                <DropdownMenu {...rootProps}>
                     <DropdownMenuTrigger className="flex items-center p-3 -m-3 hover:bg-gray-800 hover:text-white rounded-xl outline-none">
                         {triggerContent}
                     </DropdownMenuTrigger>

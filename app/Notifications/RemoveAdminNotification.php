@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class MakeAdminNotification extends Notification
+class RemoveAdminNotification extends Notification
 {
     use Queueable;
 
@@ -33,7 +33,7 @@ class MakeAdminNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];    
+        return ['database'];
     }
 
     /**
@@ -42,9 +42,9 @@ class MakeAdminNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('You have been promoted to Admin')
-            ->line('You have been promoted to Admin of the organization.')
-            ->action('Go to Dashboard', url('/invite'));
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -55,13 +55,10 @@ class MakeAdminNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            // 'userID' => $this->userID->userID, 
-            // 'user_name' => $this->userID->firstname . ' ' . $this->userID->lastname, 
-            
             'orgID' => $this->orgID->orgID, 
             'org_logo' => $this->orgID->logo, 
             'org_name' => $this->orgID->name,
-            'message' => "You have been assigned as Admin on ". $this->orgID->name . ".", 
+            'message' => "You have been removed as Admin on ". $this->orgID->name . ".", 
         ];
     }
 }

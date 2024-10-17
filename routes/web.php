@@ -12,6 +12,7 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\BackendTestingController;
 use App\Http\Controllers\FormsController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
    return Inertia::render('Home', [
@@ -35,6 +36,10 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
    Route::get('/organizations/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
    Route::get('/organizations/{orgID}/process', [OrganizationController::class, 'process'])->name('organizations.process');
    Route::get('/organizations/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
+
+   //for clearing notif
+   Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
+
 });
 
 //superadmin temporary routes
