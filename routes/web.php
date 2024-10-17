@@ -106,7 +106,7 @@ Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback'])
 
 // temporary testing route
 Route::get('/testing', [BackendTestingController::class, 'run'])->name('testing');
-Route::get('/testAuth', [GoogleController::class, 'googlepage']); //test auth for dev
+// Route::get('/testAuth', [GoogleController::class, 'googlepage']); //test auth for dev
 Route::get('/testing/form-rendering', [BackendTestingController::class, 'renderForm']);
 Route::get('testing/form-building', [BackendTestingController::class, 'showBuilder']);
 
