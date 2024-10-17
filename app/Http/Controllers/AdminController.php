@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Organization;
 use App\Models\User;
+use App\Models\Form;
 use Exception;
 use Inertia\Controller;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +39,26 @@ class AdminController extends Controller
             'pageData' => $pageData,
             'pageLayoutData' => $pageLayoutData,
             'orgID' => $orgID,
+        ]);
+    }
+
+    public function forms($orgID)
+    {
+        $organization = Organization::find($orgID);
+        $forms = Form::where('orgID', $orgID)
+            ->get()
+            ->map(
+                function ($form) {
+                    $form->formLayout = json_decode($form->formLayout);
+                    return $form;
+                }
+            );
+            // dd($forms);
+
+        return Inertia::render('Admin/AdminManageForms', [
+            'orgID' => $organization->orgID,
+            'orgName' => $organization->name,
+            'forms' => $forms,
         ]);
     }
 
@@ -271,16 +292,6 @@ class AdminController extends Controller
 
 
         return Inertia::render('Admin/AdminManageApplication', [
-            'orgID' => $organization->orgID,
-        ]);
-    }
-
-    public function forms($orgID)
-    {
-
-        $organization = Organization::find($orgID);
-
-        return Inertia::render('Admin/AdminManageForms', [
             'orgID' => $organization->orgID,
         ]);
     }

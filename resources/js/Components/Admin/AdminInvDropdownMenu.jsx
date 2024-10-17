@@ -24,17 +24,19 @@ function AdminInvDropdownMenu({ onSelect, ...props }) {
                 {props.dropdownItems.map((item, index) => (
                     <DropdownMenuItem
                         key={index}
-                        className="poppins"
-                        onSelect={(event) => {
-                            event.preventDefault();
-                            if (
-                                typeof item.name === "object" &&
-                                item.name.type === AdminDialog
-                            ) {
-                                // if the item is an admindialog, prevent the dropdown from closing
-                                event.stopPropagation();
-                            }
-                        }}
+                        className="poppins cursor-pointer"
+                        // onSelect={(event) => {
+                        //     event.preventDefault();
+                        //     if (
+                        //         typeof item.name === "object" &&
+                        //         item.name.type === AdminDialog
+                        //     ) {
+                        //         // if the item is an admindialog, prevent the dropdown from closing
+                        //         event.stopPropagation();
+                        //     }
+                        // }}
+                        onSelect={item.onSelect}
+
                     >
                         {item.name}
                     </DropdownMenuItem>
