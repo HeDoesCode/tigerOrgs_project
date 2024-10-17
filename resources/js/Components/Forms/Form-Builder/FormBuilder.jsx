@@ -27,10 +27,10 @@ const inputTypes = [
     { type: "image_upload", icon: IconResume },
 ];
 
-function FormBuilder({ orgID }) {
-    const [items, setItems] = useState([]);
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+function FormBuilder({ orgID, formData }) {
+    const [items, setItems] = useState(formData.formLayout.layout || []);
+    const [title, setTitle] = useState(formData.formLayout.name || "");
+    const [description, setDescription] = useState(formData.formLayout.desc || "");
 
     function getItemPos(id) {
         return items.findIndex((item) => item.id === id);
@@ -106,18 +106,26 @@ function FormBuilder({ orgID }) {
         setItems(items.filter((item) => item.id !== id));
     }
 
-    function handleSave() {
-        let createdForm = {
+    const handleSave = () => {
+        const dataToBeSent = {
             name: title,
             desc: description,
             layout: items,
         };
 
-        router.post(`/admin/${orgID}/form-builder/save`, dataToBeSent, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        if (!formData) {
+            router.post(`/admin/${orgID}/form-builder/save`, dataToBeSent, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        } else {
+            router.patch(`/admin/${orgID}/form-builder/save/${formData.formID}`, dataToBeSent, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        }
     }
 
     return (
@@ -155,7 +163,7 @@ function FormBuilder({ orgID }) {
                     {inputTypes.map((input) => (
                         <button
                             key={input.type}
-                            className="rounded-3xl w-full py-4 hover:bg-gray-300  transition ease-in-out diuration-200 "
+                            className="rounded-3xl w-full py-4 hover:bg-gray-300  transition ease-in-out duration-200 "
                             onClick={() => handleAddItem(input.type)}
                         >
                             <div className="w-6 h-6 mx-auto  ">
@@ -170,7 +178,7 @@ function FormBuilder({ orgID }) {
                 <div className="flex justify-end">
                     <button
                         onClick={handleSave}
-                        className="bg-[#04aa6dd5] hover:bg-[#04AA6D] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border  rounded-full"
+                        className="outline-red-300 bg-[#04aa6dd5] hover:bg-[#04AA6D] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
                     >
                         Save
                     </button>

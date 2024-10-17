@@ -22,15 +22,29 @@ class FormController extends Controller
         ]);
     }
 
+    public function showBuilderEdit($orgID, $formID)
+    {
+        $organizations = Organization::find($orgID);
+
+        $form = Form::find($formID);
+        if ($form) {
+            $form->formLayout = json_decode($form->formLayout);
+        }
+
+        return Inertia::render('Admin/AdminFormBuilder', [
+            'orgID' => $organizations->orgID,
+            'formData' => $form,
+        ]);
+    }
+
+
     public function saveForm(Request $request, $orgID)
     {
-        // dd(json_encode($request->input('layout')));
+        // dd($request->getContent());
         try {
-            // $formData = json_encode($request->json()->all());
-
             Form::create([
                 'orgID' => $orgID,
-                'formLayout' => json_encode($request->input('layout')),
+                'formLayout' => $request->getContent(),
             ]);
 
             session()->flash('toast', [
@@ -40,9 +54,8 @@ class FormController extends Controller
                 'variant' => 'success'
             ]);
         } catch (Exception $e) {
-            dd($e);
             session()->flash('toast', [
-                'title' => 'Save Error',
+                'title' => 'Form Save Error',
                 'description' => 'There was an error saving the form. Please try again later.',
                 'duration' => 5000,
                 'variant' => 'destructive'
@@ -50,6 +63,54 @@ class FormController extends Controller
             return redirect()->back();
         }
 
+        return redirect(route('admin.forms', $orgID));
+    }
+
+    public function putForm(Request $request, $orgID, $formID) {
+        $form = Form::findOrFail($formID);
+        try {
+            $form->update([
+                'formLayout' => $request->getContent()
+            ]);
+
+            session()->flash('toast', [
+                'title' => 'Form Updated',
+                'description' => 'The form has been successfully updated.',
+                'duration' => 5000,
+                'variant' => 'success'
+            ]);
+        } catch (Exception $e) {
+            session()->flash('toast', [
+                'title' => 'Form Update Error',
+                'description' => 'There was an error updating the form. Please try again later.',
+                'duration' => 5000,
+                'variant' => 'destructive'
+            ]);
+            return redirect()->back();
+        }
+        return redirect(route('admin.forms', $orgID));
+    }
+
+    public function deleteForm(Request $request, $orgID, $formID) {
+        $form = Form::findOrFail($formID);
+        try {
+            $form->delete();
+
+            session()->flash('toast', [
+                'title' => 'Form Deleted',
+                'description' => 'The form has been successfully deleted.',
+                'duration' => 5000,
+                'variant' => 'success'
+            ]);
+        } catch (Exception $e) {
+            session()->flash('toast', [
+                'title' => 'Form Delete Error',
+                'description' => 'There was an error deleting the form. Please try again later.',
+                'duration' => 5000,
+                'variant' => 'destructive'
+            ]);
+            return redirect()->back();
+        }
         return redirect(route('admin.forms', $orgID));
     }
 
