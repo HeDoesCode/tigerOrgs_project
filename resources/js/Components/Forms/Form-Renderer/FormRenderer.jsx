@@ -5,6 +5,13 @@ import Pre from "@/Components/Pre";
 function FormRenderer({ formLayout }) {
     const { errors } = usePage().props; // Get validation errors from Inertia
 
+    /**
+     *
+     * Pointers
+     * - pa make sure na yung form description supported mahabang text
+     *
+     */
+
     function handleSubmit(e) {
         e.preventDefault();
 
