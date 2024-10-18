@@ -153,18 +153,6 @@ class OrganizationController extends Controller
             'photos' => $organization->photos,
         ];
 
-        // $pageLayoutData = [
-        //     'orgID' => $organization->orgID,
-        //     'logo' => $organization->logo,
-        //     'coverPhoto' => $organization->cover,
-        //     'metadata' => [
-        //         'organizationName' => $organization->name,
-        //         'members' => $organization->members_count,
-        //     ],
-        // ];
-
-        // dump($pageData);
-
         $followButton = !DB::table('organization_followers')
             ->where('userID', Auth::id())
             ->where('orgID', $orgID)
@@ -180,8 +168,6 @@ class OrganizationController extends Controller
     public function apply(Request $request, $orgID, $formID)
     {
         $formLayout = Form::find($formID)->formLayout;
-        // check if form is deployed (maybe implement in IsRecruiting middleware)
-        // check if org is recruiting (maybe implement in IsRecruiting middleware)
         return Inertia::render('Organizations/Apply', [
             'pageLayoutData' => $this->getPageLayoutData($orgID),
             'formLayout' => $formLayout,
