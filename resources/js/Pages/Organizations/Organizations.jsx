@@ -276,6 +276,7 @@ function Organizations({
                                         orgBg={org.photos && org.photos.length > 0 ? org.photos[0].filename : 'https://placehold.co/500x800'}
                                         orgIcon={org.logo}
                                         title={org.name}
+                                        recruiting={org.recruiting}
                                         desc={org.description}
                                         count={org.members_count}
                                         href={route("organizations.home", {
@@ -302,6 +303,7 @@ function Organizations({
                                             orgBg={org.photos && org.photos.length > 0 ? org.photos[0].filename : 'https://placehold.co/500x800'}
                                             orgIcon={org.logo}
                                             title={org.name}
+                                            recruiting={org.recruiting}
                                             desc={org.description}
                                             count={org.members_count}
                                             href={route("organizations.home", {
