@@ -16,8 +16,6 @@ import { Link, router } from "@inertiajs/react";
 import IconUserCancel from "../Icons/IconUserCancel";
 import IconUserCheck from "../Icons/IconUserCheck";
 import { useState } from "react";
-import { useEffect } from "react";
-// import { useRef } from "react";
 
 function OrganizationLayout({
     editing,
@@ -71,13 +69,14 @@ function OrganizationLayout({
                                 </div>
                             </div>
                         </div>
-                        {!editing && (
+                        {/* {!editing && ( */}
+                        {route().current() === 'organizations.home' && (
                             <div className="pt-8 space-y-2 inter font-bold">
                                 {pageLayoutData.recruiting && (
                                     <Link
                                         className="contents"
                                         href={route(
-                                            "organizations.process",
+                                            "organizations.apply",
                                             pageLayoutData.orgID
                                         )}
                                     >
