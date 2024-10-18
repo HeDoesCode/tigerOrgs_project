@@ -31,6 +31,7 @@ function Organizations({
     myMemberOrganizations,
     isSuperAdmin
 }) {
+    console.log(organizations)
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
 

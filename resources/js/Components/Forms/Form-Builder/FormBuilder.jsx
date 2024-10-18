@@ -14,7 +14,7 @@ import emailIcon from "@/Components/Icons/emailIcon";
 
 import { FormActionsContext } from "../Context/FormActionsContext";
 import BuilderWrap from "./BuilderWrap";
-import { router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 
 const inputTypes = [
     { type: "text", icon: letterT },
@@ -166,7 +166,7 @@ function FormBuilder({ orgID, formData }) {
                             className="rounded-3xl w-full py-4 hover:bg-gray-300  transition ease-in-out duration-200 "
                             onClick={() => handleAddItem(input.type)}
                         >
-                            <div className="w-6 h-6 mx-auto  ">
+                            <div className="w-6 h-6 mx-auto">
                                 {input.icon && <input.icon />}
                             </div>
                             <span>{input.type}</span>
@@ -175,10 +175,18 @@ function FormBuilder({ orgID, formData }) {
                 </div>
 
                 <button onClick={() => console.log(items)}>Check Items</button>
-                <div className="flex justify-end">
+                <div className="flex justify-end space-x-3">
+                    {formData && (
+                        <Link
+                            className="bg-[#e25454] hover:bg-[#d44040] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
+                            href={document.referrer}
+                        >
+                            Cancel
+                        </Link>
+                    )}
                     <button
                         onClick={handleSave}
-                        className="outline-red-300 bg-[#04aa6dd5] hover:bg-[#04AA6D] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
+                        className="bg-[#04aa6dd5] hover:bg-[#04AA6D] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
                     >
                         Save
                     </button>

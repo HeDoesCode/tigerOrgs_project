@@ -27,16 +27,12 @@ class FormController extends Controller
         $organizations = Organization::find($orgID);
 
         $form = Form::find($formID);
-        if ($form) {
-            $form->formLayout = json_decode($form->formLayout);
-        }
 
         return Inertia::render('Admin/AdminFormBuilder', [
             'orgID' => $organizations->orgID,
             'formData' => $form,
         ]);
     }
-
 
     public function saveForm(Request $request, $orgID)
     {
@@ -66,7 +62,8 @@ class FormController extends Controller
         return redirect(route('admin.forms', $orgID));
     }
 
-    public function putForm(Request $request, $orgID, $formID) {
+    public function editForm(Request $request, $orgID, $formID)
+    {
         $form = Form::findOrFail($formID);
         try {
             $form->update([
@@ -91,7 +88,8 @@ class FormController extends Controller
         return redirect(route('admin.forms', $orgID));
     }
 
-    public function deleteForm(Request $request, $orgID, $formID) {
+    public function deleteForm(Request $request, $orgID, $formID)
+    {
         $form = Form::findOrFail($formID);
         try {
             $form->delete();
@@ -112,6 +110,41 @@ class FormController extends Controller
             return redirect()->back();
         }
         return redirect(route('admin.forms', $orgID));
+    }
+
+    public function setFormDeploy($orgID, $formID, $deploy)
+    {
+        $deploy = $deploy === "true" ? true : false;
+        $form = Form::findOrFail($formID);
+
+        try {
+            $form->deployed = $deploy;
+            $form->save();
+
+            if ($deploy) {
+                session()->flash('toast', [
+                    'title' => 'Form Deployed Successfully',
+                    'description' => "The form has been successfully deployed. Students may now view this form in your \"Home\" page",
+                    'duration' => 5000,
+                    'variant' => 'success'
+                ]);
+            } else {
+                session()->flash('toast', [
+                    'title' => 'Form Withdrawn Successfully',
+                    'description' => "The form has been successfully withdrawn and is now inaccessible to users.",
+                    'duration' => 5000,
+                    'variant' => 'success'
+                ]);
+            }
+        } catch (Exception $e) {
+            session()->flash('toast', [
+                'title' => 'Form Deploy Error',
+                'description' => 'There was an error deploying the form. Please try again later.',
+                'duration' => 5000,
+                'variant' => 'destructive'
+            ]);
+        }
+        return redirect()->back();
     }
 
     private function prepareText($text)

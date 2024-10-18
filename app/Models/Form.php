@@ -16,10 +16,12 @@ class Form extends Model
     protected $fillable = [
         'orgID',
         'formLayout',
+        'deployed'
     ];
 
     protected $casts = [
         'deployed' => 'boolean',
+        'formLayout' => 'json'
     ];
 
     public function forms(): BelongsTo

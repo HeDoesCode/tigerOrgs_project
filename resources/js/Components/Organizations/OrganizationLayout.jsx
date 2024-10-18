@@ -16,6 +16,8 @@ import { Link, router } from "@inertiajs/react";
 import IconUserCancel from "../Icons/IconUserCancel";
 import IconUserCheck from "../Icons/IconUserCheck";
 import { useState } from "react";
+import IconFileText from "../Icons/IconFileText";
+import IconAlertCircleFilled from "../Icons/IconAlertCircleFilled";
 
 function OrganizationLayout({
     editing,
@@ -44,10 +46,7 @@ function OrganizationLayout({
     );
 
     function PageContent() {
-        // const qrRef = useRef(null);
-
-        // console.log(route('organizations.home', { orgID: pageLayoutData.orgID }))
-
+        const forms = pageLayoutData.forms
         const qrValue = () => {
             return route("organizations.home", { orgID: pageLayoutData.orgID });
         };
@@ -72,21 +71,55 @@ function OrganizationLayout({
                         {/* {!editing && ( */}
                         {route().current() === 'organizations.home' && (
                             <div className="pt-8 space-y-2 inter font-bold">
-                                {pageLayoutData.recruiting && (
-                                    <Link
-                                        className="contents"
-                                        href={route(
-                                            "organizations.apply",
-                                            pageLayoutData.orgID
-                                        )}
-                                    >
-                                        <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative h-12">
-                                            Apply
-                                            <div className="inline rotate-45">
-                                                <IconArrowUp size="20" />
+                                {!editing && pageLayoutData.recruiting && (
+                                    (forms.length == 1 ? (
+                                        <Link
+                                            className="contents"
+                                            href={route("organizations.apply", [pageLayoutData.orgID, forms[0]['formID']])}
+                                        >
+                                            <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative h-12">
+                                                Apply
+                                                <div className="inline rotate-45">
+                                                    <IconArrowUp size="20" />
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Link>
+                                        </Link>
+                                    ) : (
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative h-12 cursor-pointer">
+                                                    Apply
+                                                    <div className="inline rotate-45">
+                                                        <IconArrowUp size="20" />
+                                                    </div>
+                                                </div>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle>Select Application Form</DialogTitle>
+                                                    <DialogDescription className="contents">
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <div className="size-full flex flex-col gap-y-2 mt-3">
+                                                    {forms.map((form, index) => (
+                                                        <Link
+                                                            key={index}
+                                                            href={route('organizations.apply', [pageLayoutData.orgID, form['formID']])}
+                                                            className="px-4 h-12 rounded-lg bg-slate-200 flex items-center cursor-pointer hover:font-bold transition-all gap-x-2"
+                                                        >
+                                                            <IconFileText />
+                                                            {form['formLayout']['name']}
+                                                        </Link>
+                                                    ))}
+                                                    {forms.length === 0 && (
+                                                        <span className="font-bold text-red-600">
+                                                            <IconAlertCircleFilled /> Please contact your organization administrators.<br /> (Error: No deployed form.)
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </DialogContent>
+                                        </Dialog>
+                                    ))
                                 )}
 
                                 {/* remove route if editing */}
@@ -136,7 +169,7 @@ function OrganizationLayout({
                     <section className="h-fit px-5 md:px-12 space-y-3 md:space-y-8">
                         {children}
                     </section>
-                </div>
+                </div >
             </>
         );
 

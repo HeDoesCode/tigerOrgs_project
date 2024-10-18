@@ -92,7 +92,7 @@ function AdminManageForms({ orgID, orgName, forms }) {
                                 <AdminDropdownMenu
                                     key={index}
                                     triggerContent={
-                                        <div className="bg-white flex items-center justify-center rounded-lg hover:bg-gray-100 min-h-14 hover:scale-[1.03] transition-all duration-300 ease-in-out">
+                                        <div className={`${item.deployed && 'border-4 border-green-600'} bg-white flex items-center justify-center rounded-lg hover:bg-gray-100 min-h-14 hover:scale-[1.03] transition-all duration-300 ease-in-out`}>
                                             <p className="text-black poppins ml-2 line-clamp-2">
                                                 {item.formLayout.name}
                                             </p>
@@ -103,7 +103,6 @@ function AdminManageForms({ orgID, orgName, forms }) {
                                         {
                                             name: "Edit Form",
                                             onSelect: () => router.get(route('admin.formbuilder.edit', [orgID, item.formID])),
-                                            // onSelect: () => console.log('test'),
                                         },
                                         {
                                             name: (
@@ -134,8 +133,10 @@ function AdminManageForms({ orgID, orgName, forms }) {
                                             onSelect: () => null,
                                         },
                                         {
-                                            name: "Deploy Form",
-                                            onSelect: () => null,
+                                            name: `${item.deployed ? 'Withdraw' : 'Deploy'} Form`,
+                                            onSelect: () => {
+                                                router.patch(route('admin.forms.setDeploy', [orgID, item.formID, !item.deployed]), { preserveScroll: true })
+                                            },
                                         },
                                     ]}
                                 />

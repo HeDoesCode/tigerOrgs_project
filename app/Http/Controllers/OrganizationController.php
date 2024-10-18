@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Form;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Keyword;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 class OrganizationController extends Controller
@@ -114,8 +116,6 @@ class OrganizationController extends Controller
             ->get()
             ->sortBy('name');
 
-        // dd($myMemberOrganizations);
-
         $isSuperAdmin = DB::table('organization_user_role')
             ->where('userID', Auth::id())
             ->where('roleID', 3)
@@ -128,7 +128,6 @@ class OrganizationController extends Controller
             'departments' => $departments,
             'keywords' => $keywordsArray,
             'isSuperAdmin' => $isSuperAdmin,
-            // 'isSuperAdmin' => true,
             'myMemberOrganizations' => $myMemberOrganizations ?: [],
             'queryParameters' => $queryParameters ?: null,
         ]);
@@ -178,10 +177,14 @@ class OrganizationController extends Controller
         ]);
     }
 
-    public function apply($orgID)
+    public function apply(Request $request, $orgID, $formID)
     {
+        $formLayout = Form::find($formID)->formLayout;
+        // check if form is deployed (maybe implement in IsRecruiting middleware)
+        // check if org is recruiting (maybe implement in IsRecruiting middleware)
         return Inertia::render('Organizations/Apply', [
             'pageLayoutData' => $this->getPageLayoutData($orgID),
+            'formLayout' => $formLayout,
         ]);
     }
 
@@ -223,18 +226,22 @@ class OrganizationController extends Controller
         $this->visit($orgID);
     }
 
-    public function process($orgID)
-    {
-        return Inertia::render('Organizations/Process', [
-            'pageLayoutData' => $this->getPageLayoutData($orgID),
-        ]);
-    }
-
     public function getPageLayoutData($orgID)
     {
         $organization = Organization::withCount('members')
             ->findOrFail($orgID);
+
+        $isInOrgHome = Route::currentRouteName() === 'organizations.home';
+
+        $deployedForms = $isInOrgHome
+            ? Form::where([
+                'orgID' => $orgID,
+                'deployed' => true,
+            ])->get()
+            : [];
+
         return [
+            'forms' => $deployedForms,
             'orgID' => $organization->orgID,
             'logo' => Storage::url("public/logos/" . $organization->logo),
             'coverPhoto' => Storage::url("public/covers/" . $organization->cover),
@@ -243,7 +250,6 @@ class OrganizationController extends Controller
                 'members' => $organization->members_count,
             ],
             'recruiting' => $organization->recruiting,
-            // 'recruiting' => 1,
         ];
     }
 }

@@ -46,14 +46,7 @@ class AdminController extends Controller
     {
         $organization = Organization::find($orgID);
         $forms = Form::where('orgID', $orgID)
-            ->get()
-            ->map(
-                function ($form) {
-                    $form->formLayout = json_decode($form->formLayout);
-                    return $form;
-                }
-            );
-            // dd($forms);
+            ->get();
 
         return Inertia::render('Admin/AdminManageForms', [
             'orgID' => $organization->orgID,

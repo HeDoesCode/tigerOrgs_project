@@ -12,6 +12,7 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\BackendTestingController;
 use App\Http\Controllers\FormController;
+use App\Http\Middleware\IsRecruiting;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -31,10 +32,15 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
     Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
     Route::patch('/update-user-section', [ProfileController::class, 'updateUserSection'])->name('update.user.section');
 
-    Route::get('/organizations', [OrganizationController::class, 'browse'])->name('organizations');
-    Route::get('/organizations/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
-    Route::get('/organizations/{orgID}/process', [OrganizationController::class, 'process'])->name('organizations.process');
-    Route::get('/organizations/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
+    Route::prefix('organizations')->group(function () {
+        Route::get('/', [OrganizationController::class, 'browse'])->name('organizations');
+        Route::get('/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
+        // Route::get('/organizations/{orgID}/process', [OrganizationController::class, 'process'])->name('organizations.process');
+        Route::get('/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
+
+        // form page/s
+        Route::get('/{orgID}/apply/{formID}', [OrganizationController::class, 'apply'])->name('organizations.apply')->middleware(IsRecruiting::class); // bind IsRecruiting Middleware here
+    });
 });
 
 //superadmin temporary routes
@@ -85,6 +91,8 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
 
         // manage forms
         Route::get('forms', [AdminController::class, 'forms'])->name('forms');
+        Route::patch('forms/{formID}/deploy/{deploy}', [FormController::class, 'setFormDeploy'])
+            ->where(['deploy' => '^(true|false)$'])->name('forms.setDeploy');
         Route::get('formhistory', 'formhistory')->name('formhistory');
 
         // manage admin
@@ -96,7 +104,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::get('/form-builder', [FormController::class, 'showBuilder'])->name('formbuilder');
         Route::get('/form-builder/edit/{formID}', [FormController::class, 'showBuilderEdit'])->name('formbuilder.edit');
         Route::post('/form-builder/save', [FormController::class, 'saveForm']); // create form action
-        Route::patch('/form-builder/save/{formID}', [FormController::class, 'putForm']); // modify form action
+        Route::patch('/form-builder/save/{formID}', [FormController::class, 'editForm']); // modify form action
         Route::delete('/form-builder/delete/{formID}', [FormController::class, 'deleteForm'])->name('formbuilder.delete');
     });
 
