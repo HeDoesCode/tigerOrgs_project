@@ -28,9 +28,9 @@ const inputTypes = [
 ];
 
 function FormBuilder({ orgID, formData }) {
-    const [items, setItems] = useState(formData.formLayout.layout || []);
-    const [title, setTitle] = useState(formData.formLayout.name || "");
-    const [description, setDescription] = useState(formData.formLayout.desc || "");
+    const [items, setItems] = useState(formData?.formLayout?.layout || []);
+    const [title, setTitle] = useState(formData?.formLayout?.name || "");
+    const [description, setDescription] = useState(formData?.formLayout?.desc || "");
 
     function getItemPos(id) {
         return items.findIndex((item) => item.id === id);
