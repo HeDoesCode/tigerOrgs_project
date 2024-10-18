@@ -132,7 +132,7 @@ function FormBuilder({ orgID, formData }) {
         <div className=" bg-white min-h-screen ">
             <div className="flex flex-col justify-center m-4 p-4 max-w-3xl mx-auto rounded-xl">
                 <h1 className="font-semibold text-3xl mb-4 px-2 text-center">
-                    Create Form
+                    {formData ? 'Modify' : 'Create'} Form
                 </h1>
                 <input
                     type="text"
