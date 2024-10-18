@@ -39,7 +39,7 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
         Route::get('/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
 
         // form page/s
-        Route::get('/{orgID}/apply/{formID}', [OrganizationController::class, 'apply'])->name('organizations.apply')->middleware(IsRecruiting::class); // bind IsRecruiting Middleware here
+        Route::get('/{orgID}/apply/{formID}', [OrganizationController::class, 'apply'])->name('organizations.apply')->middleware(IsRecruiting::class);
     });
 });
 
