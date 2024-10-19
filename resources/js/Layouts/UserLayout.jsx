@@ -201,14 +201,18 @@ function UserLayout({ children, bgImage, noPadding }) {
                         setNotifications(response.data.notifications); // Adjust according to your response structure
                         setCount(response.data.unreadCount); // Adjust according to your response structure
                         setUnreadNotificationsCount(response.data.unreadCount); // Update parent state
-                    } catch (error) {}
+                    } catch (error) {
+                        console.error("Error fetching notifications:", error);
+                    }
                 };
 
+                // Fetch notifications initially
                 fetchNotifications();
 
+                // Set up polling every 10 seconds
                 const intervalId = setInterval(() => {
                     fetchNotifications();
-                }, 5000);
+                }, 10000); // Adjust the interval time as needed
 
                 // Clean up the interval on unmount
                 return () => clearInterval(intervalId);
