@@ -13,6 +13,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/Components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 
 dayjs.extend(relativeTime);
@@ -273,62 +281,120 @@ function UserLayout({ children, bgImage, noPadding }) {
                                 <div className="flex flex-col space-y-3 max-h-[20rem] overflow-y-auto">
                                     {notifications.length > 0 ? (
                                         notifications.map(
-                                            (notification, index) => (
-                                                <Link
-                                                    // href={route(
-                                                    //     "admin.editpage",
-                                                    //     {
-                                                    //         id: notification
-                                                    //             .data.orgID,
-                                                    //     }
-                                                    // )}
-                                                    key={index}
-                                                    className="flex space-x-3"
-                                                >
-                                                    <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                                        <img
-                                                            src={
-                                                                notification
-                                                                    .data
-                                                                    .org_logo
-                                                            }
-                                                            alt=""
-                                                            className="size-full object-cover"
-                                                        />
-                                                    </div>
-                                                    <div className="flex flex-col">
-                                                        <div className="flex items-center">
-                                                            <div className="font-bold">
+                                            (notification, index) =>
+                                                notification ? (
+                                                    notification.data.orgID ? (
+                                                        <Link
+                                                            href={route(
+                                                                "admin.editpage",
+                                                                {
+                                                                    id: notification
+                                                                        .data
+                                                                        .orgID,
+                                                                }
+                                                            )}
+                                                            key={index}
+                                                            className="flex space-x-3"
+                                                        >
+                                                            <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
+                                                                <img
+                                                                    src={
+                                                                        notification
+                                                                            .data
+                                                                            .org_logo
+                                                                    }
+                                                                    alt=""
+                                                                    className="size-full object-cover"
+                                                                />
+                                                            </div>
+                                                            <div className="flex flex-col">
+                                                                <div className="flex items-center">
+                                                                    <div className="font-bold">
+                                                                        {
+                                                                            notification
+                                                                                .data
+                                                                                .org_name
+                                                                        }
+                                                                    </div>
+                                                                    <div className="flex-1 flex justify-end poppins text-[0.7rem] text-gray-500 ml-3 w-max">
+                                                                        {dayjs(
+                                                                            notification.created_at
+                                                                        ).fromNow()}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="poppins line-clamp-2 text-sm font-light mt-1">
+                                                                    {
+                                                                        notification
+                                                                            .data
+                                                                            .message
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </Link>
+                                                    ) : (
+                                                        <Dialog>
+                                                            <DialogTrigger>
+                                                                <div
+                                                                    key={index}
+                                                                    className="flex space-x-3"
+                                                                >
+                                                                    <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
+                                                                        <img
+                                                                            src={
+                                                                                notification
+                                                                                    .data
+                                                                                    .org_logo
+                                                                            }
+                                                                            alt=""
+                                                                            className="size-full object-cover"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="flex flex-col">
+                                                                        <div className="flex items-center">
+                                                                            <div className="font-bold">
+                                                                                {
+                                                                                    notification
+                                                                                        .data
+                                                                                        .org_name
+                                                                                }
+                                                                            </div>
+                                                                            <div className="flex-1 flex poppins text-[0.7rem] text-gray-500 ml-3 w-max">
+                                                                                {dayjs(
+                                                                                    notification.created_at
+                                                                                ).fromNow()}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="poppins line-clamp-2 text-sm font-light mt-1">
+                                                                            {
+                                                                                notification
+                                                                                    .data
+                                                                                    .message
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </DialogTrigger>
+                                                            <DialogContent className="w-fit p-10">
+                                                                <DialogHeader>
+                                                                    <DialogTitle className="text-center ">
+                                                                        {
+                                                                            notification
+                                                                                .data
+                                                                                .org_name
+                                                                        }{" "}
+                                                                        Announcement
+                                                                    </DialogTitle>
+                                                                    <DialogDescription className="hidden"></DialogDescription>
+                                                                </DialogHeader>
                                                                 {
                                                                     notification
                                                                         .data
-                                                                        .org_name
+                                                                        .message
                                                                 }
-                                                            </div>
-                                                            <div className="flex-1 flex justify-end poppins text-[0.7rem] text-gray-500 ml-3 w-max">
-                                                                {dayjs(
-                                                                    notification.created_at
-                                                                ).fromNow()}
-                                                            </div>
-                                                        </div>
-                                                        <div className="poppins text-sm font-light mt-1">
-                                                            {
-                                                                notification
-                                                                    .data
-                                                                    .message
-                                                            }
-                                                        </div>
-                                                        {/* <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
-                                                            <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">
-                                                                Accept
-                                                            </div>
-                                                            <div className="px-8 py-2 bg-[#F44336] font-semibold rounded-full">
-                                                                Decline
-                                                            </div>
-                                                        </div> */}
-                                                    </div>
-                                                </Link>
-                                            )
+                                                            </DialogContent>
+                                                        </Dialog>
+                                                    )
+                                                ) : null
                                         )
                                     ) : (
                                         <p>No notifications available.</p>
