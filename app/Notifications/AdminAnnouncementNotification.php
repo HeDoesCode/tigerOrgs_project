@@ -12,7 +12,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AdminAnnouncementNotification extends Notification implements ShouldQueue, ShouldBroadcast
+class AdminAnnouncementNotification extends Notification 
 {
     use Queueable;
 
@@ -62,27 +62,6 @@ class AdminAnnouncementNotification extends Notification implements ShouldQueue,
             'message' => $this->message,
         ];
     }
-    /**
-     * Get the broadcastable version of the notification.
-     *
-     * @return BroadcastMessage
-     */
-    public function toBroadcast(object $notifiable): BroadcastMessage
-    {
-        return new BroadcastMessage([
-            'org_logo' => $this->orgID->logo, 
-            'org_name' => $this->orgID->name,
-            'message' => $this->message,
-        ]);
-    }
-    /**
-     * Specify the channels for broadcasting.
-     *
-     * @return array<string>
-     */
-    public function broadcastOn()
-{
-    return new PrivateChannel("App.Models.User.{$notifiable->id}");
-}
+    
 
 }
