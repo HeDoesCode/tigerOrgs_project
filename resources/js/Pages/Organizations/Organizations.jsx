@@ -13,7 +13,7 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/Components/ui/accordion"
+} from "@/Components/ui/accordion";
 import ControlContainer from "@/Components/Organizations/ControlContainer";
 import ControlKeywords from "@/Components/Organizations/ControlKeywords";
 import OrganizationJoined from "@/Components/Organizations/OrganizationJoined";
@@ -29,7 +29,7 @@ function Organizations({
     departments,
     keywords,
     myMemberOrganizations,
-    isSuperAdmin
+    isSuperAdmin,
 }) {
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
@@ -49,13 +49,13 @@ function Organizations({
         );
 
         // Move 'University-Wide' organizations to the start of the array
-        if (groupedByDepartment['University-Wide']) {
-            const universityWideOrgs = groupedByDepartment['University-Wide'];
-            delete groupedByDepartment['University-Wide']; // Remove from its original position
+        if (groupedByDepartment["University-Wide"]) {
+            const universityWideOrgs = groupedByDepartment["University-Wide"];
+            delete groupedByDepartment["University-Wide"]; // Remove from its original position
 
             // Prepend University-Wide organizations to the start
             setOrganizationList({
-                'University-Wide': universityWideOrgs,
+                "University-Wide": universityWideOrgs,
                 ...groupedByDepartment, // Spread the rest of the grouped organizations
             });
         } else {
@@ -100,14 +100,14 @@ function Organizations({
 
     const formatOrgJoinedLink = (role, orgID) => {
         switch (role) {
-            case 'student': {
-                return route('organizations.home', orgID);
+            case "student": {
+                return route("organizations.home", orgID);
             }
-            case 'admin': {
-                return route('admin.editpage', orgID);
+            case "admin": {
+                return route("admin.editpage", orgID);
             }
         }
-    }
+    };
 
     const getRandomPlaceholder = () => {
         const placeholders = [
@@ -117,7 +117,7 @@ function Organizations({
         ];
         const randomIndex = Math.floor(Math.random() * placeholders.length);
         return placeholders[randomIndex];
-    }
+    };
 
     // get this route to remove all filters
     const handleClearQuery = () => {
@@ -141,7 +141,7 @@ function Organizations({
                                 defaultValue={queryParameters["search"] || ""}
                                 onChange={handleSearch}
                                 // placeholder={getRandomPlaceholder()}
-                                placeholder='College/Organization'
+                                placeholder="College/Organization"
                             />
                             <div className="absolute text-gray-500 left-0 bottom-0 h-11 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
                                 <IconSearch size="22" />
@@ -149,7 +149,10 @@ function Organizations({
                         </ControlContainer>
 
                         <ControlContainer name="Keywords">
-                            <ControlKeywords keywords={keywords} queryParameters={queryParameters} />
+                            <ControlKeywords
+                                keywords={keywords}
+                                queryParameters={queryParameters}
+                            />
                         </ControlContainer>
 
                         <ControlContainer name="Department">
@@ -188,10 +191,11 @@ function Organizations({
                         </ControlContainer>
 
                         <ControlContainer
-                            className={` items-center !mt-3 ${Object.keys(queryParameters).length !== 0
-                                ? "flex"
-                                : "hidden"
-                                }`}
+                            className={` items-center !mt-3 ${
+                                Object.keys(queryParameters).length !== 0
+                                    ? "flex"
+                                    : "hidden"
+                            }`}
                         >
                             <button
                                 className="w-fit px-3 py-1 bg-[#ffb700] hover:bg-[#f1ad00] rounded-lg text-sm"
@@ -215,36 +219,54 @@ function Organizations({
                         )}
 
                         {myMemberOrganizations.length !== 0 && (
-                            <ControlContainer name="Organizations&nbsp;you've&nbsp;joined:" className='!hidden md:!flex'>
+                            <ControlContainer
+                                name="Organizations&nbsp;you've&nbsp;joined:"
+                                className="!hidden md:!flex"
+                            >
                                 <ul className="bg-transparent flex flex-col pt-2 rounded-md space-y-1">
-                                    {Object.values(myMemberOrganizations).map((org, index) => (
-                                        <OrganizationJoined
-                                            key={index}
-                                            icon={org.logo}
-                                            title={org.name}
-                                            isAdmin={org.role_description === 'admin'}
-                                            link={formatOrgJoinedLink(org.role_description, org.orgID)}
-                                        />
-                                    ))}
+                                    {Object.values(myMemberOrganizations).map(
+                                        (org, index) => (
+                                            <OrganizationJoined
+                                                key={index}
+                                                icon={org.logo}
+                                                title={org.name}
+                                                isAdmin={
+                                                    org.role_description ===
+                                                    "admin"
+                                                }
+                                                link={formatOrgJoinedLink(
+                                                    org.role_description,
+                                                    org.orgID
+                                                )}
+                                            />
+                                        )
+                                    )}
                                 </ul>
                             </ControlContainer>
                         )}
 
                         <Accordion type="single" collapsible>
                             <AccordionItem value="item-1">
-                                <AccordionTrigger className='text-left flex md:hidden'>
-                                    <ControlContainer name="Organizations&nbsp;you've&nbsp;joined:">
-                                    </ControlContainer>
+                                <AccordionTrigger className="text-left flex md:hidden">
+                                    <ControlContainer name="Organizations&nbsp;you've&nbsp;joined:"></ControlContainer>
                                 </AccordionTrigger>
                                 <AccordionContent>
                                     <ul className="bg-transparent flex flex-col pt-2 rounded-md space-y-1">
-                                        {Object.values(myMemberOrganizations).map((org, index) => (
+                                        {Object.values(
+                                            myMemberOrganizations
+                                        ).map((org, index) => (
                                             <OrganizationJoined
                                                 key={index}
                                                 icon={org.logo}
                                                 title={org.name}
-                                                isAdmin={org.role_description === 'admin'}
-                                                link={formatOrgJoinedLink(org.role_description, org.orgID)}
+                                                isAdmin={
+                                                    org.role_description ===
+                                                    "admin"
+                                                }
+                                                link={formatOrgJoinedLink(
+                                                    org.role_description,
+                                                    org.orgID
+                                                )}
                                             />
                                         ))}
                                     </ul>
@@ -265,7 +287,7 @@ function Organizations({
 
                         {recommendedOrganizations.length !== 0 && (
                             <OrganizationContainerRow
-                                title={'Recommended based on your interests'}
+                                title={"Recommended based on your interests"}
                                 collegeLength={
                                     Object.keys(organizationList).length
                                 }
@@ -273,7 +295,11 @@ function Organizations({
                                 {recommendedOrganizations.map((org, index) => (
                                     <OrganizationTile
                                         key={index}
-                                        orgBg={org.photos && org.photos.length > 0 ? org.photos[0].filename : 'https://placehold.co/500x800'}
+                                        orgBg={
+                                            org.photos && org.photos.length > 0
+                                                ? org.photos[0].filename
+                                                : "https://placehold.co/500x800"
+                                        }
                                         orgIcon={org.logo}
                                         title={org.name}
                                         desc={org.description}
@@ -299,7 +325,12 @@ function Organizations({
                                     {orgs.map((org, index) => (
                                         <OrganizationTile
                                             key={index}
-                                            orgBg={org.photos && org.photos.length > 0 ? org.photos[0].filename : 'https://placehold.co/500x800'}
+                                            orgBg={
+                                                org.photos &&
+                                                org.photos.length > 0
+                                                    ? org.photos[0].filename
+                                                    : "https://placehold.co/500x800"
+                                            }
                                             orgIcon={org.logo}
                                             title={org.name}
                                             desc={org.description}

@@ -4,26 +4,28 @@ namespace App\Notifications;
 
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RemoveAdminNotification extends Notification
+class AdminAnnouncementNotification extends Notification implements ShouldQueue, ShouldBroadcast
 {
     use Queueable;
 
     protected $orgID;
-    protected $userID;
+    protected $message;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Organization $orgID, User $userID)
+    public function __construct(Organization $orgID, $message)
     {
         $this->orgID = $orgID;
-
-        $this->userID = $userID;
+        $this->message = $message;
     }
 
     /**
@@ -55,10 +57,32 @@ class RemoveAdminNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'orgID' => $this->orgID->orgID, 
             'org_logo' => $this->orgID->logo, 
             'org_name' => $this->orgID->name,
-            'message' => "You have been removed as Admin on ". $this->orgID->name . ".", 
+            'message' => $this->message,
         ];
     }
+    /**
+     * Get the broadcastable version of the notification.
+     *
+     * @return BroadcastMessage
+     */
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        return new BroadcastMessage([
+            'org_logo' => $this->orgID->logo, 
+            'org_name' => $this->orgID->name,
+            'message' => $this->message,
+        ]);
+    }
+    /**
+     * Specify the channels for broadcasting.
+     *
+     * @return array<string>
+     */
+    public function broadcastOn()
+{
+    return new PrivateChannel("App.Models.User.{$notifiable->id}");
+}
+
 }

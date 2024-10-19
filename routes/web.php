@@ -37,7 +37,8 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
    Route::get('/organizations/{orgID}/process', [OrganizationController::class, 'process'])->name('organizations.process');
    Route::get('/organizations/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
 
-   //for clearing notif
+   //for notif
+   Route::get('/notifications/fetch', [NotificationController::class, 'fetch'])->name('notifications.fetch');
    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
 
 });
@@ -76,6 +77,29 @@ Route::prefix('/superadmin/')
       })->name('invitehistory');
    });
 
+   Route::get('/test-auth', function () {
+      if (Auth::check()) {
+          return response()->json(['status' => 'Authenticated', 'user' => Auth::user()]);
+      }
+      return response()->json(['status' => 'Not authenticated']);
+  });
+
+  Route::post('/broadcasting/auth', function () {
+
+   
+
+    if (Auth::check()) {
+        return response()->json([
+            'user' => Auth::user(),
+        ]);
+        
+    } else {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+});
+
+  
+
 Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
    ->prefix('/admin/{orgID}/')
    ->name('admin.')
@@ -83,6 +107,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
    ->group(function () {
       Route::get('editpage', 'edit')->name('editpage');
       Route::post('save', 'saveEdit');
+      Route::post('makeAnnouncement', 'makeAnnouncement')->name('makeAnnouncement');
       Route::get('invite', 'invite')->name('invite');
       Route::post('addadmin', 'addAdmin')->name('add-admin');
       Route::get('applications', 'applications')->name('applications');

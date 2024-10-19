@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Organization;
 use App\Models\User;
+use App\Notifications\AdminAnnouncementNotification;
 use App\Notifications\MakeAdminNotification;
 use App\Notifications\RemoveAdminNotification;
 use Exception;
@@ -107,6 +108,37 @@ class AdminController extends Controller
             'admins' => $admins->values(),
             'contacts' => $organization->contacts,
         ]);
+    }
+
+    public function makeAnnouncement(Request $request, $orgID){
+
+        try{
+            $validated = $request->validate([
+                'orgID' => 'required|exists:organizations,orgID',
+                'message' => 'required|max:250',
+            ]);
+    
+            $message = $validated['message'];
+
+
+            $organization = Organization::findOrFail($orgID);
+            $members = $organization->members()->get();
+
+            foreach ($members as $member){
+                $member->notify(new AdminAnnouncementNotification($organization, $message));
+            }
+            
+
+            session()->flash('toast', [
+                'title' => 'Announcement Sent',
+                'description' => 'Members of the Organization will be Notified',
+                'variant' => 'success'
+            ]);
+
+        }
+        catch(Exception $e){}
+        
+
     }
 
 

@@ -1,4 +1,4 @@
-import { Head, usePage, useForm } from "@inertiajs/react";
+import { Head, router, useForm } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import MainAdminFrame from "@/Components/MainAdminFrame";
 import AdminButton from "@/Components/Admin/AdminButton";
@@ -70,6 +70,26 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
     // const updateAllAdmins = (updatedAdmins) =>
     //     setData("allAdmins", updatedAdmins);
 
+    //for making announcements
+    const [values, setValues] = useState({
+        orgID: orgID,
+        message: "",
+    });
+
+    function handleChange(e) {
+        const key = e.target.id;
+        const value = e.target.value;
+        setValues((values) => ({
+            ...values,
+            [key]: value,
+        }));
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        router.post(`/admin/${orgID}/makeAnnouncement`, values);
+    }
+
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
@@ -104,7 +124,17 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                         name="Send Notification"
                                     />
                                 }
-                            />
+                            >
+                                <form onSubmit={handleSubmit}>
+                                    <label htmlFor="message">Message:</label>
+                                    <input
+                                        id="message"
+                                        value={values.message}
+                                        onChange={handleChange}
+                                    />
+                                    <button type="submit">Submit</button>
+                                </form>
+                            </AdminDialog>
                             {/* Dialog for Adding Member Manually */}
 
                             <AdminDialog

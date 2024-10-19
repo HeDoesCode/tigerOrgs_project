@@ -178,14 +178,47 @@ function UserLayout({ children, bgImage, noPadding }) {
         }
 
         function Notifications({
-            unreadNotificationsCount,
-            notifications = [],
+            unreadNotificationsCount: initialCount,
+            notifications: initialNotifications = [],
             setUnreadNotificationsCount,
         }) {
+            const [notifications, setNotifications] =
+                useState(initialNotifications);
+            const [count, setCount] = useState(initialCount);
+            const { auth } = usePage().props;
+
+            useEffect(() => {
+                if (!auth || !auth.user) {
+                    console.log("No user is authenticated or available.");
+                    return;
+                }
+
+                const fetchNotifications = async () => {
+                    try {
+                        const response = await axios.get(
+                            route("notifications.fetch")
+                        ); // Replace with your fetch route
+                        setNotifications(response.data.notifications); // Adjust according to your response structure
+                        setCount(response.data.unreadCount); // Adjust according to your response structure
+                        setUnreadNotificationsCount(response.data.unreadCount); // Update parent state
+                    } catch (error) {}
+                };
+
+                fetchNotifications();
+
+                const intervalId = setInterval(() => {
+                    fetchNotifications();
+                }, 5000);
+
+                // Clean up the interval on unmount
+                return () => clearInterval(intervalId);
+            }, [auth, setUnreadNotificationsCount]);
+
             const markAllAsRead = async () => {
                 try {
                     console.log("Marked as read");
                     await axios.post(route("notifications.markAllRead"));
+                    setCount(0);
                     setUnreadNotificationsCount(0);
                 } catch (error) {
                     console.error("Error marking notifications as read", error);
@@ -195,14 +228,11 @@ function UserLayout({ children, bgImage, noPadding }) {
             return (
                 <HeaderDropdownMenu
                     triggerContent={
-                        <NotificationsIcon
-                            count={unreadNotificationsCount}
-                            size="24"
-                        />
+                        <NotificationsIcon count={count} size="24" />
                     }
                     rootProps={{
                         onOpenChange: (open) => {
-                            if (open) {
+                            if (!open) {
                                 markAllAsRead();
                             }
                         },
@@ -216,9 +246,9 @@ function UserLayout({ children, bgImage, noPadding }) {
                             >
                                 <div className="relative">
                                     Notifications
-                                    {unreadNotificationsCount > 0 ? (
+                                    {count > 0 ? (
                                         <span className="absolute -right-3 -top-1 text-[0.6rem] rounded-full bg-red-600 size-4 flex justify-center items-center text-white font-normal">
-                                            {unreadNotificationsCount}
+                                            {count}
                                         </span>
                                     ) : (
                                         ""
@@ -245,13 +275,13 @@ function UserLayout({ children, bgImage, noPadding }) {
                                         notifications.map(
                                             (notification, index) => (
                                                 <Link
-                                                    href={route(
-                                                        "admin.editpage",
-                                                        {
-                                                            id: notification
-                                                                .data.orgID,
-                                                        }
-                                                    )}
+                                                    // href={route(
+                                                    //     "admin.editpage",
+                                                    //     {
+                                                    //         id: notification
+                                                    //             .data.orgID,
+                                                    //     }
+                                                    // )}
                                                     key={index}
                                                     className="flex space-x-3"
                                                 >
