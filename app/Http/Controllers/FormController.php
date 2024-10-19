@@ -36,11 +36,10 @@ class FormController extends Controller
 
     public function saveForm(Request $request, $orgID)
     {
-        // dd($request->getContent());
         try {
             Form::create([
                 'orgID' => $orgID,
-                'formLayout' => $request->getContent(),
+                'formLayout' => json_decode($request->getContent()),
             ]);
 
             session()->flash('toast', [
@@ -67,7 +66,7 @@ class FormController extends Controller
         $form = Form::findOrFail($formID);
         try {
             $form->update([
-                'formLayout' => $request->getContent()
+                'formLayout' => json_decode($request->getContent()),
             ]);
 
             session()->flash('toast', [
