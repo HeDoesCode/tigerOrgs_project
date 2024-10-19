@@ -18,7 +18,7 @@ return [
 
         'client_secret' => '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',
 
-        'redirect' => 'https://www.tigerorgs.com/auth/google/callback',
+        'redirect' => env('APP_DEBUG') ? 'http://127.0.0.1:8000/auth/google/callback' : 'https://www.tigerorgs.com/auth/google/callback',
     ],
 
     'postmark' => [
