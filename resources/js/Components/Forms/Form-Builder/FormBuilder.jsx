@@ -179,7 +179,7 @@ function FormBuilder({ orgID, formData }) {
                     {formData && (
                         <Link
                             className="bg-[#e25454] hover:bg-[#d44040] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
-                            href={document.referrer}
+                            href={route('admin.forms', [orgID])}
                         >
                             Cancel
                         </Link>
