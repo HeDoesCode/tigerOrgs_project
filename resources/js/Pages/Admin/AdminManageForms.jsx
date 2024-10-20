@@ -11,6 +11,7 @@ import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import { Button } from "@/Components/ui/button";
 import IconPlus from "@/Components/Icons/IconPlus";
+import AdminDialog from "@/Components/Admin/AdminDialog";
 import AdminDropdownMenu from "@/Components/Admin/AdminInvDropdownMenu";
 import {
     AlertDialog,
@@ -22,10 +23,40 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/Components/ui/alert-dialog"
+} from "@/Components/ui/alert-dialog";
+import { useState } from "react";
+import { Switch } from "@/Components/ui/switch";
 
+function AdminManageForms({
+    orgID,
+    orgName,
+    forms,
+    recruitmentStatusofOSA,
+    recruitmentStatusofOrg,
+}) {
+    const [isRecruitmentEnabledforOrg, setIsRecruitmentEnabledforOrg] =
+        useState(recruitmentStatusofOrg);
 
-function AdminManageForms({ orgID, orgName, forms }) {
+    const handleRecruitmentToggle = (checked) => {
+        router.post(
+            route("admin.toggle-recruitment", orgID),
+            {
+                status: checked,
+                orgID: orgID,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    setIsRecruitmentEnabledforOrg(checked);
+                    router.visit(route("admin.forms", orgID));
+                },
+                onError: () => {
+                    console.error("Failed to toggle recruitment status");
+                },
+            }
+        );
+    };
     // console.log(forms)
     return (
         <div className="w-full">
@@ -52,29 +83,109 @@ function AdminManageForms({ orgID, orgName, forms }) {
                             params: { orgID },
                         },
                     ]}
-                    title="Manage Recruitment Form"
+                    title="Manage Recruitment Form "
+                    dialog={
+                        <AdminDialog
+                            title={`Enable/Disable Recruitment for ${orgName}`}
+                            description="Note: When you enable the recruitment, users following the organization will be notified."
+                            trigger={
+                                <div
+                                    className={`text-sm ml-3 -mt-1 ${
+                                        isRecruitmentEnabledforOrg
+                                            ? "text-red-600"
+                                            : "text-green-600"
+                                    } underline underline-offset-2`}
+                                >
+                                    Click here to
+                                    {isRecruitmentEnabledforOrg
+                                        ? " disable "
+                                        : " enable "}
+                                    recruitment
+                                </div>
+                            }
+                        >
+                            {!recruitmentStatusofOSA ? (
+                                <label
+                                    className="pr-[15px] text-[15px] leading-none text-red-600"
+                                    htmlFor="airplane-mode"
+                                >
+                                    The recruitment for this year is currently
+                                    disabled. Please wait for further
+                                    announcement.
+                                </label>
+                            ) : (
+                                ""
+                            )}
+
+                            <label
+                                className="pr-[15px] text-[15px] leading-none "
+                                htmlFor="airplane-mode"
+                            >
+                                Recruitment
+                            </label>
+                            <div className="flex">
+                                {recruitmentStatusofOSA ? (
+                                    <Switch
+                                        id="recruitment-toggle"
+                                        className="mr-2"
+                                        checked={isRecruitmentEnabledforOrg}
+                                        onCheckedChange={
+                                            handleRecruitmentToggle
+                                        }
+                                        // onCheckedChange={field.onChange}
+                                        // disabled
+                                        aria-readonly
+                                    />
+                                ) : (
+                                    <Switch
+                                        id="recruitment-toggle"
+                                        className="mr-2"
+                                        checked={isRecruitmentEnabledforOrg}
+                                        onCheckedChange={
+                                            handleRecruitmentToggle
+                                        }
+                                        // onCheckedChange={field.onChange}
+                                        disabled
+                                        aria-readonly
+                                    />
+                                )}
+
+                                {isRecruitmentEnabledforOrg ? "On" : "Off"}
+                            </div>
+                        </AdminDialog>
+                    }
                 >
                     <div className="p-5">
                         <div className="poppins mb-5">
-                            <span className="font-semibold">
-                                Recruitment is now open.
-                            </span>&nbsp;
-                            You may now deploy a Recruitment Form for&nbsp;
-                            <span className="font-semibold">
-                                {/* Society of Information Technology Enthusiasts
-                                (SITE). */}
-                                {orgName}.
-                            </span>&nbsp;
-                            You can also browse history of forms from previous
-                            year&nbsp;
-                            <span className="text-[#FF9900]">
-                                <Link
-                                    href={route("admin.formhistory", { orgID })}
-                                >
-                                    here.
-                                </Link>
-                            </span>
+                            {recruitmentStatusofOSA ? (
+                                <>
+                                    <span className="font-semibold">
+                                        Recruitment is now open.
+                                    </span>
+                                    &nbsp; You may now deploy a Recruitment Form
+                                    for&nbsp;
+                                    <span className="font-semibold">
+                                        {orgName}.
+                                    </span>
+                                    &nbsp; You can also browse history of forms
+                                    from previous year&nbsp;
+                                    <span className="text-[#FF9900]">
+                                        <Link
+                                            href={route("admin.formhistory", {
+                                                orgID,
+                                            })}
+                                        >
+                                            here.
+                                        </Link>
+                                    </span>
+                                </>
+                            ) : (
+                                <span className="font-semibold">
+                                    Recruitment is currently closed.
+                                </span>
+                            )}
                         </div>
+
                         <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-4 gap-5">
                             <Link
                                 href={route("admin.formbuilder", { orgID })}
@@ -92,7 +203,12 @@ function AdminManageForms({ orgID, orgName, forms }) {
                                 <AdminDropdownMenu
                                     key={index}
                                     triggerContent={
-                                        <div className={`${item.deployed && 'border-4 border-green-600'} bg-white flex items-center justify-center rounded-lg hover:bg-gray-100 min-h-14 hover:scale-[1.03] transition-all duration-300 ease-in-out`}>
+                                        <div
+                                            className={`${
+                                                item.deployed &&
+                                                "border-4 border-green-600"
+                                            } bg-white flex items-center justify-center rounded-lg hover:bg-gray-100 min-h-14 hover:scale-[1.03] transition-all duration-300 ease-in-out`}
+                                        >
                                             <p className="text-black poppins ml-2 line-clamp-2">
                                                 {item.formLayout.name}
                                             </p>
@@ -102,23 +218,53 @@ function AdminManageForms({ orgID, orgName, forms }) {
                                     dropdownItems={[
                                         {
                                             name: "Edit Form",
-                                            onSelect: () => router.get(route('admin.formbuilder.edit', [orgID, item.formID])),
+                                            onSelect: () =>
+                                                router.get(
+                                                    route(
+                                                        "admin.formbuilder.edit",
+                                                        [orgID, item.formID]
+                                                    )
+                                                ),
                                         },
                                         {
                                             name: (
                                                 <AlertDialog>
-                                                    <AlertDialogTrigger>Delete Form</AlertDialogTrigger>
+                                                    <AlertDialogTrigger>
+                                                        Delete Form
+                                                    </AlertDialogTrigger>
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
-                                                            <AlertDialogTitle>Delete form "{item.formLayout.name}" permanently?</AlertDialogTitle>
+                                                            <AlertDialogTitle>
+                                                                Delete form "
+                                                                {
+                                                                    item
+                                                                        .formLayout
+                                                                        .name
+                                                                }
+                                                                " permanently?
+                                                            </AlertDialogTitle>
                                                             <AlertDialogDescription>
-                                                                This action cannot be undone.
+                                                                This action
+                                                                cannot be
+                                                                undone.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
-                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
                                                             <AlertDialogAction
-                                                                onClick={() => router.delete(route('admin.formbuilder.delete', [orgID, item.formID]))}
+                                                                onClick={() =>
+                                                                    router.delete(
+                                                                        route(
+                                                                            "admin.formbuilder.delete",
+                                                                            [
+                                                                                orgID,
+                                                                                item.formID,
+                                                                            ]
+                                                                        )
+                                                                    )
+                                                                }
                                                             >
                                                                 Continue
                                                             </AlertDialogAction>
@@ -133,9 +279,23 @@ function AdminManageForms({ orgID, orgName, forms }) {
                                             onSelect: () => null,
                                         },
                                         {
-                                            name: `${item.deployed ? 'Withdraw' : 'Deploy'} Form`,
+                                            name: `${
+                                                item.deployed
+                                                    ? "Withdraw"
+                                                    : "Deploy"
+                                            } Form`,
                                             onSelect: () => {
-                                                router.patch(route('admin.forms.setDeploy', [orgID, item.formID, !item.deployed]), { preserveScroll: true })
+                                                router.patch(
+                                                    route(
+                                                        "admin.forms.setDeploy",
+                                                        [
+                                                            orgID,
+                                                            item.formID,
+                                                            !item.deployed,
+                                                        ]
+                                                    ),
+                                                    { preserveScroll: true }
+                                                );
                                             },
                                         },
                                     ]}

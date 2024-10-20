@@ -51,7 +51,51 @@ class AdminController extends Controller
         $forms = Form::where('orgID', $orgID)
             ->get();
 
+        $recruitmentStatusofOSA = DB::table('settings')->where('name', 'Recruitment')->value('status');
+        $recruitmentStatusofOrg = DB::table('organizations')->where('orgID', $orgID)->value('recruiting');
+
         return Inertia::render('Admin/AdminManageForms', [
+            'recruitmentStatusofOSA' => $recruitmentStatusofOSA,
+            'recruitmentStatusofOrg' => $recruitmentStatusofOrg,
+            'orgID' => $organization->orgID,
+            'orgName' => $organization->name,
+            'forms' => $forms,
+        ]);
+    }
+
+    public function toggleRecruitment(Request $request, $orgID )
+    {
+    $recruiting = $request->input('status');
+
+    DB::table('organizations')
+        ->where('orgID', $orgID)
+        ->update(['recruiting' => $recruiting]);
+
+        $organization = Organization::find($orgID);
+        $forms = Form::where('orgID', $orgID)
+            ->get();
+
+            
+    if($recruiting){
+        session()->flash('toast', [
+            'title' => 'Recruitment Enabled for '. $organization->name,
+            'description' => 'Status Updated Successfully!',
+            'variant' => 'success'
+        ]);
+    }else{
+        session()->flash('toast', [
+            'title' => 'Recruitment Disabled for '. $organization->name,
+            'description' => 'Status Updated Successfully!',
+            'variant' => 'destructive'
+        ]);
+    }
+
+        $recruitmentStatusofOSA = DB::table('settings')->where('name', 'Recruitment')->value('status');
+        $recruitmentStatusofOrg = DB::table('organizations')->where('orgID', $orgID)->value('recruiting');
+
+        return Inertia::render('Admin/AdminManageForms', [
+            'recruitmentStatusofOSA' => $recruitmentStatusofOSA,
+            'recruitmentStatusofOrg' => $recruitmentStatusofOrg,
             'orgID' => $organization->orgID,
             'orgName' => $organization->name,
             'forms' => $forms,
