@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Notifications\AdminAnnouncementNotification;
 use App\Notifications\MakeAdminNotification;
 use App\Notifications\RemoveAdminNotification;
+use App\Models\Form;
 use Exception;
 use Inertia\Controller;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +42,19 @@ class AdminController extends Controller
             'pageData' => $pageData,
             'pageLayoutData' => $pageLayoutData,
             'orgID' => $orgID,
+        ]);
+    }
+
+    public function forms($orgID)
+    {
+        $organization = Organization::find($orgID);
+        $forms = Form::where('orgID', $orgID)
+            ->get();
+
+        return Inertia::render('Admin/AdminManageForms', [
+            'orgID' => $organization->orgID,
+            'orgName' => $organization->name,
+            'forms' => $forms,
         ]);
     }
 
@@ -110,35 +124,33 @@ class AdminController extends Controller
         ]);
     }
 
-    public function makeAnnouncement(Request $request, $orgID){
+    public function makeAnnouncement(Request $request, $orgID)
+    {
 
-        try{
+        try {
             $validated = $request->validate([
                 'orgID' => 'required|exists:organizations,orgID',
                 'message' => 'required|max:250',
             ]);
-    
+
             $message = $validated['message'];
 
 
             $organization = Organization::findOrFail($orgID);
             $members = $organization->members()->get();
 
-            foreach ($members as $member){
+            foreach ($members as $member) {
                 $member->notify(new AdminAnnouncementNotification($organization, $message));
             }
-            
+
 
             session()->flash('toast', [
                 'title' => 'Announcement Sent',
                 'description' => 'Members of the Organization will be Notified',
                 'variant' => 'success'
             ]);
-
+        } catch (Exception $e) {
         }
-        catch(Exception $e){}
-        
-
     }
 
 
@@ -239,7 +251,7 @@ class AdminController extends Controller
             'variant' => 'destructive',
         ]);
 
-            
+
 
         return to_route('admin.invite', ['orgID' => $orgID]);
     }
@@ -264,7 +276,7 @@ class AdminController extends Controller
                 'description' => 'User was removed as Admin!',
                 'variant' => 'success',
             ]);
-            
+
             $user = User::find($userID);
             $org = Organization::find($orgID);
 
@@ -322,16 +334,6 @@ class AdminController extends Controller
 
 
         return Inertia::render('Admin/AdminManageApplication', [
-            'orgID' => $organization->orgID,
-        ]);
-    }
-
-    public function forms($orgID)
-    {
-
-        $organization = Organization::find($orgID);
-
-        return Inertia::render('Admin/AdminManageForms', [
             'orgID' => $organization->orgID,
         ]);
     }
