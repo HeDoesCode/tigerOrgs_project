@@ -9,6 +9,7 @@ use App\Notifications\AdminAnnouncementNotification;
 use App\Notifications\MakeAdminNotification;
 use App\Notifications\RemoveAdminNotification;
 use App\Models\Form;
+use App\Notifications\RecruitingEnabledNotification;
 use Exception;
 use Inertia\Controller;
 use Illuminate\Support\Facades\DB;
@@ -77,6 +78,13 @@ class AdminController extends Controller
 
             
     if($recruiting){
+        $organization = Organization::findOrFail($orgID);
+            $members = $organization->followers()->get();
+
+            foreach ($members as $member) {
+                $member->notify(new RecruitingEnabledNotification($organization));
+            }
+
         session()->flash('toast', [
             'title' => 'Recruitment Enabled for '. $organization->name,
             'description' => 'Status Updated Successfully!',

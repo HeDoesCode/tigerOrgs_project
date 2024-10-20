@@ -285,24 +285,46 @@ function UserLayout({ children, bgImage, noPadding }) {
                                             (notification, index) =>
                                                 notification ? (
                                                     notification.data.orgID ? (
-                                                        <Link
-                                                            href={route(
-                                                                "admin.editpage",
-                                                                {
-                                                                    id: notification
-                                                                        .data
-                                                                        .orgID,
-                                                                }
-                                                            )}
-                                                            key={index}
-                                                            className="flex space-x-3"
-                                                        >
-                                                            <NotificationItem
-                                                                notification={
-                                                                    notification
-                                                                }
-                                                            />
-                                                        </Link>
+                                                        notification.data
+                                                            .recruiting ? (
+                                                            <Link
+                                                                href={route(
+                                                                    "organizations.home",
+                                                                    {
+                                                                        id: notification
+                                                                            .data
+                                                                            .orgID,
+                                                                    }
+                                                                )}
+                                                                key={index}
+                                                                className="flex space-x-3"
+                                                            >
+                                                                <NotificationItem
+                                                                    notification={
+                                                                        notification
+                                                                    }
+                                                                />
+                                                            </Link>
+                                                        ) : (
+                                                            <Link
+                                                                href={route(
+                                                                    "admin.editpage",
+                                                                    {
+                                                                        id: notification
+                                                                            .data
+                                                                            .orgID,
+                                                                    }
+                                                                )}
+                                                                key={index}
+                                                                className="flex space-x-3"
+                                                            >
+                                                                <NotificationItem
+                                                                    notification={
+                                                                        notification
+                                                                    }
+                                                                />
+                                                            </Link>
+                                                        )
                                                     ) : (
                                                         <Dialog key={index}>
                                                             <DialogTrigger>
