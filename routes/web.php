@@ -58,6 +58,7 @@ Route::prefix('/superadmin/')
         });
 
         //manage page
+        Route::post('toggle-recruitment', 'toggleRecruitment')->name('toggle-recruitment');
         Route::get('invite', 'invite')->name('invite');
         Route::get('status', 'manage')->name('status');
         Route::get('status/search-org', 'searchOrg');
@@ -96,6 +97,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::post('makeAnnouncement', 'makeAnnouncement')->name('makeAnnouncement');
 
         // manage forms
+        Route::post('toggle-recruitment', 'toggleRecruitment')->name('toggle-recruitment');
         Route::get('forms', [AdminController::class, 'forms'])->name('forms');
         Route::patch('forms/{formID}/deploy/{deploy}', [FormController::class, 'setFormDeploy'])
             ->where(['deploy' => '^(true|false)$'])->name('forms.setDeploy');

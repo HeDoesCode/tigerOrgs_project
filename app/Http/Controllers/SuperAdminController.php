@@ -68,11 +68,49 @@ class SuperAdminController extends Controller
 
         $organizations = Organization::withCount('members')->get();
 
+        $recruitment = DB::table('settings')->where('name', 'Recruitment')->value('status');
+
+
         return Inertia::render('SuperAdmin/SuperAdminManage', [
+            'recruitment'=> $recruitment,
             'organizations' => $organizations,
             'departments' => Organization::distinct()->pluck('department')
         ]);
     }
+
+    public function toggleRecruitment(Request $request)
+    {
+    $status = $request->input('status');
+    
+    DB::table('settings')
+        ->where('name', 'Recruitment')
+        ->update(['status' => $status]);
+
+        if($status){
+
+            session()->flash('toast', [
+                'title' => 'Recruitment Enabled for All Organization',
+                'description' => 'Status Updated Successfully!',
+                'variant' => 'success'
+            ]);
+        }else{
+            DB::table('organizations')
+            ->update(['recruiting' => false]);
+
+            session()->flash('toast', [
+                'title' => 'Recruitment Disabled for All Organization',
+                'description' => 'Status Updated Successfully!',
+                'variant' => 'destructive'
+            ]);
+        }
+
+    return Inertia::render('SuperAdmin/SuperAdminManage', [
+        'recruitment' => $status,
+        'organizations' => Organization::withCount('members')->get(),
+        'departments' => Organization::distinct()->pluck('department')
+    ]);
+    }
+
 
     public function updateOrganizations(Request $request)
     {
