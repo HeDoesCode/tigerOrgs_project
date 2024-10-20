@@ -59,7 +59,7 @@ class AdminAnnouncementNotification extends Notification
         return [
             'org_logo' => $this->orgID->logo, 
             'org_name' => $this->orgID->name,
-            'message' => $this->message,
+            'message' => nl2br(e($this->message)),
         ];
     }
     
