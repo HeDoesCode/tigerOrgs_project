@@ -115,24 +115,47 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                         <div className="flex justify-end me-5 mt-5">
                             {/* Dialog for Sending Notification */}
                             <AdminDialog
-                                title="Send Notification"
+                                title="Send Announcement"
                                 description="Send Notification to the members of your Organization"
                                 trigger={
                                     <AdminButton
                                         className="mr-2 sm:mt-0 bg-white hover:bg-gray-800 hover:text-white"
                                         icon={<IconBellFilled />}
-                                        name="Send Notification"
+                                        name="Send Announcement"
                                     />
                                 }
                             >
-                                <form onSubmit={handleSubmit}>
-                                    <label htmlFor="message">Message:</label>
-                                    <input
-                                        id="message"
-                                        value={values.message}
-                                        onChange={handleChange}
-                                    />
-                                    <button type="submit">Submit</button>
+                                <form
+                                    onSubmit={handleSubmit}
+                                    className="space-y-4"
+                                >
+                                    <div className="space-y-2">
+                                        <label
+                                            htmlFor="name"
+                                            className="block  font-medium text-gray-700"
+                                        >
+                                            Message:
+                                        </label>
+                                        <textarea
+                                            id="message"
+                                            value={values.message}
+                                            onChange={handleChange}
+                                            className="block w-full px-4 h-44 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            placeholder="Type here your announcement"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="mt-4 grid justify-items-end">
+                                        <button
+                                            type="submit"
+                                            className="flex px-9  shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white"
+                                        >
+                                            <span className="ml-2  poppins hidden truncate sm:block">
+                                                Announce
+                                            </span>
+                                        </button>
+                                    </div>
                                 </form>
                             </AdminDialog>
                             {/* Dialog for Adding Member Manually */}

@@ -58,10 +58,11 @@ function UserLayout({ children, bgImage, noPadding }) {
                         }
                     >
                         <Link
-                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl ${url === routePath("index")
-                                ? "text-[#ffbb10] hover:text-[#E7A600]"
-                                : ""
-                                }`}
+                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl ${
+                                url === routePath("index")
+                                    ? "text-[#ffbb10] hover:text-[#E7A600]"
+                                    : ""
+                            }`}
                             href={route("index")}
                         >
                             Home
@@ -76,10 +77,11 @@ function UserLayout({ children, bgImage, noPadding }) {
                         }
                     >
                         <Link
-                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl outline-none ${url === routePath("organizations")
-                                ? "text-[#ffbb10]"
-                                : ""
-                                }`}
+                            className={`block hover:text-white hover:bg-gray-800 p-3 -m-3 rounded-xl outline-none ${
+                                url === routePath("organizations")
+                                    ? "text-[#ffbb10]"
+                                    : ""
+                            }`}
                             href={route("organizations")}
                         >
                             Organizations
@@ -171,10 +173,11 @@ function UserLayout({ children, bgImage, noPadding }) {
             return (
                 <Link
                     href={href}
-                    className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${current
-                        ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
-                        : "hover:text-white"
-                        } ${className}`}
+                    className={`p-2 space-x-2 hover:bg-gray-800 rounded-xl flex justify-center items-center ${
+                        current
+                            ? "font-bold text-[#ffbb10] hover:text-[#E7A600]"
+                            : "hover:text-white"
+                    } ${className}`}
                     {...props}
                 >
                     {children}
@@ -206,7 +209,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                         setNotifications(response.data.notifications); // Adjust according to your response structure
                         setCount(response.data.unreadCount); // Adjust according to your response structure
                         setUnreadNotificationsCount(response.data.unreadCount); // Update parent state
-                    } catch (error) { }
+                    } catch (error) {}
                 };
 
                 fetchNotifications();
@@ -294,7 +297,11 @@ function UserLayout({ children, bgImage, noPadding }) {
                                                             key={index}
                                                             className="flex space-x-3"
                                                         >
-                                                            <NotificationItem notification={notification} />
+                                                            <NotificationItem
+                                                                notification={
+                                                                    notification
+                                                                }
+                                                            />
                                                         </Link>
                                                     ) : (
                                                         <Dialog key={index}>
@@ -303,7 +310,11 @@ function UserLayout({ children, bgImage, noPadding }) {
                                                                     key={index}
                                                                     className="flex space-x-3"
                                                                 >
-                                                                    <NotificationItem notification={notification} />
+                                                                    <NotificationItem
+                                                                        notification={
+                                                                            notification
+                                                                        }
+                                                                    />
                                                                 </div>
                                                             </DialogTrigger>
                                                             <DialogContent className="w-fit p-10">
@@ -318,11 +329,13 @@ function UserLayout({ children, bgImage, noPadding }) {
                                                                     </DialogTitle>
                                                                     <DialogDescription className="hidden"></DialogDescription>
                                                                 </DialogHeader>
-                                                                {
-                                                                    notification
-                                                                        .data
-                                                                        .message
-                                                                }
+                                                                <div
+                                                                    dangerouslySetInnerHTML={{
+                                                                        __html: notification
+                                                                            .data
+                                                                            .message,
+                                                                    }}
+                                                                />
                                                             </DialogContent>
                                                         </Dialog>
                                                     )
@@ -419,38 +432,27 @@ function UserLayout({ children, bgImage, noPadding }) {
                     <>
                         <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
                             <img
-                                src={
-                                    notification
-                                        .data
-                                        .org_logo
-                                }
+                                src={notification.data.org_logo}
                                 alt=""
                                 className="size-full object-cover"
                             />
                         </div>
                         <div className="flex flex-col text-left">
                             <div className="font-bold text-sm leading-4 line-clamp-2">
-                                {
-                                    notification
-                                        .data
-                                        .org_name
-                                }
+                                {notification.data.org_name}
                             </div>
-                            <div className="poppins line-clamp-2 text-sm font-light mt-1">
-                                {
-                                    notification
-                                        .data
-                                        .message
-                                }
-                            </div>
+                            <div
+                                className="poppins line-clamp-2 text-sm font-light mt-1"
+                                dangerouslySetInnerHTML={{
+                                    __html: notification.data.message, // Renders the HTML, including <br />
+                                }}
+                            ></div>
                             <div className="poppins text-[0.7rem] text-gray-500 leading-3 mt-2">
-                                {dayjs(
-                                    notification.created_at
-                                ).fromNow()}
+                                {dayjs(notification.created_at).fromNow()}
                             </div>
                         </div>
                     </>
-                )
+                );
             }
 
             function NotificationsIcon({ size, count }) {
@@ -471,7 +473,7 @@ function UserLayout({ children, bgImage, noPadding }) {
 
         function HeaderDropdownMenu({ triggerContent, children, rootProps }) {
             return (
-                <DropdownMenu {...rootProps} >
+                <DropdownMenu {...rootProps}>
                     <DropdownMenuTrigger className="flex items-center p-3 -m-3 hover:bg-gray-800 hover:text-white rounded-xl outline-none">
                         {triggerContent}
                     </DropdownMenuTrigger>
