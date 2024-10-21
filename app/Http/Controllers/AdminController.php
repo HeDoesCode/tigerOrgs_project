@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Organization;
+use App\Models\Photo;
 use App\Models\User;
 use App\Notifications\AdminAnnouncementNotification;
 use App\Notifications\MakeAdminNotification;
@@ -13,6 +14,7 @@ use Inertia\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use League\Flysystem\StorageAttributes;
 
 class AdminController extends Controller
 {
@@ -21,7 +23,12 @@ class AdminController extends Controller
         $organization = Organization::withCount('members')
             ->with('officers.user')
             ->with('contacts')
+            ->with('photos')
             ->find($orgID);
+        
+        $organization_controller = new OrganizationController();
+        $pageLayoutData = $organization_controller->getPageLayoutData($organization->orgID);
+
         $pageData = [
             'metadata' => [
                 'organizationName' => $organization->name,
@@ -31,11 +38,8 @@ class AdminController extends Controller
             'fb_link' => $organization->fb_link,
             'contacts' => $organization->contacts,
             'officers' => $organization->officers,
-            'photos' => $organization->photos,
+            'photos' => $organization_controller->getOrgPhotos($organization->orgID),
         ];
-
-        $organization_controller = new OrganizationController();
-        $pageLayoutData = $organization_controller->getPageLayoutData($organization->orgID);
 
         return Inertia::render('Admin/AdminEditPage', [
             'pageData' => $pageData,
@@ -44,34 +48,87 @@ class AdminController extends Controller
         ]);
     }
 
-    public function saveEdit(Request $request)
+    public function saveAboutUsSection ($request, $orgID)
     {
         $request->validate([
             'aboutUs' => ['nullable', 'string'],
-            'fb_link' => ['nullable', 'string', 'url'],
-            'logo' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
-            'coverPhoto' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
         ]);
 
-        $editedOrg = Organization::find($request->orgID);
-        $editedOrg->description = $request->aboutUs;
-        $editedOrg->fb_link = $request->fb_link;
-
-        if ($request->hasFile('logo')) {
-            $logo = Storage::disk('logos')->put('/', $request->file('logo'));
-            $editedOrg->logo = $logo;
-        }
-
-        if ($request->hasFile('coverPhoto')) {
-            $cover = Storage::disk('covers')->put('/', $request->file('coverPhoto'));
-            $editedOrg->cover = $cover;
-        }
-
-
+        $editedOrg = Organization::find($orgID);
+        $editedOrg->description = $request->input('aboutUs');
         $editedOrg->save();
+    }
 
+    public function saveFBLinkSection($request, $orgID)
+    {
+        $request->validate([
+            'fb_link' => ['nullable', 'url']
+        ]);
 
-        dd("update success");
+        $editedOrg = Organization::find($orgID);
+        $editedOrg->fb_link = $request->input('fb_link');
+        $editedOrg->save();
+    }
+
+    public function saveEdit(Request $request, $orgID, $section)
+    {   
+        switch ($section) {
+            case "about-us":
+                $this->saveAboutUsSection($request, $orgID);
+                break;
+            case "fb-link":
+                $this->saveFBLinkSection($request, $orgID);
+                break;
+        }
+
+        // $request->validate([
+        //     'aboutUs' => ['nullable', 'string'],
+        //     'fb_link' => ['nullable', 'string', 'url'],
+        //     'logo' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
+        //     'coverPhoto' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
+        //     'photoData' => ['nullable', 'json'],
+        //     'photos' => ['nullable', 'array'],
+        //     'photos.*' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
+        // ]);
+        
+        
+        // $editedOrg = Organization::find($request->orgID);
+
+        // $editedOrg->description = $request->aboutUs;
+        // $editedOrg->fb_link = $request->fb_link;
+
+        // if ($request->hasFile('logo')) {
+        //     $logo = Storage::disk('logos')->put('/', $request->file('logo'));
+        //     $editedOrg->logo = $logo;
+        // }
+
+        // if ($request->hasFile('coverPhoto')) {
+        //     $cover = Storage::disk('covers')->put('/', $request->file('coverPhoto'));
+        //     $editedOrg->cover = $cover;
+        // }
+
+        // if ($request->has('photoData')) {
+        //     $photoData = json_decode($request->only('photoData')['photoData']);
+
+        //     foreach ($photoData as $index => $photo) {
+        //         if (is_null($photo->photoID)) {
+        //             Photo::create([
+        //                 'orgID' => $request->orgID,
+        //                 'filename' => Storage::disk('org-photos')->put('/', $request->file('photos')[$index]),
+        //                 'caption' => $photo->caption,
+        //             ]);
+        //         } else {
+        //             $editedPhoto = Photo::find($photo->photoID);
+        //             $editedPhoto->filename = Storage::disk('org-photos')->put('/', $request->file('photos')[$index]);
+        //             $editedPhoto->caption = $photo->caption;
+        //             $editedPhoto->save();
+        //         }
+        //     }
+        // }
+
+        // $editedOrg->save();
+
+        // dd("update success");
     }
 
     public function invite($orgID)

@@ -106,7 +106,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
    ->controller(AdminController::class)
    ->group(function () {
       Route::get('editpage', 'edit')->name('editpage');
-      Route::post('save', 'saveEdit');
+      Route::post('save/{section}', 'saveEdit');
       Route::post('makeAnnouncement', 'makeAnnouncement')->name('makeAnnouncement');
       Route::get('invite', 'invite')->name('invite');
       Route::post('addadmin', 'addAdmin')->name('add-admin');

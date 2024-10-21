@@ -150,7 +150,7 @@ class OrganizationController extends Controller
             'aboutUs' => $organization->description,
             'contacts' => $organization->contacts,
             'officers' => $organization->officers,
-            'photos' => $organization->photos,
+            'photos' => $this->getOrgPhotos($orgID),
         ];
 
         // $pageLayoutData = [
@@ -220,6 +220,23 @@ class OrganizationController extends Controller
         return Inertia::render('Organizations/Process', [
             'pageLayoutData' => $this->getPageLayoutData($orgID),
         ]);
+    }
+
+    public function getOrgPhotos($orgID) 
+    {
+        $organization = Organization::with('photos')->find($orgID);
+        $photos = [];
+        
+        foreach ($organization->photos as $photo) {
+            $photos[] = [
+                'photoID' => $photo['photoID'],
+                'orgID' => $photo['orgID'],
+                'caption' => $photo['caption'],
+                'filename' => Storage::url('public/org_photos/'.$photo['filename']),
+            ];
+        }
+
+        return $photos;
     }
 
     public function getPageLayoutData($orgID)

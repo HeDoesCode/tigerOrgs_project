@@ -21,6 +21,9 @@ import { Description } from "@radix-ui/react-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useEffect } from "react";
+import CustomFileInput from "@/Components/CustomFileInput";
+import IconFile from "@/Components/Icons/IconFile";
+import { l } from "vite/dist/node/types.d-aGj9QkWt";
 
 function Home({
     editing = false,
@@ -61,16 +64,30 @@ function Home({
 
         const formData = new FormData();
 
-        formData.append("orgID", editableLayoutData.orgID);
-        formData.append("aboutUs", editableData.aboutUs);
-        formData.append("fb_link", editableData.fb_link);
-
         if (editableLayoutData.logo instanceof File) {
             formData.append("logo", editableLayoutData.logo);
         }
 
         if (editableLayoutData.coverPhoto instanceof File) {
             formData.append("coverPhoto", editableLayoutData.coverPhoto);
+        }
+
+        let photos = [];
+        editableData.photos.map((photo) => {
+            if (photo.fileBlob) {
+                // Append the actual file object
+                formData.append('photos[]', photo.filename); // Assuming photo.filename is a File object
+                photos.push({
+                    photoID: (photo.photoID) ? photo.photoID : null,
+                    filename: photo.filename.name, // Use .name to get the file name
+                    caption: photo.caption,
+                });
+            }
+        });
+    
+        // Append the JSON array of captions, if needed
+        if (photos.length > 0) {
+            formData.append("photoData", JSON.stringify(photos)); // For captions
         }
 
         router.post("save", formData, {
@@ -160,16 +177,21 @@ function Home({
 
     //done
     function AboutUs() {
-        const [localData, setLocalData] = useState(editableData.aboutUs);
+        const [localData, setLocalData] = useState(pageData.aboutUs);
+
+        const handleSave = () => {
+            const formData = new FormData();
+            formData.append('aboutUs', localData);
+
+            router.post('save/about-us', formData);
+        }
 
         return (
             <Tile name="About Us">
-                {editableData.aboutUs}
+                {pageData.aboutUs}
                 {editing && (
                     <EditArea title="Set About Us description">
                         <textarea
-                            name=""
-                            id=""
                             placeholder="Your description here..."
                             value={localData}
                             onChange={(e) => setLocalData(e.target.value)}
@@ -177,12 +199,7 @@ function Home({
                         <button
                             type="button"
                             className="px-3 py-2 bg-cyan-400 rounded-lg"
-                            onClick={() =>
-                                setEditableData({
-                                    ...editableData,
-                                    aboutUs: localData,
-                                })
-                            }
+                            onClick={handleSave}
                         >
                             Save
                         </button>
@@ -351,17 +368,23 @@ function Home({
         );
     }
 
+    // done
     function SocialIFrame() {
-        const [localData, setLocalData] = useState(editableData.fb_link);
+        const [localData, setLocalData] = useState(pageData.fb_link);
+
+        const handleSave = () => {
+            const formData = new FormData();
+            formData.append('fb_link', localData);
+
+            router.post('save/fb-link', formData);
+        }
 
         return (
             <Tile className="h-full" name="Social Activities">
-                <span>Facebook Iframe: {editableData.fb_link}</span>
+                <span>Facebook Iframe: {pageData.fb_link}</span>
                 {editing && (
                     <EditArea title="Set IFrame link">
                         <textarea
-                            name=""
-                            id=""
                             placeholder="Your description here..."
                             value={localData}
                             onChange={(e) => setLocalData(e.target.value)}
@@ -369,12 +392,7 @@ function Home({
                         <button
                             type="button"
                             className="px-3 py-2 bg-cyan-400 rounded-lg"
-                            onClick={() =>
-                                setEditableData({
-                                    ...editableData,
-                                    fb_link: localData,
-                                })
-                            }
+                            onClick={handleSave}
                         >
                             Save
                         </button>
@@ -385,7 +403,55 @@ function Home({
     }
 
     function PhotoScrollArea() {
-        const photos = pageData.photos;
+        const [localData, setLocalData] = useState(editableData.photos);
+        const [edittingPhotos, setEdittingPhotos] = useState(editableData.photos);
+
+        const handleAddPhoto = () => {
+            if (edittingPhotos.length == 5) {
+                return;
+            }
+
+            setEdittingPhotos([...edittingPhotos, {filename: null, caption: ""}]);
+        };
+
+        const handleEditPhoto = (index, event) => {
+            let updatedPhotos = [...edittingPhotos];
+            const selectedFile = event.target.files[0];
+            const fileReader = new FileReader();
+
+            fileReader.readAsDataURL(selectedFile); // read the file
+            
+            fileReader.onload = (e) => { // when file is done reading
+                // setPreviewBlob(e.target.result);
+                updatedPhotos[index] = {...updatedPhotos[index], filename: selectedFile, fileBlob: e.target.result}
+                setEdittingPhotos(updatedPhotos);
+            };
+        }
+
+        const handleEditCaption = (index, caption) => {
+            let updatedPhotos = [...edittingPhotos];
+            updatedPhotos[index] = {...updatedPhotos[index], caption: caption};
+            setEdittingPhotos(updatedPhotos);
+        }
+
+        const handleDeletePhoto = (index) => {
+            console.log(index)
+            if (confirm("Are you sure you want to delete this photo?")) {
+                setEdittingPhotos(edittingPhotos.filter((_, i) => i !== index));
+            }
+        }
+
+        const handleReset = () => {
+            if (confirm("Are you sure you want to delete changes you have made?")) {    
+                setEdittingPhotos(localData);
+            }
+        }
+
+        const handleSave = () => {
+            if (confirm("Are you sure you want to save changes?")) {
+                setEditableData({...editableData, photos: edittingPhotos});
+            }
+        }
 
         return (
             <Tile
@@ -394,12 +460,12 @@ function Home({
                 className="overflow-x-hidden"
             >
                 <div className="h-52 md:h-80 w-full flex flex-row overflow-x-auto gap-x-6 pb-1 relative">
-                    {photos.map((photo) => (
-                        <Dialog key={photo.photoID}>
+                    {localData.map((photo, index) => (
+                        <Dialog key={index}>
                             <DialogTrigger className="contents">
                                 <div className="h-full flex-shrink-0 relative rounded-xl overflow-clip">
                                     <img
-                                        src={photo.filename}
+                                        src={(photo.fileBlob)? photo.fileBlob : photo.filename}
                                         className="h-full object-cover"
                                         alt={photo.caption}
                                     />
@@ -428,13 +494,82 @@ function Home({
                 </div>
                 {editing && (
                     <EditArea title="Set showcase photos">
-                        <div>
-                            complex multi-file upload with text edit (pic and
-                            caption)
-                        </div>
+                        <ul className="h-96 w-full overflow-scroll">
+                            {edittingPhotos.map((image, index) => 
+                                <EditPhotoScrollItem 
+                                    key={index} 
+                                    image={image} 
+                                    index={index} 
+                                    handleEditPhoto={handleEditPhoto}
+                                    handleEditCaption={handleEditCaption}
+                                    handleDeletePhoto={handleDeletePhoto}
+                                />
+                            )}
+                        </ul>
+                        {
+                            (edittingPhotos.length == 5) ?  
+                            <button disabled="disable" className="px-3 py-2 bg-gray-400 rounded-lg">
+                                Up to 5 photos only!
+                            </button>
+                            :
+                            <button type="button" className="px-3 py-2 bg-cyan-400 rounded-lg font-bold" onClick={handleAddPhoto}>
+                                + Add Photo
+                            </button>
+                        }
+                        <ul className="grid grid-cols-2 gap-3">
+                            <li>
+                                <button type="button" className="w-full px-3 py-2 bg-green-400 rounded-lg" onClick={handleSave}>
+                                    Save
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" className="w-full px-3 py-2 bg-gray-400 rounded-lg" onClick={handleReset}>
+                                    Reset
+                                </button>
+                            </li>
+                        </ul>
                     </EditArea>
                 )}
             </Tile>
+        );
+    }
+    
+    function EditPhotoScrollItem({ image, index, handleEditPhoto, handleEditCaption, handleDeletePhoto }) {
+        const counter = index + 1; // for image counter only
+
+        return(
+            <li>
+                <fieldset className="border-2 mb-3 p-5">
+                    <div className="mb-3">
+                        <img src={(image.fileBlob)? image.fileBlob : image.filename} alt="" />
+                    </div>
+                    <legend className="font-bold">Image {counter}</legend> 
+                    <div className="flex items-center mt-2 hover:scale-[1.01] transition-all duration-300 ease-in-out">
+                        <label className="cursor-pointer w-full flex items-center justify-between rounded-xl bg-[#D9D9D9] text-black px-4 py-2 shadow-md mb-3">
+                            <span>Upload Photo</span>
+                            <IconFile />
+                            <input
+                                type="file"
+                                accept="image/png, image/jpg, image/jpeg"
+                                onChange={(e) => handleEditPhoto(index, e)}
+                                className="hidden"
+                            />
+                        </label>
+                    </div>
+                    <label htmlFor="caption" className="block">Caption: </label>
+                    <input 
+                        type="text" 
+                        name="caption" 
+                        id="caption" 
+                        className="block w-full rounded mb-3" 
+                        onChange={(e) => handleEditCaption(index, e.target.value)}
+                        value={image.caption}
+                    />
+                    <button className="px-3 py-2 block w-full bg-red-400 rounded" onClick={() => handleDeletePhoto(index)}>
+                        Delete
+                    </button>
+                </fieldset>
+            </li>
         );
     }
 }

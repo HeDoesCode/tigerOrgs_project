@@ -70,6 +70,14 @@ return [
             'url' => env('APP_URL').'/storage/covers',
             'visibility' => 'public',
             'throw' => false,
+        ],
+
+        'org-photos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/org_photos'),
+            'url' => env('APP_URL').'/storage/org_photos',
+            'visibility' => 'public',
+            'throw' => false,
         ], 
 
     ],
