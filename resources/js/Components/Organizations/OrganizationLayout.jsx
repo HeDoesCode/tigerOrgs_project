@@ -193,7 +193,9 @@ function OrganizationLayout({
                             </span>
                             <button>
                                 <QRCode
-                                    value={qrValue}
+                                    value={route("organizations.home", {
+                                        orgID: pageLayoutData.orgID,
+                                    })}
                                     size={200}
                                     qrStyle="dots"
                                 />
