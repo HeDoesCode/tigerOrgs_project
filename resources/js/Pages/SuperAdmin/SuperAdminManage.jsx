@@ -12,6 +12,7 @@ import AdminOrgCard from "@/Components/Admin/AdminOrgCard";
 import IconSearch from "@/Components/Icons/IconSearch";
 import Searchbar from "@/Components/Searchbar";
 import AdminDialog from "@/Components/Admin/AdminDialog";
+import { Switch } from "@/Components/ui/switch";
 
 import {
     Select,
@@ -21,8 +22,14 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 
-export default function SuperAdminManage({ organizations, departments }) {
-    const [recruitment, setRecruitment] = useState(false);
+export default function SuperAdminManage({
+    recruitment,
+    organizations,
+    departments,
+}) {
+    const [isRecruitmentEnabled, setIsRecruitmentEnabled] =
+        useState(recruitment);
+
     const [searchQuery, setSearchQuery] = useState("");
     const [allOrganizations, setAllOrganizations] = useState(organizations);
     const [filteredOrganizations, setFilteredOrganizations] =
@@ -37,6 +44,27 @@ export default function SuperAdminManage({ organizations, departments }) {
             return acc;
         }, {})
     );
+
+    //for toggling recruitment
+    const handleRecruitmentToggle = (checked) => {
+        router.post(
+            route("superadmin.toggle-recruitment"),
+            {
+                status: checked,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    setIsRecruitmentEnabled(checked);
+                    router.visit(route("superadmin.status"));
+                },
+                onError: () => {
+                    console.error("Failed to toggle recruitment status");
+                },
+            }
+        );
+    };
 
     useEffect(() => {
         const filterOrganizations = () => {
@@ -192,20 +220,41 @@ export default function SuperAdminManage({ organizations, departments }) {
                     dialog={
                         <AdminDialog
                             title="Enable/Disable Recruitment"
-                            description="When the recruitment is enabled, student leaders will be able turn on the recruitment within their organization and will be open to students. Disabling will turn off this feature on their side."
+                            description="Note: When the recruitment is enabled, student leaders will be able turn on the recruitment within their organization and will be open to students. Disabling will turn off this feature on their side and will turn off the recruitment status of all the organizations."
                             trigger={
                                 <div
                                     className={`text-sm ml-3 -mt-1 ${
-                                        recruitment
+                                        isRecruitmentEnabled
                                             ? "text-red-600"
                                             : "text-green-600"
                                     } underline underline-offset-2`}
                                 >
                                     Click here to
-                                    {recruitment ? " disable" : " enable"}
+                                    {isRecruitmentEnabled
+                                        ? " disable"
+                                        : " enable"}
                                 </div>
                             }
-                        ></AdminDialog>
+                        >
+                            <label
+                                className="pr-[15px] text-[15px] leading-none "
+                                htmlFor="airplane-mode"
+                            >
+                                Recruitment
+                            </label>
+                            <div className="flex">
+                                <Switch
+                                    id="recruitment-toggle"
+                                    className="mr-2"
+                                    checked={isRecruitmentEnabled}
+                                    onCheckedChange={handleRecruitmentToggle}
+                                    // onCheckedChange={field.onChange}
+                                    // disabled
+                                    aria-readonly
+                                />
+                                {isRecruitmentEnabled ? "On" : "Off"}
+                            </div>
+                        </AdminDialog>
                     }
                     searchbar={
                         <Searchbar

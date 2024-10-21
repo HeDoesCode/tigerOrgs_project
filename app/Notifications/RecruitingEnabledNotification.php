@@ -3,16 +3,12 @@
 namespace App\Notifications;
 
 use App\Models\Organization;
-use App\Models\User;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AdminAnnouncementNotification extends Notification 
+class RecruitingEnabledNotification extends Notification
 {
     use Queueable;
 
@@ -22,10 +18,10 @@ class AdminAnnouncementNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(Organization $orgID, $message)
+    public function __construct(Organization $orgID)
     {
         $this->orgID = $orgID;
-        $this->message = $message;
+
     }
 
     /**
@@ -35,7 +31,7 @@ class AdminAnnouncementNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'broadcast'];
+        return ['database'];
     }
 
     /**
@@ -57,11 +53,11 @@ class AdminAnnouncementNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'recruiting' => true,
+            'orgID' => $this->orgID->orgID, 
             'org_logo' => $this->orgID->logo, 
             'org_name' => $this->orgID->name,
-            'message' => nl2br(e($this->message)),
+            'message' => "Your followed organization is now recruiting. Click to visit.",
         ];
     }
-    
-
 }

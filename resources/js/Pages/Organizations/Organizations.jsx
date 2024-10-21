@@ -31,6 +31,7 @@ function Organizations({
     myMemberOrganizations,
     isSuperAdmin,
 }) {
+    console.log(organizations)
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
 
@@ -302,6 +303,7 @@ function Organizations({
                                         }
                                         orgIcon={org.logo}
                                         title={org.name}
+                                        recruiting={org.recruiting}
                                         desc={org.description}
                                         count={org.members_count}
                                         href={route("organizations.home", {
@@ -333,6 +335,7 @@ function Organizations({
                                             }
                                             orgIcon={org.logo}
                                             title={org.name}
+                                            recruiting={org.recruiting}
                                             desc={org.description}
                                             count={org.members_count}
                                             href={route("organizations.home", {

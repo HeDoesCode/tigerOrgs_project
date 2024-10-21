@@ -54,7 +54,7 @@ function AdminLayout({ orgID, children }) {
                         />
                     </div>
                     <div className="text-center mr-3 font-bold text-xs leading-4 line-clamp-3 h-min my-auto w-32 overflow-clip">
-                        <div className="w-32 min-w-32">
+                        <div className="w-32 min-w-32 select-text">
                             {/* Placeholder Society of Information Technology
                             Enthusiasts (SITE) */}
                             {orgName}

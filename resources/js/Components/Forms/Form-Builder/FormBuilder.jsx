@@ -14,7 +14,7 @@ import emailIcon from "@/Components/Icons/emailIcon";
 
 import { FormActionsContext } from "../Context/FormActionsContext";
 import BuilderWrap from "./BuilderWrap";
-import { router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 
 const inputTypes = [
     { type: "text", icon: letterT },
@@ -27,10 +27,10 @@ const inputTypes = [
     { type: "image_upload", icon: IconResume },
 ];
 
-function FormBuilder({ orgID }) {
-    const [items, setItems] = useState([]);
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+function FormBuilder({ orgID, formData }) {
+    const [items, setItems] = useState(formData?.formLayout?.layout || []);
+    const [title, setTitle] = useState(formData?.formLayout?.name || "");
+    const [description, setDescription] = useState(formData?.formLayout?.desc || "");
 
     function getItemPos(id) {
         return items.findIndex((item) => item.id === id);
@@ -106,25 +106,33 @@ function FormBuilder({ orgID }) {
         setItems(items.filter((item) => item.id !== id));
     }
 
-    function handleSave() {
-        let createdForm = {
+    const handleSave = () => {
+        const dataToBeSent = {
             name: title,
             desc: description,
             layout: items,
         };
 
-        router.post(`/admin/${orgID}/form-builder/save`, dataToBeSent, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        if (!formData) {
+            router.post(`/admin/${orgID}/form-builder/save`, dataToBeSent, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        } else {
+            router.patch(`/admin/${orgID}/form-builder/save/${formData.formID}`, dataToBeSent, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        }
     }
 
     return (
         <div className=" bg-white min-h-screen ">
             <div className="flex flex-col justify-center m-4 p-4 max-w-3xl mx-auto rounded-xl">
                 <h1 className="font-semibold text-3xl mb-4 px-2 text-center">
-                    Create Form
+                    {formData ? 'Modify' : 'Create'} Form
                 </h1>
                 <input
                     type="text"
@@ -155,10 +163,10 @@ function FormBuilder({ orgID }) {
                     {inputTypes.map((input) => (
                         <button
                             key={input.type}
-                            className="rounded-3xl w-full py-4 hover:bg-gray-300  transition ease-in-out diuration-200 "
+                            className="rounded-3xl w-full py-4 hover:bg-gray-300  transition ease-in-out duration-200 "
                             onClick={() => handleAddItem(input.type)}
                         >
-                            <div className="w-6 h-6 mx-auto  ">
+                            <div className="w-6 h-6 mx-auto">
                                 {input.icon && <input.icon />}
                             </div>
                             <span>{input.type}</span>
@@ -167,10 +175,18 @@ function FormBuilder({ orgID }) {
                 </div>
 
                 <button onClick={() => console.log(items)}>Check Items</button>
-                <div className="flex justify-end">
+                <div className="flex justify-end space-x-3">
+                    {formData && (
+                        <Link
+                            className="bg-[#e25454] hover:bg-[#d44040] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
+                            href={route('admin.forms', [orgID])}
+                        >
+                            Cancel
+                        </Link>
+                    )}
                     <button
                         onClick={handleSave}
-                        className="bg-[#04aa6dd5] hover:bg-[#04AA6D] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border  rounded-full"
+                        className="bg-[#04aa6dd5] hover:bg-[#04AA6D] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
                     >
                         Save
                     </button>

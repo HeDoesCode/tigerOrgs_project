@@ -9,16 +9,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Form extends Model
 {
     use HasFactory;
-    
+
     public $timestamps = false;
 
     protected $primaryKey = 'formID';
     protected $fillable = [
         'orgID',
         'formLayout',
+        'deployed'
     ];
-    
-    public function forms() : BelongsTo {
+
+    protected $casts = [
+        'deployed' => 'boolean',
+        'formLayout' => 'json'
+    ];
+
+    public function forms(): BelongsTo
+    {
         return $this->belongsTo(Organization::class, 'orgID', 'orgID');
     }
 }

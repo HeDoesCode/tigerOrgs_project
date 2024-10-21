@@ -18,6 +18,8 @@ class GoogleController extends Controller
     {
         // Bypass Socialite login in development mode
         if (app()->isLocal()) {
+            session()->put('remember_me', request('remember_me'));
+
             $registeredUser = User::find('2024000004');
 
             if (!$registeredUser) {

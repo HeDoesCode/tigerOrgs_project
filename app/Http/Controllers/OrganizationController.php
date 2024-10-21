@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Form;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Keyword;
@@ -11,18 +12,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 class OrganizationController extends Controller
 {
     public function getRecommendations(): Collection
     {
-        return DB::table('organization_keywords')
+        return Organization::join('organization_keywords', 'organization_keywords.orgID', '=', 'organizations.orgID')
             ->join('user_keywords', 'organization_keywords.keyID', '=', 'user_keywords.keyID')
-            ->join('organizations', 'organization_keywords.orgID', '=', 'organizations.orgID')
-            ->leftJoin('organization_user_role', 'organizations.orgID', '=', 'organization_user_role.orgID') // Consider a left join to include organizations with 0 members
-            ->where('user_keywords.userID', '=', Auth::id())
+            ->leftJoin('organization_user_role', 'organizations.orgID', '=', 'organization_user_role.orgID')
+            ->where('user_keywords.userID', Auth::id())
             ->select(
+                'organizations.recruiting',
                 'organizations.logo',
                 'organizations.name',
                 'organizations.description',
@@ -30,6 +32,7 @@ class OrganizationController extends Controller
                 'organizations.orgID'
             )
             ->groupBy(
+                'organizations.recruiting',
                 'organizations.logo',
                 'organizations.name',
                 'organizations.description',
@@ -39,7 +42,7 @@ class OrganizationController extends Controller
             ->get()
             ->map(function ($organization) {
                 $organization->photos = DB::table('organization_photos')
-                    ->where('orgID', '=', $organization->orgID)
+                    ->where('orgID', $organization->orgID)
                     ->select('*')->get();
                 return $organization;
             });
@@ -113,8 +116,6 @@ class OrganizationController extends Controller
             ->get()
             ->sortBy('name');
 
-        // dd($myMemberOrganizations);
-
         $isSuperAdmin = DB::table('organization_user_role')
             ->where('userID', Auth::id())
             ->where('roleID', 3)
@@ -127,7 +128,6 @@ class OrganizationController extends Controller
             'departments' => $departments,
             'keywords' => $keywordsArray,
             'isSuperAdmin' => $isSuperAdmin,
-            // 'isSuperAdmin' => true,
             'myMemberOrganizations' => $myMemberOrganizations ?: [],
             'queryParameters' => $queryParameters ?: null,
         ]);
@@ -153,18 +153,6 @@ class OrganizationController extends Controller
             'photos' => $this->getOrgPhotos($orgID),
         ];
 
-        // $pageLayoutData = [
-        //     'orgID' => $organization->orgID,
-        //     'logo' => $organization->logo,
-        //     'coverPhoto' => $organization->cover,
-        //     'metadata' => [
-        //         'organizationName' => $organization->name,
-        //         'members' => $organization->members_count,
-        //     ],
-        // ];
-
-        // dump($pageData);
-
         $followButton = !DB::table('organization_followers')
             ->where('userID', Auth::id())
             ->where('orgID', $orgID)
@@ -174,6 +162,15 @@ class OrganizationController extends Controller
             'pageData' => $pageData,
             'pageLayoutData' => $this->getPageLayoutData($orgID),
             'withFollow' => $followButton, // values: 1(can follow), 0(cannot follow/is already following), no parameter(not displayed)
+        ]);
+    }
+
+    public function apply(Request $request, $orgID, $formID)
+    {
+        $formLayout = Form::find($formID)->formLayout;
+        return Inertia::render('Organizations/Apply', [
+            'pageLayoutData' => $this->getPageLayoutData($orgID),
+            'formLayout' => $formLayout,
         ]);
     }
 
@@ -243,16 +240,26 @@ class OrganizationController extends Controller
     {
         $organization = Organization::withCount('members')
             ->findOrFail($orgID);
+
+        $isInOrgHome = Route::currentRouteName() === 'organizations.home';
+
+        $deployedForms = $isInOrgHome
+            ? Form::where([
+                'orgID' => $orgID,
+                'deployed' => true,
+            ])->get()
+            : [];
+
         return [
+            'forms' => $deployedForms,
             'orgID' => $organization->orgID,
-            'logo' => Storage::url("public/logos/".$organization->logo),
-            'coverPhoto' => Storage::url("public/covers/".$organization->cover),
+            'logo' => Storage::url("public/logos/" . $organization->logo),
+            'coverPhoto' => Storage::url("public/covers/" . $organization->cover),
             'metadata' => [
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,
             ],
-            // 'recruiting' => $organization->recruiting,
-            'recruiting' => 1,
+            'recruiting' => $organization->recruiting,
         ];
     }
 }

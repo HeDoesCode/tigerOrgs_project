@@ -49,6 +49,7 @@ class OrganizationFactory extends Factory
         ];
 
         return [
+            'recruiting' => (bool) rand(0, 1),
             'name' => 'UST ' . fake()->unique()->company(),
             'logo' => "https://picsum.photos/id/" . self::$i . "/800/800",
             'cover' => "https://picsum.photos/id/" . self::$i . "/2800/800",

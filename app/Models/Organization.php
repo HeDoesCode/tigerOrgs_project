@@ -24,6 +24,10 @@ class Organization extends Model
         'department',
     ];
 
+    protected $casts = [
+        'recruiting' => 'boolean',
+    ];
+
     // Relationships:
 
     public function members(): BelongsToMany
@@ -63,6 +67,4 @@ class Organization extends Model
     {
         return $this->hasMany(Form::class, 'orgID', 'orgID');
     }
-
-    
 }
