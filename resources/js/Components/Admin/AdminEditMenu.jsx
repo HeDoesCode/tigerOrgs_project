@@ -7,6 +7,7 @@ import {
     DropdownMenuSeparator,
 } from "@/Components/ui/dropdown-menu";
 import IconEdit from "../Icons/IconEdit";
+import AdminAlertDialog from "./AdminAlertDialog";
 
 function AdminEditMenu({ userID, orgID, roleID, onRoleChange }) {
     const { data, setData, post, processing } = useForm({
@@ -36,26 +37,50 @@ function AdminEditMenu({ userID, orgID, roleID, onRoleChange }) {
             <DropdownMenuContent>
                 {roleID === 2 ? (
                     <DropdownMenuItem
+                        onSelect={(e) => {
+                            e.preventDefault();
+                        }}
                         className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
-                        onClick={() => handleAction("make-member")}
                     >
-                        Make Member
+                        <AdminAlertDialog
+                            trigger="Make Member"
+                            title={`Demote the user as member?`}
+                            description="This will disable the user to manage the organization."
+                            accept="Confirm"
+                            onclick={() => handleAction("make-member")}
+                        ></AdminAlertDialog>
                     </DropdownMenuItem>
                 ) : (
                     <DropdownMenuItem
+                        onSelect={(e) => {
+                            e.preventDefault();
+                        }}
                         className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
-                        onClick={() => handleAction("make-admin")}
                     >
-                        Make Admin
+                        <AdminAlertDialog
+                            trigger="Make Admin"
+                            title={`Make the user as admin?`}
+                            description="This will enable the user to manage the organization."
+                            accept="Confirm"
+                            onclick={() => handleAction("make-admin")}
+                        ></AdminAlertDialog>
                     </DropdownMenuItem>
                 )}
 
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
+                    onSelect={(e) => {
+                        e.preventDefault();
+                    }}
                     className="bg-[#f8f8f8] border-gray-300 cursor-pointer"
-                    onClick={() => handleAction("remove-student")}
                 >
-                    Remove Student
+                    <AdminAlertDialog
+                        trigger="Remove Student"
+                        title={`Remove the user from the organization`}
+                        description="Are you sure you want to delete the user from the organization?"
+                        accept="Confirm"
+                        onclick={() => handleAction("remove-student")}
+                    ></AdminAlertDialog>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
