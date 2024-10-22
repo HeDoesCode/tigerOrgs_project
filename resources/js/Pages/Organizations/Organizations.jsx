@@ -31,7 +31,6 @@ function Organizations({
     myMemberOrganizations,
     isSuperAdmin,
 }) {
-    console.log(organizations)
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
 
@@ -192,11 +191,10 @@ function Organizations({
                         </ControlContainer>
 
                         <ControlContainer
-                            className={` items-center !mt-3 ${
-                                Object.keys(queryParameters).length !== 0
-                                    ? "flex"
-                                    : "hidden"
-                            }`}
+                            className={` items-center !mt-3 ${Object.keys(queryParameters).length !== 0
+                                ? "flex"
+                                : "hidden"
+                                }`}
                         >
                             <button
                                 className="w-fit px-3 py-1 bg-[#ffb700] hover:bg-[#f1ad00] rounded-lg text-sm"
@@ -229,6 +227,7 @@ function Organizations({
                                         (org, index) => (
                                             <OrganizationJoined
                                                 key={index}
+                                                visibility={org.visibility}
                                                 icon={org.logo}
                                                 title={org.name}
                                                 isAdmin={
@@ -329,7 +328,7 @@ function Organizations({
                                             key={index}
                                             orgBg={
                                                 org.photos &&
-                                                org.photos.length > 0
+                                                    org.photos.length > 0
                                                     ? org.photos[0].filename
                                                     : "https://placehold.co/500x800"
                                             }

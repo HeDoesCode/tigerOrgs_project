@@ -26,6 +26,7 @@ class Organization extends Model
 
     protected $casts = [
         'recruiting' => 'boolean',
+        'visibility' => 'boolean',
     ];
 
     // Relationships:
