@@ -33,14 +33,26 @@ class GoogleController extends Controller
 
         if (AuthBypassEnum::bypassCheck($googleUser->email)) {
             if (!User::where('email', $googleUser->email)->first()) {
-                User::create([
-                    'userID' => '0000000001',
-                    'email' => $googleUser->email,
-                    'firstname' => 'OSA',
-                    'lastname' => 'admin',
-                    'status' => 'osa',
-                    'college' => 'osa'
-                ]);
+                // User::create([
+                //     'userID' => '0000000001',
+                //     'email' => $googleUser->email,
+                //     'firstname' => 'OSA',
+                //     'lastname' => 'admin',
+                //     'status' => 'osa',
+                //     'college' => 'osa'
+                // ]);
+
+                // need to update this logic if multiple superadmins supported
+                User::firstOrCreate(
+                    ['userID' => 0000000001],
+                    [
+                        'email' => $googleUser->email,
+                        'firstname' => 'OSA',
+                        'lastname' => 'admin',
+                        'status' => 'osa',
+                        'college' => 'osa'
+                    ]
+                );
             }
             Auth::login(
                 User::where('email', $googleUser->email)->first(),
