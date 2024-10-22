@@ -1,18 +1,48 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+
+on:
+  push:
+    branches:
+      - main  # Only trigger on pushes to the main branch
+
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
+
     steps:
+      # Step 1: Log the event that triggered the job
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      
+      # Step 2: Log the environment details
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      
+      # Step 3: Log branch and repository details
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
+      # Step 4: Check out the repository code
       - name: Check out repository code
         uses: actions/checkout@v4
+
+      # Step 5: Log that the repository has been cloned
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
+      
+      # Step 6: List files in the repository
+      - run: ls ${{ github.workspace }}
+
+      # Step 7: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Set your Node.js version here
+
+      # Step 8: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 9: Run build script
+      - name: Build the application
+        run: npm run build
+
+      # Step 10: Log the job's status
       - run: echo "🍏 This job's status is ${{ job.status }}."
