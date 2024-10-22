@@ -19,7 +19,7 @@ function CustomFileInput({ handleFileChange, fileType }) {
                 <IconFile />
                 <input
                     type="file"
-                    accept=".csv,.xlsx"
+                    accept={(fileType === "Student File") ? ".csv":".json"}
                     onChange={handleChange}
                     className="hidden"
                 />
