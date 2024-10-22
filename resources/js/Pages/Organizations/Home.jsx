@@ -23,7 +23,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import CustomFileInput from "@/Components/CustomFileInput";
 import IconFile from "@/Components/Icons/IconFile";
-import { l } from "vite/dist/node/types.d-aGj9QkWt";
 
 function Home({
     editing = false,
@@ -62,16 +61,6 @@ function Home({
     const handleSave = () => {
         console.log(editableData, editableLayoutData);
 
-        const formData = new FormData();
-
-        if (editableLayoutData.logo instanceof File) {
-            formData.append("logo", editableLayoutData.logo);
-        }
-
-        if (editableLayoutData.coverPhoto instanceof File) {
-            formData.append("coverPhoto", editableLayoutData.coverPhoto);
-        }
-
         let photos = [];
         editableData.photos.map((photo) => {
             if (photo.fileBlob) {
@@ -89,12 +78,6 @@ function Home({
         if (photos.length > 0) {
             formData.append("photoData", JSON.stringify(photos)); // For captions
         }
-
-        router.post("save", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
     };
 
     useEffect(() => {
@@ -175,15 +158,16 @@ function Home({
         );
     }
 
-    //done
     function AboutUs() {
         const [localData, setLocalData] = useState(pageData.aboutUs);
 
         const handleSave = () => {
-            const formData = new FormData();
-            formData.append('aboutUs', localData);
-
-            router.post('save/about-us', formData);
+            if (confirm("Are you sure you want to save changes?")) {
+                const formData = new FormData();
+                formData.append('aboutUs', localData);
+    
+                router.post('save/about-us', formData);
+            }
         }
 
         return (
@@ -210,7 +194,7 @@ function Home({
     }
 
     function ContactsContainer() {
-        const [localData, setLocalData] = useState(pageData.contacts);
+        const [contacts, setContacts] = useState(pageData.contacts);
 
         const platformIcons = {
             email: <IconMailFilled />,
@@ -222,8 +206,8 @@ function Home({
         };
 
         const handleAddNewContact = () => {
-            setLocalData([
-                ...localData,
+            setContacts([
+                ...contacts,
                 { platform: "email", name: "", address: "" },
             ]);
         };
@@ -234,13 +218,11 @@ function Home({
                 ...updatedData[index],
                 address: data.address,
                 platform: data.platform,
-            };
+            };  
             return updatedData;
         };
 
-        const handleSave = () => {
-            setEditableData({ ...editableData, contacts: localData });
-        };
+        const handleSave = () => {};
 
         return (
             <Tile name="Contacts and Information">
@@ -262,84 +244,73 @@ function Home({
                 </ul>
                 {editing && (
                     <EditArea title="Set contacts list">
-                        <div>complex bullet text editor</div>
                         <div>
-                            <ul>
-                                {localData.map((contact, index) => {
-                                    return (
-                                        <li key={index}>
-                                            <select
-                                                onChange={(e) =>
-                                                    setLocalData(
-                                                        handleEditContact(
-                                                            index,
-                                                            {
-                                                                ...contact,
-                                                                platform:
-                                                                    e.target
-                                                                        .value,
-                                                            }
-                                                        )
-                                                    )
-                                                }
-                                            >
-                                                <option value="email">
-                                                    Email
-                                                </option>
-                                                <option value="facebook">
-                                                    Facebook
-                                                </option>
-                                                <option value="x">X</option>
-                                                <option value="linkedin">
-                                                    Linked In
-                                                </option>
-                                                <option value="instagram">
-                                                    Instagram
-                                                </option>
-                                                <option value="other">
-                                                    Other
-                                                </option>
-                                            </select>
-                                            <input
-                                                type="text"
-                                                value={contact.address}
-                                                onChange={(e) =>
-                                                    setLocalData(
-                                                        handleEditContact(
-                                                            index,
-                                                            {
-                                                                ...contact,
-                                                                address:
-                                                                    e.target
-                                                                        .value,
-                                                            }
-                                                        )
-                                                    )
-                                                }
-                                            />
-                                        </li>
-                                    );
+                            <ul className="h-96 w-full overflow-scroll">
+                                {contacts.map((contact, index) => {
+                                    return <EditContactItem key={index} index={index} />;
                                 })}
                             </ul>
-                            <button
-                                type="button"
-                                className="px-3 py-2 bg-cyan-400 rounded-lg"
-                                onClick={handleAddNewContact}
-                            >
+
+                            <button type="button" className="px-3 py-2 bg-cyan-400 rounded-lg w-full mb-4" onClick={handleAddNewContact} >
                                 Add New Contact
                             </button>
 
-                            <button
-                                type="button"
-                                className="px-3 py-2 bg-cyan-400 rounded-lg"
-                                onClick={handleSave}
-                            >
-                                Save
-                            </button>
+                            <div className="grid grid-cols-2 gap-4">
+                                <button type="button" className="px-3 py-2 bg-green-400 rounded-lg" onClick={handleSave}>
+                                    Save
+                                </button>
+                                <button type="button" className="px-3 py-2 bg-gray-400 rounded-lg">
+                                    Reset
+                                </button>
+                            </div>
+
                         </div>
                     </EditArea>
                 )}
             </Tile>
+        );
+    }
+
+    function EditContactItem({ index }) {
+        const counter = index + 1;
+
+        return (
+            <li className="mb-3">
+                <fieldset className="p-5 border-2 rounded-lg">
+                    <legend className="font-bold">Contact { counter }</legend>
+                    <ul className="grid grid-rows-3 ">
+                        <li className="mb-3">
+                            <label htmlFor="" className="block">Name: </label>
+                            <input type="text" className="w-full block"/>   
+                        </li>
+                        <li className="mb-3">
+                            <label htmlFor="" className="block">Address Link: </label>
+                            <input type="text" className="w-full block" />
+                        </li>
+                        <li className="mb-3">
+                            <label htmlFor="" className="block">Platform: </label>
+                            <select className="w-full block">
+                                <option value="email">
+                                    Email
+                                </option>
+                                <option value="facebook">
+                                    Facebook
+                                </option>
+                                <option value="x">X</option>
+                                <option value="linkedin">
+                                    Linked In
+                                </option>
+                                <option value="instagram">
+                                    Instagram
+                                </option>
+                                <option value="other">
+                                    Other
+                                </option>
+                            </select>
+                        </li>
+                    </ul>
+                </fieldset>
+            </li>
         );
     }
 
@@ -368,15 +339,16 @@ function Home({
         );
     }
 
-    // done
     function SocialIFrame() {
         const [localData, setLocalData] = useState(pageData.fb_link);
 
         const handleSave = () => {
-            const formData = new FormData();
-            formData.append('fb_link', localData);
+            if (confirm("Are you sure you want to save changes?")) {    
+                const formData = new FormData();
+                formData.append('fb_link', localData);
 
-            router.post('save/fb-link', formData);
+                router.post('save/fb-link', formData);
+            }
         }
 
         return (

@@ -114,65 +114,73 @@ class AdminController extends Controller
         ]);
     }
 
-    public function saveAboutUsSection ($request, $orgID)
+    public function saveAboutUsSection($request, $editedOrg)
     {
         $request->validate([
             'aboutUs' => ['nullable', 'string'],
         ]);
 
-        $editedOrg = Organization::find($orgID);
         $editedOrg->description = $request->input('aboutUs');
         $editedOrg->save();
     }
 
-    public function saveFBLinkSection($request, $orgID)
+    public function saveFBLinkSection($request, $editedOrg)
     {
         $request->validate([
             'fb_link' => ['nullable', 'url']
         ]);
 
-        $editedOrg = Organization::find($orgID);
         $editedOrg->fb_link = $request->input('fb_link');
+        $editedOrg->save();
+    }
+
+    public function saveLogoSection($request, $editedOrg) 
+    {   
+        $request->validate([
+            'logo' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
+        ]);
+
+        $logo = Storage::disk('logos')->put('/',$request->file('logo'));
+        $editedOrg->logo = $logo;
+        $editedOrg->save();
+    }
+    
+    public function saveCoverSection($request, $editedOrg) 
+    {   
+        $request->validate([
+            'cover' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
+        ]);
+
+        $cover = Storage::disk('covers')->put('/',$request->file('cover'));
+        $editedOrg->cover = $cover;
         $editedOrg->save();
     }
 
     public function saveEdit(Request $request, $orgID, $section)
     {   
+        $editedOrg = Organization::find($orgID);
+
         switch ($section) {
             case "about-us":
-                $this->saveAboutUsSection($request, $orgID);
+                $this->saveAboutUsSection($request, $editedOrg);
                 break;
             case "fb-link":
-                $this->saveFBLinkSection($request, $orgID);
+                $this->saveFBLinkSection($request, $editedOrg);
+                break;
+            case "logo":
+                $this->saveLogoSection($request, $editedOrg);
+                break;
+            case "cover":
+                $this->saveCoverSection($request, $editedOrg);
                 break;
         }
 
         // $request->validate([
-        //     'aboutUs' => ['nullable', 'string'],
-        //     'fb_link' => ['nullable', 'string', 'url'],
-        //     'logo' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
-        //     'coverPhoto' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
         //     'photoData' => ['nullable', 'json'],
         //     'photos' => ['nullable', 'array'],
         //     'photos.*' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
         // ]);
         
-        
-        // $editedOrg = Organization::find($request->orgID);
-
-        // $editedOrg->description = $request->aboutUs;
-        // $editedOrg->fb_link = $request->fb_link;
-
-        // if ($request->hasFile('logo')) {
-        //     $logo = Storage::disk('logos')->put('/', $request->file('logo'));
-        //     $editedOrg->logo = $logo;
-        // }
-
-        // if ($request->hasFile('coverPhoto')) {
-        //     $cover = Storage::disk('covers')->put('/', $request->file('coverPhoto'));
-        //     $editedOrg->cover = $cover;
-        // }
-
         // if ($request->has('photoData')) {
         //     $photoData = json_decode($request->only('photoData')['photoData']);
 

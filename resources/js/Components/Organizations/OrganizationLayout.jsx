@@ -207,36 +207,32 @@ function OrganizationLayout({
 
     function CoverPhoto() {
         const [file, setFile] = useState(null);
-
         const [previewUrl, setPreviewUrl] = useState(null);
 
-        function handleImageChange(event) {
+        const handleImageChange = (event) => {
             const selectedFile = event.target.files[0];
             setFile(selectedFile);
 
             const fileReader = new FileReader();
+            fileReader.readAsDataURL(selectedFile);
             fileReader.onload = (e) => {
                 setPreviewUrl(e.target.result);
             };
-            fileReader.readAsDataURL(selectedFile);
         }
 
         const handleSave = () => {
-            setEditableLayoutData({
-                ...pageLayoutData,
-                coverPhoto: file,
-                coverPhotoURL: URL.createObjectURL(file),
-            });
+            if (confirm("Are you sure you want to save changes?")) {
+                const formData = new FormData();
+
+                formData.append('cover', file);
+                router.post('save/cover', formData);
+            }
         };
 
         return (
             <div className="max-h-[25rem] min-h-[15rem] h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
                 <img
-                    src={
-                        typeof pageLayoutData.coverPhoto === "object"
-                            ? pageLayoutData.coverPhotoURL
-                            : pageLayoutData.coverPhoto
-                    }
+                    src={pageLayoutData.coverPhoto}
                     alt="Organization Cover Photo"
                     className="w-full object-cover"
                 />
@@ -272,36 +268,32 @@ function OrganizationLayout({
 
     function OrganizationLogo() {
         const [file, setFile] = useState(null);
-
         const [previewUrl, setPreviewUrl] = useState(null);
 
         function handleImageChange(event) {
             const selectedFile = event.target.files[0];
             setFile(selectedFile);
-
+            
             const fileReader = new FileReader();
+            fileReader.readAsDataURL(selectedFile);
             fileReader.onload = (e) => {
                 setPreviewUrl(e.target.result);
             };
-            fileReader.readAsDataURL(selectedFile);
         }
 
         const handleSave = () => {
-            setEditableLayoutData({
-                ...pageLayoutData,
-                logo: file,
-                logoURL: URL.createObjectURL(file),
-            });
+            if (confirm("Are you sure you want to save changes?")) {
+                const formData = new FormData();
+
+                formData.append('logo', file);
+                router.post('save/logo', formData);
+            }
         };
 
         return (
             <div className="size-36 md:size-44 rounded-[2rem] overflow-clip relative">
                 <img
-                    src={
-                        typeof pageLayoutData.logo === "object"
-                            ? pageLayoutData.logoURL
-                            : pageLayoutData.logo
-                    }
+                    src={pageLayoutData.logo}
                     alt="Organization Logo"
                     className="size-full object-cover"
                 />
