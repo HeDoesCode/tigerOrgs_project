@@ -1,6 +1,5 @@
 import { Link } from "@inertiajs/react";
 function OrganizationJoined({ icon, title, isAdmin, isSuperAdmin, link, visibility }) {
-    console.log(visibility)
     return (
         <Link href={link} className="bg-transparent text-black transition-all duration-100 ease-in-out hover:bg-gray-800 hover:text-white p-2 rounded-xl">
             <li className="flex items-center space-x-3 poppins">
