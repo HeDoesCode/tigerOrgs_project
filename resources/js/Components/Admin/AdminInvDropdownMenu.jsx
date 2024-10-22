@@ -36,7 +36,6 @@ function AdminInvDropdownMenu({ onSelect, ...props }) {
                         //     }
                         // }}
                         onSelect={item.onSelect}
-
                     >
                         {item.name}
                     </DropdownMenuItem>

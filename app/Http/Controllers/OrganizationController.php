@@ -106,11 +106,10 @@ class OrganizationController extends Controller
         })->values()->toArray();
 
         // get all organization this user is a member of
-        $myMemberOrganizations = DB::table('organization_user_role')
+        $myMemberOrganizations = Organization::join('organization_user_role', 'organizations.orgID', '=', 'organization_user_role.orgID')
             ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
-            ->join('organizations', 'organization_user_role.orgID', '=', 'organizations.orgID')
             ->where('organization_user_role.userID', Auth::id())
-            ->select('organizations.name', 'roles.role_description', 'organizations.orgID', 'organizations.logo')
+            ->select('organizations.name', 'roles.role_description', 'organizations.orgID', 'organizations.logo', 'organizations.visibility')
             // ->limit(10) // remove in production
             ->orderBy('organizations.name', 'asc')
             ->get()
@@ -219,17 +218,17 @@ class OrganizationController extends Controller
         ]);
     }
 
-    public function getOrgPhotos($orgID) 
+    public function getOrgPhotos($orgID)
     {
         $organization = Organization::with('photos')->find($orgID);
         $photos = [];
-        
+
         foreach ($organization->photos as $photo) {
             $photos[] = [
                 'photoID' => $photo['photoID'],
                 'orgID' => $photo['orgID'],
                 'caption' => $photo['caption'],
-                'filename' => Storage::url('public/org_photos/'.$photo['filename']),
+                'filename' => Storage::url('public/org_photos/' . $photo['filename']),
             ];
         }
 

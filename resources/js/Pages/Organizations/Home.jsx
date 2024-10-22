@@ -65,15 +65,15 @@ function Home({
         editableData.photos.map((photo) => {
             if (photo.fileBlob) {
                 // Append the actual file object
-                formData.append('photos[]', photo.filename); // Assuming photo.filename is a File object
+                formData.append("photos[]", photo.filename); // Assuming photo.filename is a File object
                 photos.push({
-                    photoID: (photo.photoID) ? photo.photoID : null,
+                    photoID: photo.photoID ? photo.photoID : null,
                     filename: photo.filename.name, // Use .name to get the file name
                     caption: photo.caption,
                 });
             }
         });
-    
+
         // Append the JSON array of captions, if needed
         if (photos.length > 0) {
             formData.append("photoData", JSON.stringify(photos)); // For captions
@@ -376,14 +376,19 @@ function Home({
 
     function PhotoScrollArea() {
         const [localData, setLocalData] = useState(editableData.photos);
-        const [edittingPhotos, setEdittingPhotos] = useState(editableData.photos);
+        const [edittingPhotos, setEdittingPhotos] = useState(
+            editableData.photos
+        );
 
         const handleAddPhoto = () => {
             if (edittingPhotos.length == 5) {
                 return;
             }
 
-            setEdittingPhotos([...edittingPhotos, {filename: null, caption: ""}]);
+            setEdittingPhotos([
+                ...edittingPhotos,
+                { filename: null, caption: "" },
+            ]);
         };
 
         const handleEditPhoto = (index, event) => {
@@ -392,38 +397,50 @@ function Home({
             const fileReader = new FileReader();
 
             fileReader.readAsDataURL(selectedFile); // read the file
-            
-            fileReader.onload = (e) => { // when file is done reading
+
+            fileReader.onload = (e) => {
+                // when file is done reading
                 // setPreviewBlob(e.target.result);
-                updatedPhotos[index] = {...updatedPhotos[index], filename: selectedFile, fileBlob: e.target.result}
+                updatedPhotos[index] = {
+                    ...updatedPhotos[index],
+                    filename: selectedFile,
+                    fileBlob: e.target.result,
+                };
                 setEdittingPhotos(updatedPhotos);
             };
-        }
+        };
 
         const handleEditCaption = (index, caption) => {
             let updatedPhotos = [...edittingPhotos];
-            updatedPhotos[index] = {...updatedPhotos[index], caption: caption};
+            updatedPhotos[index] = {
+                ...updatedPhotos[index],
+                caption: caption,
+            };
             setEdittingPhotos(updatedPhotos);
-        }
+        };
 
         const handleDeletePhoto = (index) => {
-            console.log(index)
+            console.log(index);
             if (confirm("Are you sure you want to delete this photo?")) {
                 setEdittingPhotos(edittingPhotos.filter((_, i) => i !== index));
             }
-        }
+        };
 
         const handleReset = () => {
-            if (confirm("Are you sure you want to delete changes you have made?")) {    
+            if (
+                confirm(
+                    "Are you sure you want to delete changes you have made?"
+                )
+            ) {
                 setEdittingPhotos(localData);
             }
-        }
+        };
 
         const handleSave = () => {
             if (confirm("Are you sure you want to save changes?")) {
-                setEditableData({...editableData, photos: edittingPhotos});
+                setEditableData({ ...editableData, photos: edittingPhotos });
             }
-        }
+        };
 
         return (
             <Tile
@@ -437,7 +454,11 @@ function Home({
                             <DialogTrigger className="contents">
                                 <div className="h-full flex-shrink-0 relative rounded-xl overflow-clip">
                                     <img
-                                        src={(photo.fileBlob)? photo.fileBlob : photo.filename}
+                                        src={
+                                            photo.fileBlob
+                                                ? photo.fileBlob
+                                                : photo.filename
+                                        }
                                         className="h-full object-cover"
                                         alt={photo.caption}
                                     />
@@ -467,35 +488,49 @@ function Home({
                 {editing && (
                     <EditArea title="Set showcase photos">
                         <ul className="h-96 w-full overflow-scroll">
-                            {edittingPhotos.map((image, index) => 
-                                <EditPhotoScrollItem 
-                                    key={index} 
-                                    image={image} 
-                                    index={index} 
+                            {edittingPhotos.map((image, index) => (
+                                <EditPhotoScrollItem
+                                    key={index}
+                                    image={image}
+                                    index={index}
                                     handleEditPhoto={handleEditPhoto}
                                     handleEditCaption={handleEditCaption}
                                     handleDeletePhoto={handleDeletePhoto}
                                 />
-                            )}
+                            ))}
                         </ul>
-                        {
-                            (edittingPhotos.length == 5) ?  
-                            <button disabled="disable" className="px-3 py-2 bg-gray-400 rounded-lg">
+                        {edittingPhotos.length == 5 ? (
+                            <button
+                                disabled="disable"
+                                className="px-3 py-2 bg-gray-400 rounded-lg"
+                            >
                                 Up to 5 photos only!
                             </button>
-                            :
-                            <button type="button" className="px-3 py-2 bg-cyan-400 rounded-lg font-bold" onClick={handleAddPhoto}>
+                        ) : (
+                            <button
+                                type="button"
+                                className="px-3 py-2 bg-cyan-400 rounded-lg font-bold"
+                                onClick={handleAddPhoto}
+                            >
                                 + Add Photo
                             </button>
-                        }
+                        )}
                         <ul className="grid grid-cols-2 gap-3">
                             <li>
-                                <button type="button" className="w-full px-3 py-2 bg-green-400 rounded-lg" onClick={handleSave}>
+                                <button
+                                    type="button"
+                                    className="w-full px-3 py-2 bg-green-400 rounded-lg"
+                                    onClick={handleSave}
+                                >
                                     Save
                                 </button>
                             </li>
                             <li>
-                                <button type="button" className="w-full px-3 py-2 bg-gray-400 rounded-lg" onClick={handleReset}>
+                                <button
+                                    type="button"
+                                    className="w-full px-3 py-2 bg-gray-400 rounded-lg"
+                                    onClick={handleReset}
+                                >
                                     Reset
                                 </button>
                             </li>
@@ -505,17 +540,28 @@ function Home({
             </Tile>
         );
     }
-    
-    function EditPhotoScrollItem({ image, index, handleEditPhoto, handleEditCaption, handleDeletePhoto }) {
+
+    function EditPhotoScrollItem({
+        image,
+        index,
+        handleEditPhoto,
+        handleEditCaption,
+        handleDeletePhoto,
+    }) {
         const counter = index + 1; // for image counter only
 
-        return(
+        return (
             <li>
                 <fieldset className="border-2 mb-3 p-5">
                     <div className="mb-3">
-                        <img src={(image.fileBlob)? image.fileBlob : image.filename} alt="" />
+                        <img
+                            src={
+                                image.fileBlob ? image.fileBlob : image.filename
+                            }
+                            alt=""
+                        />
                     </div>
-                    <legend className="font-bold">Image {counter}</legend> 
+                    <legend className="font-bold">Image {counter}</legend>
                     <div className="flex items-center mt-2 hover:scale-[1.01] transition-all duration-300 ease-in-out">
                         <label className="cursor-pointer w-full flex items-center justify-between rounded-xl bg-[#D9D9D9] text-black px-4 py-2 shadow-md mb-3">
                             <span>Upload Photo</span>
@@ -528,16 +574,23 @@ function Home({
                             />
                         </label>
                     </div>
-                    <label htmlFor="caption" className="block">Caption: </label>
-                    <input 
-                        type="text" 
-                        name="caption" 
-                        id="caption" 
-                        className="block w-full rounded mb-3" 
-                        onChange={(e) => handleEditCaption(index, e.target.value)}
+                    <label htmlFor="caption" className="block">
+                        Caption:{" "}
+                    </label>
+                    <input
+                        type="text"
+                        name="caption"
+                        id="caption"
+                        className="block w-full rounded mb-3"
+                        onChange={(e) =>
+                            handleEditCaption(index, e.target.value)
+                        }
                         value={image.caption}
                     />
-                    <button className="px-3 py-2 block w-full bg-red-400 rounded" onClick={() => handleDeletePhoto(index)}>
+                    <button
+                        className="px-3 py-2 block w-full bg-red-400 rounded"
+                        onClick={() => handleDeletePhoto(index)}
+                    >
                         Delete
                     </button>
                 </fieldset>

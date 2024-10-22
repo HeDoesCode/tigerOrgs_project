@@ -31,7 +31,6 @@ function Organizations({
     myMemberOrganizations,
     isSuperAdmin,
 }) {
-    console.log(organizations)
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
 
@@ -192,11 +191,10 @@ function Organizations({
                         </ControlContainer>
 
                         <ControlContainer
-                            className={` items-center !mt-3 ${
-                                Object.keys(queryParameters).length !== 0
-                                    ? "flex"
-                                    : "hidden"
-                            }`}
+                            className={` items-center !mt-3 ${Object.keys(queryParameters).length !== 0
+                                ? "flex"
+                                : "hidden"
+                                }`}
                         >
                             <button
                                 className="w-fit px-3 py-1 bg-[#ffb700] hover:bg-[#f1ad00] rounded-lg text-sm"
@@ -206,7 +204,7 @@ function Organizations({
                             </button>
                         </ControlContainer>
 
-                        {isSuperAdmin && (
+                        {/* {isSuperAdmin && (
                             <ControlContainer>
                                 <ul className="bg-transparent flex flex-col py-3 rounded-md space-y-4">
                                     <OrganizationJoined
@@ -218,7 +216,7 @@ function Organizations({
                                 </ul>
                             </ControlContainer>
                         )}
-
+ */}
                         {myMemberOrganizations.length !== 0 && (
                             <ControlContainer
                                 name="Organizations&nbsp;you've&nbsp;joined:"
@@ -229,6 +227,7 @@ function Organizations({
                                         (org, index) => (
                                             <OrganizationJoined
                                                 key={index}
+                                                visibility={org.visibility}
                                                 icon={org.logo}
                                                 title={org.name}
                                                 isAdmin={
@@ -329,7 +328,7 @@ function Organizations({
                                             key={index}
                                             orgBg={
                                                 org.photos &&
-                                                org.photos.length > 0
+                                                    org.photos.length > 0
                                                     ? org.photos[0].filename
                                                     : "https://placehold.co/500x800"
                                             }

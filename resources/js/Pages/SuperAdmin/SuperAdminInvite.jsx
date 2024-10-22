@@ -377,6 +377,8 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                         getOrg={getOrg}
                                                     />
                                                 ),
+                                                onSelect: (e) =>
+                                                    e.preventDefault(),
                                             },
                                             {
                                                 name: (
@@ -392,6 +394,8 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                         }}
                                                     ></AdminAlertDialog>
                                                 ),
+                                                onSelect: (e) =>
+                                                    e.preventDefault(),
                                             },
                                         ]}
                                     />
