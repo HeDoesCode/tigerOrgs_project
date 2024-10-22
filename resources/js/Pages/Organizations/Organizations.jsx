@@ -204,7 +204,7 @@ function Organizations({
                             </button>
                         </ControlContainer>
 
-                        {isSuperAdmin && (
+                        {/* {isSuperAdmin && (
                             <ControlContainer>
                                 <ul className="bg-transparent flex flex-col py-3 rounded-md space-y-4">
                                     <OrganizationJoined
@@ -216,7 +216,7 @@ function Organizations({
                                 </ul>
                             </ControlContainer>
                         )}
-
+ */}
                         {myMemberOrganizations.length !== 0 && (
                             <ControlContainer
                                 name="Organizations&nbsp;you've&nbsp;joined:"
