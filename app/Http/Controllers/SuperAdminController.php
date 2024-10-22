@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use PhpParser\Node\Expr\PostDec;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class SuperAdminController extends Controller
 {
@@ -363,21 +364,73 @@ class SuperAdminController extends Controller
         fclose($studentData);
     }
 
-    private function handleOrganizationUpload() {
-        // TO-DO: process upload of organization data from ESORR
+    private function handleOrganizationUpload($organizationFile) {
+        try {
+            $submittedData= json_decode(file_get_contents($organizationFile), true);
+            
+            $validator = Validator::make($submittedData, [
+                '*.name' => ['required', 'string'],
+                '*.department' => ['required', 'string'],
+            ]);
+
+            if ($validator->fails()) {
+                dd("error with json contents");
+            }
+
+        } catch (Exception $e) {
+            dd("error with file");
+        }
+        
+        $existingOrgs = Organization::all()->toArray();
+
+        $submittedDataNames = [];
+        $existingOrgNames = [];
+
+        foreach($submittedData as $org) {
+            $submittedDataNames[] = $org['name'];
+        }
+
+        foreach($existingOrgs as $org) {
+            $existingOrgNames[] = $org['name'];
+        }
+
+        // mass update
+        Organization::query()->update(['visibility' => true]);
+
+        // get the names of the orgs that should be hidden
+        $orgNamesToHide = array_diff($existingOrgNames, $submittedDataNames);
+
+        // get the name of the newly added orgs
+        $newOrgNames = array_diff($submittedDataNames, $existingOrgNames);
+    
+        if (!empty($orgNamesToHide)) {
+            Organization::whereIn('name', $orgNamesToHide)->update(['visibility' => false]);
+        }
+
+        if (!empty($newOrgNames)) {
+            foreach ($newOrgNames as $newOrgName) {
+                $newOrgData = collect($submittedData)->firstWhere('name', $newOrgName);
+    
+                Organization::create([
+                    'name' => $newOrgData['name'],
+                    'department' => $newOrgData['department'],
+                ]);
+            }
+        }
+        
+        dd("Success");
     }
 
-    public function upload(Request $request){
+    public function upload(Request $request) {
         if ($request->studentFile == null && $request->organizationFile == null) {
-            // TO-DO: return with proper error
-            dd($request);
+            dd("Student or Organization file must not be empty");
         }
 
         if ($request->studentFile != null) {
-            $this->handleStudentUpload($request->studentFile);
+            $this->handleStudentUpload($request->file('studentFile'));
         } 
         if ($request->organizationFile != null) { 
-            $this->handleOrganizationUpload();
+            $this->handleOrganizationUpload($request->file('organizationFile'));
         } 
     }
 
