@@ -374,11 +374,20 @@ class SuperAdminController extends Controller
             ]);
 
             if ($validator->fails()) {
-                dd("error with json contents");
+                session()->flash('toast', [
+                    'title' => 'Failed to upload',
+                    'description' => 'Please double check the JSON File',
+                    'variant' => 'destructive'
+                ]);
             }
 
         } catch (Exception $e) {
-            dd("error with file");
+            session()->flash('toast', [
+                'title' => 'File Uploaded Successfully',
+                'description' => 'The organization list and status was updated',
+                'variant' => 'success'
+            ]);
+            
         }
         
         $existingOrgs = Organization::all()->toArray();
@@ -419,6 +428,11 @@ class SuperAdminController extends Controller
         }
         
         dd("Success");
+        session()->flash('toast', [
+            'title' => 'Failed to upload',
+            'description' => 'Please double check the JSON File',
+            'variant' => 'destructive'
+        ]);
     }
 
     public function upload(Request $request) {
