@@ -373,19 +373,34 @@ class SuperAdminController extends Controller
 
     private function handleOrganizationUpload($organizationFile) {
         try {
+            $fileTypeValidator = Validator::make(['organizationFile' => $organizationFile], [
+                'organizationFile' => ['required', 'file', 'mimes:json']
+            ]);
+
+            if ($fileTypeValidator->fails()) {
+                session()->flash('toast', [
+                    'title' => 'Failed to upload',
+                    'description' => 'File type must be JSON (.json)',
+                    'variant' => 'destructive'
+                ]);
+                
+                return redirect()->back()->with('error');
+            }
+
             $submittedData= json_decode(file_get_contents($organizationFile), true);
             
-            $validator = Validator::make($submittedData, [
+            $contentValidator = Validator::make($submittedData, [
                 '*.name' => ['required', 'string'],
                 '*.department' => ['required', 'string'],
             ]);
 
-            if ($validator->fails()) {
+            if ($contentValidator->fails()) {
                 session()->flash('toast', [
                     'title' => 'Failed to upload',
                     'description' => 'Please double check the JSON File',
                     'variant' => 'destructive'
                 ]);
+
                 return redirect()->back()->with('error');
             }
 
@@ -447,13 +462,12 @@ class SuperAdminController extends Controller
 
     public function upload(Request $request) {
         if ($request->studentFile == null && $request->organizationFile == null) {
-        
             session()->flash('toast', [
                 'title' => 'Failed to upload',
                 'description' => 'Student or Organization file must not be empty',
                 'variant' => 'destructive'
             ]);
-            return redirect()->back();
+            return redirect()->back()->withErrors('error');
         }
 
         if ($request->studentFile != null) {
