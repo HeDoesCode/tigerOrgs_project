@@ -12,6 +12,18 @@ function CustomFileInput({ handleFileChange, fileType }) {
         }
     };
 
+    // Update the accept logic based on fileType
+    const getAcceptedFileTypes = () => {
+        switch (fileType) {
+            case "Student File":
+                return ".csv";
+            case "Organization File":
+                return ".json"; // You can change this if you need a different type
+            default:
+                return ""; // Default to any file type
+        }
+    };
+
     return (
         <div className="flex items-center mt-2 hover:scale-[1.01] transition-all duration-300 ease-in-out">
             <label className="cursor-pointer w-full flex items-center justify-between rounded-xl bg-[#D9D9D9] text-black px-4 py-2 shadow-md">
@@ -19,7 +31,7 @@ function CustomFileInput({ handleFileChange, fileType }) {
                 <IconFile />
                 <input
                     type="file"
-                    accept={(fileType === "Student File") ? ".csv":".json"}
+                    accept={getAcceptedFileTypes()}
                     onChange={handleChange}
                     className="hidden"
                 />
