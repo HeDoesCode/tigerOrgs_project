@@ -27,8 +27,6 @@ function SuperAdminDataUpload() {
     const handleUpload = (e) => {
         e.preventDefault();
         setUploading(true);
-        setSuccessMessage("");
-        setErrorMessage("");
 
         post(route("superadmin.dataupload.file"), {
             onSuccess: () => {
