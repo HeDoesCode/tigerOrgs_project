@@ -453,6 +453,7 @@ class SuperAdminController extends Controller
                 'description' => 'Student or Organization file must not be empty',
                 'variant' => 'destructive'
             ]);
+            return redirect()->back();
         }
 
         if ($request->studentFile != null) {
