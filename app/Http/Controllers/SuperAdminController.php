@@ -379,6 +379,7 @@ class SuperAdminController extends Controller
                     'description' => 'Please double check the JSON File',
                     'variant' => 'destructive'
                 ]);
+                return redirect()->back();
             }
 
         } catch (Exception $e) {
@@ -387,6 +388,7 @@ class SuperAdminController extends Controller
                 'description' => 'The organization list and status was updated',
                 'variant' => 'success'
             ]);
+            return redirect()->back();
             
         }
         
@@ -427,12 +429,12 @@ class SuperAdminController extends Controller
             }
         }
         
-        dd("Success");
         session()->flash('toast', [
             'title' => 'Failed to upload',
             'description' => 'Please double check the JSON File',
             'variant' => 'destructive'
         ]);
+        return redirect()->back();
     }
 
     public function upload(Request $request) {
