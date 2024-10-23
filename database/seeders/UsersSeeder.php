@@ -14,15 +14,15 @@ class UsersSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            [
-                'userID' => '2024000001',
-                'email' => 'arvin.alkuino.cics@ust.edu.ph',
-                'firstname' => 'ARVIN',
-                'lastname' => 'ALKUINO',
-                'middlename' => 'MIDDLENAME',
-                'college' => 'College of Information and Computing Sciences',
-                'status' => 'student',
-            ],
+            // [
+            //     'userID' => '2024000001',
+            //     'email' => 'arvin.alkuino.cics@ust.edu.ph',
+            //     'firstname' => 'ARVIN',
+            //     'lastname' => 'ALKUINO',
+            //     'middlename' => 'MIDDLENAME',
+            //     'college' => 'College of Information and Computing Sciences',
+            //     'status' => 'student',
+            // ],
             [
                 'userID' => '2024000002',
                 'email' => 'laurencearvin.arcilla.cics@ust.edu.ph',
