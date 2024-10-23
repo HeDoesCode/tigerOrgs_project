@@ -7,8 +7,6 @@ import CustomFileInput from "@/Components/CustomFileInput";
 
 function SuperAdminDataUpload() {
     const [uploading, setUploading] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
 
     const { data, setData, post, reset } = useForm({
         studentFile: null,
@@ -87,14 +85,6 @@ function SuperAdminDataUpload() {
                         >
                             {uploading ? "Uploading..." : "Upload Files"}
                         </button>
-                        {successMessage && (
-                            <p className="text-green-500 mt-3">
-                                {successMessage}
-                            </p>
-                        )}
-                        {errorMessage && (
-                            <p className="text-red-500 mt-3">{errorMessage}</p>
-                        )}
                     </div>
                 </MainAdminFrame>
             </SuperAdminLayout>
