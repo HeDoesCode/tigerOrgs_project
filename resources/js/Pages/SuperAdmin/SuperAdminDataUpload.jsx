@@ -34,11 +34,7 @@ function SuperAdminDataUpload() {
 
         post(route("superadmin.dataupload.file"), {
             onSuccess: () => {
-                setSuccessMessage("File uploaded successfully!");
                 reset();
-            },
-            onError: (errors) => {
-                setErrorMessage("Failed to upload file. Please try again.");
             },
             onFinish: () => {
                 setUploading(false);

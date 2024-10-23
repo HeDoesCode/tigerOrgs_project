@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
+use function Laravel\Prompts\error;
+
 class SuperAdminController extends Controller
 {
     //manage org functions
@@ -264,7 +266,7 @@ class SuperAdminController extends Controller
 
             return redirect()->route('superadmin.invite');
         } catch (Exception $e) {
-            dd($e);
+
 
             session()->flash('toast', [
                 'title' => 'Failed',
@@ -358,7 +360,12 @@ class SuperAdminController extends Controller
             }    
         } catch (Exception $e) {
             // TO-DO: return with proper error
-            dd($e->getMessage());
+            session()->flash('toast', [
+                'title' => 'Failed to upload',
+                'description' => 'Please double check the File',
+                'variant' => 'destructive'
+            ]);
+            return redirect()->back()->with('error');
         }
 
         fclose($studentData);
@@ -379,16 +386,16 @@ class SuperAdminController extends Controller
                     'description' => 'Please double check the JSON File',
                     'variant' => 'destructive'
                 ]);
-                return redirect()->back();
+                return redirect()->back()->with('error');
             }
 
         } catch (Exception $e) {
             session()->flash('toast', [
-                'title' => 'File Uploaded Successfully',
-                'description' => 'The organization list and status was updated',
-                'variant' => 'success'
+                'title' => 'Failed to upload',
+                'description' => 'Please double check the JSON File',
+                'variant' => 'destructive'
             ]);
-            return redirect()->back();
+            return redirect()->back()->with('error');
             
         }
         
@@ -429,17 +436,23 @@ class SuperAdminController extends Controller
             }
         }
         
+    
         session()->flash('toast', [
-            'title' => 'Failed to upload',
-            'description' => 'Please double check the JSON File',
-            'variant' => 'destructive'
+            'title' => 'File Uploaded Successfully',
+            'description' => 'The organization list and status was updated',
+            'variant' => 'success'
         ]);
         return redirect()->back();
     }
 
     public function upload(Request $request) {
         if ($request->studentFile == null && $request->organizationFile == null) {
-            dd("Student or Organization file must not be empty");
+        
+            session()->flash('toast', [
+                'title' => 'Failed to upload',
+                'description' => 'Student or Organization file must not be empty',
+                'variant' => 'destructive'
+            ]);
         }
 
         if ($request->studentFile != null) {
