@@ -34,24 +34,21 @@ function RenderFormItem({ item }) {
 }
 
 function prepareText(name) {
-    name = name.toLowerCase();
-    name = name.trim();
-    name = name.replaceAll(" ", "_");
-    return name;
+    return name.toLowerCase().trim().replaceAll(" ", "_");
 }
 
 function SimpleInput({ type, name, required }) {
     let preparedName = prepareText(name);
 
     return (
-        <li>
-            <label htmlFor={preparedName}>
+        <li className="mb-4">
+            <label htmlFor={preparedName} className="block  mb-1">
                 {name}
-                {required ? <span>*</span> : ""}
+                {required && <span className="text-red-500 ml-1">*</span>}
             </label>
             <input
                 type={type}
-                className="default"
+                className="w-full px-3 py-2 bg-transparent border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 id={preparedName}
                 name={preparedName}
                 required={required}
@@ -64,14 +61,17 @@ function FileUploadInput({ name, required }) {
     let preparedName = prepareText(name);
 
     return (
-        <li>
-            <label htmlFor={preparedName}>
+        <li className="mb-4">
+            <label
+                htmlFor={preparedName}
+                className="block  font-medium text-gray-700 mb-1"
+            >
                 {name}
-                {required ? <span>*</span> : ""}
+                {required && <span className="text-red-500 ml-1">*</span>}
             </label>
             <input
                 type="file"
-                className="default"
+                className="w-full px-3 py-2  text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 id={preparedName}
                 name={preparedName}
                 required={required}
@@ -87,44 +87,66 @@ function MultiChoiceInput({ type, name, options, required }) {
     switch (type) {
         case "select":
             input = (
-                <li>
-                    <label htmlFor={preparedName}>
+                <li className="mb-4">
+                    <label
+                        htmlFor={preparedName}
+                        className="block  font-medium text-gray-700 mb-1"
+                    >
                         {name}
-                        {required ? <span>*</span> : ""}
+                        {required && (
+                            <span className="text-red-500 ml-1">*</span>
+                        )}
                     </label>
-                    <select name={preparedName} id={preparedName}>
-                        {options.map((option, index) => {
-                            return (
-                                <option key={index} value={prepareText(option)}>
-                                    {option}
-                                </option>
-                            );
-                        })}
+                    <select
+                        className="w-full px-3 py-2 bg-transparent border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        name={preparedName}
+                        id={preparedName}
+                    >
+                        {options.map((option, index) => (
+                            <option key={index} value={prepareText(option)}>
+                                {option}
+                            </option>
+                        ))}
                     </select>
                 </li>
             );
             break;
         case "radio":
             input = (
-                <li>
-                    <label>
-                        {name}
-                        {required ? <span>*</span> : ""}
-                    </label>
-                    {options.map((option) => {
-                        const preparedOption = prepareText(option);
-                        return (
-                            <>
-                                <input
-                                    type="radio"
-                                    name={preparedName}
-                                    id={preparedOption}
-                                    value={preparedOption}
-                                />
-                                <label htmlFor={preparedOption}>{option}</label>
-                            </>
-                        );
-                    })}
+                <li className="mb-4">
+                    <fieldset>
+                        <legend className=" font-medium text-gray-700 mb-1">
+                            {name}
+                            {required && (
+                                <span className="text-red-500 ml-1">*</span>
+                            )}
+                        </legend>
+                        <div className="mt-2 space-y-2">
+                            {options.map((option) => {
+                                const preparedOption = prepareText(option);
+                                return (
+                                    <div
+                                        key={preparedOption}
+                                        className="flex items-center"
+                                    >
+                                        <input
+                                            type="radio"
+                                            name={preparedName}
+                                            id={preparedOption}
+                                            value={preparedOption}
+                                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                        />
+                                        <label
+                                            htmlFor={preparedOption}
+                                            className="ml-2 block  text-gray-700"
+                                        >
+                                            {option}
+                                        </label>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </fieldset>
                 </li>
             );
             break;
