@@ -20,10 +20,10 @@ import IconFileText from "../Icons/IconFileText";
 import IconAlertCircleFilled from "../Icons/IconAlertCircleFilled";
 
 function OrganizationLayout({
-    editing,
+    editing = false,
     children,
     pageLayoutData,
-    setEditableLayoutData,
+    // setEditableLayoutData,
     withFollow,
 }) {
     const toggleFollow = () => {
@@ -55,7 +55,7 @@ function OrganizationLayout({
             <>
                 <div>
                     {/* cover photo */}
-                    <CoverPhoto globalData={pageLayoutData.coverPhoto} />
+                    <CoverPhoto />
                     <div className="w-full h-fit md:h-48 -mt-14 px-5 md:px-12 flex justify-between">
                         {/* organization logo */}
                         <OrganizationLogo />
@@ -112,8 +112,8 @@ function OrganizationLayout({
                                                         </Link>
                                                     ))}
                                                     {forms.length === 0 && (
-                                                        <span className="font-bold text-red-600">
-                                                            <IconAlertCircleFilled /> Please contact your organization administrators.<br /> (Error: No deployed form.)
+                                                        <span className="font-bold text-red-600 flex">
+                                                            <IconAlertCircleFilled />&nbsp;Please contact your organization administrators.<br /> (Error: No deployed form.)
                                                         </span>
                                                     )}
                                                 </div>
@@ -208,29 +208,6 @@ function OrganizationLayout({
     }
 
     function CoverPhoto() {
-        const [file, setFile] = useState(null);
-        const [previewUrl, setPreviewUrl] = useState(null);
-
-        const handleImageChange = (event) => {
-            const selectedFile = event.target.files[0];
-            setFile(selectedFile);
-
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(selectedFile);
-            fileReader.onload = (e) => {
-                setPreviewUrl(e.target.result);
-            };
-        }
-
-        const handleSave = () => {
-            if (confirm("Are you sure you want to save changes?")) {
-                const formData = new FormData();
-
-                formData.append('cover', file);
-                router.post('save/cover', formData);
-            }
-        };
-
         return (
             <div className="max-h-[25rem] min-h-[15rem] h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
                 <img
@@ -238,60 +215,12 @@ function OrganizationLayout({
                     alt="Organization Cover Photo"
                     className="w-full object-cover"
                 />
-                {editing && (
-                    <EditArea title="Set Page Cover Photo">
-                        <label>Select an image:</label>
-                        <input
-                            type="file"
-                            accept="image/png, image/jpg, image/jpeg"
-                            onChange={handleImageChange}
-                        />
-                        {previewUrl && (
-                            <div>
-                                <img
-                                    src={previewUrl}
-                                    alt="Image Preview"
-                                    style={{ width: "100%" }}
-                                />
-                            </div>
-                        )}
-                        <button
-                            type="button"
-                            className="px-3 py-2 bg-cyan-400 rounded-lg"
-                            onClick={handleSave}
-                        >
-                            Save
-                        </button>
-                    </EditArea>
-                )}
+                {editing && editing.coverPhoto}
             </div>
         );
     }
 
     function OrganizationLogo() {
-        const [file, setFile] = useState(null);
-        const [previewUrl, setPreviewUrl] = useState(null);
-
-        function handleImageChange(event) {
-            const selectedFile = event.target.files[0];
-            setFile(selectedFile);
-            
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(selectedFile);
-            fileReader.onload = (e) => {
-                setPreviewUrl(e.target.result);
-            };
-        }
-
-        const handleSave = () => {
-            if (confirm("Are you sure you want to save changes?")) {
-                const formData = new FormData();
-
-                formData.append('logo', file);
-                router.post('save/logo', formData);
-            }
-        };
-
         return (
             <div className="size-36 md:size-44 rounded-[2rem] overflow-clip relative">
                 <img
@@ -299,32 +228,7 @@ function OrganizationLayout({
                     alt="Organization Logo"
                     className="size-full object-cover"
                 />
-                {editing && (
-                    <EditArea title="Set Organization Logo">
-                        <label>Select an image:</label>
-                        <input
-                            type="file"
-                            accept="image/png, image/jpg, image/jpeg"
-                            onChange={handleImageChange}
-                        />
-                        {previewUrl && (
-                            <div>
-                                <img
-                                    src={previewUrl}
-                                    alt="Image Preview"
-                                    style={{ width: "100%" }}
-                                />
-                            </div>
-                        )}
-                        <button
-                            type="button"
-                            className="px-3 py-2 bg-cyan-400 rounded-lg"
-                            onClick={handleSave}
-                        >
-                            Save
-                        </button>
-                    </EditArea>
-                )}
+                {editing && editing.orgLogo}
             </div>
         );
     }

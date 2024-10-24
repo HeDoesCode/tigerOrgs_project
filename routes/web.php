@@ -90,11 +90,13 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
     ->controller(AdminController::class)
     ->group(function () {
         Route::get('editpage', 'edit')->name('editpage');
-        Route::post('save/{section}', 'saveEdit');
         Route::get('invite', 'invite')->name('invite');
         Route::post('addadmin', 'addAdmin')->name('add-admin');
         Route::get('applications', 'applications')->name('applications');
         Route::post('makeAnnouncement', 'makeAnnouncement')->name('makeAnnouncement');
+
+        //edit page
+        Route::post('save/{section}', 'saveEdit');
 
         // manage forms
         Route::post('toggle-recruitment', 'toggleRecruitment')->name('toggle-recruitment');

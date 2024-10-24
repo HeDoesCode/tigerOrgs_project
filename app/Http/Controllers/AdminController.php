@@ -27,7 +27,7 @@ class AdminController extends Controller
             ->with('contacts')
             ->with('photos')
             ->find($orgID);
-        
+
         $organization_controller = new OrganizationController();
         $pageLayoutData = $organization_controller->getPageLayoutData($organization->orgID);
 
@@ -68,39 +68,39 @@ class AdminController extends Controller
         ]);
     }
 
-    public function toggleRecruitment(Request $request, $orgID )
+    public function toggleRecruitment(Request $request, $orgID)
     {
-    $recruiting = $request->input('status');
+        $recruiting = $request->input('status');
 
-    DB::table('organizations')
-        ->where('orgID', $orgID)
-        ->update(['recruiting' => $recruiting]);
+        DB::table('organizations')
+            ->where('orgID', $orgID)
+            ->update(['recruiting' => $recruiting]);
 
         $organization = Organization::find($orgID);
         $forms = Form::where('orgID', $orgID)
             ->get();
 
-            
-    if($recruiting){
-        $organization = Organization::findOrFail($orgID);
+
+        if ($recruiting) {
+            $organization = Organization::findOrFail($orgID);
             $members = $organization->followers()->get();
 
             foreach ($members as $member) {
                 $member->notify(new RecruitingEnabledNotification($organization));
             }
 
-        session()->flash('toast', [
-            'title' => 'Recruitment Enabled for '. $organization->name,
-            'description' => 'Status Updated Successfully!',
-            'variant' => 'success'
-        ]);
-    }else{
-        session()->flash('toast', [
-            'title' => 'Recruitment Disabled for '. $organization->name,
-            'description' => 'Status Updated Successfully!',
-            'variant' => 'destructive'
-        ]);
-    }
+            session()->flash('toast', [
+                'title' => 'Recruitment Enabled for ' . $organization->name,
+                'description' => 'Status Updated Successfully!',
+                'variant' => 'success'
+            ]);
+        } else {
+            session()->flash('toast', [
+                'title' => 'Recruitment Disabled for ' . $organization->name,
+                'description' => 'Status Updated Successfully!',
+                'variant' => 'destructive'
+            ]);
+        }
 
         $recruitmentStatusofOSA = DB::table('settings')->where('name', 'Recruitment')->value('status');
         $recruitmentStatusofOrg = DB::table('organizations')->where('orgID', $orgID)->value('recruiting');
@@ -112,97 +112,6 @@ class AdminController extends Controller
             'orgName' => $organization->name,
             'forms' => $forms,
         ]);
-    }
-
-    public function saveAboutUsSection($request, $editedOrg)
-    {
-        $request->validate([
-            'aboutUs' => ['nullable', 'string'],
-        ]);
-
-        $editedOrg->description = $request->input('aboutUs');
-        $editedOrg->save();
-    }
-
-    public function saveFBLinkSection($request, $editedOrg)
-    {
-        $request->validate([
-            'fb_link' => ['nullable', 'url']
-        ]);
-
-        $editedOrg->fb_link = $request->input('fb_link');
-        $editedOrg->save();
-    }
-
-    public function saveLogoSection($request, $editedOrg) 
-    {   
-        $request->validate([
-            'logo' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
-        ]);
-
-        $logo = Storage::disk('logos')->put('/',$request->file('logo'));
-        $editedOrg->logo = $logo;
-        $editedOrg->save();
-    }
-    
-    public function saveCoverSection($request, $editedOrg) 
-    {   
-        $request->validate([
-            'cover' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
-        ]);
-
-        $cover = Storage::disk('covers')->put('/',$request->file('cover'));
-        $editedOrg->cover = $cover;
-        $editedOrg->save();
-    }
-
-    public function saveEdit(Request $request, $orgID, $section)
-    {   
-        $editedOrg = Organization::find($orgID);
-
-        switch ($section) {
-            case "about-us":
-                $this->saveAboutUsSection($request, $editedOrg);
-                break;
-            case "fb-link":
-                $this->saveFBLinkSection($request, $editedOrg);
-                break;
-            case "logo":
-                $this->saveLogoSection($request, $editedOrg);
-                break;
-            case "cover":
-                $this->saveCoverSection($request, $editedOrg);
-                break;
-        }
-
-        // $request->validate([
-        //     'photoData' => ['nullable', 'json'],
-        //     'photos' => ['nullable', 'array'],
-        //     'photos.*' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
-        // ]);
-        
-        // if ($request->has('photoData')) {
-        //     $photoData = json_decode($request->only('photoData')['photoData']);
-
-        //     foreach ($photoData as $index => $photo) {
-        //         if (is_null($photo->photoID)) {
-        //             Photo::create([
-        //                 'orgID' => $request->orgID,
-        //                 'filename' => Storage::disk('org-photos')->put('/', $request->file('photos')[$index]),
-        //                 'caption' => $photo->caption,
-        //             ]);
-        //         } else {
-        //             $editedPhoto = Photo::find($photo->photoID);
-        //             $editedPhoto->filename = Storage::disk('org-photos')->put('/', $request->file('photos')[$index]);
-        //             $editedPhoto->caption = $photo->caption;
-        //             $editedPhoto->save();
-        //         }
-        //     }
-        // }
-
-        // $editedOrg->save();
-
-        // dd("update success");
     }
 
     public function invite($orgID)
@@ -462,5 +371,101 @@ class AdminController extends Controller
         return Inertia::render('Admin/AdminFormHistory', [
             'orgID' => $organization->orgID,
         ]);
+    }
+
+    // public function saveAboutUsSection($request, $editedOrg)
+    // {
+    //     $request->validate([
+    //         'aboutUs' => ['nullable', 'string'],
+    //     ]);
+
+    //     $editedOrg->description = $request->input('aboutUs');
+    //     $editedOrg->save();
+    // }
+
+    // public function saveFBLinkSection($request, $editedOrg)
+    // {
+    //     $request->validate([
+    //         'fb_link' => ['nullable', 'url']
+    //     ]);
+
+    //     $editedOrg->fb_link = $request->input('fb_link');
+    //     $editedOrg->save();
+    // }
+
+    // public function saveLogoSection($request, $editedOrg)
+    // {
+    //     $request->validate([
+    //         'logo' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
+    //     ]);
+
+    //     $logo = Storage::disk('logos')->put('/', $request->file('logo'));
+    //     $editedOrg->logo = $logo;
+    //     $editedOrg->save();
+    // }
+
+    // public function saveCoverSection($request, $editedOrg)
+    // {
+    //     $request->validate([
+    //         'cover' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
+    //     ]);
+
+    //     $cover = Storage::disk('covers')->put('/', $request->file('cover'));
+    //     $editedOrg->cover = $cover;
+    //     $editedOrg->save();
+    // }
+
+    // public function saveEdit(Request $request, $orgID, $section)
+    // {
+    //     $editedOrg = Organization::find($orgID);
+
+    //     // switch ($section) {
+    //     //     case "about-us":
+    //     //         $this->saveAboutUsSection($request, $editedOrg);
+    //     //         break;
+    //     //     case "fb-link":
+    //     //         $this->saveFBLinkSection($request, $editedOrg);
+    //     //         break;
+    //     //     case "logo":
+    //     //         $this->saveLogoSection($request, $editedOrg);
+    //     //         break;
+    //     //     case "cover":
+    //     //         $this->saveCoverSection($request, $editedOrg);
+    //     //         break;
+    //     // }
+
+    //     // $request->validate([
+    //     //     'photoData' => ['nullable', 'json'],
+    //     //     'photos' => ['nullable', 'array'],
+    //     //     'photos.*' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
+    //     // ]);
+
+    //     // if ($request->has('photoData')) {
+    //     //     $photoData = json_decode($request->only('photoData')['photoData']);
+
+    //     //     foreach ($photoData as $index => $photo) {
+    //     //         if (is_null($photo->photoID)) {
+    //     //             Photo::create([
+    //     //                 'orgID' => $request->orgID,
+    //     //                 'filename' => Storage::disk('org-photos')->put('/', $request->file('photos')[$index]),
+    //     //                 'caption' => $photo->caption,
+    //     //             ]);
+    //     //         } else {
+    //     //             $editedPhoto = Photo::find($photo->photoID);
+    //     //             $editedPhoto->filename = Storage::disk('org-photos')->put('/', $request->file('photos')[$index]);
+    //     //             $editedPhoto->caption = $photo->caption;
+    //     //             $editedPhoto->save();
+    //     //         }
+    //     //     }
+    //     // }
+
+    //     // $editedOrg->save();
+
+    //     // dd("update success");
+    // }
+
+    public function saveEdit(Request $request, $orgID, $data)
+    {
+        // handle save with error handling each section
     }
 }
