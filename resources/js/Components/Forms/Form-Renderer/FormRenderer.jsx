@@ -43,11 +43,11 @@ function FormRenderer({ formLayout }) {
                 Log item
             </button> */}
                     <div className="px-6 py-8">
-                        <h1 className="text-3xl font-bold text-center text-gray-900 mb-6">
+                        <h1 className="text-3xl font-bold  text-gray-900 mb-6">
                             {formLayout.name}
                         </h1>
                         {formLayout.desc && (
-                            <p className="text-gray-600 text-center mb-8">
+                            <p className="text-gray-600  mb-8">
                                 {formLayout.desc}
                             </p>
                         )}
