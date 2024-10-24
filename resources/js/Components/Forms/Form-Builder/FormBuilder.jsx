@@ -173,8 +173,6 @@ function FormBuilder({ orgID, formData }) {
                         </button>
                     ))}
                 </div>
-
-                <button onClick={() => console.log(items)}>Check Items</button>
                 <div className="flex justify-end space-x-3">
                     {formData && (
                         <Link

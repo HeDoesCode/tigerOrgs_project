@@ -2,16 +2,14 @@ import { useContext, useEffect } from "react";
 import { FormActionsContext } from "../Context/FormActionsContext";
 import { useForm } from "@inertiajs/react";
 
-function EditMultiChoiceItem({ id, type }) {
-    const defaultQuestion = `${type}_${id}`;
-
+function EditMultiChoiceItem({ id, item }) {
     const { delete: handleDeleteItem, edit: handleEditItem } =
         useContext(FormActionsContext);
 
     const { data, setData, post, processing, errors } = useForm({
-        question: defaultQuestion,
-        required: false,
-        options: ["option 1", "option 2", "option 3"],
+        question: (item.name !== "") ? item.name : "" ,
+        required: (item.required),
+        options: item.options || [],
     });
 
     function handleAddOption() {
@@ -56,11 +54,6 @@ function EditMultiChoiceItem({ id, type }) {
                         type="text"
                         value={data.question}
                         onChange={(e) => setData("question", e.target.value)}
-                        onBlur={(e) => {
-                            e.target.value === ""
-                                ? setData("question", defaultQuestion)
-                                : setData("question", e.target.value);
-                        }}
                         placeholder="Type Question here..."
                         required
                     />
@@ -74,22 +67,8 @@ function EditMultiChoiceItem({ id, type }) {
                                     className="w-full p-1 rounded border border-gray-300"
                                     type="text"
                                     value={option}
-                                    onChange={(e) =>
-                                        handleEditOption(index, e.target.value)
-                                    }
-                                    onBlur={(e) => {
-                                        e.target.value === ""
-                                            ? handleEditOption(
-                                                  index,
-                                                  `Option ${index + 1}`
-                                              )
-                                            : handleEditOption(
-                                                  index,
-                                                  e.target.value
-                                              );
-                                    }}
+                                    onChange={(e) => handleEditOption(index, e.target.value)}
                                 />
-
                                 <button
                                     className="ml-2 text-red-500"
                                     onClick={() => handleDeleteOption(index)}
@@ -117,6 +96,7 @@ function EditMultiChoiceItem({ id, type }) {
                             type="checkbox"
                             id={`required_${id}`}
                             onChange={() => setData("required", !data.required)}
+                            checked={data.required}
                         />
                         <label htmlFor={`required_${id}`}> Required</label>
                         <label className="">|</label>
@@ -128,21 +108,6 @@ function EditMultiChoiceItem({ id, type }) {
                         </button>
                     </li>
                 </div>
-                <li className="grid grid-cols-2">
-                    {/* <button
-                        className="bg-gray-200 px-4 py-2 border  hover:bg-gray-300 "
-                        type="reset"
-                        onClick={() =>
-                            setData({
-                                question: defaultQuestion,
-                                required: false,
-                                options: ["option 1", "option 2", "option 3"],
-                            })
-                        }
-                    >
-                        Reset
-                    </button> */}
-                </li>
             </ul>
         </form>
     );

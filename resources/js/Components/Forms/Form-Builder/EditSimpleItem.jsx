@@ -3,12 +3,10 @@ import { useContext } from "react";
 import { FormActionsContext } from "../Context/FormActionsContext";
 import { useEffect } from "react";
 
-function EditSimpleItem({ id, type }) {
-    const defaultQuestion = `${type}_${id}`;
-
+function EditSimpleItem({ id, item }) {
     const { data, setData, post, processing, errors } = useForm({
-        question: defaultQuestion,
-        required: false,
+        question: (item.name !== "") ? item.name:"" ,
+        required: (item.required),
     });
 
     const { delete: handleDeleteItem, edit: handleEditItem } =
@@ -32,11 +30,6 @@ function EditSimpleItem({ id, type }) {
                         type="text"
                         value={data.question}
                         onChange={(e) => setData("question", e.target.value)}
-                        onBlur={(e) => {
-                            e.target.value === ""
-                                ? setData("question", defaultQuestion)
-                                : setData("question", e.target.value);
-                        }}
                         placeholder="Type Question here..."
                         required
                     />
@@ -48,6 +41,7 @@ function EditSimpleItem({ id, type }) {
                             type="checkbox"
                             id={`required_${id}`}
                             onChange={() => setData("required", !data.required)}
+                            checked={data.required}
                         />
                         <label htmlFor={`required_${id}`}> Required</label>
                         <label className="">|</label>
@@ -62,18 +56,6 @@ function EditSimpleItem({ id, type }) {
                 </div>
 
                 <li className="grid grid-cols-2">
-                    {/* <button
-                        className="bg-gray-200 px-4 py-2 border  hover:bg-gray-300 "
-                        type="reset"
-                        onClick={() =>
-                            setData({
-                                question: defaultQuestion,
-                                required: false,
-                            })
-                        }
-                    >
-                        Reset
-                    </button> */}
                 </li>
             </ul>
         </form>

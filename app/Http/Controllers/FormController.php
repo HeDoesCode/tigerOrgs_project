@@ -35,12 +35,17 @@ class FormController extends Controller
     }
 
     public function saveForm(Request $request, $orgID)
-    {
+    {   
         try {
+            $formLayout = $request->getContent();
+            $validationRules = $this->buildRules(json_decode($formLayout, true)['layout']);
+
             Form::create([
                 'orgID' => $orgID,
-                'formLayout' => json_decode($request->getContent()),
+                'formLayout' => json_decode($formLayout),
+                'validationRules' => $validationRules,
             ]);
+                        
 
             session()->flash('toast', [
                 'title' => 'Form Saved',
@@ -64,9 +69,15 @@ class FormController extends Controller
     public function editForm(Request $request, $orgID, $formID)
     {
         $form = Form::findOrFail($formID);
+        
         try {
+
+            $updatedFormLayout = $request->getContent();
+            $updatedValidationRules = $this->buildRules(json_decode($updatedFormLayout, true)['layout']);
+
             $form->update([
-                'formLayout' => json_decode($request->getContent()),
+                'formLayout' => json_decode($updatedFormLayout),
+                'validationRules' => $updatedValidationRules,
             ]);
 
             session()->flash('toast', [
@@ -157,23 +168,26 @@ class FormController extends Controller
     private function buildRules($formLayout)
     {
         $rules = [];
-
+        
         foreach ($formLayout as $input) {
-            $inputRules = array();
+            $inputRules = [];
 
-            if ($input['required'] === "1") {
+            if ($input['required']) {
                 array_push($inputRules, 'required');
             } else {
                 array_push($inputRules, 'nullable');
             }
 
             switch ($input['type']) {
+                case "text":
+                    array_push($inputRules, 'string');
+                    break;
                 case "number":
                     array_push($inputRules, 'numeric');
                     break;
                 case "email":
-                    break;
                     array_push($inputRules, 'email');
+                    break;
                 case "image_upload":
                     array_push($inputRules, 'file', 'max:4096', 'image', 'mimes:png,jpg,jpeg');
                     break;
@@ -181,8 +195,8 @@ class FormController extends Controller
                     array_push($inputRules, 'file', 'max:4096', 'extensions:pdf');
                     break;
             }
-            $fieldName = "userData." . $this->prepareText($input['name']);
-            $rules[$fieldName] = str_replace('_', '|', implode("_", $inputRules));
+            $fieldName = $this->prepareText($input['name']);
+            $rules[$fieldName] = $inputRules;
         }
 
         return $rules;
