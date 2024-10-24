@@ -11,7 +11,6 @@ enum AuthBypassEnum: string
             'test.email.cics@ust.edu.ph',
             // 'arvin.alkuino.cics@ust.edu.ph',
             // 'laurencearvin.arcilla.cics@ust.edu.ph',
-            
             'ethanjohn.catacutan.cics@ust.edu.ph',
         ];
     }
