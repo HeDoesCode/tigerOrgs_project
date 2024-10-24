@@ -43,9 +43,9 @@ function EditableItem({ id, item }) {
                     {item.type === "select" ||
                     item.type === "radio" ||
                     item.type === "checkbox" ? (
-                        <EditMultiChoiceItem id={id} type={item.type} />
+                        <EditMultiChoiceItem id={id} item={item} />
                     ) : (
-                        <EditSimpleItem id={id} type={item.type} />
+                        <EditSimpleItem id={id} item={item} />
                     )}
                 </div>
             </div>

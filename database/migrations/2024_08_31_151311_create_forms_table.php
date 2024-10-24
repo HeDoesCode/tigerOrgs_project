@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('orgID')->constrained('organizations', 'orgID')->onDelete('cascade');
             $table->boolean('deployed')->default(false);
             $table->json('formLayout');
+            $table->json('validationRules');
         });
     }
 
