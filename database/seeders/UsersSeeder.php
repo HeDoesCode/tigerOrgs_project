@@ -19,7 +19,7 @@ class UsersSeeder extends Seeder
                 'email' => 'arvin.alkuino.cics@ust.edu.ph',
                 'firstname' => 'ARVIN',
                 'lastname' => 'ALKUINO',
-                'middlename' => 'MIDDLENAME',
+                'middlename' => 'GUTIERREZ',
                 'college' => 'College of Information and Computing Sciences',
                 'status' => 'student',
             ],
