@@ -38,9 +38,11 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
     Route::get('/notifications/fetch', [NotificationController::class, 'fetch'])->name('notifications.fetch');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
 
+    
     Route::prefix('organizations')->group(function () {
         Route::get('/', [OrganizationController::class, 'browse'])->name('organizations');
         Route::get('/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
+        // Route::get('/organizations/{orgID}/process', [OrganizationController::class, 'process'])->name('organizations.process');
         Route::get('/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
 
         // form page/s
