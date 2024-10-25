@@ -159,6 +159,24 @@ class SuperAdminController extends Controller
 
     //invite admin functions
 
+    public function searchUser(Request $request)
+    {
+        $query = User::query();
+
+        if ($request->filled('query')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'LIKE', "%" . $request->input('query') . "%")
+                    ->orWhere('email', 'LIKE', "%" . $request->input('query') . "%");
+            });
+        }
+        
+        $users = $query->get();
+
+        return response()->json([
+            'users' => $users,
+        ]);
+    }
+
     public function invite()
     {
         $admins = User::join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
@@ -210,9 +228,29 @@ class SuperAdminController extends Controller
             'roleID' => 'required|exists:roles,roleID',
         ]);
 
+        
+
 
 
         try {
+
+            $currentAdminCount = DB::table('organization_user_role')
+            ->where('orgID', $validated['orgID'])
+            ->where('roleID', '=', '2') 
+            ->count();
+
+
+            if ($currentAdminCount >= 3) {
+                
+                session()->flash('toast', [
+                    'title' => 'Failed to the add the user',
+                    'description' => 'The organization already has the maximum number of admins (Max: 2).',
+                    'variant' => 'destructive'
+                ]);
+                return redirect()->back();
+            }
+
+
             DB::table('organization_user_role')->updateOrInsert(
                 [
                     'userID' => $validated['userID'],

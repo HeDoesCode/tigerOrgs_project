@@ -68,6 +68,7 @@ Route::prefix('/superadmin/')
         Route::post('addOrg', 'addOrg')->name('addOrg');
 
         //invite page
+        Route::get('invite/search-users', 'searchUser');
         Route::get('search-users', 'search');
         Route::post('addadmin', 'addAdmin')->name('add-admin');
         Route::delete('deleteadmin/{userID}', 'deleteAdmin')->name('delete-admin');
@@ -94,7 +95,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::get('editpage', 'edit')->name('editpage');
         Route::post('save/{section}', 'saveEdit');
         Route::get('invite', 'invite')->name('invite');
-        Route::post('addadmin', 'addAdmin')->name('add-admin');
+        Route::post('addMember', 'addMember')->name('add-member');
         Route::get('applications', 'applications')->name('applications');
         Route::post('makeAnnouncement', 'makeAnnouncement')->name('makeAnnouncement');
 
@@ -106,6 +107,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::get('formhistory', 'formhistory')->name('formhistory');
 
         // manage admin
+        Route::get('search-users', 'search');
         Route::post('make-admin', 'makeAdmin')->name('make-admin');
         Route::post('make-member', 'makeMember')->name('make-member');
         Route::post('remove-student', 'removeStudent')->name('remove-student');

@@ -3,8 +3,10 @@ import IconEye from "@/Components/Icons/IconEye";
 import IconStatus from "@/Components/Icons/IconStatus";
 import IconChevronDown from "@/Components/Icons/IconChevronDown";
 import AdminDropdownMenu from "@/Components/Admin/AdminDropdownMenu";
+import { useRef } from "react";
 
 function AdminOrgCard({ edit, visible, setVisible, organization }) {
+    const imgRef = useRef(null);
     const visibilityClass = visible
         ? "bg-green-50  border-green-600 text-green-800"
         : "bg-red-50  border-red-600 text-red-800";
@@ -16,8 +18,16 @@ function AdminOrgCard({ edit, visible, setVisible, organization }) {
                     <div className="p-2 content-center">
                         <img
                             className="rounded-full"
-                            src={organization.logo}
-                            alt={organization.name}
+                            src={
+                                organization.logo
+                                    ? organization.logo
+                                    : "https://placehold.co/500x500"
+                            }
+                            alt="Organization Logo"
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "https://placehold.co/500x500";
+                            }}
                         />
                     </div>
                     <div className="col-span-2  px-2">

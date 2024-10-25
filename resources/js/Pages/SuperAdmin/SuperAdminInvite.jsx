@@ -146,6 +146,32 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
         });
     };
 
+    //for searching the user on the main search bar
+    const [searchMainQuery, setSearchMainQuery] = useState("");
+    const [allUsers, setAllOrganizations] = useState(users);
+    const [filteredUsers, setFilteredUsers] = useState(users);
+    useEffect(() => {
+        const filterUsers = () => {
+            let filtered = allUsers;
+
+            if (searchMainQuery) {
+                filtered = filtered.filter((user) => {
+                    const fullName =
+                        `${user.firstname} ${user.lastname}`.toLowerCase();
+                    return fullName.includes(searchMainQuery.toLowerCase());
+                });
+            }
+
+            setFilteredUsers(filtered);
+        };
+
+        filterUsers();
+    }, [searchMainQuery, allUsers]);
+
+    const handleMainSearchChange = (e) => {
+        setSearchMainQuery(e.target.value);
+    };
+
     return (
         <div className="w-full">
             <Head title="OSA Dashboard" />
@@ -164,6 +190,16 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                         },
                     ]}
                     title="Role Invitation"
+                    searchbar={
+                        <Searchbar
+                            className={"col-span-3"}
+                            value={searchMainQuery}
+                            onChange={handleMainSearchChange}
+                            placeholder={"Search for a user"}
+                            onInviteAdmin={true}
+                        />
+                    }
+                    onInviteAdmin={true}
                 >
                     <div>
                         <div className="flex justify-end me-5 mt-5">
@@ -242,6 +278,12 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                     selectedOrg={selectedOrg}
                                                     processing={processing}
                                                     getOrg={getOrg}
+                                                    orgSearchQuery={
+                                                        orgSearchQuery
+                                                    }
+                                                    handleOrgSearchChange={
+                                                        handleOrgSearchChange
+                                                    }
                                                 />
                                             </div>
                                         </VerticalCard>
@@ -250,7 +292,7 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                             </AdminDialog>
                         </div>
                         <div className="grid grid-rows-1 p-5 gap-2">
-                            {users.map((user) => (
+                            {filteredUsers.map((user) => (
                                 <VerticalCard gridcol="md:grid-cols-12">
                                     <div className=" col-span-3 content-center">
                                         <h1 className="md:ml-2 text-center md:text-left font-bold">
@@ -361,9 +403,6 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                         handleInvite={
                                                             handleInvite
                                                         }
-                                                        orgSearchQuery={
-                                                            orgSearchQuery
-                                                        }
                                                         filteredOrganizations={
                                                             filteredOrganizations
                                                         }
@@ -375,6 +414,12 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                         }
                                                         processing={processing}
                                                         getOrg={getOrg}
+                                                        orgSearchQuery={
+                                                            orgSearchQuery
+                                                        }
+                                                        handleOrgSearchChange={
+                                                            handleOrgSearchChange
+                                                        }
                                                     />
                                                 ),
                                                 onSelect: (e) =>
