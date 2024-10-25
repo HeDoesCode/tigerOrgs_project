@@ -159,6 +159,24 @@ class SuperAdminController extends Controller
 
     //invite admin functions
 
+    public function searchUser(Request $request)
+    {
+        $query = User::query();
+
+        if ($request->filled('query')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'LIKE', "%" . $request->input('query') . "%")
+                    ->orWhere('email', 'LIKE', "%" . $request->input('query') . "%");
+            });
+        }
+        
+        $users = $query->get();
+
+        return response()->json([
+            'users' => $users,
+        ]);
+    }
+
     public function invite()
     {
         $admins = User::join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')

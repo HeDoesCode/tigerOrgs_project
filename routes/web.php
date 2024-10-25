@@ -68,6 +68,7 @@ Route::prefix('/superadmin/')
         Route::post('addOrg', 'addOrg')->name('addOrg');
 
         //invite page
+        Route::get('invite/search-users', 'searchUser');
         Route::get('search-users', 'search');
         Route::post('addadmin', 'addAdmin')->name('add-admin');
         Route::delete('deleteadmin/{userID}', 'deleteAdmin')->name('delete-admin');

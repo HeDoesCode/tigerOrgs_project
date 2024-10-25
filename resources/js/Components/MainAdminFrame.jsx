@@ -10,6 +10,7 @@ function MainAdminFrame({
     onSelect,
     filter,
     dialog,
+    onInviteAdmin,
     ...props
 }) {
     const { url } = usePage();
@@ -25,9 +26,14 @@ function MainAdminFrame({
                 <div className=" pb-3 flex col-span-5">
                     {title} {dialog}
                 </div>
-
-                {searchbar}
-                {filter}
+                {onInviteAdmin ? (
+                    <div className="col-span-5">{searchbar}</div>
+                ) : (
+                    <>
+                        {searchbar}
+                        {filter}
+                    </>
+                )}
             </div>
             <div className="bg-[#EEEEEE] mt-2 border border-gray-400 rounded-xl grid grid-cols-1 divide-y divide-gray-400">
                 <div className="grid grid-cols-8 gap-4">
@@ -37,10 +43,11 @@ function MainAdminFrame({
                             return (
                                 <Link
                                     key={index}
-                                    className={`py-3 rounded-t-xl hover:bg-gray-800 hover:text-white text-md flex justify-center cursor-pointer ${route().current() === item.link
-                                        ? "border-b-2 border-[#FF9900] text-[#FF9900]"
-                                        : ""
-                                        }`}
+                                    className={`py-3 rounded-t-xl hover:bg-gray-800 hover:text-white text-md flex justify-center cursor-pointer ${
+                                        route().current() === item.link
+                                            ? "border-b-2 border-[#FF9900] text-[#FF9900]"
+                                            : ""
+                                    }`}
                                     onClick={() => handleNavClick(item.label)}
                                     href={itemUrl}
                                 >
