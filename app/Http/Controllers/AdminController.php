@@ -273,6 +273,10 @@ class AdminController extends Controller
 
 
     //search function and invite manually
+    
+
+
+
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -289,7 +293,7 @@ class AdminController extends Controller
     }
 
 
-    public function addAdmin(Request $request, $orgID)
+    public function addMember(Request $request, $orgID)
     {
 
         $validated = $request->validate([
@@ -302,17 +306,20 @@ class AdminController extends Controller
 
         try {
 
-            $currentAdminCount = DB::table('organization_user_role')
+            $userExists = DB::table('organization_user_role')
             ->where('orgID', $validated['orgID'])
-            ->where('roleID', '=', '2') 
-            ->count();
+            ->where('userID', $validated['userID'])
+            ->where(function ($query) {
+                $query->where('roleID', '1')
+                    ->orWhere('roleID', '2');
+            })
+            ->exists();
 
-
-            if ($currentAdminCount >= 3) {
+            if ($userExists) {
                 
                 session()->flash('toast', [
                     'title' => 'Failed to the add the user',
-                    'description' => 'The organization already has the maximum number of admins (Max: 2).',
+                    'description' => 'The user is already inside the organization.',
                     'variant' => 'destructive'
                 ]);
                 return redirect()->back();

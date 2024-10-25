@@ -26,9 +26,12 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
 
         if (query.length > 0) {
             try {
-                const response = await axios.get("/superadmin/search-users", {
-                    params: { query },
-                });
+                const response = await axios.get(
+                    `/admin/${orgID}/search-users`,
+                    {
+                        params: { query },
+                    }
+                );
 
                 setSearchResults(response.data);
             } catch (error) {
@@ -41,7 +44,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
 
     //invite
     const handleInvite = (e) => {
-        post(route("admin.add-admin", orgID), {
+        post(route("admin.add-member", orgID), {
             preserveState: true,
             preserveScroll: true,
         });
