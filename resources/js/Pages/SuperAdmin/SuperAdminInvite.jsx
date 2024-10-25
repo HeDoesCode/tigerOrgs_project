@@ -278,6 +278,12 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                     selectedOrg={selectedOrg}
                                                     processing={processing}
                                                     getOrg={getOrg}
+                                                    orgSearchQuery={
+                                                        orgSearchQuery
+                                                    }
+                                                    handleOrgSearchChange={
+                                                        handleOrgSearchChange
+                                                    }
                                                 />
                                             </div>
                                         </VerticalCard>
@@ -397,9 +403,6 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                         handleInvite={
                                                             handleInvite
                                                         }
-                                                        orgSearchQuery={
-                                                            orgSearchQuery
-                                                        }
                                                         filteredOrganizations={
                                                             filteredOrganizations
                                                         }
@@ -411,6 +414,12 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                         }
                                                         processing={processing}
                                                         getOrg={getOrg}
+                                                        orgSearchQuery={
+                                                            orgSearchQuery
+                                                        }
+                                                        handleOrgSearchChange={
+                                                            handleOrgSearchChange
+                                                        }
                                                     />
                                                 ),
                                                 onSelect: (e) =>
