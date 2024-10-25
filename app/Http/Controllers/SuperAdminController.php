@@ -369,6 +369,13 @@ class SuperAdminController extends Controller
         }
 
         fclose($studentData);
+
+        session()->flash('toast', [
+            'title' => 'File Uploaded Successfully',
+            'description' => 'The users list has been updated',
+            'variant' => 'success'
+        ]);
+        return redirect()->back();
     }
 
     private function handleOrganizationUpload($organizationFile) {
