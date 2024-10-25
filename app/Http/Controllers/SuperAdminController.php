@@ -228,9 +228,29 @@ class SuperAdminController extends Controller
             'roleID' => 'required|exists:roles,roleID',
         ]);
 
+        
+
 
 
         try {
+
+            $currentAdminCount = DB::table('organization_user_role')
+            ->where('orgID', $validated['orgID'])
+            ->where('roleID', '=', '2') 
+            ->count();
+
+
+            if ($currentAdminCount >= 3) {
+                
+                session()->flash('toast', [
+                    'title' => 'Failed to the add the user',
+                    'description' => 'The organization already has the maximum number of admins (Max: 2).',
+                    'variant' => 'destructive'
+                ]);
+                return redirect()->back();
+            }
+
+
             DB::table('organization_user_role')->updateOrInsert(
                 [
                     'userID' => $validated['userID'],

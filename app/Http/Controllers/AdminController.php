@@ -301,6 +301,22 @@ class AdminController extends Controller
 
 
         try {
+
+            $currentAdminCount = DB::table('organization_user_role')
+            ->where('orgID', $validated['orgID'])
+            ->where('roleID', '=', '2') 
+            ->count();
+
+
+            if ($currentAdminCount >= 3) {
+                
+                session()->flash('toast', [
+                    'title' => 'Failed to the add the user',
+                    'description' => 'The organization already has the maximum number of admins (Max: 2).',
+                    'variant' => 'destructive'
+                ]);
+                return redirect()->back();
+            }
             DB::table('organization_user_role')->updateOrInsert(
                 [
                     'userID' => $validated['userID'],
@@ -336,6 +352,22 @@ class AdminController extends Controller
     public function makeAdmin(Request $request, $orgID)
     {
         $userID = $request->input('userID');
+
+        $currentAdminCount = DB::table('organization_user_role')
+            ->where('orgID', $orgID)
+            ->where('roleID', '=', '2') 
+            ->count();
+
+
+            if ($currentAdminCount >= 3) {
+                
+                session()->flash('toast', [
+                    'title' => 'Failed to the add the user',
+                    'description' => 'The organization already has the maximum number of admins (Max: 2).',
+                    'variant' => 'destructive'
+                ]);
+                return redirect()->back();
+            }
 
         $exists = DB::table('organization_user_role')
             ->where('userID', $userID)
