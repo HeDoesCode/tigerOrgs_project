@@ -31,11 +31,11 @@ class isMember
 
         switch($roleType->roleID){
             case 1: {
-                $role = "member";
+                $role = "a member";
                 break;
             }
             case 2: {
-                $role = "admin";
+                $role = "an admin";
                 break;
             }
         }
@@ -50,7 +50,7 @@ class isMember
 
 
                 session()->flash('toast', [
-                    'title' => "Already a $role of this organization.",
+                    'title' => "Already $role of this organization.",
                     'variant' => 'destructive'
                 ]);
                 return redirect()->back();
