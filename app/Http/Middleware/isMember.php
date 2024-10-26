@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class isAdmin
+class isMember
 {
     /**
      * Handle an incoming request.
@@ -20,21 +20,12 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next, string $type = null): Response
     {
-
-        /**
-         * TODO
-         * pass orgID to request
-         * check if user exists in organization_user_role with orgID and roleID
-         * return $next($request) if success
-         * abort 401 if fail
-         */
-
         $userID = Auth::id();
         $orgID = $request->route('orgID');
 
         $checkRole = DB::table('organization_user_role')
             ->where('userID', $userID)
-            ->where('roleID', 2)
+            ->where('roleID', 1)
             ->where('orgID', $orgID)
             ->select('*')
             ->first();

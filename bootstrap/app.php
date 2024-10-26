@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\isAdmin;
+use App\Http\Middleware\isMember;
 use App\Http\Middleware\isSuperAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ])->alias([
             'isAdmin' => isAdmin::class,
             'isSuperAdmin' => isSuperAdmin::class,
+            'isMember' => isMember::class,
         ]);
 
         //
