@@ -44,7 +44,10 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
 
     //invite
     const handleInvite = (e) => {
-        post(route("admin.add-member", orgID), {
+        console.log(orgID);
+        console.log(data.userID);
+        
+        post(`/admin/${orgID}/addMember/${data.userID}`, {
             preserveState: true,
             preserveScroll: true,
         });

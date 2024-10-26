@@ -15,6 +15,7 @@ use App\Http\Controllers\FormsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FormController;
 use App\Http\Middleware\IsRecruiting;
+use App\Http\Middleware\isSameDepartment;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -72,7 +73,7 @@ Route::prefix('/superadmin/')
         //invite page
         Route::get('invite/search-users', 'searchUser');
         Route::get('search-users', 'search');
-        Route::post('addadmin', 'addAdmin')->name('add-admin');
+        Route::post('addadmin/{orgID}/{userID}', 'addAdmin')->name('add-admin')->middleware(isSameDepartment::class);
         Route::delete('deleteadmin/{userID}', 'deleteAdmin')->name('delete-admin');
         Route::delete('delete-admin-role/{userID}/{orgID}', 'deleteAdminRole')->name('delete-admin-role');
 
@@ -97,7 +98,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::get('editpage', 'edit')->name('editpage');
         Route::post('save/{section}', 'saveEdit');
         Route::get('invite', 'invite')->name('invite');
-        Route::post('addMember', 'addMember')->name('add-member');
+        Route::post('addMember/{userID}', 'addMember')->name('add-member')->middleware(isSameDepartment::class);
         Route::get('applications', 'applications')->name('applications');
         Route::post('makeAnnouncement', 'makeAnnouncement')->name('makeAnnouncement');
 

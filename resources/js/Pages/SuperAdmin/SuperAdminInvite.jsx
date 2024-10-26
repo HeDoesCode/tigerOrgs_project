@@ -131,10 +131,12 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
         setSelectedOrg(orgID);
     };
 
+
+
     const handleInvite = (e) => {
         e.preventDefault();
 
-        post(route("superadmin.add-admin"));
+        post(`/superadmin/addadmin/${selectedOrg}/${data.userID}`) ;
     };
 
     //delete admin logic
