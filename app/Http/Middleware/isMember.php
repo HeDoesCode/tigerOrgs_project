@@ -28,7 +28,9 @@ class isMember
             ->where('roleID', 1)
             ->where('orgID', $orgID)
             ->select('*')
-            ->first();
+            ->exists();
+
+            dd($checkRole);
 
         if ($checkRole) {
             // dd($checkRole->roleID);
