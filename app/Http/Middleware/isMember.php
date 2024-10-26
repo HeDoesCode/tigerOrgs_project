@@ -13,31 +13,24 @@ use Symfony\Component\HttpFoundation\Response;
 
 class isMember
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next, string $type = null): Response
+    public function handle(Request $request, Closure $next, string $roleType = null, string $action = null): Response
     {
         $userID = Auth::id();
         $orgID = $request->route('orgID');
 
+        // Role ID for admin and member
+        $roleID = ($roleType === 'admin') ? 2 : 1;
+
         $checkRole = DB::table('organization_user_role')
             ->where('userID', $userID)
-            ->where('roleID', 1)
             ->where('orgID', $orgID)
-            ->select('*')
             ->exists();
 
-            dd($checkRole);
 
         if ($checkRole) {
-            // dd($checkRole->roleID);
-
-            if($type === 'block'){
+            if ($action === 'block') {
                 session()->flash('toast', [
-                    'title' => 'Already a member of this organization.',
+                    'title' => "Already a $roleType of this organization.",
                     'variant' => 'destructive'
                 ]);
                 return redirect()->back();
@@ -48,9 +41,8 @@ class isMember
             ]);
             return $next($request);
         } else {
-            // abort(response('You are not assigned an admin role to this page', 401));
-            // abort(403, 'Sorry, you are not allowed to access this page/');
-            abort(403, 'Sorry, this page is inaccessible');
+            abort(403, "Sorry, this page is inaccessible for non-$roleType users.");
         }
     }
 }
+
