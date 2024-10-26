@@ -13,24 +13,44 @@ use Symfony\Component\HttpFoundation\Response;
 
 class isMember
 {
-    public function handle(Request $request, Closure $next, string $roleType = null, string $action = null): Response
+    public function handle(Request $request, Closure $next, string $action = null): Response
     {
         $userID = Auth::id();
         $orgID = $request->route('orgID');
+        
 
         // Role ID for admin and member
-        $roleID = ($roleType === 'admin') ? 2 : 1;
+        // $roleID = ($roleType === 'admin') ? 2 : 1;
+
+        $roleType = DB::table('organization_user_role')
+            ->select("*")
+            ->where('userID', $userID)
+            ->where('orgID', $orgID)
+            ->first();
+
+
+        switch($roleType->roleID){
+            case 1: {
+                $role = "member";
+                break;
+            }
+            case 2: {
+                $role = "admin";
+                break;
+            }
+        }
 
         $checkRole = DB::table('organization_user_role')
             ->where('userID', $userID)
             ->where('orgID', $orgID)
             ->exists();
 
-
         if ($checkRole) {
             if ($action === 'block') {
+
+
                 session()->flash('toast', [
-                    'title' => "Already a $roleType of this organization.",
+                    'title' => "Already a $role of this organization.",
                     'variant' => 'destructive'
                 ]);
                 return redirect()->back();
