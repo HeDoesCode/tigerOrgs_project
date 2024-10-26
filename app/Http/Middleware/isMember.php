@@ -13,29 +13,44 @@ use Symfony\Component\HttpFoundation\Response;
 
 class isMember
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next, string $type = null): Response
+    public function handle(Request $request, Closure $next, string $action = null): Response
     {
         $userID = Auth::id();
         $orgID = $request->route('orgID');
+        
+
+        // Role ID for admin and member
+        // $roleID = ($roleType === 'admin') ? 2 : 1;
+
+        $roleType = DB::table('organization_user_role')
+            ->select("*")
+            ->where('userID', $userID)
+            ->where('orgID', $orgID)
+            ->first();
+
+
+        switch($roleType->roleID){
+            case 1: {
+                $role = "a member";
+                break;
+            }
+            case 2: {
+                $role = "an admin";
+                break;
+            }
+        }
 
         $checkRole = DB::table('organization_user_role')
             ->where('userID', $userID)
-            ->where('roleID', 1)
             ->where('orgID', $orgID)
-            ->select('*')
-            ->first();
+            ->exists();
 
         if ($checkRole) {
-            // dd($checkRole->roleID);
+            if ($action === 'block') {
 
-            if($type === 'block'){
+
                 session()->flash('toast', [
-                    'title' => 'Already a member of this organization.',
+                    'title' => "Already $role of this organization.",
                     'variant' => 'destructive'
                 ]);
                 return redirect()->back();
@@ -46,9 +61,8 @@ class isMember
             ]);
             return $next($request);
         } else {
-            // abort(response('You are not assigned an admin role to this page', 401));
-            // abort(403, 'Sorry, you are not allowed to access this page/');
-            abort(403, 'Sorry, this page is inaccessible');
+            abort(403, "Sorry, this page is inaccessible for non-$roleType users.");
         }
     }
 }
+
