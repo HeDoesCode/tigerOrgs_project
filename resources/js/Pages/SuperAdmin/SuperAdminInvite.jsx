@@ -364,13 +364,7 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                         </AdminDialog>
                                     </div>
 
-                                    <AdminInvDropdownMenu
-                                        triggerContent={<DotsVertical />}
-                                        title="Select Action"
-                                        dropdownItems={[
-                                            {
-                                                name: (
-                                                    <AdminDialogForInvite
+                                    <AdminDialogForInvite
                                                         title="Assign Role for Student"
                                                         description={
                                                             <div>
@@ -395,9 +389,10 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                                         user.userID
                                                                     );
                                                                 }}
+                                                                className="flex items-center  justify-center"
                                                             >
-                                                                Assign Another
-                                                                Role
+                                                                <div className="hover:bg-gray-300 rounded-full p-2"><IconInvite/></div>
+                                                                
                                                             </div>
                                                         }
                                                         handleInvite={
@@ -421,29 +416,7 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                             handleOrgSearchChange
                                                         }
                                                     />
-                                                ),
-                                                onSelect: (e) =>
-                                                    e.preventDefault(),
-                                            },
-                                            {
-                                                name: (
-                                                    <AdminAlertDialog
-                                                        trigger="Delete All Roles"
-                                                        title={`Remove ${user.firstname} ${user.lastname} as admin?`}
-                                                        description="This will remove all the admin roles of this user to his/her assigned organization."
-                                                        accept="Confirm"
-                                                        onclick={() => {
-                                                            handleDelete(
-                                                                user.userID
-                                                            );
-                                                        }}
-                                                    ></AdminAlertDialog>
-                                                ),
-                                                onSelect: (e) =>
-                                                    e.preventDefault(),
-                                            },
-                                        ]}
-                                    />
+
                                 </VerticalCard>
                             ))}
                         </div>
