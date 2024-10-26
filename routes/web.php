@@ -66,6 +66,8 @@ Route::prefix('/superadmin/')
         Route::get('status/search-org', 'searchOrg');
         Route::post('update-organizations', 'updateOrganizations')->name('update-organizations');
         Route::post('addOrg', 'addOrg')->name('addOrg');
+        Route::post('editOrg', 'editOrg')->name('editOrg');
+        Route::delete('deleteOrg/{id}', 'deleteOrg')->name('deleteOrg');
 
         //invite page
         Route::get('invite/search-users', 'searchUser');

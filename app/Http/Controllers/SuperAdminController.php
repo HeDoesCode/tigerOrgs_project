@@ -16,6 +16,7 @@ use PhpParser\Node\Expr\PostDec;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 use function Laravel\Prompts\error;
 
@@ -24,16 +25,14 @@ class SuperAdminController extends Controller
     //manage org functions
 
     public function addOrg(Request $request){
-        $validated = $request-> validate([
-            'name' => 'required|unique:organizations',
-            'department' => 'required',
-
-        ]);
-
         
 
         try {
-            
+            $validated = $request-> validate([
+                'name' => 'required|unique:organizations',
+                'department' => 'required',
+    
+            ]);
 
             DB::table('organizations')->updateOrInsert([
                 'recruiting'=> false,
@@ -54,7 +53,7 @@ class SuperAdminController extends Controller
 
             session()->flash('toast', [
                 'title' => 'Failed',
-                'description' => 'Organization was not added',
+                'description' => 'Organization already exists',
                 'variant' => 'destructive'
             ]);
 
@@ -63,6 +62,59 @@ class SuperAdminController extends Controller
         }
    
     }
+
+
+    public function editOrg(Request $request) {
+        try {
+            $organization = Organization::findOrFail($request->orgId);
+    
+            $validated = $request->validate([
+                'orgId' => 'required',
+                'name' => ['required', Rule::unique('organizations', 'name')->ignore($organization->orgID, 'orgID')],
+                'department' => 'required',
+            ]);
+    
+            $organization->update([
+                'name' => $validated['name'],
+                'department' => $validated['department'],
+            ]);
+    
+            session()->flash('toast', [
+                'title' => 'Saved',
+                'description' => 'Organization edited successfully!',
+                'variant' => 'success'
+            ]);
+    
+            return redirect()->back()->with([
+                'organizations' => Organization::all(),
+                'departments' => Organization::distinct('department')->pluck('department'),
+            ]);
+        } catch (Exception $e) {
+            session()->flash('toast', [
+                'title' => 'Failed',
+                'description' => 'Organization already exists.',
+                'variant' => 'destructive'
+            ]);
+    
+            return redirect()->back()->with('error', 'An error occurred while editing the organization.');
+        }
+    }
+
+    public function deleteOrg($id)
+{
+    $organization = Organization::findOrFail($id);
+
+    
+    $organization->delete();
+
+    session()->flash('toast', [
+        'title' => 'Deleted',
+        'description' => 'Organization deleted successfully!',
+        'variant' => 'success'
+    ]);
+
+    return redirect()->back();
+}
 
     
 
