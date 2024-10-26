@@ -37,8 +37,16 @@ function AdminOrgInvCard({
                     <div className="p-2 content-center">
                         <img
                             className="rounded-full"
-                            src={organization.logo}
-                            alt={organization.name}
+                            src={
+                                organization.logo
+                                    ? organization.logo
+                                    : "https://placehold.co/500x500"
+                            }
+                            alt="Organization Logo"
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "https://placehold.co/500x500";
+                            }}
                         />
                     </div>
                     <div className="col-span-2  px-2">

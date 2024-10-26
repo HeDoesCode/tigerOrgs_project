@@ -196,6 +196,52 @@ export default function SuperAdminManage({
         });
     }
 
+    const [editingOrg, setEditingOrg] = useState(null);
+
+    function handleEditOrg(orgId, updatedData) {
+        router.post(route("superadmin.editOrg"), {
+            orgId: orgId,
+            name: updatedData.name,
+            department: updatedData.department
+        }, {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                const updatedOrganizations = page.props.organizations;
+                setAllOrganizations(updatedOrganizations);
+
+                const updatedDepartments = page.props.departments;
+                if (updatedDepartments) {
+                    setAvailableDepartments(updatedDepartments);
+                }
+            },
+            onError: () => {
+                console.error("Failed to update organization");
+            }
+        });
+    }
+
+    // function to handle organization deletion
+    function handleDeleteOrg(orgId) {
+        router.delete(route("superadmin.deleteOrg", { id: orgId }), {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                
+                const updatedOrganizations = allOrganizations.filter(
+                    org => org.orgID !== orgId
+                );
+                setAllOrganizations(updatedOrganizations);
+                setFilteredOrganizations(updatedOrganizations);
+            },
+            onError: () => {
+                console.error("Failed to delete organization");
+            }
+        });
+    }
+
+
+
     return (
         <div className="w-full">
             <Head title="OSA Dashboard" />
@@ -420,6 +466,8 @@ export default function SuperAdminManage({
                                             }));
                                         }}
                                         organization={organization}
+                                        onEdit={handleEditOrg}
+                                        onDelete={handleDeleteOrg}
                                     />
                                 ))}
                             </div>
