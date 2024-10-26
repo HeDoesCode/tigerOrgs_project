@@ -18,7 +18,7 @@ class isAdmin
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $type = null): Response
+    public function     handle(Request $request, Closure $next, string $type = null): Response
     {
 
         /**
@@ -44,7 +44,7 @@ class isAdmin
 
             if($type === 'block'){
                 session()->flash('toast', [
-                    'title' => 'Already a member of this organization.',
+                    'title' => 'Already an admin of this organization.',
                     'variant' => 'destructive'
                 ]);
                 return redirect()->back();
