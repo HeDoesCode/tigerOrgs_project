@@ -82,6 +82,7 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
                     </div>
                 </div>
             </UserLayout>
+            
             <div className="relative">
                 {isLoggedIn || <GoogleModal />}
                 {isNewUser && (
