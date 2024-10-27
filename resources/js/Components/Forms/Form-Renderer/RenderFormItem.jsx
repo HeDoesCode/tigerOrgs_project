@@ -90,7 +90,7 @@ function MultiChoiceInput({ type, name, options, required }) {
                 <li className="mb-4">
                     <label
                         htmlFor={preparedName}
-                        className="block  font-medium text-gray-700 mb-1"
+                        className="block font-medium text-gray-700 mb-1"
                     >
                         {name}
                         {required && (
