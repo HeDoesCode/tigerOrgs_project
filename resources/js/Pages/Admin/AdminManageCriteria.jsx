@@ -12,7 +12,7 @@ import IconHistory from "@/Components/Icons/IconHistory";
 import IconEye from "@/Components/Icons/IconEye";
 import AdminDialog from "@/Components/Admin/AdminDialog";
 
-function AdminFormHistory({ orgID }) {
+function AdminManageCriteria({ orgID }) {
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
@@ -85,4 +85,4 @@ function AdminFormHistory({ orgID }) {
     );
 }
 
-export default AdminFormHistory;
+export default AdminManageCriteria;
