@@ -68,4 +68,9 @@ class Organization extends Model
     {
         return $this->hasMany(Form::class, 'orgID', 'orgID');
     }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'orgID', 'orgID');
+    }   
 }

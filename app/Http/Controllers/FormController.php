@@ -7,6 +7,8 @@ use App\Models\Form;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -202,18 +204,59 @@ class FormController extends Controller
         return $rules;
     }
 
-    public function submitForm(Request $request)
-    {
-        $formLayout = $request->formLayout['layout'];
+        public function submitForm(Request $request)
+        {
 
-        $rules = $this->buildRules($formLayout);
+            try{
 
-        $request->validate($rules);
+                $user = Auth::user();
+                $validated = $request->validate([
+                    'orgID'=>'required',
+                    'formID' =>'required'
+                ]);
 
-        // do smth with data if properly validated
-        // TO-DO
+                // $formLayout = $request->formLayout['layout'];
 
-        // success gets redirected here
-        return Inertia::render('Admin/AdminFormBuilder');
-    }
+                // $rules = $this->buildRules($formLayout);
+
+                // $request->validate($rules);
+
+                if(!$validated){
+                    session()->flash('toast', [
+                        'title' => 'Error submitting the form',
+                        'description' => 'Please double check your inputs in the form.',
+                        'variant' => 'destructive'
+                    ]);
+                }
+
+                DB::table('applications')->insert(
+                    [
+                        'userID'=> $user->userID,
+                        'orgID'=> $validated['orgID'],
+                        'formID'=> $validated['formID']
+
+                    ],
+                    [
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                    );
+
+                    session()->flash('toast', [
+                        'title' => 'Application Submitted',
+                        'description' => 'Your application has been recorded. Please wait for the admin to process it.',
+                        'variant' => 'success'
+                    ]);
+
+                    return redirect()->route('organizations.home', ['orgID' => $validated['orgID']]);
+                
+            }catch (Exception $e){
+                return redirect()->back()->with('error');
+            }
+        }
+
+
+
+
+
 }

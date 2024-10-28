@@ -28,6 +28,10 @@ class isMember
             ->where('orgID', $orgID)
             ->first();
 
+        if(!isset($roleType)){   
+            return $next($request);
+        }
+
 
         switch($roleType->roleID){
             case 1: {

@@ -170,6 +170,8 @@ class OrganizationController extends Controller
         return Inertia::render('Organizations/Apply', [
             'pageLayoutData' => $this->getPageLayoutData($orgID),
             'formLayout' => $formLayout,
+            'orgID' => $orgID,
+            'formID'=> $formID
         ]);
     }
 

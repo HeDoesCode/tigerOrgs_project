@@ -1,8 +1,9 @@
 import { router, usePage } from "@inertiajs/react";
 import RenderFormItem from "./RenderFormItem";
 import Pre from "@/Components/Pre";
+import { useEffect } from "react";
 
-function FormRenderer({ formLayout }) {
+function FormRenderer({ formLayout, orgID, formID }) {
     const { errors } = usePage().props; // Get validation errors from Inertia
 
     /**
@@ -22,10 +23,19 @@ function FormRenderer({ formLayout }) {
             formObject[key] = value;
         });
 
-        router.post("/form/submit", {
-            userData: formObject,
-            formLayout: formLayout,
-        });
+        router.post(
+            route("formSubmission", { orgID, formID }),
+            {
+                //pakibalik na lang to
+                // userData: formObject,
+                // formLayout: formLayout,
+                orgID: orgID,
+                formID: formID,
+            },
+            { preserveState: true, preserveScroll: true }
+        );
+        console.log("userdata:".userData);
+        console.log("formLayout:".formLayout);
     }
 
     return (

@@ -13,7 +13,14 @@ import { useRef, useState } from "react";
 import AdminButton from "./AdminButton";
 import IconDelete from "../Icons/IconDelete";
 
-function AdminOrgCard({ edit, visible, setVisible, organization, onEdit, onDelete }) {
+function AdminOrgCard({
+    edit,
+    visible,
+    setVisible,
+    organization,
+    onEdit,
+    onDelete,
+}) {
     const imgRef = useRef(null);
     const visibilityClass = visible
         ? "bg-green-50  border-green-600 text-green-800"
@@ -32,9 +39,9 @@ function AdminOrgCard({ edit, visible, setVisible, organization, onEdit, onDelet
 
     const handleEditChange = (e) => {
         const { id, value } = e.target;
-        setEditForm(prev => ({
+        setEditForm((prev) => ({
             ...prev,
-            [id]: value
+            [id]: value,
         }));
     };
 
@@ -65,67 +72,74 @@ function AdminOrgCard({ edit, visible, setVisible, organization, onEdit, onDelet
                     {edit ? (
                         <div className="flex justify-items-end flex-col ml-7 sm:ml-3 lg:ml-5">
                             <AdminDialog
-                        title={`Edit Organization of ${organization.name}`}
-                        description="Replace the name and the department/college/faculty of the organization you want to edit."
-                        trigger={<div className="text-gray-500 hover:text-gray-700"><IconEdit /> </div>}
-                    >
-                        <form
-                            onSubmit={handleEditSubmit}
-                            className="space-y-4"
-                        >
-                            <div className="space-y-2">
-                                <label
-                                    htmlFor="name"
-                                    className="block  font-medium text-gray-700"
+                                title={`Edit Organization of ${organization.name}`}
+                                description="Replace the name and the department/college/faculty of the organization you want to edit."
+                                trigger={
+                                    <div className="text-gray-500 hover:text-gray-700">
+                                        <IconEdit />{" "}
+                                    </div>
+                                }
+                            >
+                                <form
+                                    onSubmit={handleEditSubmit}
+                                    className="space-y-4"
                                 >
-                                    Name of the
-                                    Organization:
-                                </label>
-                                <input
-                                    id="name"
-                                    value={editForm.name}
-                                    onChange={handleEditChange}
-                                    className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    required
-                                />
-                            </div>
+                                    <div className="space-y-2">
+                                        <label
+                                            htmlFor="name"
+                                            className="block  font-medium text-gray-700"
+                                        >
+                                            Name of the Organization:
+                                        </label>
+                                        <input
+                                            id="name"
+                                            value={editForm.name}
+                                            onChange={handleEditChange}
+                                            className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            required
+                                        />
+                                    </div>
 
-                            <div className="space-y-2">
-                                <label
-                                    htmlFor="department"
-                                    className="block  font-medium text-gray-700"
-                                >
-                                    Department:
-                                </label>
-                                <input
-                                    id="department"
-                                    value={editForm.department}
-                                    onChange={handleEditChange}
-                                    className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    required
-                                />
-                            </div>
+                                    <div className="space-y-2">
+                                        <label
+                                            htmlFor="department"
+                                            className="block  font-medium text-gray-700"
+                                        >
+                                            Department:
+                                        </label>
+                                        <input
+                                            id="department"
+                                            value={editForm.department}
+                                            onChange={handleEditChange}
+                                            className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            required
+                                        />
+                                    </div>
 
-                            <div className="mt-4 grid justify-items-end">
-                                <button
-                                    type="submit"
-                                    className="flex px-9  shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white"
-                                >
-                                    <span className="ml-2  poppins hidden truncate sm:block">
-                                        Submit
-                                    </span>
-                                </button>
-                            </div>
-                        </form>
-                    </AdminDialog>
-                    <AdminAlertDialog
-                                            trigger={<div className="text-gray-500 hover:text-gray-700"><IconDelete /> </div>}
-                                            title={`Remove this organization?`}
-                                            description="This will remove the organization from the list. Admins and users will not be able to access and view the organizations after this action."
-                                            accept="Confirm"       
-                                            onclick={() => onDelete(organization.orgID)}
-                                        ></AdminAlertDialog></div>
-                        
+                                    <div className="mt-4 grid justify-items-end">
+                                        <button
+                                            type="submit"
+                                            className="flex px-9  shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white"
+                                        >
+                                            <span className="ml-2  poppins hidden truncate sm:block">
+                                                Submit
+                                            </span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </AdminDialog>
+                            <AdminAlertDialog
+                                trigger={
+                                    <div className="text-gray-500 hover:text-gray-700">
+                                        <IconDelete />{" "}
+                                    </div>
+                                }
+                                title={`Remove this organization?`}
+                                description="This will remove the organization from the list. Admins and users will not be able to access and view the organizations after this action."
+                                accept="Confirm"
+                                onclick={() => onDelete(organization.orgID)}
+                            ></AdminAlertDialog>
+                        </div>
                     ) : (
                         ""
                     )}
