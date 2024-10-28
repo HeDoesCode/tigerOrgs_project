@@ -48,7 +48,10 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
 
         // form page/s
         Route::get('/{orgID}/apply/{formID}', [OrganizationController::class, 'apply'])->name('organizations.apply')->middleware([IsRecruiting::class, 'isMember:block']);
+        
     });
+
+    Route::post('/{orgID}/form-submission/{formID}', [FormController::class, 'submitForm'])->name('formSubmission')->middleware([IsRecruiting::class, 'isMember:block']);
 });
 
 //superadmin temporary routes
