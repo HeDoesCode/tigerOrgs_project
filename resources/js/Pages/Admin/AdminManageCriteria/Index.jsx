@@ -5,6 +5,8 @@ import IconCheckBox from "@/Components/Icons/IconCheckBox";
 import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import IconPlus from "@/Components/Icons/IconPlus";
+import IconDelete from "@/Components/Icons/IconDelete";
+import IconEdit from "@/Components/Icons/IconEdit";
 
 export function Index({ orgID, criteriaData }) {
     
@@ -71,21 +73,21 @@ export function Index({ orgID, criteriaData }) {
                                         key={criteria.criteriaID}
                                         className="p-5 mb-3 rounded bg-white grid grid-cols-12 gap-3"
                                     >
-                                        <div className="grid grid-cols-subgrid col-span-10 align-middle">
+                                        <div className="grid grid-cols-subgrid col-span-10 align-middle items-center">
                                             {criteria.name}
                                         </div>
                                         <a href={route("admin.criteria.edit", [criteria.orgID, criteria.criteriaID])}>
                                             <button 
-                                                className="bg-green-600 w-full p-2 rounded hover:bg-green-700 text-white text-lg"
+                                                className="bg-green-600 w-full p-2 rounded hover:bg-green-700 text-white text-lg flex justify-center items-center gap-x-2"
                                             >
-                                                Edit
+                                                <IconEdit /> Edit
                                             </button>
                                         </a>
                                         <button
-                                            className="bg-red-500 w-fill p-2 rounded hover:bg-red-600 text-white text-lg"
+                                            className="bg-red-500 w-fill p-2 rounded hover:bg-red-600 text-white text-lg flex justify-center items-center gap-x-2"
                                             onClick={() => handleDelete(criteria.criteriaID)}
-                                        >
-                                            Delete
+                                        >   
+                                            <IconDelete /> Delete
                                         </button>
                                     </li>
                                 );

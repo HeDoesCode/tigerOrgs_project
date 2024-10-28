@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Criteria;
-use App\Models\Organization;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
