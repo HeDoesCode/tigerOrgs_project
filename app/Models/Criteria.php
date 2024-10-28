@@ -10,6 +10,9 @@ class Criteria extends Model
     use HasFactory;
 
     public $timestamps = false;
+    
+    protected $primaryKey = "criteriaID";
+    protected $table = "criteria";
 
     protected $fillable = [
         'orgID',

@@ -2,31 +2,91 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Criteria;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CriteriaController extends Controller
-{
+{    
+    // GET: get all and display criteria
     public function index($orgID)
-    {
-        $organization = Organization::findOrFail($orgID);
+    {   
+        $allCriteria = Criteria::where('orgID', $orgID)->get()->toArray();
 
-        return Inertia::render('Admin/AdminManageCriteria', [$orgID => $organization->orgID]);
+        return Inertia::render('Admin/AdminManageCriteria/Index', ['orgID' => $orgID, 'criteriaData' => $allCriteria]);
     }
 
-    public function store()
-    {}
+    // GET: display create form
+    public function create($orgID) 
+    {
+        return Inertia::render('Admin/AdminManageCriteria/Create', ['orgID' => $orgID]);
+    }
 
-    public function create()
-    {}
+    // POST: create new criteria
+    public function store(Request $request, $orgID)
+    {
+        $validatedData = $request->validate([
+                            'name' => ['required', 'string'],
+                            'description' => ['required', 'string']
+                        ]);
 
-    public function show()
-    {}
+        Criteria::create([
+            'orgID' => $orgID,
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+        ]);
+
+        session()->flash('toast', [
+            'title' => 'Criteria was successfully created!',
+            'description' => '',
+            'variant' => 'success'
+        ]);
+
+        return redirect()->route('admin.criteria.index',['orgID' => $orgID]);
+    }
+
+    // GET: get specific criteria and display in edit form
+    public function edit($orgID, $criterion)
+    {
+        $editedCriteria = Criteria::find($criterion);
+
+        return Inertia::render('Admin/AdminManageCriteria/Edit', ['orgID' => $orgID, 'criteriaData' => $editedCriteria]);
+    }
     
-    public function update()
-    {}
+    // PUT: update criteria
+    public function update(Request $request, $orgID, $criterion)
+    {
+        $validatedData = $request->validate([
+                            'name' => ['required', 'string'],
+                            'description' => ['required', 'string']
+                        ]);
 
-    public function destroy()
-    {}
+        $editedCriteria = Criteria::find($criterion);
+        $editedCriteria->name = $validatedData['name'];
+        $editedCriteria->description = $validatedData['description'];
+        $editedCriteria->save();
+        
+        session()->flash('toast', [
+            'title' => 'Criteria was successfully updated!',
+            'description' => '',
+            'variant' => 'success'
+        ]);
+        
+        return redirect()->route('admin.criteria.index', ['orgID' => $orgID]);
+    }
+
+    // DELETE: delete criteria
+    public function destroy($orgID, $criterion) 
+    {
+        $deletedCriteria = Criteria::find($criterion);
+
+        $deletedCriteria->delete();
+
+        session()->flash('toast', [
+            'title' => 'Criteria was successfully deleted!',
+            'description' => '',
+            'variant' => 'success'
+        ]);
+    }
 }

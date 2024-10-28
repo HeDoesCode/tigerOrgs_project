@@ -117,7 +117,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::post('remove-student', 'removeStudent')->name('remove-student');
 
         // manage criteria
-        Route::resource('criteria', CriteriaController::class);
+        Route::resource('criteria', CriteriaController::class)->only(['index', 'store', 'create', 'update', 'destroy', 'edit']);
 
         // form builder routes
         Route::get('/form-builder', [FormController::class, 'showBuilder'])->name('formbuilder');
