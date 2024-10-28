@@ -2,19 +2,11 @@ import { Head } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import MainAdminFrame from "@/Components/MainAdminFrame";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
-import VerticalCard from "@/Components/VerticalCard";
-import IconInvite from "@/Components/Icons/IconInvite";
-import IconDotsVertical from "@/Components/Icons/IconDotsVertical";
-import Home from "../Organizations/Home";
-import IconEdit from "@/Components/Icons/IconEdit";
 import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import DotsVertical from "@/Components/DotsVertical";
 import AdminDialog from "@/Components/Admin/AdminDialog";
-import AdminDropdownMenu from "@/Components/Admin/AdminInvDropdownMenu";
 import { useState } from "react";
-import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
-import IconDelete from "@/Components/Icons/IconDelete";
 import {
     Select,
     SelectContent,
@@ -23,23 +15,17 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 
-function AdminManageApplication({ orgID }) {
-    const [forms] = useState(true);
-    const [response] = useState(true);
+function AdminManageApplication({ orgID, formsWithApplications }) {
+    const [selectedFormId, setSelectedFormId] = useState(null);
 
-    const [orgs, setOrgs] = useState({
-        name: "",
-        department: "",
-    });
+    const selectedForm = formsWithApplications.find(
+        (form) => form.formID === selectedFormId
+    );
+    const hasApplications = selectedForm?.applications?.length > 0;
 
-    function handleChangeForNewOrg(e) {
-        const key = e.target.id;
-        const value = e.target.value;
-        setOrgs((orgs) => ({
-            ...orgs,
-            [key]: value,
-        }));
-    }
+    const handleFormSelect = (formId) => {
+        setSelectedFormId(formId);
+    };
 
     return (
         <div className="w-full">
@@ -68,18 +54,34 @@ function AdminManageApplication({ orgID }) {
                     ]}
                     title="Manage Student Applications"
                 >
-                    {forms ? (
+                    {formsWithApplications.length > 0 ? (
                         <div className="">
-                            <div className=" grid grid-cols-12  divide-x  divide-gray-200">
-                                <div className="col-span-2 mb-6 ">
+                            <div className="grid grid-cols-12 divide-x divide-gray-200">
+                                <div className="col-span-2 mb-6">
                                     <div className="poppins p-5">
                                         Forms Available:
                                     </div>
                                     <div className="h-[500px] overflow-auto">
-                                        <ApplicationForms selected={true} />
-                                        <ApplicationForms />
-                                        <ApplicationForms />
-                                        <ApplicationForms />
+                                        {formsWithApplications.map((form) => (
+                                            <ApplicationForms
+                                                key={form.formID}
+                                                formID={form.formID}
+                                                name={form.formLayout?.name}
+                                                applicationCount={
+                                                    form.applications?.length ||
+                                                    0
+                                                }
+                                                selected={
+                                                    selectedFormId ===
+                                                    form.formID
+                                                }
+                                                onSelect={() =>
+                                                    handleFormSelect(
+                                                        form.formID
+                                                    )
+                                                }
+                                            />
+                                        ))}
                                     </div>
                                 </div>
 
@@ -88,17 +90,18 @@ function AdminManageApplication({ orgID }) {
                                         <h1 className="p-5">
                                             Application Responses for the form{" "}
                                             <span className="underline underline-offset-2">
-                                                Staff for Back-End
+                                                {selectedForm?.formLayout
+                                                    ?.name || "Select a form"}
                                             </span>
                                             :
                                         </h1>
                                     </div>
-                                    {response ? (
+                                    {selectedForm && hasApplications ? (
                                         <div className="min-h-[500px] h-[500px] overflow-auto">
-                                            <table className="mr-3  bg-white divide-y min-h-[500px]  rounded-r-xl divide-gray-200    ">
+                                            <table className="mr-3 bg-white divide-y min-h-[500px] rounded-r-xl divide-gray-200">
                                                 <thead>
                                                     <tr className="lg:grid hidden font-bold grid-cols-9 py-4 text-center">
-                                                        <th className=" col-span-2 text-sm">
+                                                        <th className="col-span-2 text-sm">
                                                             Full Name
                                                         </th>
                                                         <th className="col-span-2 text-sm">
@@ -119,17 +122,26 @@ function AdminManageApplication({ orgID }) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <ApplicationResponses />
-                                                    <ApplicationResponses />
-                                                    <ApplicationResponses />
-                                                    <ApplicationResponses />
-                                                    <ApplicationResponses />
+                                                    {selectedForm.applications.map(
+                                                        (application) => (
+                                                            <ApplicationResponses
+                                                                key={
+                                                                    application.applicationID
+                                                                }
+                                                                application={
+                                                                    application
+                                                                }
+                                                            />
+                                                        )
+                                                    )}
                                                 </tbody>
                                             </table>
                                         </div>
                                     ) : (
                                         <div className="m-14 sm:m-48 text-xl text-gray-600 font-thin text-center">
-                                            No Responses Found
+                                            {selectedForm
+                                                ? "No Responses Found"
+                                                : "Select a form to view responses"}
                                         </div>
                                     )}
                                 </div>
@@ -148,37 +160,59 @@ function AdminManageApplication({ orgID }) {
     );
 }
 
-function ApplicationForms({ selected }) {
+function ApplicationForms({
+    formID,
+    name,
+    applicationCount,
+    selected,
+    onSelect,
+}) {
     return (
         <div
+            onClick={onSelect}
             className={`cursor-pointer p-4 rounded-l-xl text-sm ml-3 ${
                 selected ? "bg-white" : ""
-            } hover:bg-white flex`}
+            } hover:bg-white flex justify-between items-center`}
         >
-            <h1 className="font-extrabold">Staff for Back-End</h1>{" "}
-            <div className="ml-2 mr-2 rounded-full p-1 text-xs text-center  font-bold bg-gray-300">
-                21
+            <h1 className="font-extrabold">{name}</h1>
+            <div className="ml-2 mr-2 rounded-full p-1 text-xs text-center font-bold bg-gray-300">
+                {applicationCount}
             </div>
         </div>
     );
 }
 
-function ApplicationResponses() {
+function ApplicationResponses({ application }) {
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+        });
+    };
+
+    // Now we can access user data through application.user
+    const user = application.user;
+
     return (
         <tr className="grid grid-cols-1 hover:bg-gray-100 lg:grid-cols-9 py-2 text-center min-h-16">
-            <td className=" lg:col-span-2 text-sm content-center">
-                Laurence Arvin Arcilla
+            <td className="lg:col-span-2 text-sm content-center">
+                {user?.firstname} {user?.lastname}
             </td>
-            <td className="lg:col-span-2 text-sm content-center ">
-                College of Information and Computing Sciences
+            <td className="lg:col-span-2 text-sm content-center">
+                {user?.college}
             </td>
             <td className="lg:col-span-2 text-sm content-center truncate">
-                laurencearvin.arcilla.cics@ust.edu.ph
+                {user?.email}
             </td>
-            <td className="col-span-1 text-sm content-center">Aug-13-2024</td>
+            <td className="col-span-1 text-sm content-center">
+                {formatDate(application.created_at)}
+            </td>
             <td className="lg:col-span-1 px-4 text-sm content-center">
                 <div className={`bg-[#609B00] rounded-xl text-white`}>
-                    50% Match
+                    {/* palagay code  */}
+                    90% Match
                 </div>
             </td>
             <td className="col-span-1 text-sm grid grid-cols-2">
@@ -186,80 +220,67 @@ function ApplicationResponses() {
                     title="Answer of the Applicant"
                     trigger={
                         <div className="underline content-center underline-offset-2">
-                            View <span className="lg:hidden ">Response </span>
+                            View <span className="lg:hidden">Response</span>
                         </div>
                     }
-                ></AdminDialog>
+                >
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-bold">Applicant Details</h3>
+                        <p>
+                            <strong>Name:</strong> {user?.firstname}{" "}
+                            {user?.lastname}
+                        </p>
+                        <p>
+                            <strong>Email:</strong> {user?.email}
+                        </p>
+                        <p>
+                            <strong>College:</strong> {user?.college}
+                        </p>
+                        <hr className="my-4" />
+                        <h3 className="text-lg font-bold">
+                            Application Answers
+                        </h3>
+                        <pre className="bg-gray-100 p-4 rounded">
+                            {/* {JSON.stringify(application.userData, null, 2)} */}
+                        </pre>
+                    </div>
+                </AdminDialog>
 
                 <AdminDialog
-                    //specify the user
-                    title="Set the Status for this Application"
+                    title={`Set the Status for Applicant ${user?.firstname} ${user?.lastname}`}
                     trigger={<DotsVertical />}
                 >
-                    <form
-                        // onSubmit={
-                        //     handleSubmitForNewOrg
-                        // }
-                        className="space-y-4"
-                    >
+                    <form className="space-y-4">
                         <div className="space-y-2">
-                            <label
-                                htmlFor="name"
-                                className="block text-sm font-bold text-gray-700"
-                            >
+                            <label className="block text-sm font-bold text-gray-700">
                                 Select a Status to be Set for this Application:
                             </label>
                             <Select
-                                defaultValue="Assign"
-                                // onValueChange={
-                                //    handleFilterCategory
-                                // }
+                                defaultValue={
+                                    application.status === "submitted"
+                                        ? "assigned"
+                                        : application.status
+                                }
                             >
                                 <SelectTrigger className="w-full h-12 mb border-gray-300 bg-transparent">
-                                    <SelectValue placeholder="Assign" />
+                                    <SelectValue placeholder="Set Status" />
                                 </SelectTrigger>
-                                <SelectContent
-                                    className="border-gray-500 bg-[#EEEEEE] quicksand"
-                                    ref={(ref) => {
-                                        if (!ref) return;
-                                        ref.ontouchstart = (e) =>
-                                            e.preventDefault();
-                                    }}
-                                >
-                                    <SelectItem
-                                        value="Assign"
-                                        className="hover:!bg-gray-3 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
-                                    >
-                                        Mark as Assigned
+                                <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand">
+                                    <SelectItem value="accepted">
+                                        Mark as Accepted
                                     </SelectItem>
-                                    <SelectItem
-                                        value="Additional"
-                                        className="hover:!bg-gray-3 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
-                                    >
+                                    <SelectItem value="pending">
                                         Mark as Pending
                                     </SelectItem>
-                                    <SelectItem
-                                        value="Reject"
-                                        className="hover:!bg-gray-3 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
-                                    >
+                                    <SelectItem value="rejected">
                                         Mark as Rejected
                                     </SelectItem>
                                 </SelectContent>
                             </Select>
-                            <label
-                                htmlFor="name"
-                                className="block text-sm font-bold text-gray-700"
-                            >
+                            <label className="block text-sm font-bold text-gray-700">
                                 Attach a Message/Reason:
                             </label>
                             <textarea
-                                id="name"
-                                // value={
-                                //     orgs.name
-                                // }
-                                // onChange={
-                                //     handleChangeForNewOrg
-                                // }
                                 className="block w-full px-4 h-44 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 placeholder="(Optional)"
                             />
@@ -268,62 +289,15 @@ function ApplicationResponses() {
                         <div className="mt-4 grid justify-items-end">
                             <button
                                 type="submit"
-                                className="flex px-9  shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white"
+                                className="flex px-9 shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white"
                             >
-                                <span className="ml-2  poppins hidden truncate sm:block">
+                                <span className="ml-2 poppins hidden truncate sm:block">
                                     Set Status
                                 </span>
                             </button>
                         </div>
                     </form>
                 </AdminDialog>
-
-                {/* <AdminDropdownMenu
-                                                        triggerContent={
-                                                            
-                                                        }
-                                                        title="Select Action"
-                                                        dropdownItems={[
-                                                            {
-                                                                name: (
-                                                                    <AdminAlertDialog
-                                                                        trigger={`Assign as Staff for Back-end`}
-                                                                        title={`Assign this user?`}
-                                                                        description="Once confirmed, the user will automatically be added to your organization."
-                                                                        accept="Confirm"
-                                                                        // onclick={() =>
-                                                                        //     onDelete(
-                                                                        //         organization.orgID
-                                                                        //     )
-                                                                        // }
-                                                                    ></AdminAlertDialog>
-                                                                ),
-                                                                onSelect: (e) =>
-                                                                    e.preventDefault(),
-                                                            },
-                                                            {
-                                                                name: "Send Notification",
-                                                                value: "notif",
-                                                            },
-                                                            {
-                                                                name: (
-                                                                    <AdminAlertDialog
-                                                                        trigger={`Reject the applicant`}
-                                                                        title={`Reject this user?`}
-                                                                        description="Once rejected, the users application will be removed from the list."
-                                                                        accept="Confirm"
-                                                                        // onclick={() =>
-                                                                        //     onDelete(
-                                                                        //         organization.orgID
-                                                                        //     )
-                                                                        // }
-                                                                    ></AdminAlertDialog>
-                                                                ),
-                                                                onSelect: (e) =>
-                                                                    e.preventDefault(),
-                                                            },
-                                                        ]}
-                                                    /> */}
             </td>
         </tr>
     );

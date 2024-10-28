@@ -204,58 +204,59 @@ class FormController extends Controller
         return $rules;
     }
 
-    public function submitForm(Request $request)
-    {
+        public function submitForm(Request $request)
+        {
 
-        try{
+            try{
 
-            $user = Auth::user();
-            $validated = $request->validate([
-                'orgID'=>'required',
-                'formID' =>'required'
-            ]);
-
-            // $formLayout = $request->formLayout['layout'];
-
-            // $rules = $this->buildRules($formLayout);
-
-            // $request->validate($rules);
-
-            if(!$validated){
-                session()->flash('toast', [
-                    'title' => 'Error submitting the form',
-                    'description' => 'Please double check your inputs in the form.',
-                    'variant' => 'destructive'
+                $user = Auth::user();
+                $validated = $request->validate([
+                    'orgID'=>'required',
+                    'formID' =>'required'
                 ]);
+
+                // $formLayout = $request->formLayout['layout'];
+
+                // $rules = $this->buildRules($formLayout);
+
+                // $request->validate($rules);
+
+                if(!$validated){
+                    session()->flash('toast', [
+                        'title' => 'Error submitting the form',
+                        'description' => 'Please double check your inputs in the form.',
+                        'variant' => 'destructive'
+                    ]);
+                }
+
+                DB::table('applications')->insert(
+                    [
+                        'userID'=> $user->userID,
+                        'orgID'=> $validated['orgID'],
+                        'formID'=> $validated['formID']
+
+                    ],
+                    [
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                    );
+
+                    session()->flash('toast', [
+                        'title' => 'Application Submitted',
+                        'description' => 'Your application has been recorded. Please wait for the admin to process it.',
+                        'variant' => 'success'
+                    ]);
+
+                    return redirect()->route('organizations.home', ['orgID' => $validated['orgID']]);
+                
+            }catch (Exception $e){
+                return redirect()->back()->with('error');
             }
-
-            DB::table('applications')->insert(
-                [
-                    'userID'=> $user->userID,
-                    'orgID'=> $validated['orgID'],
-                    'formID'=> $validated['formID']
-
-                ],
-                [
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-                );
-
-                session()->flash('toast', [
-                    'title' => 'Application Submitted',
-                    'description' => 'Your application has been recorded. Please wait for the admin to process it.',
-                    'variant' => 'success'
-                ]);
-
-                return redirect()->route('organizations.home', ['orgID' => $validated['orgID']]);
-            
-        }catch (Exception $e){
-            return redirect()->back()->with('error');
         }
-    }
 
 
-    
+
+
 
 }

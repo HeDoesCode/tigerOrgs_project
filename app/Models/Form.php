@@ -30,4 +30,9 @@ class Form extends Model
     {
         return $this->belongsTo(Organization::class, 'orgID', 'orgID');
     }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'formID', 'formID');
+    }
 }
