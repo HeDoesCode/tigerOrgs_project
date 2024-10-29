@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
 use Exception;
 use App\Models\Form;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Organization;
+use App\Models\User;
+use App\Notifications\AcceptedApplicationNotification;
+use App\Notifications\PendingApplicationNotification;
+use App\Notifications\RejectedApplicationNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -255,6 +260,102 @@ class FormController extends Controller
             }
         }
 
+
+        public function setStatus(Request $request, $orgID){
+            try {
+                $validated = $request->validate([
+                    'applicationID' => 'required|exists:applications,applicationID',
+                    'formID' => 'required|exists:forms,formID',
+                    'userID' => 'required|exists:users,userID',
+                    'orgID' => 'required|exists:organizations,orgID',
+                    'status' => 'required',
+                    'message' => 'nullable|string' 
+                ]);
+        
+                $application = Application::where('applicationID', $validated['applicationID'])
+                    ->where('formID', $validated['formID'])
+                    ->where('userID', $validated['userID'])
+                    ->first();
+
+                //params that will be used for sending notif
+                $user = User::find($validated['userID']);
+                $org = Organization::find($validated['orgID']);
+        
+                if (!$application) {
+                    session()->flash('toast', [
+                        'title' => 'Application not found',
+                        'description' => 'Please try again.',
+                        'variant' => 'destructive'
+                    ]);
+                    return redirect()->back();
+                }
+        
+                if (in_array($validated['status'], ['accepted', 'rejected'])) {
+                    $application->status = $validated['status'];
+                    $application->save();
+        
+                    session()->flash('toast', [
+                        'title' => 'Status updated successfully',
+                        'description' => 'The application status has been updated.',
+                        'variant' => 'success'
+                    ]);
+
+                    if($validated['status'] === "accepted"){
+                        $user->notify(new AcceptedApplicationNotification($org, $validated['message']));
+                    }
+
+                    if($validated['status'] === "rejected"){
+                        $user->notify(new RejectedApplicationNotification($org, $validated['message']));
+                    }
+        
+                    return redirect()->back();
+                }
+        
+                if ($validated['status'] === "pending") {
+                    if (!empty($request->message)) {
+                        $application->status = $validated['status'];
+                        $application->additionalInstructions = $request->message;
+                        $application->save();
+        
+                        session()->flash('toast', [
+                            'title' => 'Status updated successfully',
+                            'description' => 'The application status has been updated with additional instructions.',
+                            'variant' => 'success'
+                        ]);
+
+                        $user->notify(new PendingApplicationNotification($org, $validated['message']));
+                        
+        
+                        return redirect()->back();
+                    } else {
+                        session()->flash('toast', [
+                            'title' => 'Additional Instruction or Message Required',
+                            'description' => 'Please provide additional instructions.',
+                            'variant' => 'destructive'
+                        ]);
+        
+                        return redirect()->back();
+                    }
+                }
+        
+                session()->flash('toast', [
+                    'title' => 'Invalid Status',
+                    'description' => 'The status provided is invalid.',
+                    'variant' => 'destructive'
+                ]);
+                
+                return redirect()->back();
+                
+            } catch (Exception $e) {
+                session()->flash('toast', [
+                    'title' => 'Error',
+                    'description' => 'An unexpected error occurred. Please try again.',
+                    'variant' => 'destructive'
+                ]);
+                return redirect()->back();
+            }
+        }
+        
 
 
 

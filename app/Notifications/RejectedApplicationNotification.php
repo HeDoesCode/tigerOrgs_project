@@ -59,7 +59,7 @@ class RejectedApplicationNotification extends Notification
         return [
             'org_logo' => $this->orgID->logo, 
             'org_name' => $this->orgID->name,
-            'message' => "Your application for this organization has been rejected.\n\n" . nl2br(e($this->message)),
+            'message' => "Your application for this organization has been rejected.<br><br>" . nl2br(e($this->message)),
         ];
     }
 }

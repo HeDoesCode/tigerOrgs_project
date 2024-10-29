@@ -1,4 +1,4 @@
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import MainAdminFrame from "@/Components/MainAdminFrame";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
@@ -18,14 +18,14 @@ import {
 function AdminManageApplication({ orgID, formsWithApplications }) {
     const [selectedFormId, setSelectedFormId] = useState(null);
 
+    const handleFormSelect = (formId) => {
+        setSelectedFormId(formId);
+    };
+
     const selectedForm = formsWithApplications.find(
         (form) => form.formID === selectedFormId
     );
     const hasApplications = selectedForm?.applications?.length > 0;
-
-    const handleFormSelect = (formId) => {
-        setSelectedFormId(formId);
-    };
 
     return (
         <div className="w-full">
@@ -131,6 +131,10 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                                                 application={
                                                                     application
                                                                 }
+                                                                orgID={orgID}
+                                                                selectedFormId={
+                                                                    selectedFormId
+                                                                }
                                                             />
                                                         )
                                                     )}
@@ -182,7 +186,7 @@ function ApplicationForms({
     );
 }
 
-function ApplicationResponses({ application }) {
+function ApplicationResponses({ application, orgID, selectedFormId }) {
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString("en-US", {
@@ -194,6 +198,64 @@ function ApplicationResponses({ application }) {
 
     // Now we can access user data through application.user
     const user = application.user;
+
+    const [status, setStatus] = useState("accepted");
+
+    const handleStatusValue = (value) => {
+        setStatus(value);
+    };
+
+    const [message, setMessage] = useState("");
+
+    const handleInputMessageValue = (value) => {
+        setMessage(value);
+    };
+
+    const [selectedUser, setselectedUser] = useState(null);
+
+    const handleUserSelect = (userId) => {
+        setselectedUser(userId);
+    };
+
+    const [selectedApplicationId, setselectedApplicationId] = useState(null);
+
+    const handleApplicationSelect = (applicationId) => {
+        setselectedApplicationId(applicationId);
+    };
+
+    function handleStatusSubmit(e) {
+        e.preventDefault();
+
+        router.patch(
+            route("admin.setStatus", orgID),
+            {
+                formID: selectedFormId,
+                userID: selectedUser,
+                applicationID: selectedApplicationId,
+                orgID: orgID,
+                status: status,
+                message: message,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    setStatus("accepted");
+                    setMessage("");
+                },
+                onError: () => {
+                    console.error("Save failed. Please try again.");
+                },
+            }
+        );
+
+        console.log(selectedApplicationId);
+        console.log(status);
+        console.log(selectedUser);
+        console.log(orgID);
+        console.log(message);
+        console.log(selectedFormId);
+    }
 
     return (
         <tr className="grid grid-cols-1 hover:bg-gray-100 lg:grid-cols-9 py-2 text-center min-h-16">
@@ -248,9 +310,18 @@ function ApplicationResponses({ application }) {
 
                 <AdminDialog
                     title={`Set the Status for Applicant ${user?.firstname} ${user?.lastname}`}
-                    trigger={<DotsVertical />}
+                    trigger={
+                        <DotsVertical
+                            onClick={() => {
+                                handleUserSelect(user?.userID);
+                                handleApplicationSelect(
+                                    application.applicationID
+                                );
+                            }}
+                        />
+                    }
                 >
-                    <form className="space-y-4">
+                    <form onSubmit={handleStatusSubmit} className="space-y-4">
                         <div className="space-y-2">
                             <label className="block text-sm font-bold text-gray-700">
                                 Select a Status to be Set for this Application:
@@ -258,9 +329,10 @@ function ApplicationResponses({ application }) {
                             <Select
                                 defaultValue={
                                     application.status === "submitted"
-                                        ? "assigned"
+                                        ? "accepted"
                                         : application.status
                                 }
+                                onValueChange={handleStatusValue}
                             >
                                 <SelectTrigger className="w-full h-12 mb border-gray-300 bg-transparent">
                                     <SelectValue placeholder="Set Status" />
@@ -282,7 +354,14 @@ function ApplicationResponses({ application }) {
                             </label>
                             <textarea
                                 className="block w-full px-4 h-44 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                placeholder="(Optional)"
+                                placeholder={
+                                    status === "pending"
+                                        ? "(This field is required)"
+                                        : "(Optional)"
+                                }
+                                onChange={(e) =>
+                                    handleInputMessageValue(e.target.value)
+                                }
                             />
                         </div>
 
