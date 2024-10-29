@@ -58,6 +58,8 @@ class isAdmin
             // abort(response('You are not assigned an admin role to this page', 401));
             // abort(403, 'Sorry, you are not allowed to access this page/');
             abort(403, 'Sorry, this page is inaccessible');
+
+            
         }
     }
 }

@@ -370,7 +370,7 @@ class AdminController extends Controller
                 
                 session()->flash('toast', [
                     'title' => 'Failed to the add the user',
-                    'description' => 'The organization already has the maximum number of admins (Max: 2).',
+                    'description' => 'The organization already has the maximum number of admins (Max: 3).',
                     'variant' => 'destructive'
                 ]);
                 return redirect()->back();
