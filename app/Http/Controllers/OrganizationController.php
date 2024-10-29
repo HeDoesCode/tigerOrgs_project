@@ -183,7 +183,7 @@ class OrganizationController extends Controller
             ->select('*')
             ->get();
 
-        $organizationName = Organization::find($orgID)->value('name');
+        $organizationName = Organization::find($orgID)->name;
 
         if ($following->isNotEmpty()) { // User is following org
             DB::table('organization_followers')
