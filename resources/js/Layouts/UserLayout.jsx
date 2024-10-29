@@ -499,9 +499,6 @@ function UserLayout({ children, bgImage, noPadding }) {
                                         {getStatusText(application.status)}
                                     </div>
                                 </div>
-                                <div className="poppins text-[0.7rem] text-gray-500 mt-2">
-                                    {dayjs(application.created_at).fromNow()}
-                                </div>
                             </div>
                         </div>
                     ))
