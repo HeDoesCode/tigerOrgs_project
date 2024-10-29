@@ -13,6 +13,7 @@ import IconSearch from "@/Components/Icons/IconSearch";
 import Searchbar from "@/Components/Searchbar";
 import AdminDialog from "@/Components/Admin/AdminDialog";
 import { Switch } from "@/Components/ui/switch";
+import CustomPagination from "@/Components/CustomPagination";
 
 import {
     Select,
@@ -29,20 +30,24 @@ export default function SuperAdminManage({
 }) {
     const [isRecruitmentEnabled, setIsRecruitmentEnabled] =
         useState(recruitment);
-
     const [searchQuery, setSearchQuery] = useState("");
-    const [allOrganizations, setAllOrganizations] = useState(organizations);
-    const [filteredOrganizations, setFilteredOrganizations] =
-        useState(organizations);
     const [selectedDepartment, setSelectedDepartment] = useState("All");
     const [availableDepartments, setAvailableDepartments] =
         useState(departments);
     const [edit, setEdit] = useState(false);
+    const [allOrganizations, setAllOrganizations] = useState(
+        organizations.data || []
+    );
+
+    // Initialize visibleStates with the current page's organizations
     const [visibleStates, setVisibleStates] = useState(
-        organizations.reduce((acc, org) => {
+        organizations.data.reduce((acc, org) => {
             acc[org.orgID] = org.visibility;
             return acc;
         }, {})
+    );
+    const [filteredOrganizations, setFilteredOrganizations] = useState(
+        organizations.data
     );
 
     //for toggling recruitment
@@ -102,9 +107,9 @@ export default function SuperAdminManage({
         setSelectedDepartment(value);
     };
 
-    //for saving forms
+    // for saving forms
     const { data, setData, post, processing, reset } = useForm({
-        organizations: organizations.map((org) => ({
+        organizations: allOrganizations.map((org) => ({
             id: org.orgID,
             visibility: org.visibility,
         })),
@@ -113,7 +118,7 @@ export default function SuperAdminManage({
     useEffect(() => {
         setData(
             "organizations",
-            organizations.map((org) => ({
+            allOrganizations.map((org) => ({
                 id: org.orgID,
                 visibility: visibleStates[org.orgID],
             }))
@@ -199,26 +204,30 @@ export default function SuperAdminManage({
     const [editingOrg, setEditingOrg] = useState(null);
 
     function handleEditOrg(orgId, updatedData) {
-        router.post(route("superadmin.editOrg"), {
-            orgId: orgId,
-            name: updatedData.name,
-            department: updatedData.department
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: (page) => {
-                const updatedOrganizations = page.props.organizations;
-                setAllOrganizations(updatedOrganizations);
-
-                const updatedDepartments = page.props.departments;
-                if (updatedDepartments) {
-                    setAvailableDepartments(updatedDepartments);
-                }
+        router.post(
+            route("superadmin.editOrg"),
+            {
+                orgId: orgId,
+                name: updatedData.name,
+                department: updatedData.department,
             },
-            onError: () => {
-                console.error("Failed to update organization");
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    const updatedOrganizations = page.props.organizations;
+                    setAllOrganizations(updatedOrganizations);
+
+                    const updatedDepartments = page.props.departments;
+                    if (updatedDepartments) {
+                        setAvailableDepartments(updatedDepartments);
+                    }
+                },
+                onError: () => {
+                    console.error("Failed to update organization");
+                },
             }
-        });
+        );
     }
 
     // function to handle organization deletion
@@ -227,21 +236,17 @@ export default function SuperAdminManage({
             preserveState: true,
             preserveScroll: true,
             onSuccess: (page) => {
-                
                 const updatedOrganizations = allOrganizations.filter(
-                    org => org.orgID !== orgId
+                    (org) => org.orgID !== orgId
                 );
                 setAllOrganizations(updatedOrganizations);
                 setFilteredOrganizations(updatedOrganizations);
             },
             onError: () => {
                 console.error("Failed to delete organization");
-            }
+            },
         });
     }
-
-
-
     return (
         <div className="w-full">
             <Head title="OSA Dashboard" />
@@ -470,6 +475,9 @@ export default function SuperAdminManage({
                                         onDelete={handleDeleteOrg}
                                     />
                                 ))}
+                                <div className="fixed w-screen bottom-0 left-0 right-0 pl-8 sm:pl-24 pr-10 pb-3 flex justify-center">
+                                    <CustomPagination page={organizations} />
+                                </div>
                             </div>
                         )}
                     </div>
