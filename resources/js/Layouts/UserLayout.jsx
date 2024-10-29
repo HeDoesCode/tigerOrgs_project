@@ -268,12 +268,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                                 value="applications"
                                 className="data-[state=active]:bg-gray-800 data-[state=active]:text-white rounded-lg"
                             >
-                                <div className="relative">
-                                    Applications
-                                    <span className="absolute -right-3 -top-1 text-[0.6rem] rounded-full bg-red-600 size-4 flex justify-center items-center text-white font-normal">
-                                        15
-                                    </span>
-                                </div>
+                                <div className="relative">Applications</div>
                             </TabsTrigger>
                         </TabsList>
 
@@ -369,80 +364,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                                 </div>
                             </TabsContent>
                             <TabsContent value="applications">
-                                <div className="flex flex-col space-y-3 max-h-[20rem] overflow-y-auto">
-                                    <div className="flex space-x-3">
-                                        <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                            <img
-                                                src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
-                                                alt=""
-                                                className="size-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <div className="flex items-center">
-                                                <div className="font-bold">
-                                                    TomasinoWeb
-                                                </div>
-                                                <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">
-                                                    2 days ago
-                                                </div>
-                                            </div>
-                                            <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
-                                                <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">
-                                                    View
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex space-x-3">
-                                        <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                            <img
-                                                src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
-                                                alt=""
-                                                className="size-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <div className="flex items-center">
-                                                <div className="font-bold">
-                                                    TomasinoWeb
-                                                </div>
-                                                <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">
-                                                    2 days ago
-                                                </div>
-                                            </div>
-                                            <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
-                                                <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">
-                                                    View
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex space-x-3">
-                                        <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
-                                            <img
-                                                src="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/270248466_309421074524208_4699754745554854022_n.jpg?stp=dst-jpg_p200x200&_nc_cat=110&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFIX-PZOCvY39Ts0B0EZaYlyZODIdEpl6nJk4Mh0SmXqUmobdwUBHr2A_Cqb_c3ZRWCXgIJ2s0dEWz3NhEBe8Vb&_nc_ohc=gi9nCJxHWRkQ7kNvgH8Yjod&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYCZDAzaJMlBWPgXrJSuBI4lc7XbxXx3uHykIXWhLWwMRw&oe=66C8B8A4"
-                                                alt=""
-                                                className="size-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <div className="flex items-center">
-                                                <div className="font-bold">
-                                                    TomasinoWeb
-                                                </div>
-                                                <div className="flex-1 flex flex-nowrap poppins text-[0.7rem] text-gray-500 ml-3 w-max">
-                                                    2 days ago
-                                                </div>
-                                            </div>
-                                            <div className="mt-2 flex flex-nowrap space-x-5 poppins text-xs text-white">
-                                                <div className="px-8 py-2 bg-[#04AA6D] font-semibold rounded-full">
-                                                    View
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <ApplicationNotifications />
                             </TabsContent>
                         </div>
                     </Tabs>
@@ -505,6 +427,91 @@ function UserLayout({ children, bgImage, noPadding }) {
                 </DropdownMenu>
             );
         }
+    }
+
+    function ApplicationNotifications() {
+        const { applications } = usePage().props;
+
+        const getStatusColor = (status) => {
+            switch (status) {
+                case "accepted":
+                    return "bg-green-500";
+                case "rejected":
+                    return "bg-red-500";
+                case "pending":
+                    return "bg-yellow-500";
+                default:
+                    return "bg-blue-500";
+            }
+        };
+
+        const getStatusText = (status) => {
+            switch (status) {
+                case "accepted":
+                    return "Accepted";
+                case "rejected":
+                    return "Rejected";
+                case "pending":
+                    return "Under Review";
+                default:
+                    return "Submitted";
+            }
+        };
+
+        return (
+            <div className="flex flex-col space-y-3 max-h-[20rem] overflow-y-auto">
+                {applications.length > 0 ? (
+                    applications.map((application) => (
+                        <div
+                            key={application.applicationID}
+                            className="flex space-x-3"
+                        >
+                            <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
+                                <img
+                                    src={
+                                        application.organization.logo ||
+                                        "/api/placeholder/64/64"
+                                    }
+                                    alt={application.organization.name}
+                                    className="size-full object-cover"
+                                />
+                            </div>
+                            <div className="flex flex-col flex-1">
+                                <div className="flex items-center justify-between">
+                                    <div className="font-bold text-sm">
+                                        {application.organization.name}
+                                    </div>
+                                </div>
+                                <div className="poppins line-clamp-2 text-sm font-light mt-1">
+                                    Current status of your application:{" "}
+                                    {application.form}
+                                    {console.log(application)}
+                                </div>
+                                <div className="mt-1 flex flex-nowrap space-x-5 poppins text-xs text-white">
+                                    <div
+                                        // href={route("applications.view", {
+                                        //     id: application.applicationID,
+                                        // })}
+                                        className={`px-8 py-2 ${getStatusColor(
+                                            application.status
+                                        )} font-semibold rounded-full  transition-opacity`}
+                                    >
+                                        {getStatusText(application.status)}
+                                    </div>
+                                </div>
+                                <div className="poppins text-[0.7rem] text-gray-500 mt-2">
+                                    {dayjs(application.created_at).fromNow()}
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className="text-center py-4 text-gray-500">
+                        No applications found.
+                    </div>
+                )}
+            </div>
+        );
     }
 }
 

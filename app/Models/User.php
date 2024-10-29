@@ -58,6 +58,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Keyword::class, 'user_keywords', 'userID', 'keyID');
     }
 
+    public function applications()
+    {
+    return $this->hasMany(Application::class, 'userID', 'userID');
+    }
+
+
     protected $hidden = [
         // 'password',
         'remember_token',

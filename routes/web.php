@@ -38,6 +38,7 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
     //for notif
     Route::get('/notifications/fetch', [NotificationController::class, 'fetch'])->name('notifications.fetch');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
+    Route::post('/applications/{application}/status', [NotificationController::class, 'updateStatus'])->name('notifications.updateStatus');
 
     
     Route::prefix('organizations')->group(function () {
