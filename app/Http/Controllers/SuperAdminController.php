@@ -121,7 +121,10 @@ class SuperAdminController extends Controller
     public function manage()
     {
 
-        $organizations = Organization::withCount('members')->get();
+        $organizations = Organization::withCount('members')     
+        // ->get();
+        ->paginate(20);
+
 
         $recruitment = DB::table('settings')->where('name', 'Recruitment')->value('status');
 
@@ -237,7 +240,8 @@ class SuperAdminController extends Controller
             ->select('users.userID', 'users.email', 'users.firstname', 'users.lastname', 'users.college', 'users.status')
             ->distinct()
             ->withCount('organizations')
-            ->get();
+            // ->get();
+            ->paginate(20);
 
 
 
