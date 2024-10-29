@@ -51,6 +51,12 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                             link: "admin.formhistory",
                             params: { orgID },
                         },
+                        {
+                            icon: <IconCheckBox />,
+                            label: "Manage Criteria",
+                            link: "admin.criteria.index",
+                            params: { orgID },
+                        },
                     ]}
                     title="Manage Student Applications"
                 >

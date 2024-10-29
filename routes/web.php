@@ -11,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\BackendTestingController;
+use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\FormsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FormController;
@@ -119,6 +120,9 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::post('make-admin', 'makeAdmin')->name('make-admin');
         Route::post('make-member', 'makeMember')->name('make-member');
         Route::post('remove-student', 'removeStudent')->name('remove-student');
+
+        // manage criteria
+        Route::resource('criteria', CriteriaController::class)->only(['index', 'store', 'create', 'update', 'destroy', 'edit']);
 
         // form builder routes
         Route::get('/form-builder', [FormController::class, 'showBuilder'])->name('formbuilder');
