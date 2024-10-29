@@ -41,7 +41,7 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
     Route::post('/applications/{application}/status', [NotificationController::class, 'updateStatus'])->name('notifications.updateStatus');
 
-    
+
     Route::prefix('organizations')->group(function () {
         Route::get('/', [OrganizationController::class, 'browse'])->name('organizations');
         Route::get('/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
@@ -101,11 +101,13 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
     ->controller(AdminController::class)
     ->group(function () {
         Route::get('editpage', 'edit')->name('editpage');
-        Route::post('save/{section}', 'saveEdit');
         Route::get('invite', 'invite')->name('invite');
         Route::post('addMember/{userID}', 'addMember')->name('add-member')->middleware(isSameDepartment::class);
         Route::get('applications', 'applications')->name('applications');
         Route::post('makeAnnouncement', 'makeAnnouncement')->name('makeAnnouncement');
+
+        //edit page
+        Route::post('save', 'saveEdit')->name('saveEditPage');
 
         // manage forms
         Route::post('toggle-recruitment', 'toggleRecruitment')->name('toggle-recruitment');

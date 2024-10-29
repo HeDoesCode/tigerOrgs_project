@@ -36,13 +36,13 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
             <UserLayout bgImage={bgImage} noPadding>
                 <div className="w-full flex-1 flex justify-center items-center relative">
                     <img
-                        className="absolute bottom-[-3.3rem] sm:bottom-[-4.3rem] right-[3%] h-36 sm:h-56"
+                        className="absolute bottom-[-3.3rem] sm:bottom-[-4.3rem] right-[3%] h-36 sm:h-56 pointer-events-none"
                         src={tiger1}
                         alt="tiger1"
                         onError={hideImage}
                     />
                     <img
-                        className="absolute top-[-0.5rem] left-[5%] rotate-180 h-40 sm:h-60"
+                        className="absolute top-[-0.5rem] left-[5%] rotate-180 h-40 sm:h-60 pointer-events-none"
                         src={tiger2}
                         alt="tiger2"
                         onError={hideImage}

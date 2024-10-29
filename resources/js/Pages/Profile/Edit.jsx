@@ -5,7 +5,7 @@ import KeywordSelect from "@/Components/Organizations/KeywordSelect";
 import React, { useState } from "react";
 
 function Edit({ user, activeUserKeywords, keywords }) {
-    const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
+    const fullName = `${user.firstname} ${user.middlename} ${user.lastname}`;
     const userSectionError = user.section != null ? null : 'Specify Section'; // if section exists, no error
 
     return (
@@ -98,7 +98,7 @@ function Edit({ user, activeUserKeywords, keywords }) {
                         className='w-full rounded-l-lg focus:border-black border-transparent'
                         value={sectionString}
                         onChange={handleSectionStringChange}
-                        onKeyDown={handleSectionKeyDown}
+                    // onKeyDown={handleSectionKeyDown}
                     // onBlur={() => setSectionString(user.section || '')}
                     />
                     {sectionString !== user.section && (
@@ -106,8 +106,8 @@ function Edit({ user, activeUserKeywords, keywords }) {
                             Cancel
                         </button>
                     )}
-                    <button className={`rounded-r-lg border-l border-l-gray-200 px-3 ${sectionString !== user.section ? 'hover:bg-black/5 text-black' : 'cursor-not-allowed text-gray-500'}`}
-                        disabled={sectionString === user.section} onClick={() => patchSection(sectionString)}
+                    <button className={`rounded-r-lg border-l border-l-gray-200 disabled:bg-gray-200 px-3 ${sectionString !== user.section ? 'hover:bg-black/5 text-black' : 'cursor-not-allowed text-gray-500'}`}
+                        disabled={sectionString === user.section || sectionString === ''} onClick={() => patchSection(sectionString)}
                     >
                         Save
                     </button>

@@ -24,6 +24,7 @@ class OrganizationController extends Controller
             ->join('user_keywords', 'organization_keywords.keyID', '=', 'user_keywords.keyID')
             ->leftJoin('organization_user_role', 'organizations.orgID', '=', 'organization_user_role.orgID')
             ->where('user_keywords.userID', Auth::id())
+            ->where('organizations.visibility', 1)
             ->select(
                 'organizations.recruiting',
                 'organizations.logo',
@@ -44,14 +45,19 @@ class OrganizationController extends Controller
             ->map(function ($organization) {
                 $organization->photos = DB::table('organization_photos')
                     ->where('orgID', $organization->orgID)
-                    ->select('*')->get();
+                    ->select('*')->get()->map(function ($photo) {
+                        $photo->filename = Storage::url('photo/' . $photo->filename);
+                        return $photo;
+                    });
+
+                $organization->logo = Storage::url('logo/' . $organization->logo);
                 return $organization;
             });
     }
 
     public function browse(Request $request): Response
     {
-        $this->getRecommendations();
+        // $this->getRecommendations();
         $query = Organization::query();
         $queryParameters = [];
 
@@ -89,12 +95,21 @@ class OrganizationController extends Controller
         }
 
         $organizations = $query
-            // only visible orgs included
-            ->where('visibility', 1)
-            // attach photos
-            ->with('photos')
-            ->withCount('members')
-            ->get();
+            ->where('visibility', 1)    // Only include visible organizations
+            ->with('photos')             // Attach photos relationship
+            ->withCount('members')       // Attach member count
+            ->get()
+            ->map(function ($organization) {
+                // Map over each photo to modify its URL
+                $organization->photos = $organization->photos->map(function ($photo) {
+                    $photo->filename = Storage::url('photo/' . $photo->filename);
+                    return $photo;
+                });
+                $organization->logo = Storage::url('logo/' . $organization->logo);
+                return $organization;
+            });
+
+        // dd($organizations);
 
         // get all available keywords
         $keywords = Keyword::pluck('keyword', 'keyID');
@@ -114,7 +129,13 @@ class OrganizationController extends Controller
             // ->limit(10) // remove in production
             ->orderBy('organizations.name', 'asc')
             ->get()
-            ->sortBy('name');
+            ->sortBy('name')
+            ->map(
+                function ($organization) {
+                    $organization->logo = Storage::url('logo/' . $organization->logo);
+                    return $organization;
+                }
+            );
 
         $isSuperAdmin = DB::table('organization_user_role')
             ->where('userID', Auth::id())
@@ -139,9 +160,7 @@ class OrganizationController extends Controller
             ->with('officers.user')
             ->with('contacts')
             ->findOrFail($orgID);
-        // try {
 
-        // }
         $pageData = [
             'metadata' => [
                 'organizationName' => $organization->name,
@@ -251,7 +270,7 @@ class OrganizationController extends Controller
                 'photoID' => $photo['photoID'],
                 'orgID' => $photo['orgID'],
                 'caption' => $photo['caption'],
-                'filename' => Storage::url('public/org_photos/' . $photo['filename']),
+                'filename' => Storage::url('photo/' . $photo['filename']),
             ];
         }
 
@@ -261,6 +280,7 @@ class OrganizationController extends Controller
     public function getPageLayoutData($orgID)
     {
         $organization = Organization::withCount('members')
+            ->with('keywords')
             ->findOrFail($orgID);
 
         $isInOrgHome = Route::currentRouteName() === 'organizations.home';
@@ -275,9 +295,11 @@ class OrganizationController extends Controller
         return [
             'forms' => $deployedForms,
             'orgID' => $organization->orgID,
-            'logo' => Storage::url("public/logos/" . $organization->logo),
-            'coverPhoto' => Storage::url("public/covers/" . $organization->cover),
+            'logo' => Storage::url("public/logo/" . $organization->logo),
+            'coverPhoto' => Storage::url("public/coverPhoto/" . $organization->coverPhoto),
             'metadata' => [
+                'keywords' => $organization->keywords ?: [],
+                'department' => $organization->department,
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,
             ],
