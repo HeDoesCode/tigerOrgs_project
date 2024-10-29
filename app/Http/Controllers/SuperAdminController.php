@@ -123,7 +123,7 @@ class SuperAdminController extends Controller
 
         $organizations = Organization::withCount('members')     
         // ->get();
-        ->paginate(20);
+        ->paginate(12);
 
 
         $recruitment = DB::table('settings')->where('name', 'Recruitment')->value('status');
