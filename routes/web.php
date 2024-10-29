@@ -111,6 +111,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::patch('forms/{formID}/deploy/{deploy}', [FormController::class, 'setFormDeploy'])
             ->where(['deploy' => '^(true|false)$'])->name('forms.setDeploy');
         Route::get('formhistory', 'formhistory')->name('formhistory');
+        Route::patch('setStatus', [FormController::class, 'setStatus'])->name('setStatus');
 
         // manage admin
         Route::get('search-users', 'search');
