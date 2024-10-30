@@ -86,6 +86,10 @@ Route::prefix('/superadmin/')
         Route::get('dataupload', 'fileupload')->name('dataupload');
         Route::post('dataupload/file', 'upload')->name('dataupload.file');
 
+        //download page
+        Route::get('datadownload', 'filedownload')->name('filedownload');
+        Route::get('member-export', 'export');
+
         // routes for activity log tab
         Route::get('loginhistory', 'viewLoginHistory')->name('loginhistory');
 
