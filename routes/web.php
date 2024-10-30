@@ -102,6 +102,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
     ->group(function () {
         Route::get('editpage', 'edit')->name('editpage');
         Route::post('save/{section}', 'saveEdit');
+        Route::post('save', 'saveEdit')->name('saveEditPage');
         Route::get('invite', 'invite')->name('invite');
         Route::post('addMember/{userID}', 'addMember')->name('add-member')->middleware(isSameDepartment::class);
         Route::get('applications', 'applications')->name('applications');
