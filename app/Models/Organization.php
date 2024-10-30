@@ -68,4 +68,14 @@ class Organization extends Model
     {
         return $this->hasMany(Form::class, 'orgID', 'orgID');
     }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class, 'orgID', 'orgID');
+    }   
+
+    public function criteria(): HasMany
+    {
+        return $this->hasMany(Criteria::class, 'orgID', 'orgID');
+    }
 }

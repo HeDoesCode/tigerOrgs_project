@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\Criteria;
 use Exception;
 use App\Models\Form;
 use Illuminate\Http\RedirectResponse;
@@ -16,39 +17,50 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Smalot\PdfParser\Parser;
 
 class FormController extends Controller
 {
     // strictly for admin
     public function showBuilder($orgID)
     {
-        $organizations = Organization::find($orgID);
+        $organizations = Organization::with('criteria')->find($orgID);
 
         return Inertia::render('Admin/AdminFormBuilder', [
             'orgID' => $organizations->orgID,
+            'criterias'=> $organizations->criteria
         ]);
     }
 
     public function showBuilderEdit($orgID, $formID)
     {
-        $organizations = Organization::find($orgID);
+        $organizations = Organization::with('criteria')->find($orgID);
 
         $form = Form::find($formID);
 
         return Inertia::render('Admin/AdminFormBuilder', [
             'orgID' => $organizations->orgID,
             'formData' => $form,
+            'criterias'=> $organizations->criteria
         ]);
     }
 
     public function saveForm(Request $request, $orgID)
     {   
+
         try {
             $formLayout = $request->getContent();
             $validationRules = $this->buildRules(json_decode($formLayout, true)['layout']);
 
+            $criteria = $request->input('criteria'); 
+
+            $criteriaID = $criteria ? Criteria::where('criteriaID', $criteria)->value('criteriaID') : null;
+
+            
+
             Form::create([
                 'orgID' => $orgID,
+                'criteriaID' => $criteriaID,
                 'formLayout' => json_decode($formLayout),
                 'validationRules' => $validationRules,
             ]);
@@ -82,7 +94,12 @@ class FormController extends Controller
             $updatedFormLayout = $request->getContent();
             $updatedValidationRules = $this->buildRules(json_decode($updatedFormLayout, true)['layout']);
 
+            $criteria = $request->input('criteria'); 
+
+            $criteriaID = $criteria ? Criteria::where('criteriaID', $criteria)->value('criteriaID') : null;
+
             $form->update([
+                'criteriaID' => $criteriaID,
                 'formLayout' => json_decode($updatedFormLayout),
                 'validationRules' => $updatedValidationRules,
             ]);
@@ -209,69 +226,93 @@ class FormController extends Controller
         return $rules;
     }
 
-        public function submitForm(Request $request)
-        {
-
-            try{
-
-                $user = Auth::user();
-                $validated = $request->validate([
-                    'orgID'=>'required',
-                    'formID' =>'required',
-                    'userData' => 'required|array',
-                    'formLayout' => 'required|array'
+    public function submitForm(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $validated = $request->validate([
+                'orgID' => 'required',
+                'formID' => 'required',
+                'userData' => 'required|array',
+                'formLayout' => 'required|array'
+            ]);
+    
+            if (!$validated) {
+                session()->flash('toast', [
+                    'title' => 'Error submitting the form',
+                    'description' => 'Please double check your inputs in the form.',
+                    'variant' => 'destructive'
                 ]);
-
-                if(!$validated){
-                    session()->flash('toast', [
-                        'title' => 'Error submitting the form',
-                        'description' => 'Please double check your inputs in the form.',
-                        'variant' => 'destructive'
-                    ]);
-                }
-
-                $formLayout = $validated['formLayout'];
-                $userData = $validated['userData'];
-
-
-                foreach ($formLayout['layout'] as &$item) {
-                    $fieldName = $item['name'];
-                    
-                    $key = str_replace(' ', '_', strtolower($fieldName));
-                    
-                    if (isset($userData[$key])) {
-                        $item['value'] = $userData[$key];
-                    }
-                }
-
-                DB::table('applications')->insert(
-                    [
-                        'userID'=> $user->userID,
-                        'orgID'=> $validated['orgID'],
-                        'formID'=> $validated['formID'],
-                        'userData' => json_encode($formLayout),
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ],
-                    [
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]
-                    );
-
-                    session()->flash('toast', [
-                        'title' => 'Application Submitted',
-                        'description' => 'Your application has been recorded. Please wait for the admin to process it.',
-                        'variant' => 'success'
-                    ]);
-
-                    return redirect()->route('organizations.home', ['orgID' => $validated['orgID']]);
-                
-            }catch (Exception $e){
-                return redirect()->back()->with('error');
             }
-        }
+    
+            $formLayout = $validated['formLayout'];
+            $userData = $validated['userData'];
 
+            
+    
+            foreach ($formLayout['layout'] as &$item) {
+                $fieldName = $item['name'];
+                $key = str_replace(' ', '_', strtolower($fieldName));
+                
+                if ($item['type'] === 'file_upload') {
+                    // check if we have the file in userData
+                    if (isset($userData[$key]) && $userData[$key] instanceof \Illuminate\Http\UploadedFile) {
+                        $file = $userData[$key];
+
+                        
+                        if ($file->getClientMimeType() === 'application/pdf') {
+                            try {
+                                $parser = new Parser();
+                                $pdf = $parser->parseFile($file->getRealPath());
+                                $text = $pdf->getText();
+    
+                                // store the extracted text in the item's value
+                                $item['value'] = [
+                                    'content' => $text,
+                                    'original_filename' => $file->getClientOriginalName(),
+                                    'extracted_at' => now()->toDateTimeString(),
+                                    'file_size' => $file->getSize()
+                                ];
+                            } catch (\Exception $e) {
+                                
+                                throw new Exception('Failed to parse PDF: ' . $e->getMessage());
+                            }
+                        } else {
+                            throw new Exception('Uploaded file must be a PDF');
+                        }
+                    }
+                } elseif (isset($userData[$key])) {
+                    $item['value'] = $userData[$key];
+                }
+    
+            }
+    
+            DB::table('applications')->insert([
+                'userID' => $user->userID,
+                'orgID' => $validated['orgID'],
+                'formID' => $validated['formID'],
+                'userData' => json_encode($formLayout),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+    
+            session()->flash('toast', [
+                'title' => 'Application Submitted',
+                'description' => 'Your application has been recorded. Please wait for the admin to process it.',
+                'variant' => 'success'
+            ]);
+    
+            return redirect()->route('organizations.home', ['orgID' => $validated['orgID']]);
+            
+        } catch (Exception $e) {
+            session()->flash('toast', [
+                'title' => 'Error Processing PDF',
+                'description' => $e->getMessage(),
+                'variant' => 'destructive'
+            ]);
+            return redirect()->back();
+        }
+    }
 
         public function setStatus(Request $request, $orgID){
             try {
