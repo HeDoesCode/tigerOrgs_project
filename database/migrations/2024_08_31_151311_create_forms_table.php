@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('forms', function (Blueprint $table) {
             $table->id('formID');
             $table->foreignId('orgID')->constrained('organizations', 'orgID')->onDelete('cascade');
+            $table->foreignId('criteriaID')->nullable()->constrained('criteria', 'criteriaID')->nullOnDelete();
             $table->boolean('deployed')->default(false);
             $table->json('formLayout');
             $table->json('validationRules');
