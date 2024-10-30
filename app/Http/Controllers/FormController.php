@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\Criteria;
 use Exception;
 use App\Models\Form;
 use Illuminate\Http\RedirectResponse;
@@ -51,13 +52,16 @@ class FormController extends Controller
             $formLayout = $request->getContent();
             $validationRules = $this->buildRules(json_decode($formLayout, true)['layout']);
 
-            $criteria = $request->validate([
-                'criteria'=> 'required|exists:criteria,criteriaID'
-            ]);
+            $criteria = $request->input('criteria'); 
+
+
+            $criteriaID = $criteria ? Criteria::where('criteriaID', $criteria)->value('criteriaID') : null;
+
+            
 
             Form::create([
                 'orgID' => $orgID,
-                'criteriaI' => $criteria,
+                'criteriaID' => $criteriaID,
                 'formLayout' => json_decode($formLayout),
                 'validationRules' => $validationRules,
             ]);
@@ -91,7 +95,14 @@ class FormController extends Controller
             $updatedFormLayout = $request->getContent();
             $updatedValidationRules = $this->buildRules(json_decode($updatedFormLayout, true)['layout']);
 
+
+            $criteria = $request->input('criteria'); 
+
+
+            $criteriaID = $criteria ? Criteria::where('criteriaID', $criteria)->value('criteriaID') : null;
+
             $form->update([
+                'criteriaID' => $criteriaID,
                 'formLayout' => json_decode($updatedFormLayout),
                 'validationRules' => $updatedValidationRules,
             ]);

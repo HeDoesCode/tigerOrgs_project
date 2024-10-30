@@ -108,7 +108,9 @@ function FormBuilder({ orgID, formData, criterias }) {
         setItems(items.filter((item) => item.id !== id));
     }
 
-    const [criteriaSelected, setCriteriaSelected] = useState("");
+    const [criteriaSelected, setCriteriaSelected] = useState(
+        formData?.criteriaID || ""
+    );
 
     const handleSave = () => {
         const dataToBeSent = {
