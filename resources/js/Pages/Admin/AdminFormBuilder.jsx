@@ -6,7 +6,7 @@ import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import FormBuilder from "@/Components/Forms/Form-Builder/FormBuilder";
 
-function AdminFormBuilder({ orgID, formData }) {
+function AdminFormBuilder({ orgID, formData, criterias }) {
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
@@ -40,7 +40,11 @@ function AdminFormBuilder({ orgID, formData }) {
                     ]}
                     title="Manage Recruitment Form"
                 >
-                    <FormBuilder orgID={orgID} formData={formData} />
+                    <FormBuilder
+                        orgID={orgID}
+                        formData={formData}
+                        criterias={criterias}
+                    />
                 </MainAdminFrame>
             </AdminLayout>
         </div>

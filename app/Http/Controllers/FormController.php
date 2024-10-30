@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\Criteria;
 use Exception;
 use App\Models\Form;
 use Illuminate\Http\RedirectResponse;
@@ -22,33 +23,43 @@ class FormController extends Controller
     // strictly for admin
     public function showBuilder($orgID)
     {
-        $organizations = Organization::find($orgID);
+        $organizations = Organization::with('criteria')->find($orgID);
 
         return Inertia::render('Admin/AdminFormBuilder', [
             'orgID' => $organizations->orgID,
+            'criterias'=> $organizations->criteria
         ]);
     }
 
     public function showBuilderEdit($orgID, $formID)
     {
-        $organizations = Organization::find($orgID);
+        $organizations = Organization::with('criteria')->find($orgID);
 
         $form = Form::find($formID);
 
         return Inertia::render('Admin/AdminFormBuilder', [
             'orgID' => $organizations->orgID,
             'formData' => $form,
+            'criterias'=> $organizations->criteria
         ]);
     }
 
     public function saveForm(Request $request, $orgID)
     {   
+
         try {
             $formLayout = $request->getContent();
             $validationRules = $this->buildRules(json_decode($formLayout, true)['layout']);
 
+            $criteria = $request->input('criteria'); 
+
+            $criteriaID = $criteria ? Criteria::where('criteriaID', $criteria)->value('criteriaID') : null;
+
+            
+
             Form::create([
                 'orgID' => $orgID,
+                'criteriaID' => $criteriaID,
                 'formLayout' => json_decode($formLayout),
                 'validationRules' => $validationRules,
             ]);
@@ -82,7 +93,12 @@ class FormController extends Controller
             $updatedFormLayout = $request->getContent();
             $updatedValidationRules = $this->buildRules(json_decode($updatedFormLayout, true)['layout']);
 
+            $criteria = $request->input('criteria'); 
+
+            $criteriaID = $criteria ? Criteria::where('criteriaID', $criteria)->value('criteriaID') : null;
+
             $form->update([
+                'criteriaID' => $criteriaID,
                 'formLayout' => json_decode($updatedFormLayout),
                 'validationRules' => $updatedValidationRules,
             ]);
@@ -233,7 +249,6 @@ class FormController extends Controller
                 $formLayout = $validated['formLayout'];
                 $userData = $validated['userData'];
 
-
                 foreach ($formLayout['layout'] as &$item) {
                     $fieldName = $item['name'];
                     
@@ -271,7 +286,6 @@ class FormController extends Controller
                 return redirect()->back()->with('error');
             }
         }
-
 
         public function setStatus(Request $request, $orgID){
             try {

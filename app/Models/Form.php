@@ -15,6 +15,7 @@ class Form extends Model
     protected $primaryKey = 'formID';
     protected $fillable = [
         'orgID',
+        'criteriaID',
         'formLayout',
         'deployed',
         'validationRules',
@@ -34,5 +35,10 @@ class Form extends Model
     public function applications()
     {
         return $this->hasMany(Application::class, 'formID', 'formID');
+    }
+
+    public function criteria(): BelongsTo
+    {
+        return $this->belongsTo(Criteria::class, 'criteriaID', 'criteriaID');
     }
 }
