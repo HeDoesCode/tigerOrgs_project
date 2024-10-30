@@ -9,7 +9,6 @@ use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 class isAdmin
@@ -43,7 +42,7 @@ class isAdmin
         if ($checkRole) {
             // dd($checkRole->roleID);
 
-            if ($type === 'block') {
+            if($type === 'block'){
                 session()->flash('toast', [
                     'title' => 'Already a member of this organization.',
                     'variant' => 'destructive'
@@ -51,7 +50,7 @@ class isAdmin
                 return redirect()->back();
             }
             Inertia::share([
-                'orgLogo' => Storage::url('logo/' . Organization::where('orgID', $orgID)->value('logo')),
+                'orgLogo' => Organization::where('orgID', $orgID)->value('logo'),
                 'orgName' => Organization::where('orgID', $orgID)->value('name'),
             ]);
             return $next($request);
