@@ -26,6 +26,13 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
 
+        DB::table('settings')->insert([
+            'name' => 'Manual Registration',  
+            'status' => false,             
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
     }
 
     /**
