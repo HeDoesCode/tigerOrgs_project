@@ -217,14 +217,10 @@ class FormController extends Controller
                 $user = Auth::user();
                 $validated = $request->validate([
                     'orgID'=>'required',
-                    'formID' =>'required'
+                    'formID' =>'required',
+                    'userData' => 'required|array',
+                    'formLayout' => 'required|array'
                 ]);
-
-                // $formLayout = $request->formLayout['layout'];
-
-                // $rules = $this->buildRules($formLayout);
-
-                // $request->validate($rules);
 
                 if(!$validated){
                     session()->flash('toast', [
@@ -234,12 +230,28 @@ class FormController extends Controller
                     ]);
                 }
 
+                $formLayout = $validated['formLayout'];
+                $userData = $validated['userData'];
+
+
+                foreach ($formLayout['layout'] as &$item) {
+                    $fieldName = $item['name'];
+                    
+                    $key = str_replace(' ', '_', strtolower($fieldName));
+                    
+                    if (isset($userData[$key])) {
+                        $item['value'] = $userData[$key];
+                    }
+                }
+
                 DB::table('applications')->insert(
                     [
                         'userID'=> $user->userID,
                         'orgID'=> $validated['orgID'],
-                        'formID'=> $validated['formID']
-
+                        'formID'=> $validated['formID'],
+                        'userData' => json_encode($formLayout),
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ],
                     [
                         'created_at' => now(),

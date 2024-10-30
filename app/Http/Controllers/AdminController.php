@@ -491,10 +491,11 @@ class AdminController extends Controller
 
         $formsWithApplications = Form::where('orgID', $orgID)
         ->with(['applications' => function ($query) {
-            $query->select('applicationID', 'formID', 'userID', 'similarityScore', 'status', 'created_at')
+            $query->select('applicationID', 'formID', 'userID', 'userData', 'similarityScore', 'status', 'created_at')
                 ->with('user:userID,firstname,lastname,email,college'); 
         }])
         ->get(['formID', 'formLayout', 'orgID']);
+
 
         return Inertia::render('Admin/AdminManageApplication', [
             'orgID' => $organization->orgID,

@@ -17,25 +17,27 @@ function FormRenderer({ formLayout, orgID, formID }) {
         e.preventDefault();
 
         const formData = new FormData(e.target);
-        const formObject = {};
+        const userData = {};
 
-        formData.forEach((value, key) => {
-            formObject[key] = value;
-        });
+        // Iterate through the form fields and add them to the userData object
+        for (const [key, value] of formData.entries()) {
+            userData[key] = value;
+        }
 
+        // Pass the userData object to the server-side route
         router.post(
             route("formSubmission", { orgID, formID }),
             {
-                //pakibalik na lang to
-                // userData: formObject,
-                // formLayout: formLayout,
-                orgID: orgID,
-                formID: formID,
+                userData,
+                formLayout,
+                orgID,
+                formID,
             },
             { preserveState: true, preserveScroll: true }
         );
-        console.log("userdata:".userData);
-        console.log("formLayout:".formLayout);
+
+        console.log(userData);
+        console.log(formData);
     }
 
     return (

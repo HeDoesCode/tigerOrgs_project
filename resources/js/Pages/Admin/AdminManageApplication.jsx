@@ -1,4 +1,4 @@
-import { Head, router } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import MainAdminFrame from "@/Components/MainAdminFrame";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
@@ -14,6 +14,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/Components/ui/select";
+import RenderFormItem from "@/Components/Forms/Form-Renderer/RenderFormItem";
+import RenderFormItemAnswers from "@/Components/Forms/Form-Renderer/RenderFormItemAnswers";
 
 function AdminManageApplication({ orgID, formsWithApplications }) {
     const [selectedFormId, setSelectedFormId] = useState(null);
@@ -193,6 +195,7 @@ function ApplicationForms({
 }
 
 function ApplicationResponses({ application, orgID, selectedFormId }) {
+    const { errors } = usePage().props;
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString("en-US", {
@@ -293,7 +296,7 @@ function ApplicationResponses({ application, orgID, selectedFormId }) {
                     }
                 >
                     <div className="space-y-4">
-                        <h3 className="text-lg font-bold">Applicant Details</h3>
+                        <h3 className="text-md font-bold">Applicant Details</h3>
                         <p>
                             <strong>Name:</strong> {user?.firstname}{" "}
                             {user?.lastname}
@@ -308,9 +311,62 @@ function ApplicationResponses({ application, orgID, selectedFormId }) {
                         <h3 className="text-lg font-bold">
                             Application Answers
                         </h3>
-                        <pre className="bg-gray-100 p-4 rounded">
-                            {/* {JSON.stringify(application.userData, null, 2)} */}
-                        </pre>
+                        <div className="px-6 py-8">
+                            <h1 className="text-3xl font-bold  text-gray-900 mb-6">
+                                {application.userData.name}
+                            </h1>
+                            {application.userData.desc && (
+                                <p className="text-gray-600  mb-8">
+                                    {application.userData.desc}
+                                </p>
+                            )}
+
+                            {Object.keys(errors).length > 0 && (
+                                <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+                                    <div className="flex">
+                                        <div className="flex-shrink-0">
+                                            <svg
+                                                className="h-5 w-5 text-red-400"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <div className="ml-3">
+                                            <h3 className="font-medium text-red-800">
+                                                There were errors with your
+                                                submission
+                                            </h3>
+                                            <ul className="mt-2 text-red-700 list-disc list-inside">
+                                                {Object.keys(errors).map(
+                                                    (error, index) => (
+                                                        <li key={index}>
+                                                            {errors[error]}
+                                                        </li>
+                                                    )
+                                                )}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            <ul className="space-y-6">
+                                {application.userData.layout.map(
+                                    (item, index) => (
+                                        <RenderFormItemAnswers
+                                            key={index}
+                                            item={item}
+                                        />
+                                    )
+                                )}
+                            </ul>
+                        </div>
                     </div>
                 </AdminDialog>
 
