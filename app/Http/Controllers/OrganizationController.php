@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
 use App\Models\Form;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -186,9 +187,31 @@ class OrganizationController extends Controller
     public function apply(Request $request, $orgID, $formID)
     {
         $formLayout = Form::find($formID)->formLayout;
+
+        
+        $user = Auth::user();
+
+    
+        $alreadyAnswered = Application::where('formID', $formID)
+            ->where('userID', $user->userID)
+            ->exists();
+
+        if($alreadyAnswered){
+            session()->flash('toast', [
+                'title' => "You already answered this form.",
+                'description' => 'Please wait for the status of your application.',
+            ]);
+
+            return redirect()->back();
+
+        }
+
+
         return Inertia::render('Organizations/Apply', [
             'pageLayoutData' => $this->getPageLayoutData($orgID),
             'formLayout' => $formLayout,
+            'orgID' => $orgID,
+            'formID'=> $formID
         ]);
     }
 
