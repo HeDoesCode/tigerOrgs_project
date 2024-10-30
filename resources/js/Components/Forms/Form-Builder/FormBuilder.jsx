@@ -27,10 +27,12 @@ const inputTypes = [
     { type: "image_upload", icon: IconResume },
 ];
 
-function FormBuilder({ orgID, formData }) {
+function FormBuilder({ orgID, formData, criterias }) {
     const [items, setItems] = useState(formData?.formLayout?.layout || []);
     const [title, setTitle] = useState(formData?.formLayout?.name || "");
-    const [description, setDescription] = useState(formData?.formLayout?.desc || "");
+    const [description, setDescription] = useState(
+        formData?.formLayout?.desc || ""
+    );
 
     function getItemPos(id) {
         return items.findIndex((item) => item.id === id);
@@ -106,11 +108,14 @@ function FormBuilder({ orgID, formData }) {
         setItems(items.filter((item) => item.id !== id));
     }
 
+    const [criteriaSelected, setCriteriaSelected] = useState("");
+
     const handleSave = () => {
         const dataToBeSent = {
             name: title,
             desc: description,
             layout: items,
+            criteria: criteriaSelected,
         };
 
         if (!formData) {
@@ -120,19 +125,24 @@ function FormBuilder({ orgID, formData }) {
                 },
             });
         } else {
-            router.patch(`/admin/${orgID}/form-builder/save/${formData.formID}`, dataToBeSent, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+            router.patch(
+                `/admin/${orgID}/form-builder/save/${formData.formID}`,
+                dataToBeSent,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
         }
-    }
+    };
 
     return (
         <div className=" bg-white min-h-screen ">
+            {console.log(criterias)}
             <div className="flex flex-col justify-center m-4 p-4 max-w-3xl mx-auto rounded-xl">
                 <h1 className="font-semibold text-3xl mb-4 px-2 text-center">
-                    {formData ? 'Modify' : 'Create'} Form
+                    {formData ? "Modify" : "Create"} Form
                 </h1>
                 <input
                     type="text"
@@ -149,6 +159,21 @@ function FormBuilder({ orgID, formData }) {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
+                <select
+                    value={criteriaSelected}
+                    onChange={(e) => setCriteriaSelected(e.target.value)}
+                    className="w-full mt-2 bg-transparent rounded-xl border-[1.5px] border-x-stone-600 mb-2"
+                >
+                    <option value="">No Criteria Selected</option>
+                    {criterias.map((criteria) => (
+                        <option
+                            key={criteria.criteriaID}
+                            value={criteria.criteriaID}
+                        >
+                            {criteria.name}
+                        </option>
+                    ))}
+                </select>
                 <FormActionsContext.Provider
                     value={{ delete: handleDeleteItem, edit: handleEditItem }}
                 >
@@ -177,7 +202,7 @@ function FormBuilder({ orgID, formData }) {
                     {formData && (
                         <Link
                             className="bg-[#e25454] hover:bg-[#d44040] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
-                            href={route('admin.forms', [orgID])}
+                            href={route("admin.forms", [orgID])}
                         >
                             Cancel
                         </Link>

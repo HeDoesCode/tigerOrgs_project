@@ -22,33 +22,42 @@ class FormController extends Controller
     // strictly for admin
     public function showBuilder($orgID)
     {
-        $organizations = Organization::find($orgID);
+        $organizations = Organization::with('criteria')->find($orgID);
+
 
         return Inertia::render('Admin/AdminFormBuilder', [
             'orgID' => $organizations->orgID,
+            'criterias'=> $organizations->criteria
         ]);
     }
 
     public function showBuilderEdit($orgID, $formID)
     {
-        $organizations = Organization::find($orgID);
+        $organizations = Organization::with('criteria')->find($orgID);
 
         $form = Form::find($formID);
 
         return Inertia::render('Admin/AdminFormBuilder', [
             'orgID' => $organizations->orgID,
             'formData' => $form,
+            'criterias'=> $organizations->criteria
         ]);
     }
 
     public function saveForm(Request $request, $orgID)
     {   
+
         try {
             $formLayout = $request->getContent();
             $validationRules = $this->buildRules(json_decode($formLayout, true)['layout']);
 
+            $criteria = $request->validate([
+                'criteria'=> 'required|exists:criteria,criteriaID'
+            ]);
+
             Form::create([
                 'orgID' => $orgID,
+                'criteriaI' => $criteria,
                 'formLayout' => json_decode($formLayout),
                 'validationRules' => $validationRules,
             ]);
