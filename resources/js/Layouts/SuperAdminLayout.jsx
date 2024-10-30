@@ -21,9 +21,8 @@ function SuperAdminLayout({ children }) {
     );
 
     function HeaderContent() {
-
         const handleLogout = () => {
-            Inertia.post('/logout');
+            Inertia.post("/logout");
         };
 
         return (
@@ -84,8 +83,11 @@ function SuperAdminLayout({ children }) {
                     <SideBarLink
                         icon={<IconDataUpload size="100%" />}
                         href={route("superadmin.dataupload")}
-                        desc="Data&nbsp;Upload"
-                        current={url === routePath("superadmin.dataupload")}
+                        desc="Manage&nbsp;Data"
+                        current={
+                            url === routePath("superadmin.dataupload") ||
+                            url === routePath("superadmin.filedownload")
+                        }
                     />
                 </nav>
             </div>
@@ -95,9 +97,10 @@ function SuperAdminLayout({ children }) {
             return (
                 <div className="flex">
                     <Link
-                        className={`flex items-center py-2 pl-3 rounded-l-full overflow-x-clip w-full ${(current && "bg-[#FFBC58]") ||
+                        className={`flex items-center py-2 pl-3 rounded-l-full overflow-x-clip w-full ${
+                            (current && "bg-[#FFBC58]") ||
                             "hover:bg-gray-800 hover:text-white"
-                            }`}
+                        }`}
                         href={href}
                     >
                         <div className="min-h-7 min-w-7 size-7">{icon}</div>

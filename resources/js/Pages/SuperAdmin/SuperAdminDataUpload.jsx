@@ -49,6 +49,11 @@ function SuperAdminDataUpload() {
                             label: "Upload",
                             link: "superadmin.dataupload",
                         },
+                        {
+                            icon: <IconCheckBox />,
+                            label: "Download",
+                            link: "superadmin.filedownload",
+                        },
                     ]}
                     title="Data Upload"
                 >

@@ -622,4 +622,40 @@ class SuperAdminController extends Controller
             'loginEntries' => $loginEntries,
         ]);
     }
+
+    public function filedownload()
+    {
+        return Inertia::render('SuperAdmin/SuperAdminDataDownload');
+    }
+
+    //json download for e-sorr
+
+    public function export()
+    {
+        $organizations = Organization::with(['members' => function ($query) {
+            $query->select('users.userID', 'firstname', 'lastname', 'email')
+                  ->orderBy('lastname');
+        }])->get()
+        ->map(function ($org) {
+            return [
+                'organization_name' => $org->name,
+                'members' => $org->members->map(function ($member) {
+                    return [
+                        'firstName' => $member->firstname,
+                        'middleName' => $member->middlename,
+                        'lastname' => $member->lastname,
+                        'studentNumber' => $member->userID,
+                    ];
+                })
+            ];
+        });
+
+
+        $filename = 'organizations-members-' . date('Y-m-d') . '.json';
+        
+        return response()->json($organizations)
+            ->header('Content-Disposition', 'attachment; filename=' . $filename)
+            ->header('Content-Type', 'application/json');
+    }
+
 }
