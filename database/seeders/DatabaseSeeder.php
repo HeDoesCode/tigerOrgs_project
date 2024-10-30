@@ -83,18 +83,6 @@ class DatabaseSeeder extends Seeder
             ->count(120)
             ->create()
             ->each(function ($organization) use ($users) {
-                // Photos
-                Photo::factory()
-                    ->for($organization, 'organization')
-                    ->portrait()
-                    ->count(1)
-                    ->create();
-
-                Photo::factory()
-                    ->for($organization, 'organization')
-                    ->count(3)
-                    ->create();
-
                 // Random Keywords
                 $keywords = Keyword::all()->pluck('keyID')->toArray();
                 $randomKeywords = array_rand(array_flip($keywords), rand(5, 15));

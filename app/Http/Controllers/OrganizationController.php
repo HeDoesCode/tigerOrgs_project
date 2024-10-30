@@ -169,22 +169,21 @@ class OrganizationController extends Controller
     {
         $formLayout = Form::find($formID)->formLayout;
 
-        
+
         $user = Auth::user();
 
-    
+
         $alreadyAnswered = Application::where('formID', $formID)
             ->where('userID', $user->userID)
             ->exists();
 
-        if($alreadyAnswered){
+        if ($alreadyAnswered) {
             session()->flash('toast', [
                 'title' => "You already answered this form.",
                 'description' => 'Please wait for the status of your application.',
             ]);
 
             return redirect()->back();
-
         }
 
 
@@ -192,7 +191,7 @@ class OrganizationController extends Controller
             'pageLayoutData' => $this->getPageLayoutData($orgID),
             'formLayout' => $formLayout,
             'orgID' => $orgID,
-            'formID'=> $formID
+            'formID' => $formID
         ]);
     }
 
@@ -251,7 +250,7 @@ class OrganizationController extends Controller
                 'photoID' => $photo['photoID'],
                 'orgID' => $photo['orgID'],
                 'caption' => $photo['caption'],
-                'filename' => Storage::url('public/org_photos/' . $photo['filename']),
+                'filename' => Storage::url('public/photo/' . $photo['filename']),
             ];
         }
 
@@ -261,6 +260,7 @@ class OrganizationController extends Controller
     public function getPageLayoutData($orgID)
     {
         $organization = Organization::withCount('members')
+            ->with('keywords')
             ->findOrFail($orgID);
 
         $isInOrgHome = Route::currentRouteName() === 'organizations.home';
@@ -275,9 +275,11 @@ class OrganizationController extends Controller
         return [
             'forms' => $deployedForms,
             'orgID' => $organization->orgID,
-            'logo' => Storage::url("public/logos/" . $organization->logo),
-            'coverPhoto' => Storage::url("public/covers/" . $organization->cover),
+            'logo' => Storage::url("public/logo/" . $organization->logo),
+            'coverPhoto' => Storage::url("public/coverPhoto/" . $organization->coverPhoto),
             'metadata' => [
+                'keywords' => $organization->keywords ?: [],
+                'department' => $organization->department,
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,
             ],

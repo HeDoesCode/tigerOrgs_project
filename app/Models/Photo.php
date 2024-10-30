@@ -17,9 +17,11 @@ class Photo extends Model
     protected $fillable = [
         'orgID',
         'filename',
+        'caption'
     ];
 
-    public function organization() : BelongsTo {
+    public function organization(): BelongsTo
+    {
         return $this->belongsTo(Organization::class, 'orgID', 'orgID');
     }
 }

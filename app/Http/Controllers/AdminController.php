@@ -10,11 +10,13 @@ use App\Notifications\AdminAnnouncementNotification;
 use App\Notifications\MakeAdminNotification;
 use App\Notifications\RemoveAdminNotification;
 use App\Models\Form;
+use App\Models\Keyword;
 use App\Notifications\RecruitingEnabledNotification;
 use Exception;
 use Inertia\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use League\Flysystem\StorageAttributes;
 
@@ -27,7 +29,7 @@ class AdminController extends Controller
             ->with('contacts')
             ->with('photos')
             ->find($orgID);
-        
+
         $organization_controller = new OrganizationController();
         $pageLayoutData = $organization_controller->getPageLayoutData($organization->orgID);
 
@@ -43,10 +45,28 @@ class AdminController extends Controller
             'photos' => $organization_controller->getOrgPhotos($organization->orgID),
         ];
 
+        // get all available keywords
+        $keywords = Keyword::pluck('keyword', 'keyID');
+        // ... and parse into array of objects
+        $keywordsArray = $keywords->map(function ($keyword, $keyID) {
+            return [
+                'keyID' => $keyID,
+                'keyword' => $keyword,
+            ];
+        })->values()->toArray();
+
+        $orgMembers = User::join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
+            ->where('organization_user_role.orgID', $orgID)
+            ->select('users.*')->get();
+
+        // dd($orgMembers);
+
         return Inertia::render('Admin/AdminEditPage', [
             'pageData' => $pageData,
             'pageLayoutData' => $pageLayoutData,
+            'keywords' => $keywordsArray,
             'orgID' => $orgID,
+            'members' => $orgMembers,
         ]);
     }
 
@@ -68,39 +88,39 @@ class AdminController extends Controller
         ]);
     }
 
-    public function toggleRecruitment(Request $request, $orgID )
+    public function toggleRecruitment(Request $request, $orgID)
     {
-    $recruiting = $request->input('status');
+        $recruiting = $request->input('status');
 
-    DB::table('organizations')
-        ->where('orgID', $orgID)
-        ->update(['recruiting' => $recruiting]);
+        DB::table('organizations')
+            ->where('orgID', $orgID)
+            ->update(['recruiting' => $recruiting]);
 
         $organization = Organization::find($orgID);
         $forms = Form::where('orgID', $orgID)
             ->get();
 
-            
-    if($recruiting){
-        $organization = Organization::findOrFail($orgID);
+
+        if ($recruiting) {
+            $organization = Organization::findOrFail($orgID);
             $members = $organization->followers()->get();
 
             foreach ($members as $member) {
                 $member->notify(new RecruitingEnabledNotification($organization));
             }
 
-        session()->flash('toast', [
-            'title' => 'Recruitment Enabled for '. $organization->name,
-            'description' => 'Status Updated Successfully!',
-            'variant' => 'success'
-        ]);
-    }else{
-        session()->flash('toast', [
-            'title' => 'Recruitment Disabled for '. $organization->name,
-            'description' => 'Status Updated Successfully!',
-            'variant' => 'destructive'
-        ]);
-    }
+            session()->flash('toast', [
+                'title' => 'Recruitment Enabled for ' . $organization->name,
+                'description' => 'Status Updated Successfully!',
+                'variant' => 'success'
+            ]);
+        } else {
+            session()->flash('toast', [
+                'title' => 'Recruitment Disabled for ' . $organization->name,
+                'description' => 'Status Updated Successfully!',
+                'variant' => 'destructive'
+            ]);
+        }
 
         $recruitmentStatusofOSA = DB::table('settings')->where('name', 'Recruitment')->value('status');
         $recruitmentStatusofOrg = DB::table('organizations')->where('orgID', $orgID)->value('recruiting');
@@ -114,95 +134,269 @@ class AdminController extends Controller
         ]);
     }
 
-    public function saveAboutUsSection($request, $editedOrg)
+    public function saveEdit(Request $request, $orgID)
     {
-        $request->validate([
-            'aboutUs' => ['nullable', 'string'],
-        ]);
+        /*$request->validate(
+            [
+                // coverPhoto
+                'changesMade.storage.coverPhoto' => 'sometimes|required|image|mimes:jpeg,png,jpg|max:2048',
 
-        $editedOrg->description = $request->input('aboutUs');
-        $editedOrg->save();
-    }
+                // logo
+                'changesMade.storage.logo' => 'sometimes|required|image|mimes:jpeg,png,jpg|max:2048',
 
-    public function saveFBLinkSection($request, $editedOrg)
-    {
-        $request->validate([
-            'fb_link' => ['nullable', 'url']
-        ]);
+                // aboutUs
+                'pageState.pageData.aboutUs' => 'nullable|string|max:65535',
 
-        $editedOrg->fb_link = $request->input('fb_link');
-        $editedOrg->save();
-    }
+                // keywords
+                'pageState.pageLayoutData.keywords.*.keyID' => 'sometimes|integer|exists:keywords,keyID',
 
-    public function saveLogoSection($request, $editedOrg) 
-    {   
-        $request->validate([
-            'logo' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
-        ]);
+                // contacts
+                'pageState.pageData.contacts.*.contactID' => 'sometimes|integer|nullable|exists:organization_contacts,contactID',
+                'pageState.pageData.contacts.*.orgID' => 'sometimes|required|integer|exists:organizations,orgID',
+                'pageState.pageData.contacts.*.platform' => 'sometimes|required|string|in:facebook,instagram,linkedin,email,x,default',
+                'pageState.pageData.contacts.*.address' => 'sometimes|required|string',
 
-        $logo = Storage::disk('logos')->put('/',$request->file('logo'));
-        $editedOrg->logo = $logo;
-        $editedOrg->save();
-    }
-    
-    public function saveCoverSection($request, $editedOrg) 
-    {   
-        $request->validate([
-            'cover' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
-        ]);
+                // fb_link
+                'pageState.pageData.fb_link' => 'nullable|string|url|max:255',
 
-        $cover = Storage::disk('covers')->put('/',$request->file('cover'));
-        $editedOrg->cover = $cover;
-        $editedOrg->save();
-    }
+                // photos
+                'changesMade.storage.photos.*' => [
+                    'sometimes',
+                    'required',
+                    'image',
+                    'mimes:jpeg,png,jpg',
+                    'max:2048',
+                    function ($attribute, $value, $fail) {
+                        if ($value->getClientOriginalName() === 'default.jpeg') {
+                            $fail('The file name "default.jpeg" is not allowed.');
+                        }
+                    },
+                ],
+                'pageState.pageData.photos' => 'required|array|min:1',
+                'pageState.pageData.photos.*.photoID' => 'sometimes|nullable|integer|exists:organization_photos,photoID',
+                'pageState.pageData.photos.*.orgID' => 'sometimes|required|integer|exists:organizations,orgID',
+                'pageState.pageData.photos.*.caption' => 'sometimes|required|string|max:255',
+            ]
+        );*/
 
-    public function saveEdit(Request $request, $orgID, $section)
-    {   
-        $editedOrg = Organization::find($orgID);
+        $rules = [
+            // coverPhoto
+            'changesMade.storage.coverPhoto' => 'sometimes|required|image|mimes:jpeg,png,jpg|max:2048',
 
-        switch ($section) {
-            case "about-us":
-                $this->saveAboutUsSection($request, $editedOrg);
-                break;
-            case "fb-link":
-                $this->saveFBLinkSection($request, $editedOrg);
-                break;
-            case "logo":
-                $this->saveLogoSection($request, $editedOrg);
-                break;
-            case "cover":
-                $this->saveCoverSection($request, $editedOrg);
-                break;
+            // logo
+            'changesMade.storage.logo' => 'sometimes|required|image|mimes:jpeg,png,jpg|max:2048',
+
+            // aboutUs
+            'pageState.pageData.aboutUs' => 'nullable|string|max:65535',
+
+            // keywords
+            'pageState.pageLayoutData.keywords.*.keyID' => 'sometimes|integer|exists:keywords,keyID',
+
+            // contacts
+            'pageState.pageData.contacts.*.contactID' => 'sometimes|integer|nullable|exists:organization_contacts,contactID',
+            'pageState.pageData.contacts.*.orgID' => 'sometimes|required|integer|exists:organizations,orgID',
+            'pageState.pageData.contacts.*.platform' => 'sometimes|required|string|in:facebook,instagram,linkedin,email,x,default',
+            'pageState.pageData.contacts.*.address' => 'sometimes|required|string',
+
+            // fb_link
+            'pageState.pageData.fb_link' => 'nullable|string|url|max:255',
+
+            // photos
+            'changesMade.storage.photos.*' => [
+                'sometimes',
+                'required',
+                'image',
+                'mimes:jpeg,png,jpg',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    if ($value->getClientOriginalName() === 'default.jpeg') {
+                        $fail('The file name "default.jpeg" is not allowed.');
+                    }
+                },
+            ],
+            'pageState.pageData.photos' => 'required|array|min:1',
+            'pageState.pageData.photos.*.photoID' => 'sometimes|nullable|integer|exists:organization_photos,photoID',
+            'pageState.pageData.photos.*.orgID' => 'sometimes|required|integer|exists:organizations,orgID',
+            'pageState.pageData.photos.*.caption' => 'sometimes|required|string|max:255',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            session()->flash('toast', [
+                'title' => 'Failed to save your changes.',
+                'description' => 'One or more of your changes caused an error. Please check your changes and try again.',
+                'duration' => 5000,
+                'variant' => 'destructive'
+            ]);
+
+            return redirect()->back();
         }
 
-        // $request->validate([
-        //     'photoData' => ['nullable', 'json'],
-        //     'photos' => ['nullable', 'array'],
-        //     'photos.*' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg,jpeg'],
-        // ]);
-        
-        // if ($request->has('photoData')) {
-        //     $photoData = json_decode($request->only('photoData')['photoData']);
+        $changesMade = $request->input('changesMade');
+        $organization = Organization::findOrFail($orgID);
 
-        //     foreach ($photoData as $index => $photo) {
-        //         if (is_null($photo->photoID)) {
-        //             Photo::create([
-        //                 'orgID' => $request->orgID,
-        //                 'filename' => Storage::disk('org-photos')->put('/', $request->file('photos')[$index]),
-        //                 'caption' => $photo->caption,
-        //             ]);
-        //         } else {
-        //             $editedPhoto = Photo::find($photo->photoID);
-        //             $editedPhoto->filename = Storage::disk('org-photos')->put('/', $request->file('photos')[$index]);
-        //             $editedPhoto->caption = $photo->caption;
-        //             $editedPhoto->save();
-        //         }
-        //     }
-        // }
+        if (isset($changesMade) && $changesMade['all'] == true) {
+            $changes = $request->input('changesMade')['changes'];
+            $pageState = $request->input('pageState');
 
-        // $editedOrg->save();
+            try {
+                foreach ($changes as $key => $_) {
+                    switch ($key) {
+                        case 'coverPhoto': {
+                                // ignore if original file is default.jpeg | delete original file
+                                // if (Organization::find($orgID)->coverPhoto !== 'default.jpeg' && Storage::exists('public/coverPhoto', Organization::find($orgID)->coverPhoto)) {
+                                if (Organization::find($orgID)->coverPhoto !== 'default.jpeg') {
+                                    Storage::delete('public/coverPhoto/' . Organization::find($orgID)->coverPhoto);
+                                }
+                                // store new coverPhoto with new filename
+                                $newFile = $request->file('changesMade.storage.coverPhoto'); // retrieve the file
+                                $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
+                                $newFile->storeAs('public/coverPhoto', $newFile_filename); // store in storage
+                                // change coverPhoto attribute of org in DB
+                                $organization->coverPhoto = $newFile_filename;
+                                break;
+                            }
+                        case 'logo': {
+                                // ignore if original file is default.jpeg | delete original file
+                                if (Organization::find($orgID)->logo !== 'default.jpeg'/* && Storage::exists('public/logo', Organization::find($orgID)->logo)*/) {
+                                    Storage::delete('public/logo/' . Organization::find($orgID)->logo);
+                                }
+                                // store new logo with new filename
+                                $newFile = $request->file('changesMade.storage.logo'); // retrieve the file
+                                $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
+                                $newFile->storeAs('public/logo', $newFile_filename); // store in storage
+                                // change logo attribute of org in DB
+                                $organization->logo = $newFile_filename;
+                                break;
+                            }
+                        case 'keywords': {
+                                $newRecords = [];
+                                foreach ($pageState['pageLayoutData']['metadata']['keywords'] as $item) {
+                                    $newRecords[] = [
+                                        'orgID' => $orgID,
+                                        'keyID' => $item['keyID']
+                                    ];
+                                }
+                                // deletion
+                                DB::table('organization_keywords')
+                                    ->where('orgID', $orgID)->delete();
+                                // insertion
+                                DB::table('organization_keywords')->insert($newRecords);
+                                break;
+                            };
+                        case 'aboutUs': {
+                                $organization->description = $request->input('pageState.pageData.aboutUs');
+                                break;
+                            }
+                        case 'contacts': {
+                                DB::table('organization_contacts')->where('orgID', $orgID)->delete();
+                                DB::table('organization_contacts')->insert($pageState['pageData']['contacts']);
+                                break;
+                            }
+                        case 'social': {
+                                $organization->fb_link = $request->input('pageState.pageData.fb_link');
+                                break;
+                            }
+                        case 'photos': {
+                                $newPhotoArray = $pageState['pageData']['photos'];
+                                $storagePhotos = $request->file('changesMade.storage.photos');
+                                $orgPhotos = Photo::where('orgID', $orgID)->get();
+                                // checking if any photos are deleted
+                                $orgPhotoIDs = $orgPhotos->pluck('photoID')->toArray();
+                                $newPhotoIDs = array_column($newPhotoArray, 'photoID');
+                                $missingPhotoIDs = array_diff($orgPhotoIDs, $newPhotoIDs);
+                                if (!empty($missingPhotoIDs)) { // a photoID is missing from original (DB)
+                                    // remove deleted photos from storage. if default.jpeg, ignore.
+                                    $deletedPhotoFilenames = Photo::whereIn('photoID', $missingPhotoIDs)->get()->pluck('filename');
+                                    foreach ($deletedPhotoFilenames as $item) {
+                                        if ($item !== 'default.jpeg') {
+                                            Storage::delete('public/photo/' . $item);
+                                        }
+                                    }
+                                    // delete rows not in the newPhotoArray
+                                    Photo::whereIn('photoID', $missingPhotoIDs)->delete();
+                                }
 
-        // dd("update success");
+                                foreach ($newPhotoArray as $index => $photo) {
+                                    // handle new rows
+                                    $origPhoto = Photo::find($photo['photoID']);
+                                    if ($photo['photoID'] === null) {
+                                        // dump('new photo detected. Inserting:');
+                                        $newFile = $storagePhotos[$index]; // retrieve the file
+                                        $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
+                                        $newFile->storeAs('public/photo', $newFile_filename); // store in storage
+                                        $newPhoto_id = Photo::create([
+                                            'orgID' => $orgID,
+                                            'caption' => $photo['caption'],
+                                            'filename' => $newFile_filename,
+                                        ])->photoID;
+
+                                        $newPhotoArray[$index]['photoID'] = $newPhoto_id;
+                                        $newPhotoArray[$index]['filename'] = $newFile_filename;
+                                    } else { // handle row update/s
+                                        // handle caption change
+                                        $tempNewName = '';
+                                        if ($photo['caption'] !== $origPhoto->caption) {
+                                            $origPhoto->caption = $photo['caption'];
+                                            $origPhoto->save();
+                                        }
+                                        if ($photo['filename'] !== Storage::url('photo/' . $origPhoto->filename)) { // image file has changed
+                                            // filename default.jpeg check is already enforced in validation
+                                            // delete old photo in storage
+                                            if ($origPhoto->filename !== 'default.jpeg') {
+                                                Storage::delete('public/photo/' . $origPhoto->filename);
+                                            }
+                                            // generate new filename
+                                            $newFile = $storagePhotos[$index]; // retrieve the file
+                                            $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
+                                            $newFile->storeAs('public/photo', $newFile_filename); // store in storage
+                                            // update Photo filename and save()
+                                            $origPhoto->filename = $newFile_filename;
+                                            $tempNewName = $newFile_filename;
+                                            $origPhoto->save();
+                                        } else {
+                                            $tempNewName = $origPhoto->filename;
+                                        }
+                                        $newPhotoArray[$index]['filename'] = $tempNewName;
+                                    }
+                                }
+                                // update all photos using $newPhotoArray
+                                $origPhotos = Photo::where('orgID', $orgID)->get();
+                                $count = 0;
+                                foreach ($newPhotoArray as $photo) {
+                                    $origPhotos[$count]->caption = $photo['caption'];
+                                    $origPhotos[$count]->filename = $photo['filename'];
+                                    $origPhotos[$count]->save();
+                                    ++$count;
+                                }
+                                break;
+                            }
+                    }
+                }
+
+                $organization->save();
+
+                session()->flash('toast', [
+                    'title' => 'Page changes saved successfully.',
+                    'duration' => 2000,
+                    'variant' => 'success'
+                ]);
+
+                return Inertia::location(route('admin.editpage', [$orgID]));
+            } catch (Exception $e) {
+                session()->flash('toast', [
+                    'title' => 'Failed to save your changes.',
+                    'description' => 'Something went wrong on our end. Please inform your administrators and try again later.',
+                    'duration' => 5000,
+                    'variant' => 'destructive'
+                ]);
+
+                return redirect()->back();
+            }
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function invite($orgID)
@@ -273,7 +467,7 @@ class AdminController extends Controller
 
 
     //search function and invite manually
-    
+
 
 
 
@@ -307,16 +501,16 @@ class AdminController extends Controller
         try {
 
             $userExists = DB::table('organization_user_role')
-            ->where('orgID', $validated['orgID'])
-            ->where('userID', $validated['userID'])
-            ->where(function ($query) {
-                $query->where('roleID', '1')
-                    ->orWhere('roleID', '2');
-            })
-            ->exists();
+                ->where('orgID', $validated['orgID'])
+                ->where('userID', $validated['userID'])
+                ->where(function ($query) {
+                    $query->where('roleID', '1')
+                        ->orWhere('roleID', '2');
+                })
+                ->exists();
 
             if ($userExists) {
-                
+
                 session()->flash('toast', [
                     'title' => 'Failed to the add the user',
                     'description' => 'The user is already inside the organization.',
@@ -362,19 +556,19 @@ class AdminController extends Controller
 
         $currentAdminCount = DB::table('organization_user_role')
             ->where('orgID', $orgID)
-            ->where('roleID', '=', '2') 
+            ->where('roleID', '=', '2')
             ->count();
 
 
-            if ($currentAdminCount >= 3) {
-                
-                session()->flash('toast', [
-                    'title' => 'Failed to the add the user',
-                    'description' => 'The organization already has the maximum number of admins (Max: 3).',
-                    'variant' => 'destructive'
-                ]);
-                return redirect()->back();
-            }
+        if ($currentAdminCount >= 3) {
+
+            session()->flash('toast', [
+                'title' => 'Failed to the add the user',
+                'description' => 'The organization already has the maximum number of admins (Max: 3).',
+                'variant' => 'destructive'
+            ]);
+            return redirect()->back();
+        }
 
         $exists = DB::table('organization_user_role')
             ->where('userID', $userID)
@@ -490,11 +684,11 @@ class AdminController extends Controller
 
 
         $formsWithApplications = Form::where('orgID', $orgID)
-        ->with(['applications' => function ($query) {
-            $query->select('applicationID', 'formID', 'userID', 'userData', 'similarityScore', 'status', 'created_at')
-                ->with('user:userID,firstname,lastname,email,college'); 
-        }])
-        ->get(['formID', 'formLayout', 'orgID']);
+            ->with(['applications' => function ($query) {
+                $query->select('applicationID', 'formID', 'userID', 'userData', 'similarityScore', 'status', 'created_at')
+                    ->with('user:userID,firstname,lastname,email,college');
+            }])
+            ->get(['formID', 'formLayout', 'orgID']);
 
 
         return Inertia::render('Admin/AdminManageApplication', [

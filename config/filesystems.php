@@ -39,7 +39,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
@@ -56,29 +56,29 @@ return [
             'throw' => false,
         ],
 
-        'logos' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/logos'),
-            'url' => env('APP_URL').'/storage/logos',
-            'visibility' => 'public',
-            'throw' => false,
-        ], 
-        
-        'covers' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/covers'),
-            'url' => env('APP_URL').'/storage/covers',
-            'visibility' => 'public',
-            'throw' => false,
-        ],
+        // 'logos' => [
+        //     'driver' => 'local',
+        //     'root' => storage_path('app/public/logos'),
+        //     'url' => env('APP_URL').'/storage/logos',
+        //     'visibility' => 'public',
+        //     'throw' => false,
+        // ],
 
-        'org-photos' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/org_photos'),
-            'url' => env('APP_URL').'/storage/org_photos',
-            'visibility' => 'public',
-            'throw' => false,
-        ], 
+        // 'covers' => [
+        //     'driver' => 'local',
+        //     'root' => storage_path('app/public/covers'),
+        //     'url' => env('APP_URL').'/storage/covers',
+        //     'visibility' => 'public',
+        //     'throw' => false,
+        // ],
+
+        // 'org-photos' => [
+        //     'driver' => 'local',
+        //     'root' => storage_path('app/public/org_photos'),
+        //     'url' => env('APP_URL').'/storage/org_photos',
+        //     'visibility' => 'public',
+        //     'throw' => false,
+        // ],
 
     ],
 

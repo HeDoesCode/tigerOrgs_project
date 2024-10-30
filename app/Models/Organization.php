@@ -17,7 +17,7 @@ class Organization extends Model
     protected $fillable = [
         'name',
         'logo',
-        'cover',
+        'coverPhoto',
         'description',
         'fb_link',
         'visibility',
@@ -68,9 +68,4 @@ class Organization extends Model
     {
         return $this->hasMany(Form::class, 'orgID', 'orgID');
     }
-
-    public function applications()
-    {
-        return $this->hasMany(Application::class, 'orgID', 'orgID');
-    }   
 }
