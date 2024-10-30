@@ -29,7 +29,9 @@ function Organizations({
     departments,
     keywords,
     myMemberOrganizations,
+    isSuperAdmin,
 }) {
+    console.log(organizations)
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
 
@@ -108,6 +110,16 @@ function Organizations({
         }
     };
 
+    const getRandomPlaceholder = () => {
+        const placeholders = [
+            "ex. College of Architecture",
+            "ex. SITE",
+            "ex. MUSIKAT",
+        ];
+        const randomIndex = Math.floor(Math.random() * placeholders.length);
+        return placeholders[randomIndex];
+    };
+
     // get this route to remove all filters
     const handleClearQuery = () => {
         router.get(route("organizations"));
@@ -130,7 +142,7 @@ function Organizations({
                                 defaultValue={queryParameters["search"] || ""}
                                 onChange={handleSearch}
                                 // placeholder={getRandomPlaceholder()}
-                                placeholder="Dept./Organization"
+                                placeholder="College/Organization"
                             />
                             <div className="absolute text-gray-500 left-0 bottom-0 h-11 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
                                 <IconSearch size="22" />

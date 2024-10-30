@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Organization>
@@ -52,23 +51,12 @@ class OrganizationFactory extends Factory
         return [
             'recruiting' => (bool) rand(0, 1),
             'name' => 'UST ' . fake()->unique()->company(),
-            'logo' => "default.jpeg",
-            'coverPhoto' => "default.jpeg",
+            'logo' => "https://picsum.photos/id/" . self::$i . "/800/800",
+            'cover' => "https://picsum.photos/id/" . self::$i . "/2800/800",
             'description' => fake()->realTextBetween($minNbChars = 160, $maxNbChars = 200, $indexSize = 2),
             'fb_link' => fake()->url(),
             'visibility' => fake()->boolean(),
             'department' => fake()->randomElement($departments)
         ];
-    }
-
-    public function configure()
-    {
-        return $this->afterCreating(function ($organization) {
-            DB::table('organization_photos')->insert([
-                'orgID' => $organization->orgID,
-                'caption' => 'sample',
-                'filename' => 'default.jpeg',
-            ]);
-        });
     }
 }

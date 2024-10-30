@@ -24,23 +24,22 @@ class SuperAdminController extends Controller
 {
     //manage org functions
 
-    public function addOrg(Request $request)
-    {
-
+    public function addOrg(Request $request){
+        
 
         try {
-            $validated = $request->validate([
+            $validated = $request-> validate([
                 'name' => 'required|unique:organizations',
                 'department' => 'required',
-
+    
             ]);
 
             DB::table('organizations')->updateOrInsert([
-                'recruiting' => false,
-                'name' => $validated['name'],
+                'recruiting'=> false,
+                'name'=> $validated['name'],
                 'department' => $validated['department'],
                 'visibility' => 1,
-
+                
             ]);
 
             session()->flash('toast', [
@@ -61,31 +60,31 @@ class SuperAdminController extends Controller
 
             return redirect()->back()->with('error', 'An error occurred while assigning the admin role.');
         }
+   
     }
 
 
-    public function editOrg(Request $request)
-    {
+    public function editOrg(Request $request) {
         try {
             $organization = Organization::findOrFail($request->orgId);
-
+    
             $validated = $request->validate([
                 'orgId' => 'required',
                 'name' => ['required', Rule::unique('organizations', 'name')->ignore($organization->orgID, 'orgID')],
                 'department' => 'required',
             ]);
-
+    
             $organization->update([
                 'name' => $validated['name'],
                 'department' => $validated['department'],
             ]);
-
+    
             session()->flash('toast', [
                 'title' => 'Saved',
                 'description' => 'Organization edited successfully!',
                 'variant' => 'success'
             ]);
-
+    
             return redirect()->back()->with([
                 'organizations' => Organization::all(),
                 'departments' => Organization::distinct('department')->pluck('department'),
@@ -96,28 +95,28 @@ class SuperAdminController extends Controller
                 'description' => 'Organization already exists.',
                 'variant' => 'destructive'
             ]);
-
+    
             return redirect()->back()->with('error', 'An error occurred while editing the organization.');
         }
     }
 
     public function deleteOrg($id)
-    {
-        $organization = Organization::findOrFail($id);
+{
+    $organization = Organization::findOrFail($id);
 
+    
+    $organization->delete();
 
-        $organization->delete();
+    session()->flash('toast', [
+        'title' => 'Deleted',
+        'description' => 'Organization deleted successfully!',
+        'variant' => 'success'
+    ]);
 
-        session()->flash('toast', [
-            'title' => 'Deleted',
-            'description' => 'Organization deleted successfully!',
-            'variant' => 'success'
-        ]);
+    return redirect()->back();
+}
 
-        return redirect()->back();
-    }
-
-
+    
 
     public function manage()
     {
@@ -131,7 +130,7 @@ class SuperAdminController extends Controller
 
 
         return Inertia::render('SuperAdmin/SuperAdminManage', [
-            'recruitment' => $recruitment,
+            'recruitment'=> $recruitment,
             'organizations' => $organizations,
             'departments' => Organization::distinct()->pluck('department')
         ]);
@@ -139,22 +138,22 @@ class SuperAdminController extends Controller
 
     public function toggleRecruitment(Request $request)
     {
-        $status = $request->input('status');
+    $status = $request->input('status');
+    
+    DB::table('settings')
+        ->where('name', 'Recruitment')
+        ->update(['status' => $status]);
 
-        DB::table('settings')
-            ->where('name', 'Recruitment')
-            ->update(['status' => $status]);
-
-        if ($status) {
+        if($status){
 
             session()->flash('toast', [
                 'title' => 'Recruitment Enabled for All Organization',
                 'description' => 'Status Updated Successfully!',
                 'variant' => 'success'
             ]);
-        } else {
+        }else{
             DB::table('organizations')
-                ->update(['recruiting' => false]);
+            ->update(['recruiting' => false]);
 
             session()->flash('toast', [
                 'title' => 'Recruitment Disabled for All Organization',
@@ -163,11 +162,11 @@ class SuperAdminController extends Controller
             ]);
         }
 
-        return Inertia::render('SuperAdmin/SuperAdminManage', [
-            'recruitment' => $status,
-            'organizations' => Organization::withCount('members')->get(),
-            'departments' => Organization::distinct()->pluck('department')
-        ]);
+    return Inertia::render('SuperAdmin/SuperAdminManage', [
+        'recruitment' => $status,
+        'organizations' => Organization::withCount('members')->get(),
+        'departments' => Organization::distinct()->pluck('department')
+    ]);
     }
 
 
@@ -225,7 +224,7 @@ class SuperAdminController extends Controller
                     ->orWhere('email', 'LIKE', "%" . $request->input('query') . "%");
             });
         }
-
+        
         $users = $query->get();
 
         return response()->json([
@@ -285,20 +284,20 @@ class SuperAdminController extends Controller
             'roleID' => 'required|exists:roles,roleID',
         ]);
 
-
+        
 
 
 
         try {
 
             $currentAdminCount = DB::table('organization_user_role')
-                ->where('orgID', $validated['orgID'])
-                ->where('roleID', '=', '2')
-                ->count();
+            ->where('orgID', $validated['orgID'])
+            ->where('roleID', '=', '2') 
+            ->count();
 
 
             if ($currentAdminCount >= 3) {
-
+                
                 session()->flash('toast', [
                     'title' => 'Failed to the add the user',
                     'description' => 'The organization already has the maximum number of admins (Max: 3).',
@@ -375,37 +374,37 @@ class SuperAdminController extends Controller
     //for specific org
 
     public function deleteAdminRole($userID, $orgID)
-    {
-        try {
-            DB::table('organization_user_role')
-                ->where('userID', $userID)
-                ->where('orgID', $orgID)
-                ->where('roleID', 2)
-                ->delete();
+{
+    try {
+        DB::table('organization_user_role')
+            ->where('userID', $userID)
+            ->where('orgID', $orgID)
+            ->where('roleID', 2)
+            ->delete();
 
             $user = User::find($userID);
             $org = Organization::find($orgID);
 
             $user->notify(new RemoveAdminNotification($org, $user));
 
-            session()->flash('toast', [
-                'title' => 'Success',
-                'description' => 'Admin role removed successfully!',
-                'variant' => 'success'
-            ]);
+        session()->flash('toast', [
+            'title' => 'Success',
+            'description' => 'Admin role removed successfully!',
+            'variant' => 'success'
+        ]);
 
 
 
-            return redirect()->route('superadmin.invite');
-        } catch (Exception $e) {
-            session()->flash('toast', [
-                'title' => 'Failed',
-                'description' => 'Failed to remove admin role.',
-                'variant' => 'destructive'
-            ]);
-            return redirect()->back();
-        }
+        return redirect()->route('superadmin.invite');
+    } catch (Exception $e) {
+        session()->flash('toast', [
+            'title' => 'Failed',
+            'description' => 'Failed to remove admin role.',
+            'variant' => 'destructive'
+        ]);
+        return redirect()->back();
     }
+}
 
 
 
@@ -416,25 +415,24 @@ class SuperAdminController extends Controller
         return Inertia::render('SuperAdmin/SuperAdminDataUpload');
     }
 
-    private function handleStudentUpload($studentFile)
-    {
-        $studentData = fopen($studentFile, 'r');
+    private function handleStudentUpload($studentFile) {
+        $studentData = fopen($studentFile, 'r');            
         $studentChunks = [];
 
         try {
             $dumpHeader = fgetcsv($studentData); // skip the header in the csv file
-
+            
             while ($data = fgetcsv($studentData)) {
                 $existingUser = User::find($data[0]);
 
-                if ($existingUser != null) {
-                    if ($existingUser->email != $data[1]) {  // to check if user has changed their email
+                if ($existingUser != null) {         
+                    if ($existingUser->email != $data[1]) {  // to check if user has changed their email 
                         $existingUser->email = $data[1];
                         $existingUser->save();
                     }
                 } else {
                     $studentChunks[] = [
-                        "userID" => $data[0],
+                        "userID" => $data[0],   
                         "email" => $data[1],
                         "firstname" => $data[2],
                         "lastname" => $data[3],
@@ -453,7 +451,7 @@ class SuperAdminController extends Controller
 
             if (!empty($studentChunks)) { // insert the rest in studentChunks
                 User::insert($studentChunks);
-            }
+            }    
         } catch (Exception $e) {
             // TO-DO: return with proper error
             session()->flash('toast', [
@@ -474,8 +472,7 @@ class SuperAdminController extends Controller
         return redirect()->back();
     }
 
-    private function handleOrganizationUpload($organizationFile)
-    {
+    private function handleOrganizationUpload($organizationFile) {
         try {
             $fileTypeValidator = Validator::make(['organizationFile' => $organizationFile], [
                 'organizationFile' => ['required', 'file', 'mimes:json']
@@ -487,12 +484,12 @@ class SuperAdminController extends Controller
                     'description' => 'File type must be JSON (.json)',
                     'variant' => 'destructive'
                 ]);
-
+                
                 return redirect()->back()->with('error');
             }
 
-            $submittedData = json_decode(file_get_contents($organizationFile), true);
-
+            $submittedData= json_decode(file_get_contents($organizationFile), true);
+            
             $contentValidator = Validator::make($submittedData, [
                 '*.name' => ['required', 'string'],
                 '*.department' => ['required', 'string'],
@@ -507,6 +504,7 @@ class SuperAdminController extends Controller
 
                 return redirect()->back()->with('error');
             }
+
         } catch (Exception $e) {
             session()->flash('toast', [
                 'title' => 'Failed to upload',
@@ -514,18 +512,19 @@ class SuperAdminController extends Controller
                 'variant' => 'destructive'
             ]);
             return redirect()->back()->with('error');
+            
         }
-
+        
         $existingOrgs = Organization::all()->toArray();
 
         $submittedDataNames = [];
         $existingOrgNames = [];
 
-        foreach ($submittedData as $org) {
+        foreach($submittedData as $org) {
             $submittedDataNames[] = $org['name'];
         }
 
-        foreach ($existingOrgs as $org) {
+        foreach($existingOrgs as $org) {
             $existingOrgNames[] = $org['name'];
         }
 
@@ -537,7 +536,7 @@ class SuperAdminController extends Controller
 
         // get the name of the newly added orgs
         $newOrgNames = array_diff($submittedDataNames, $existingOrgNames);
-
+    
         if (!empty($orgNamesToHide)) {
             Organization::whereIn('name', $orgNamesToHide)->update(['visibility' => false]);
         }
@@ -545,15 +544,15 @@ class SuperAdminController extends Controller
         if (!empty($newOrgNames)) {
             foreach ($newOrgNames as $newOrgName) {
                 $newOrgData = collect($submittedData)->firstWhere('name', $newOrgName);
-
+    
                 Organization::create([
                     'name' => $newOrgData['name'],
                     'department' => $newOrgData['department'],
                 ]);
             }
         }
-
-
+        
+    
         session()->flash('toast', [
             'title' => 'File Uploaded Successfully',
             'description' => 'The organization list and status was updated',
@@ -562,8 +561,7 @@ class SuperAdminController extends Controller
         return redirect()->back();
     }
 
-    public function upload(Request $request)
-    {
+    public function upload(Request $request) {
         if ($request->studentFile == null && $request->organizationFile == null) {
             session()->flash('toast', [
                 'title' => 'Failed to upload',
@@ -575,10 +573,10 @@ class SuperAdminController extends Controller
 
         if ($request->studentFile != null) {
             $this->handleStudentUpload($request->file('studentFile'));
-        }
-        if ($request->organizationFile != null) {
+        } 
+        if ($request->organizationFile != null) { 
             $this->handleOrganizationUpload($request->file('organizationFile'));
-        }
+        } 
     }
 
     // Activity log tab functions

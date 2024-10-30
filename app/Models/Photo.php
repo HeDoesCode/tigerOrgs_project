@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class Photo extends Model
 {
@@ -19,11 +17,9 @@ class Photo extends Model
     protected $fillable = [
         'orgID',
         'filename',
-        'caption'
     ];
 
-    public function organization(): BelongsTo
-    {
+    public function organization() : BelongsTo {
         return $this->belongsTo(Organization::class, 'orgID', 'orgID');
     }
 }
