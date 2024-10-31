@@ -267,12 +267,8 @@ class FormController extends Controller
                                 $text = $pdf->getText();
     
                                 // store the extracted text in the item's value
-                                $item['value'] = [
-                                    'content' => $text,
-                                    'original_filename' => $file->getClientOriginalName(),
-                                    'extracted_at' => now()->toDateTimeString(),
-                                    'file_size' => $file->getSize()
-                                ];
+                                $item['value'] = $text;
+                                
                             } catch (\Exception $e) {
                                 
                                 throw new Exception('Failed to parse PDF: ' . $e->getMessage());

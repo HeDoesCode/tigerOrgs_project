@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Criteria;
 use Illuminate\Http\Request;
 use App\Models\Organization;
 use App\Models\Photo;
@@ -679,23 +680,33 @@ class AdminController extends Controller
 
 
     public function applications($orgID)
-    {
-        $organization = Organization::find($orgID);
+{
+    $organization = Organization::find($orgID);
 
+    $criteria = DB::table('criteria')
+        ->where('orgID', $orgID)
+        ->select('criteriaID', 'name', 'description')
+        ->whereNotNull('description')
+        ->where('description', '!=', '')
+        ->get();
 
-        $formsWithApplications = Form::where('orgID', $orgID)
-            ->with(['applications' => function ($query) {
+    $formsWithApplications = Form::where('orgID', $orgID)
+        ->with([
+            'applications' => function ($query) {
                 $query->select('applicationID', 'formID', 'userID', 'userData', 'similarityScore', 'status', 'created_at')
                     ->with('user:userID,firstname,lastname,email,college');
-            }])
-            ->get(['formID', 'formLayout', 'orgID']);
+            }
+        ])
+        ->get(['formID', 'formLayout', 'orgID', 'criteriaID']);
+
+    return Inertia::render('Admin/AdminManageApplication', [
+        'orgID' => $organization->orgID,
+        'formsWithApplications' => $formsWithApplications,
+        'orgCriteria' => $criteria // Pass criteria separately
+    ]);
+}
 
 
-        return Inertia::render('Admin/AdminManageApplication', [
-            'orgID' => $organization->orgID,
-            'formsWithApplications' => $formsWithApplications,
-        ]);
-    }
 
     public function formhistory($orgID)
     {

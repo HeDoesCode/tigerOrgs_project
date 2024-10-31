@@ -6,7 +6,7 @@ import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import DotsVertical from "@/Components/DotsVertical";
 import AdminDialog from "@/Components/Admin/AdminDialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Select,
     SelectContent,
@@ -16,9 +16,12 @@ import {
 } from "@/Components/ui/select";
 import RenderFormItem from "@/Components/Forms/Form-Renderer/RenderFormItem";
 import RenderFormItemAnswers from "@/Components/Forms/Form-Renderer/RenderFormItemAnswers";
+import { TokenizerEn, StemmerEn } from "@nlpjs/lang-en";
+import pos from "pos";
 
-function AdminManageApplication({ orgID, formsWithApplications }) {
+function AdminManageApplication({ orgID, formsWithApplications, orgCriteria }) {
     const [selectedFormId, setSelectedFormId] = useState(null);
+    const [similarityScores, setSimilarityScores] = useState({});
 
     const handleFormSelect = (formId) => {
         setSelectedFormId(formId);
@@ -28,6 +31,213 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
         (form) => form.formID === selectedFormId
     );
     const hasApplications = selectedForm?.applications?.length > 0;
+
+    //for testing
+    // Initialize NLP tools
+    const preprocessText = (text, tokenizer, tagger) => {
+        if (!text || typeof text !== "string") return [];
+        const tokens = tokenizer.tokenize(text.toLowerCase());
+        const posTags = tagger.tag(tokens);
+        return tokens.filter((_, i) => {
+            const tag = posTags[i][1];
+            return !["CC", "DT", "IN", "PRP", "UH"].includes(tag);
+        });
+    };
+
+    // Calculate Term Frequency for a document
+    const calculateTF = (tokens) => {
+        const termFreq = {};
+        tokens.forEach((term) => {
+            termFreq[term] = (termFreq[term] || 0) + 1;
+        });
+        const maxFreq = Math.max(...Object.values(termFreq));
+        return Object.fromEntries(
+            Object.entries(termFreq).map(([term, freq]) => [
+                term,
+                freq / maxFreq,
+            ])
+        );
+    };
+
+    // Calculate IDF for all documents
+    const calculateIDF = (documentsTokens) => {
+        const numDocs = documentsTokens.length;
+        const termDocs = {};
+
+        documentsTokens.forEach((tokens) => {
+            new Set(tokens).forEach((term) => {
+                termDocs[term] = (termDocs[term] || 0) + 1;
+            });
+        });
+
+        return Object.fromEntries(
+            Object.entries(termDocs).map(([term, freq]) => [
+                term,
+                Math.log(numDocs / freq),
+            ])
+        );
+    };
+
+    // Calculate TF-IDF vector for a document
+    const calculateTFIDF = (tf, idf) => {
+        const tfidf = {};
+        Object.keys(tf).forEach((term) => {
+            if (idf[term]) {
+                tfidf[term] = tf[term] * idf[term];
+            }
+        });
+        return tfidf;
+    };
+
+    // Calculate cosine similarity between two TF-IDF vectors
+    const calculateCosineSimilarity = (vector1, vector2) => {
+        const terms = new Set([
+            ...Object.keys(vector1),
+            ...Object.keys(vector2),
+        ]);
+
+        let dotProduct = 0;
+        let magnitude1 = 0;
+        let magnitude2 = 0;
+
+        terms.forEach((term) => {
+            const v1 = vector1[term] || 0;
+            const v2 = vector2[term] || 0;
+            dotProduct += v1 * v2;
+            magnitude1 += v1 * v1;
+            magnitude2 += v2 * v2;
+        });
+
+        magnitude1 = Math.sqrt(magnitude1);
+        magnitude2 = Math.sqrt(magnitude2);
+
+        if (magnitude1 === 0 || magnitude2 === 0) return 0;
+        return dotProduct / (magnitude1 * magnitude2);
+    };
+
+    // Main function to compare criteria with user answers
+    const compareCriteriaWithAnswers = (criteria, userAnswers) => {
+        const tokenizer = new TokenizerEn();
+        const tagger = new pos.Tagger();
+
+        // Process criteria descriptions
+        const criteriaTokens = criteria.map((criterion) =>
+            preprocessText(criterion.description, tokenizer, tagger)
+        );
+
+        // Process user answers
+        const answerTokens = userAnswers.map((answer) =>
+            preprocessText(answer, tokenizer, tagger)
+        );
+
+        // Combine all documents for IDF calculation
+        const allDocuments = [...criteriaTokens, ...answerTokens];
+        const idf = calculateIDF(allDocuments);
+
+        // Calculate TF-IDF vectors for criteria
+        const criteriaTFIDF = criteriaTokens.map((tokens) => {
+            const tf = calculateTF(tokens);
+            return calculateTFIDF(tf, idf);
+        });
+
+        // Calculate TF-IDF vectors for answers
+        const answersTFIDF = answerTokens.map((tokens) => {
+            const tf = calculateTF(tokens);
+            return calculateTFIDF(tf, idf);
+        });
+
+        // Calculate similarity scores
+        const similarityScores = criteriaTFIDF.map((criterionVector, i) => {
+            return answersTFIDF.map((answerVector) =>
+                calculateCosineSimilarity(criterionVector, answerVector)
+            );
+        });
+
+        return similarityScores;
+    };
+
+    // Usage in your component:
+    useEffect(() => {
+        if (selectedForm?.applications && orgCriteria) {
+            // Debug logs
+            console.log("Organization Criteria:", orgCriteria);
+            console.log("Selected Form:", selectedForm);
+
+            // Convert criteria to the format we need
+            const criteriaDescriptions = orgCriteria
+                .filter(
+                    (criterion) =>
+                        criterion && typeof criterion.description === "string"
+                )
+                .map((criterion) => ({
+                    id: criterion.criteriaID,
+                    description: criterion.description,
+                }));
+
+            console.log("Criteria Descriptions:", criteriaDescriptions);
+
+            const newSimilarityScores = {};
+
+            selectedForm.applications.forEach((application) => {
+                // Extract text answers from application
+                const textAnswers = application.userData.layout
+                    .filter(
+                        (item) =>
+                            typeof item.value === "string" &&
+                            item.value.trim() !== ""
+                    )
+                    .map((item) => item.value);
+
+                console.log(
+                    "Text Answers for application",
+                    application.applicationID,
+                    ":",
+                    textAnswers
+                );
+
+                if (
+                    criteriaDescriptions.length === 0 ||
+                    textAnswers.length === 0
+                ) {
+                    console.log("No valid criteria or answers to compare");
+                    newSimilarityScores[application.applicationID] = 0;
+                    return;
+                }
+
+                // Calculate similarity scores
+                const scores = compareCriteriaWithAnswers(
+                    criteriaDescriptions,
+                    textAnswers
+                );
+
+                console.log(
+                    "Raw Similarity Scores for Application:",
+                    application.applicationID
+                );
+                console.log("Scores:", scores);
+
+                // Calculate average similarity score
+                const flatScores = scores.flat();
+                const averageScore =
+                    flatScores.length > 0
+                        ? (flatScores.reduce((a, b) => a + b, 0) /
+                              flatScores.length) *
+                          100
+                        : 0;
+
+                newSimilarityScores[application.applicationID] = averageScore;
+
+                console.log(
+                    "Average Similarity Score for application",
+                    application.applicationID,
+                    ":",
+                    averageScore.toFixed(2) + "%"
+                );
+            });
+
+            setSimilarityScores(newSimilarityScores);
+        }
+    }, [selectedForm, orgCriteria]);
 
     return (
         <div className="w-full">
@@ -143,6 +353,9 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                                                 selectedFormId={
                                                                     selectedFormId
                                                                 }
+                                                                similarityScores={
+                                                                    similarityScores
+                                                                }
                                                             />
                                                         )
                                                     )}
@@ -194,7 +407,12 @@ function ApplicationForms({
     );
 }
 
-function ApplicationResponses({ application, orgID, selectedFormId }) {
+function ApplicationResponses({
+    application,
+    orgID,
+    selectedFormId,
+    similarityScores,
+}) {
     const { errors } = usePage().props;
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -282,8 +500,11 @@ function ApplicationResponses({ application, orgID, selectedFormId }) {
             </td>
             <td className="lg:col-span-1 px-4 text-sm content-center">
                 <div className={`bg-[#609B00] rounded-xl text-white`}>
-                    {/* palagay code  */}
-                    90% Match
+                    {similarityScores[application.applicationID]
+                        ? `${similarityScores[
+                              application.applicationID
+                          ].toFixed(1)}% Match`
+                        : "Calculating..."}
                 </div>
             </td>
             <td className="col-span-1 text-sm grid grid-cols-2">
