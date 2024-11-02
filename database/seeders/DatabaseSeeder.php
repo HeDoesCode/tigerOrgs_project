@@ -84,9 +84,9 @@ class DatabaseSeeder extends Seeder
             ->create()
             ->each(function ($organization) use ($users) {
                 // Random Keywords
-                $keywords = Keyword::all()->pluck('keyID')->toArray();
-                $randomKeywords = array_rand(array_flip($keywords), rand(5, 15));
-                $organization->keywords()->attach($randomKeywords);
+                // $keywords = Keyword::all()->pluck('keyID')->toArray();
+                // $randomKeywords = array_rand(array_flip($keywords), rand(5, 15));
+                // $organization->keywords()->attach($randomKeywords);
 
                 // Random Officers
                 $usersArray = $users->pluck('userID')->toArray(); // Get an array of user IDs
