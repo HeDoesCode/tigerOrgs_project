@@ -46,7 +46,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
     const handleInvite = (e) => {
         console.log(orgID);
         console.log(data.userID);
-        
+
         post(`/admin/${orgID}/addMember/${data.userID}`, {
             preserveState: true,
             preserveScroll: true,
@@ -157,7 +157,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                             type="submit"
                                             className="flex px-9  shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white"
                                         >
-                                            <span className="ml-2  poppins hidden truncate sm:block">
+                                            <span className="ml-2  poppins truncate sm:block">
                                                 Announce
                                             </span>
                                         </button>
@@ -186,7 +186,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                     {searchResults.map((user) => (
                                         <VerticalCard
                                             key={user.userID}
-                                            gridcol="grid-cols-4"
+                                            gridcol="grid-col-1 md:grid-cols-4"
                                         >
                                             <div className="text-sm font-bold content-center text-center">
                                                 {user.firstname} {user.lastname}
@@ -194,7 +194,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                             <div className="truncate col-span-2 content-center text-sm font-semibold text-center">
                                                 {user.email}
                                             </div>
-                                            <div className="sm px-4 text-sm content-center ">
+                                            <div className="sm px-4 text-sm content-center justify-self-center ">
                                                 <AdminAlertDialog
                                                     trigger={
                                                         <div

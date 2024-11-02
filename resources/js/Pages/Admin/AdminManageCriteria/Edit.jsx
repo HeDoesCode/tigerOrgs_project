@@ -13,25 +13,28 @@ function Edit({ orgID, criteriaData }) {
 
     const handleCancel = () => {
         setData({
-            name: criteriaData.name, 
-            description: criteriaData.description
+            name: criteriaData.name,
+            description: criteriaData.description,
         });
-        router.get(route('admin.criteria.index', [orgID]));
-    }
+        router.get(route("admin.criteria.index", [orgID]));
+    };
 
     const handleReset = () => {
         if (confirm("Are you sure you want to revert changes?")) {
             setData({
-                name: criteriaData.name, 
-                description: criteriaData.description
+                name: criteriaData.name,
+                description: criteriaData.description,
             });
         }
-    }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        put(route("admin.criteria.update", [orgID, criteriaData.criteriaID]), data);
+        put(
+            route("admin.criteria.update", [orgID, criteriaData.criteriaID]),
+            data
+        );
     };
 
     return (
