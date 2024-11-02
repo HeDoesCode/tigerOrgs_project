@@ -5,7 +5,7 @@
 @section('message', __('Your session has timed out. Please reload the page to continue'))
 @section('action')
     <button onclick="window.location.reload()"
-        class="px-4 py-2 bg-black text-white rounded-xl hover:bg-black/70 flex gap-x-2">
+        class="px-4 py-2 bg-black text-white rounded-xl hover:bg-black/70 flex gap-x-2 items-center">
         {{-- <span class="whitespace-nowrap"> --}}
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
