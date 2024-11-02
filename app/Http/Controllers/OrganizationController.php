@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Application;
 use App\Models\Form;
+use App\Models\Officer;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Keyword;
 use Inertia\Controller;
 use App\Models\Organization;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -159,18 +161,31 @@ class OrganizationController extends Controller
         $organization = Organization::withCount('members')
             ->with('officers.user')
             ->with('contacts')
-            ->findOrFail($orgID);
-        // try {
+            ->find($orgID);
 
-        // }
+        $officers = Officer::where('orgID', $orgID);
+
+        if ($officers->exists()) {
+            $latestCreatedAt = $officers->max('created_at');
+            $latestUpdatedAt = $officers->max('updated_at');
+
+            // Get the most recent date and format it
+            $latestOfficerUpdateDate = Carbon::parse(max($latestCreatedAt, $latestUpdatedAt))
+                ->format('M. d, Y');
+        } else {
+            $latestOfficerUpdateDate = 'N/A';
+        }
+
         $pageData = [
             'metadata' => [
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,
             ],
             'aboutUs' => $organization->description,
+            'fb_link' => $organization->fb_link,
             'contacts' => $organization->contacts,
             'officers' => $organization->officers,
+            'latestOfficerUpdate' => $latestOfficerUpdateDate,
             'photos' => $this->getOrgPhotos($orgID),
         ];
 

@@ -29,7 +29,7 @@ Usage:
     />
 */
 
-export default function TextEditorDialog({ trigger, type, target, required = false, componentProps, maxLength }) {
+export default function TextEditorDialog({ trigger, type, target, required = false, componentProps }) {
     const [text, setText] = useState(typeof trigger === 'string' ? trigger : '');
 
     const handleTextSave = (e) => {

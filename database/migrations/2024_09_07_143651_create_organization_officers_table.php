@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreign('userID')->references('userID')->on('users')->onDelete('cascade');
             $table->string('position');
             // $table->primary(['orgID', 'userID']);
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 

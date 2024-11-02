@@ -17,6 +17,7 @@ import OrganizationLayout from "@/Components/Organizations/OrganizationLayout";
 import { Head } from "@inertiajs/react";
 import IconPoint from "@/Components/Icons/IconPoint";
 import { useToast } from "@/hooks/use-toast";
+import FacebookPage from "@/Components/Organizations/FacebookPage";
 
 function Home({
     editing = false,
@@ -26,6 +27,8 @@ function Home({
     withFollow,
 }) {
     const { toast } = useToast();
+
+    console.log('latestOfficerUpdate:', pageData.latestOfficerUpdate)
 
     const copyToClipboard = (text) => {
         navigator.clipboard
@@ -51,7 +54,6 @@ function Home({
     return (
         <OrganizationLayout
             pageLayoutData={pageLayoutData}
-            // setEditableLayoutData={setEditableLayoutData}
             recruiting={recruiting}
             editing={editing}
             withFollow={withFollow}
@@ -69,7 +71,7 @@ function Home({
                 </div>
 
                 {/* Facebook Iframe */}
-                <div className="w-full md:w-1/2">
+                <div className="w-full md:w-1/2 overflow-hidden">
                     <SocialIFrame />
                 </div>
             </div>
@@ -82,14 +84,14 @@ function Home({
         </OrganizationLayout>
     );
 
-    function Tile({ children, className, name, id }) {
+    function Tile({ children, className, name, id, childrenCN, nameCN }) {
         return (
             <div
                 className={`w-full bg-white p-4 md:p-7 rounded-lg flex flex-col ${className} space-y-1 relative`}
                 id={id}
             >
-                <div className="poppins text-lg font-extrabold">{name}</div>
-                <div className="w-full block whitespace-pre-line">{children}</div>
+                <div className={`poppins text-lg font-extrabold ${nameCN}`}>{name}</div>
+                <div className={`w-full block whitespace-pre-line ${childrenCN}`}>{children}</div>
             </div>
         );
     }
@@ -97,7 +99,7 @@ function Home({
     function AboutUsContainer() {
 
         return (
-            <Tile name="About Us">
+            <Tile name="About Us" id='aboutUs'>
                 {pageData.aboutUs}
                 {editing && editing.aboutUs}
             </Tile>
@@ -116,15 +118,17 @@ function Home({
         };
 
         return (
-            <Tile name="Contacts and Information">
+            <Tile name="Contacts and Information" id='contacts'>
                 <ul className="w-full space-y-2 pl-2 relative">
                     {pageData.contacts.map((contact, index) => (
                         <li
                             key={index}
-                            className="flex items-center quicksand gap-x-2"
+                            className="flex flex-col  sm:flex-row sm:items-center quicksand gap-x-2"
                         >
-                            <div>{platformIcons[contact.platform]}</div>
-                            <div className="font-semibold">{contact.name}:</div>
+                            <div className="flex gap-x-2">
+                                <div>{platformIcons[contact.platform]}</div>
+                                <div className="font-semibold">{contact.name}:</div>
+                            </div>
                             <button
                                 className="truncate flex-1 text-left hover:outline hover:outline-1 rounded-md hover:outline-gray-500 hover:px-2 transition-all"
                                 onClick={() => copyToClipboard(contact.address)}
@@ -139,20 +143,19 @@ function Home({
         );
     }
 
-    // not editable
     function OfficersContainer() {
         const officers = pageData.officers;
 
         return (
-            <Tile name="Officers">
+            <Tile name="Officers" className='h-full' id='officers'>
                 <ul className="w-full space-y-2 pl-2">
+                    {/* {officers.map((officer, index) => ( */}
                     {officers.map((officer, index) => (
                         <li key={index} className="flex items-center">
                             <span className="mr-3">•</span>
                             <div>
-                                <div className="nunito font-extrabold text-lg">
-                                    {officer.user.firstname}&nbsp;
-                                    {officer.user.lastname}
+                                <div className="nunito font-extrabold text-md leading-6">
+                                    {officer?.user?.firstname}{officer?.user?.middlename ? ` ${officer?.user?.middlename[0]}.` : ''} {officer?.user?.lastname}
                                 </div>
                                 <div className="-mt-1 quicksand text-sm">
                                     {officer.position}
@@ -161,6 +164,7 @@ function Home({
                         </li>
                     ))}
                 </ul>
+                <div className="absolute top-3 right-3 text-xs text-slate-400/70 italic text-right leading-3">Last Update:<br />{pageData.latestOfficerUpdate}</div>
                 {editing && editing.officers}
             </Tile>
         );
@@ -168,8 +172,8 @@ function Home({
 
     function SocialIFrame() {
         return (
-            <Tile className="h-full" name="Social Activities">
-                <span>Facebook Iframe: {pageData.fb_link}</span>
+            <Tile childrenCN='h-fit' name="Social Activities" id='facebookLink'>
+                <FacebookPage link={pageData.fb_link} />
                 {editing && editing.social}
             </Tile>
         );
@@ -187,20 +191,20 @@ function Home({
                     {pageData['photos'].map((photo, index) => (
                         <Dialog key={index}>
                             <DialogTrigger className="contents">
-                                <div className="h-full flex-shrink-0 relative rounded-xl overflow-clip min-w-40">
+                                <div className="h-full flex-shrink-0 relative rounded-xl overflow-clip min-w-32">
                                     <img
                                         src={photo.filename}
                                         className="h-full object-cover"
                                         alt={photo.caption}
                                     />
-                                    <div className="absolute bottom-0 top-52 left-0 right-0 bg-gradient-to-b from-transparent to-black text-white px-9 flex items-center quicksand font-bold tracking-wide">
+                                    <div className="absolute text-sm md:text-base bottom-0 top-28 leading-5 md:top-52 left-0 right-0 bg-gradient-to-b from-transparent to-black text-white px-6 md:px-9 flex items-center quicksand font-bold md:tracking-wide">
                                         <span className="line-clamp-3">
                                             {photo.caption}
                                         </span>
                                     </div>
                                 </div>
                             </DialogTrigger>
-                            <DialogContent className="max-w-5xl w-fit max-h-[90%]">
+                            <DialogContent className="max-w-5xl w-full md:w-fit max-h-[90%]">
                                 <DialogHeader>
                                     <DialogTitle>{photo.caption}</DialogTitle>
                                     <DialogDescription></DialogDescription>

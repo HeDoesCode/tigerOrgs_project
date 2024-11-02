@@ -226,7 +226,7 @@ function OrganizationLayout({
 
     function CoverPhoto() {
         return (
-            <div className="max-h-[25rem] min-h-[15rem] h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
+            <div className="max-h-[25rem] min-h-10 h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
                 <img
                     src={pageLayoutData.coverPhoto}
                     alt="Organization Cover Photo"
@@ -239,7 +239,7 @@ function OrganizationLayout({
 
     function OrganizationLogo() {
         return (
-            <div className="size-36 md:size-44 rounded-[2rem] overflow-clip relative">
+            <div className="size-28 sm:size-36 md:size-44 rounded-[2rem] overflow-clip relative">
                 <img
                     src={pageLayoutData.logo}
                     alt="Organization Logo"
@@ -253,9 +253,6 @@ function OrganizationLayout({
     function OrganizationMetadata() {
         return (
             <div className="flex-1 relative">
-                {/* <div className="mb-2 text-sm text-slate-500 italic leading-4">
-                    {pageLayoutData.metadata.department}
-                </div> */}
                 <div className="text-lg inter font-extrabold">
                     {pageLayoutData.metadata.organizationName}
                 </div>

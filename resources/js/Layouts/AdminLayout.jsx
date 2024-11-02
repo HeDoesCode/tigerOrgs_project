@@ -50,7 +50,7 @@ function AdminLayout({ orgID, children }) {
                             // src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s"
                             src={orgLogo}
                             alt="test"
-                            className="bg-cover rounded-full"
+                            className="rounded-full object-cover aspect-square"
                         />
                     </div>
                     <div className="text-center mr-3 font-bold text-xs leading-4 line-clamp-3 h-min my-auto w-32 overflow-clip">

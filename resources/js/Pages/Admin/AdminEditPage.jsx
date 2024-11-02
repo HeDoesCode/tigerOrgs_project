@@ -21,33 +21,57 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/Components/ui/dialog"
+import {
+    Command,
+    CommandEmpty,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/Components/ui/command"
+
 import TextEditorDialog from "@/Components/Admin/EditPage/TextEditorDialog";
 import IconDelete from "@/Components/Icons/IconDelete";
 import IconSquareArrowUpFilled from "@/Components/Icons/IconSquareArrowUpFilled";
 import IconSquareArrowDownFilled from "@/Components/Icons/IconSquareArrowDownFilled";
 import EditorKeywordSelect from "@/Components/Admin/EditPage/EditorKeywordSelect";
+import { useMemo } from "react";
+import React from "react";
 
 function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
     const { errors } = usePage().props;
-    console.log(errors);
+    console.log('errors:', errors)
     const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 
     const [currentPageState, setCurrentPageState] = useState({
-        pageData: pageData,
-        pageLayoutData: pageLayoutData,
+        pageData: { ...pageData },
+        pageLayoutData: { ...pageLayoutData },
     });
+
+    // const [currentPageState, setCurrentPageState] = useState({
+    //     pageData: structuredClone(pageData), // use structuredClone to lose references and create independent copy
+    //     pageLayoutData: structuredClone(pageLayoutData),
+    // });
 
     const [changesMade, setChangesMade] = useState({
         all: false,
         storage: {},
     });
 
+    console.log('current page state:', currentPageState)
+
     useEffect(() => {
         const statesChanged = !(
             JSON.stringify(currentPageState.pageData) ===
-                JSON.stringify(pageData) &&
+            JSON.stringify(pageData) &&
             JSON.stringify(currentPageState.pageLayoutData) ===
-                JSON.stringify(pageLayoutData)
+            JSON.stringify(pageLayoutData)
         );
 
         setChangesMade((prevState) => ({
@@ -123,6 +147,18 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                 delete changes["contacts"];
             }
 
+            // officers
+            if (
+                !jsonStringIsEqual(
+                    currentPageState.pageData.officers,
+                    pageData.officers
+                )
+            ) {
+                changes["officers"] = true;
+            } else {
+                delete changes["officers"];
+            }
+
             // social
             if (
                 !jsonStringIsEqual(
@@ -165,9 +201,6 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
         setChangesMade({ all: false });
     };
 
-    // console.log('pageData photos:', currentPageState.pageData.photos)
-    // console.log('photo storage:', changesMade.storage.photos)
-
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
@@ -190,9 +223,8 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                     title="Edit Organization's Page"
                 >
                     <div
-                        className={`p-5 m-1 !border-2 border-transparent ${
-                            changesMade.all && "!border-red-500"
-                        }`}
+                        className={`p-5 m-1 !border-2 border-transparent ${changesMade.all && "!border-red-500"
+                            }`}
                     >
                         {changesMade.all && (
                             <div className="flex justify-end mb-2">
@@ -213,7 +245,6 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                                 photos: <EditorPhotos />,
                                 saveButton: <EditorSaveButton />,
                             }}
-                            recruiting={false} //example lang
                             pageData={currentPageState.pageData}
                             pageLayoutData={currentPageState.pageLayoutData}
                         />
@@ -311,8 +342,8 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         previewChangeProps={
                             file
                                 ? {
-                                      onClick: handleSavePreview,
-                                  }
+                                    onClick: handleSavePreview,
+                                }
                                 : null
                         }
                     />
@@ -439,8 +470,8 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         previewChangeProps={
                             file
                                 ? {
-                                      onClick: handleSavePreview,
-                                  }
+                                    onClick: handleSavePreview,
+                                }
                                 : null
                         }
                     />
@@ -590,7 +621,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                     placeholder="Your description here..."
                     className="h-52"
                     maxLength={maxTextLength}
-                    value={editAboutUs}
+                    value={editAboutUs || ''}
                     onBlur={() =>
                         setEditAboutUs((prevState) => {
                             const trimmedText = prevState?.trim();
@@ -705,7 +736,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                                                 <div className="size-full flex items-center justify-center cursor-pointer hover:bg-slate-300 rounded-lg">
                                                     {
                                                         platformIcons[
-                                                            contact.platform
+                                                        contact.platform
                                                         ]
                                                     }
                                                 </div>
@@ -734,7 +765,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                                                     ];
                                                     updatedContact[index] = {
                                                         ...updatedContact[
-                                                            index
+                                                        index
                                                         ],
                                                         name: text,
                                                     };
@@ -765,7 +796,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                                                     ];
                                                     updatedContact[index] = {
                                                         ...updatedContact[
-                                                            index
+                                                        index
                                                         ],
                                                         address: text,
                                                     };
@@ -874,13 +905,240 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
     }
 
     function EditorOfficers() {
-        return (
-            // <EditArea>
-            // </EditArea>
-            <div className="absolute inset-0 flex items-center justify-center font-bold text-3xl -rotate-45 text-red-500/50 pointer-events-none">
-                edit pending
-            </div>
+        const [editOfficers, setEditOfficers] = useState([...currentPageState.pageData.officers])
+        const sortedMembers = useMemo(() =>
+            members.sort((a, b) => a.lastname.localeCompare(b.lastname)),
+            [members]
         );
+        const [selectedRowIndex, setSelectedRowIndex] = useState(null)
+
+        const handleSavePreview = () => {
+            // filter out officer with empty/null user, userID, and position
+            setCurrentPageState((prevState) => {
+                const nonEmptyOfficers = editOfficers.filter((value) => (
+                    value.userID !== null && value.user !== null && value.position !== ''
+                ))
+
+                return {
+                    ...prevState,
+                    pageData: {
+                        ...prevState.pageData,
+                        officers: [...nonEmptyOfficers]
+                    }
+                }
+            })
+        }
+
+        const handleAddOfficerField = () => {
+            setEditOfficers((prevState) => ([
+                ...prevState, {
+                    officerID: null,
+                    orgID: orgID,
+                    userID: null,
+                    position: '',
+                    user: null
+                }
+            ]))
+        }
+
+        function handleMoveItemUp(index) {
+            if (index === 0) return;
+            setEditOfficers((prevState) => {
+                let updatedOfficers = [...prevState];
+
+                const heldItem = updatedOfficers[index - 1];
+                updatedOfficers[index - 1] = updatedOfficers[index];
+                updatedOfficers[index] = heldItem;
+
+                return updatedOfficers;
+            })
+        }
+
+        function handleMoveItemDown(index) {
+            if (index >= editOfficers.length - 1) return;
+            setEditOfficers((prevState) => {
+                let updatedOfficers = [...prevState];
+
+                const heldItem = updatedOfficers[index + 1];
+                updatedOfficers[index + 1] = updatedOfficers[index];
+                updatedOfficers[index] = heldItem;
+
+                return updatedOfficers;
+            })
+        }
+
+
+        function handleDelete(index) {
+            setEditOfficers((prevState) => {
+                const updatedOfficers = prevState.filter((value, i) => i !== index);
+                return updatedOfficers;
+            })
+        }
+
+        const handleReset = () => {
+            setCurrentPageState((prevState) => ({
+                ...prevState,
+                pageData: {
+                    ...prevState.pageData,
+                    officers: pageData.officers,
+                }
+            }))
+        }
+
+        return (
+            <EditArea
+                title="Set officers list"
+                componentProps={{
+                    // dialog: { open: true },
+                    dialogContentCN: "max-w-[40rem] w-full overflow-x-auto",
+                    dialogTriggerCN: changesMade.changes?.officers
+                        ? "border border-red-500"
+                        : "",
+                }}
+                footer={
+                    <EditArea.ActionButtons
+                        previewChangeProps={{ onClick: handleSavePreview }}
+                        resetProps={{ onClick: handleReset }}
+                    />}
+            >
+                <table>
+                    <thead>
+                        <tr>
+                            <th className="text-left px-2">
+                                <div className="py-3">Position</div>
+                            </th>
+                            <th className="text-left px-2">Assigned Member</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {editOfficers.map((officer, index) => (
+                            <React.Fragment key={index}>
+                                <tr>
+                                    <td className="text-left">
+                                        <TextEditorDialog
+                                            trigger={officer?.position || <span className="text-red-500/80 font-bold">*required</span>}
+                                            type='Position Name'
+                                            required='true'
+                                            componentProps={{
+                                                dialogTriggerCN:
+                                                    "text-xs sm:text-base leading-tight sm:leading-normal",
+                                                input: { maxLength: 255 },
+                                            }}
+                                            target={(text) => {
+                                                setEditOfficers((prevState) => {
+                                                    let updatedOfficers = [...prevState];
+                                                    updatedOfficers[index] = {
+                                                        ...updatedOfficers[index],
+                                                        position: text
+                                                    }
+
+                                                    return updatedOfficers;
+                                                })
+                                            }}
+                                        />
+                                    </td>
+                                    <td>
+                                        <button className="w-full text-left p-2 hover:outline hover:outline-slate-500 rounded-md"
+                                            onClick={() => setSelectedRowIndex(index)}
+                                        >
+                                            {officer.user !== null ? (
+                                                `${officer.user.lastname}, ${officer.user.firstname}${officer.user.middlename ? ` ${officer.user.middlename}` : ''}`
+                                            ) : (
+                                                <span className="text-red-500/80 font-bold">*required</span>
+                                            )}
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <div className="flex flex-col md:flex-row gap-3 justify-center items-center">
+                                            <div className="flex gap-x-1 items-center">
+                                                <button
+                                                    className="text-slate-600 enabled:hover:text-slate-600/80 disabled:cursor-not-allowed relative group"
+                                                    onClick={() => handleMoveItemUp(index)}
+                                                    disabled={index === 0}
+                                                >
+                                                    <IconSquareArrowUpFilled size={30} />
+                                                    <div className="group-disabled:block hidden h-0 border-b-2 border-red-500 absolute w-full inset-0 m-auto -rotate-45" />
+                                                </button>
+                                                <button
+                                                    className="text-slate-600 enabled:hover:text-slate-600/80 disabled:cursor-not-allowed relative group"
+                                                    onClick={() => handleMoveItemDown(index)}
+                                                    disabled={
+                                                        index === editOfficers.length - 1
+                                                    }
+                                                >
+                                                    <IconSquareArrowDownFilled size={30} />
+                                                    <div className="group-disabled:block hidden h-0 border-b-2 border-red-500 absolute w-full inset-0 m-auto -rotate-45" />
+                                                </button>
+                                            </div>
+                                            <button
+                                                onClick={() => handleDelete(index)}
+                                                className="size-10 flex items-center justify-center rounded-lg hover:bg-slate-300 relative group disabled:cursor-not-allowed"
+                                            >
+                                                <IconDelete />
+                                                <div className="group-disabled:block hidden h-0 border-b-2 border-red-500 absolute w-full inset-0 m-auto -rotate-45" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colSpan="3">
+                                        <div className="border-b-[1px] mt-2 mb-3 border-slate-300 w-full" />
+                                    </td>
+                                </tr>
+                            </React.Fragment>
+                        ))}
+                    </tbody>
+                </table>
+                <button
+                    className="py-2 rounded-md text-center w-full bg-slate-300 hover:bg-slate-300/80"
+                    onClick={handleAddOfficerField}
+                >
+                    <span className="text-xl">+</span>&nbsp;Add Officer
+                </button>
+                <Dialog open={selectedRowIndex !== null} onOpenChange={(open) => setSelectedRowIndex(open ? selectedRowIndex : null)}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Assign Student to this Position</DialogTitle>
+                            <DialogDescription className='mb-4'>
+                                Below is a list of your organization's current members:
+                            </DialogDescription>
+                            <Command>
+                                <CommandInput
+                                    placeholder="Search member by student id or name..."
+                                />
+                                <CommandList>
+                                    <CommandEmpty>No member found.</CommandEmpty>
+                                    {sortedMembers.map((member) => (
+                                        <CommandItem key={member.userID} className='hover:font-bold cursor-pointer py-4'
+                                            value={`${member.lastname}, ${member.firstname}${member.middlename ? ` ${member.middlename} ${member.userID}` : ''}`}
+                                            onSelect={() => {
+                                                const tempOfficer = {
+                                                    officerID: editOfficers[selectedRowIndex]?.officerID || null,
+                                                    orgID: parseInt(orgID),
+                                                    userID: String(member.userID),
+                                                    position: editOfficers[selectedRowIndex].position,
+                                                    user: { ...member }
+
+                                                }
+                                                setEditOfficers((prevState) => {
+                                                    let tempOfficers = [...prevState];
+                                                    tempOfficers[selectedRowIndex] = tempOfficer;
+                                                    return tempOfficers;
+                                                })
+                                                setSelectedRowIndex(null)
+                                            }}>
+                                            <span className="w-[10ch] text-end">{member.userID}</span>|&nbsp;&nbsp;{member.lastname}, {member.firstname}{member.middlename ? ` ${member.middlename}` : ''}
+                                        </CommandItem>
+                                    ))}
+                                </CommandList>
+                            </Command>
+
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
+            </EditArea>
+        )
     }
 
     function EditorSocial() {
@@ -916,6 +1174,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         ? "border border-red-500"
                         : "",
                 }}
+                transparent
                 footer={
                     <EditArea.ActionButtons
                         resetProps={{ onClick: handleReset }}
@@ -925,7 +1184,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
             >
                 <input
                     type="text"
-                    value={editSocial}
+                    value={editSocial || ''}
                     onBlur={() =>
                         setSocial((prevState) => {
                             const trimmedText = prevState?.trim();
@@ -956,7 +1215,6 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
             const nonEmptyPhotos = editPhotos.filter(
                 (photo) => photo.caption !== "" && photo.filename !== ""
             );
-            console.log(nonEmptyPhotos);
             setCurrentPageState((prevState) => ({
                 ...prevState,
                 pageData: {
@@ -1045,8 +1303,9 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
         }
 
         function handleMoveItemDown(index) {
+            if (index >= editPhotos.length - 1) return;
             setEditPhotos((prevState) => {
-                if (index >= prevState.length - 1) return prevState;
+                // if (index >= prevState.length - 1) return prevState;
 
                 const updatedPhotos = [...prevState];
 
@@ -1085,15 +1344,6 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                 return [...prevState, emptyPhoto];
             });
         }
-
-        /**
-         * replicating error:
-         *  - add new photo and delete default
-         * status of remaining row:
-         *  - storage file index 1, state index 0 // mismatch
-         */
-        console.log("editPhotos:", editPhotos);
-        console.log("tempPhotoStorage:", tempPhotoStorage);
 
         return (
             <EditArea
@@ -1141,10 +1391,10 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         <span className="text-xl">+</span>&nbsp;Add Photo
                     </button>
                 )) || (
-                    <span className="text-red-500 text-center text-sm font-bold -mt-3">
-                        (Max: 4)
-                    </span>
-                )}
+                        <span className="text-red-500 text-center text-sm font-bold -mt-3">
+                            (Max: 4)
+                        </span>
+                    )}
             </EditArea>
         );
 
@@ -1245,7 +1495,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                             </div>
                         </td>
                         <td>
-                            <div className="flex gap-x-3 justify-center">
+                            <div className="flex flex-col md:flex-row gap-3 justify-center items-center">
                                 <div className="flex gap-x-1 items-center">
                                     <button
                                         className="text-slate-600 enabled:hover:text-slate-600/80 disabled:cursor-not-allowed relative group"

@@ -10,7 +10,7 @@ class Officer extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     protected $primaryKey = 'officerID';
     protected $table = 'organization_officers';

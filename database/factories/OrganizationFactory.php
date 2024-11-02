@@ -51,7 +51,8 @@ class OrganizationFactory extends Factory
             'logo' => "default.jpeg",
             'coverPhoto' => "default.jpeg",
             'description' => fake()->realTextBetween($minNbChars = 160, $maxNbChars = 200, $indexSize = 2),
-            'fb_link' => fake()->url(),
+            // 'fb_link' => fake()->url(),
+            'fb_link' => '',
             'visibility' => fake()->boolean(),
             'department' => fake()->randomElement($departments)
         ];

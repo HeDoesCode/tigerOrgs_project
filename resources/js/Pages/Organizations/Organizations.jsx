@@ -32,7 +32,7 @@ function Organizations({
 }) {
     queryParameters = queryParameters || {};
     const [organizationList, setOrganizationList] = useState({});
-
+    // console.log(myMemberOrganizations)
     // group organizations by department/college
     useEffect(() => {
         const groupedByDepartment = organizations.reduce(
@@ -246,6 +246,7 @@ function Organizations({
                                         ).map((org, index) => (
                                             <OrganizationJoined
                                                 key={index}
+                                                visibility={org.visibility}
                                                 icon={org.logo}
                                                 title={org.name}
                                                 isAdmin={

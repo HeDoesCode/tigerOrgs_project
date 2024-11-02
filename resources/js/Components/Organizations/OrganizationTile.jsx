@@ -22,7 +22,7 @@ function OrganizationTile({ orgBg, orgIcon, title, desc, count, recruiting, href
                 </div>
             </div>
             {/* hover replacement */}
-            <div className="space-y-1">
+            <div className="space-y-1 w-full">
                 <div className="w-full line-clamp-2 poppins text-sm font-bold tracking-wide">{title}</div>
                 <div className="w-full text-xs line-clamp-2">{desc}</div>
                 <div className="w-full text-xs line-clamp-1 text-gray-600 truncate">{count} Members</div>

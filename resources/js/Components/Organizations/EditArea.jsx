@@ -15,7 +15,7 @@ function EditArea({ children, footer = null, title, description, transparent, co
         <Dialog {...componentProps?.dialog}>
             <DialogTrigger className={`contents ${transparent && 'pointer-events-none'}`}>
                 <div className={`absolute inset-0 h-full w-full flex items-center justify-center group hover:border hover:bg-slate-500/20 hover:backdrop-blur-[2px] rounded-lg transition-all ${componentProps?.dialogTriggerCN}`}>
-                    <div className="bg-gray-300/50 group-hover:bg-gray-500/90 px-3 py-2 opacity-30 group-hover:opacity-100 text-black group-hover:text-white rounded-xl flex flex-nowrap select-none pointer-events-auto">
+                    <div className={`${transparent ? 'opacity-50 bg-gray-400/80' : 'opacity-30 bg-gray-300/50'}  group-hover:bg-gray-500/90 px-3 py-2 group-hover:opacity-100 text-black group-hover:text-white rounded-xl flex flex-nowrap select-none pointer-events-auto`}>
                         <IconPencil /> <span className="text-base">Edit</span>
                     </div>
                 </div>

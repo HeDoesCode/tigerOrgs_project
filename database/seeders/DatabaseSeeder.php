@@ -90,17 +90,16 @@ class DatabaseSeeder extends Seeder
 
                 // Random Officers
                 $usersArray = $users->pluck('userID')->toArray(); // Get an array of user IDs
-                // dd($usersArray);
-                Officer::factory()
-                    ->count(7)
-                    ->for($organization, 'organization')
-                    ->create()
-                    ->each(function ($officer) use ($usersArray) {
-                        $officer->userID = array_rand(array_flip($usersArray)); // Assign a random user ID
-                        // dd($officer);
-                        // dd($officer);
-                        $officer->save(); // Save the officer with the new user ID
-                    });
+                // Officer::factory()
+                //     ->count(7)
+                //     ->for($organization, 'organization')
+                //     ->create()
+                //     ->each(function ($officer) use ($usersArray) {
+                //         $officer->userID = array_rand(array_flip($usersArray)); // Assign a random user ID
+                //         // dd($officer);
+                //         // dd($officer);
+                //         $officer->save(); // Save the officer with the new user ID
+                //     });
 
                 Contact::factory()
                     ->for($organization, 'organization')
