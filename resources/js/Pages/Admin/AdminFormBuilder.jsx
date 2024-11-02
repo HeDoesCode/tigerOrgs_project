@@ -23,6 +23,7 @@ function AdminFormBuilder({ orgID, formData, criterias }) {
                             icon: <IconForms />,
                             label: "Recruitment Form",
                             link: "admin.forms",
+                            altlink: "admin.forms",
                             params: { orgID },
                         },
                         {
