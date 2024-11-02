@@ -178,6 +178,7 @@ function ControlKeywords({ keywords, className, queryParameters }) {
                         {keywordBank.map((item, index) => (
                             <EditableKeywordTile key={index} name={item.keyword} add onClick={() => enableKeyword(item)} />
                         ))}
+                        {keywordBank.length === 0 && <span className="italic text-slate-400">No organization has set any keywords currently.</span>}
                     </div>
                     {/* <DialogClose asChild>
                         <div className="w-full flex justify-end">

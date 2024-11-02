@@ -111,17 +111,9 @@ class OrganizationController extends Controller
                 return $organization;
             });
 
-        // dd($organizations);
-
-        // get all available keywords
-        $keywords = Keyword::pluck('keyword', 'keyID');
-        // ... and parse into array of objects
-        $keywordsArray = $keywords->map(function ($keyword, $keyID) {
-            return [
-                'keyID' => $keyID,
-                'keyword' => $keyword,
-            ];
-        })->values()->toArray();
+        // // get all available keywords
+        $keywords = Keyword::join('organization_keywords', 'keywords.keyID', '=', 'organization_keywords.keyID')
+            ->select('keywords.*')->distinct()->get();
 
         // get all organization this user is a member of
         $myMemberOrganizations = Organization::join('organization_user_role', 'organizations.orgID', '=', 'organization_user_role.orgID')
@@ -149,7 +141,7 @@ class OrganizationController extends Controller
             'organizations' => $organizations,
             'recommendedOrganizations' => $recommendedOrganizations,
             'departments' => $departments,
-            'keywords' => $keywordsArray,
+            'keywords' => $keywords,
             'isSuperAdmin' => $isSuperAdmin,
             'myMemberOrganizations' => $myMemberOrganizations ?: [],
             'queryParameters' => $queryParameters ?: null,
