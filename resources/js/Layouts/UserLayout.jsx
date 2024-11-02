@@ -107,7 +107,10 @@ function UserLayout({ children, bgImage, noPadding }) {
                                 </div>
                             }
                         >
-                            <DDM_Link href={route("profile.edit")}>
+                            <DDM_Link
+                                href={route("profile.edit")}
+                                current={url === routePath("profile.edit")}
+                            >
                                 <IconProfile />
                                 <span>Profile</span>
                             </DDM_Link>
@@ -127,7 +130,9 @@ function UserLayout({ children, bgImage, noPadding }) {
                 {/* content for narrow */}
                 <div className="flex w-full sm:hidden justify-end space-x-4">
                     <Notifications
-                        count={`$page.props.unreadNotificationsCount`}
+                        unreadNotificationsCount={count}
+                        setUnreadNotificationsCount={setCount}
+                        notifications={notifications}
                     />
                     <HeaderDropdownMenu
                         triggerContent={
@@ -136,20 +141,30 @@ function UserLayout({ children, bgImage, noPadding }) {
                             </div>
                         }
                     >
-                        <DDM_Link current={url === routePath("index")}>
+                        <DDM_Link
+                            current={url === routePath("index")}
+                            href={route("index")}
+                        >
                             Home
                         </DDM_Link>
-                        <DDM_Link current={url === routePath("organizations")}>
+                        <DDM_Link
+                            current={url === routePath("organizations")}
+                            href={route("organizations")}
+                        >
                             Organizations
                         </DDM_Link>
                         <div className="px-3">
                             <DropdownMenuSeparator className="bg-gray-400" />
                         </div>
-                        <DDM_Link href={route("profile.edit")}>
+                        <DDM_Link
+                            current={url === routePath("profile.edit")}
+                            href={route("profile.edit")}
+                        >
                             <IconProfile />
                             <span>Profile</span>
                         </DDM_Link>
                         <DDM_Link
+                            current={url === routePath("logout")}
                             href={route("logout")}
                             method="post"
                             as="button"
