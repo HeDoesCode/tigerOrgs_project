@@ -135,6 +135,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
+Route::post('/api/register', [GoogleController::class, 'register']);
 
 // temporary testing route
 Route::get('/testing', [BackendTestingController::class, 'run'])->name('testing');

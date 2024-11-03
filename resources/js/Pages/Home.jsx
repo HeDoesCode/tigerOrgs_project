@@ -4,8 +4,19 @@ import Logo from "@/Components/Logo";
 import IconSearch from "@/Components/Icons/IconSearch";
 import Policy from "@/Components/ui/Custom/Policy";
 import { useState } from "react";
+import IconMailFilled from "@/Components/Icons/IconMailFilled";
+import KeywordSelect from "@/Components/Organizations/KeywordSelect";
+import InputContainer from "@/Pages/Profile/InputContainer";
+import { Inertia } from "@inertiajs/inertia";
 
-function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
+function Home({
+    bgImage,
+    tiger1,
+    tiger2,
+    googleUser,
+    isLoggedIn,
+    isNewUser = false,
+}) {
     const hideImage = () => {
         this.style.display = "none";
     };
@@ -86,96 +97,232 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
 
             <div className="relative">
                 {isLoggedIn || <GoogleModal />}
-                {isNewUser && <PrivacyPolicy />}
+                {isNewUser && <Reg googleUser={googleUser} />}
             </div>
         </div>
     );
 
-    function PrivacyPolicy({ onClose }) {
+    function Reg({ googleUser }) {
+        const [userId, setUserId] = useState(googleUser.id || "");
+        const [section, setSection] = useState(googleUser.section || "");
+        const [college, setCollege] = useState(googleUser.college || "");
+
+        const [errors, setErrors] = useState({});
+        const [isSubmitting, setIsSubmitting] = useState(false);
+
+        const validateForm = () => {
+            const newErrors = {};
+            console.log("Validating form with:", { userId, section, college });
+
+            if (!userId.trim()) {
+                newErrors.userIdError = "Specify ID Number";
+            }
+
+            if (!section.trim()) {
+                newErrors.userSectionError = "Specify Section";
+            } else if (!/^\d{1}-[A-Za-z]+$/.test(section)) {
+                newErrors.userSectionError =
+                    "Section must be in format: Year-Section (e.g., 3-ITG)";
+            }
+
+            if (!college?.trim()) {
+                newErrors.collegeError = "College affiliation is required";
+            }
+
+            return newErrors;
+        };
+
+        const handleSubmit = async () => {
+            const formErrors = validateForm();
+            if (Object.keys(formErrors).length > 0) {
+                setErrors(formErrors);
+                return;
+            }
+
+            setIsSubmitting(true);
+            try {
+                await Inertia.post("/api/register", {
+                    userID: userId,
+                    section: section,
+                    email: googleUser.email,
+                    college: college,
+                });
+                // Handle successful registration (like redirecting or showing a success message)
+            } catch (error) {
+                // Handle any errors returned from the backend
+                console.error(error.response?.data);
+                setErrors({ submit: "Registration failed. Please try again." });
+            } finally {
+                setIsSubmitting(false);
+            }
+        };
+
+        console.log({
+            googleUser,
+            id: userId,
+            firstname: googleUser.firstname,
+            lasttname: googleUser.lastname,
+            section: section,
+            email: googleUser.email,
+            college: college,
+            status: status,
+        });
+
         return (
             <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[50]">
-                <div className="inter fixed bg-white mx-5 max-w-[40rem]  border-gray-400 border rounded-xl p-5 sm:p-10 space-y-5">
-                    <div className="overflow-y-auto max-h-[70vh] pr-2 w-full">
-                        <Policy>
-                            <Policy.Title>
-                                Terms and Conditions Policy
-                            </Policy.Title>
-                            <Policy.Content>
-                                <Policy.Paragraph>
-                                    Welcome to TigerOrgs! By accessing or using
-                                    our platform, you agree to comply with and
-                                    be bound by the following terms and
-                                    conditions. Please read them carefully.
-                                </Policy.Paragraph>
-                                <Policy.Number
-                                    number="1"
-                                    title="Acceptance of Terms"
+                <div className="mt-4 w-full flex justify-center px-5">
+                    <div className="w-full max-w-[65rem] flex flex-col items-center drop-shadow shadow-black rounded-[2rem] space-y-3 bg-[#F4F4F4] border border-gray-300">
+                        <div className="h-36 w-full flex flex-col justify-center px-12 space-y-3 bg-[#ffd875] rounded-[2rem]">
+                            <span className="poetsen-one text-xl sm:text-3xl uppercase">
+                                {googleUser.firstname && googleUser.lastname
+                                    ? `${googleUser.firstname} ${googleUser.lastname}`
+                                    : "Name not available"}{" "}
+                            </span>
+                            <div className="flex gap-x-3 text-sm sm:text-base">
+                                <div className="hidden sm:contents">
+                                    <IconMailFilled />
+                                </div>
+                                <span>{googleUser.email}</span>
+                            </div>
+                        </div>
+                        <div className="w-full rounded-[2rem] bg-[#F0F0F0] drop-shadow border border-gray-300 p-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <IDInput
+                                        currentId={userId}
+                                        userIdError={errors.userIdError}
+                                        onChange={setUserId}
+                                    />
+                                    {errors.userIdError && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.userIdError}
+                                        </p>
+                                    )}
+                                </div>
+                                <div>
+                                    <CollegeInput
+                                        currentCollege={college}
+                                        onChange={setCollege}
+                                    />
+                                    {errors.collegeError && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.collegeError}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <SectionInput
+                                        currentSection={section}
+                                        userSectionError={
+                                            errors.userSectionError
+                                        }
+                                        onChange={setSection}
+                                    />
+                                    {errors.userSectionError && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.userSectionError}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="mt-6">
+                                <button
+                                    type="button"
+                                    onClick={handleSubmit}
+                                    disabled={isSubmitting}
+                                    className="px-6 py-1 bg-[#FFBC11] text-xs sm:text-base rounded-lg hover:bg-[#ebb222] disabled:opacity-50"
                                 >
-                                    By accessing TigerOrgs, you agree to be
-                                    bound by these Terms and Conditions and our
-                                    Privacy Policy. If you do not agree with any
-                                    part of these terms, you should not use the
-                                    platform.
-                                </Policy.Number>
-                                <Policy.Number number="2" title="Eligibility">
-                                    TigerOrgs is exclusively for students,
-                                    staff, and affiliated personnel of the
-                                    University of Santo Tomas (UST). By using
-                                    the platform, you confirm that you are a
-                                    current member of the UST community and have
-                                    a valid UST Gmail account.
-                                </Policy.Number>
-                                <Policy.Number
-                                    number="3"
-                                    title="User Registration and Accounts"
-                                >
-                                    <Policy.Bullet>
-                                        You must login using your UST Gmail
-                                        account. You are responsible for
-                                        maintaining the confidentiality of your
-                                        login credentials and for all activities
-                                        that occur under your account.
-                                    </Policy.Bullet>
-                                </Policy.Number>
-                                <Policy.Number
-                                    number="4"
-                                    title="Use of the Platform"
-                                >
-                                    <Policy.Bullet>
-                                        Content and Conduct: You agree to use
-                                        TigerOrgs only for lawful purposes and
-                                        in a way that does not infringe the
-                                        rights of others or restrict their use
-                                        and enjoyment of the platform.
-                                    </Policy.Bullet>
-                                    <Policy.Bullet>
-                                        Prohibited Activities: You must not
-                                        misuse the platform by introducing
-                                        viruses, trojans, or other harmful
-                                        material or by attempting to gain
-                                        unauthorized access to any part of the
-                                        platform.
-                                    </Policy.Bullet>
-                                </Policy.Number>
-                                <Policy.Number number="5" title="Policy">
-                                    Your use of the platform is also governed by
-                                    our Privacy Policy, which details how we
-                                    collect, use, and protect your personal
-                                    information.
-                                </Policy.Number>
-                            </Policy.Content>
-                        </Policy>
-                        <div className="pt-7 flex items-end justify-center sm:justify-end space-x-2 sm:space-x-4">
-                            <button
-                                onClick={onClose}
-                                className="px-6 py-1 bg-[#FFBC11] text-xs sm:text-base rounded-lg hover:bg-[#ebb222]"
-                            >
-                                Accept
-                            </button>
+                                    {isSubmitting ? "Submitting..." : "Submit"}
+                                </button>
+                                {errors.submit && (
+                                    <p className="text-red-500 text-xs mt-2">
+                                        {errors.submit}
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        );
+    }
+
+    function SectionInput({ currentSection, userSectionError, onChange }) {
+        const [sectionString, setSectionString] = useState(
+            currentSection || ""
+        );
+
+        const handleSectionStringChange = (e) => {
+            setSectionString(e.target.value);
+            onChange(e.target.value); // Pass value up to parent
+        };
+
+        return (
+            <InputContainer title="Section">
+                <input
+                    type="text"
+                    maxLength={10}
+                    placeholder="[YEAR]-[SECTION] ex. 3-ITG"
+                    className="w-full rounded-lg focus:border-black border-transparent"
+                    value={sectionString}
+                    onChange={handleSectionStringChange}
+                />
+            </InputContainer>
+        );
+    }
+
+    function IDInput({ currentId, userIdError, onChange }) {
+        const [idString, setIdString] = useState(currentId || "");
+
+        const handleIdStringChange = (e) => {
+            setIdString(e.target.value);
+            onChange(e.target.value); // Pass value up to parent
+        };
+
+        return (
+            <InputContainer title="ID Number:">
+                <div className="flex">
+                    <input
+                        type="text"
+                        maxLength={10}
+                        placeholder="ID NUMBER"
+                        className="w-full rounded-l-lg focus:border-black border-transparent"
+                        value={idString}
+                        onChange={handleIdStringChange}
+                    />
+                </div>
+            </InputContainer>
+        );
+    }
+
+    function CollegeInput({ currentCollege, userCollegeError, onChange }) {
+        const [collegeString, setCollegeString] = useState(
+            currentCollege || ""
+        );
+
+        const handleCollegeStringChange = (e) => {
+            setCollegeString(e.target.value);
+            onChange(e.target.value); // Update parent component's college state
+        };
+
+        return (
+            <InputContainer title="College:">
+                <div className="flex">
+                    <input
+                        type="text"
+                        placeholder="College"
+                        className="w-full rounded-l-lg focus:border-black border-transparent"
+                        value={collegeString}
+                        onChange={handleCollegeStringChange}
+                    />
+                </div>
+                {userCollegeError && (
+                    <p className="text-red-500 text-xs mt-1">
+                        {userCollegeError}
+                    </p>
+                )}
+            </InputContainer>
         );
     }
 
@@ -246,6 +393,101 @@ function Home({ bgImage, tiger1, tiger2, isLoggedIn, isNewUser = false }) {
                 </div>
             </div>
         );
+
+        function PrivacyPolicy({ onClose }) {
+            return (
+                <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[50]">
+                    <div className="inter fixed bg-white mx-5 max-w-[40rem]  border-gray-400 border rounded-xl p-5 sm:p-10 space-y-5">
+                        <div className="overflow-y-auto max-h-[70vh] pr-2 w-full">
+                            <Policy>
+                                <Policy.Title>
+                                    Terms and Conditions Policy
+                                </Policy.Title>
+                                <Policy.Content>
+                                    <Policy.Paragraph>
+                                        Welcome to TigerOrgs! By accessing or
+                                        using our platform, you agree to comply
+                                        with and be bound by the following terms
+                                        and conditions. Please read them
+                                        carefully.
+                                    </Policy.Paragraph>
+                                    <Policy.Number
+                                        number="1"
+                                        title="Acceptance of Terms"
+                                    >
+                                        By accessing TigerOrgs, you agree to be
+                                        bound by these Terms and Conditions and
+                                        our Privacy Policy. If you do not agree
+                                        with any part of these terms, you should
+                                        not use the platform.
+                                    </Policy.Number>
+                                    <Policy.Number
+                                        number="2"
+                                        title="Eligibility"
+                                    >
+                                        TigerOrgs is exclusively for students,
+                                        staff, and affiliated personnel of the
+                                        University of Santo Tomas (UST). By
+                                        using the platform, you confirm that you
+                                        are a current member of the UST
+                                        community and have a valid UST Gmail
+                                        account.
+                                    </Policy.Number>
+                                    <Policy.Number
+                                        number="3"
+                                        title="User Registration and Accounts"
+                                    >
+                                        <Policy.Bullet>
+                                            You must login using your UST Gmail
+                                            account. You are responsible for
+                                            maintaining the confidentiality of
+                                            your login credentials and for all
+                                            activities that occur under your
+                                            account.
+                                        </Policy.Bullet>
+                                    </Policy.Number>
+                                    <Policy.Number
+                                        number="4"
+                                        title="Use of the Platform"
+                                    >
+                                        <Policy.Bullet>
+                                            Content and Conduct: You agree to
+                                            use TigerOrgs only for lawful
+                                            purposes and in a way that does not
+                                            infringe the rights of others or
+                                            restrict their use and enjoyment of
+                                            the platform.
+                                        </Policy.Bullet>
+                                        <Policy.Bullet>
+                                            Prohibited Activities: You must not
+                                            misuse the platform by introducing
+                                            viruses, trojans, or other harmful
+                                            material or by attempting to gain
+                                            unauthorized access to any part of
+                                            the platform.
+                                        </Policy.Bullet>
+                                    </Policy.Number>
+                                    <Policy.Number number="5" title="Policy">
+                                        Your use of the platform is also
+                                        governed by our Privacy Policy, which
+                                        details how we collect, use, and protect
+                                        your personal information.
+                                    </Policy.Number>
+                                </Policy.Content>
+                            </Policy>
+                            <div className="pt-7 flex items-end justify-center sm:justify-end space-x-2 sm:space-x-4">
+                                <button
+                                    onClick={onClose}
+                                    className="px-6 py-1 bg-[#FFBC11] text-xs sm:text-base rounded-lg hover:bg-[#ebb222]"
+                                >
+                                    Accept
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
 
         function LoginError() {
             return (

@@ -121,17 +121,20 @@ class SuperAdminController extends Controller
     public function manage()
     {
 
-        $organizations = Organization::withCount('members')     
+        $organizations = Organization::with('members')     
         // ->get();
         ->paginate(12);
 
 
         $recruitment = DB::table('settings')->where('name', 'Recruitment')->value('status');
 
+        $departments = Organization::distinct()->pluck('department');
 
         return Inertia::render('SuperAdmin/SuperAdminManage', [
             'recruitment'=> $recruitment,
             'organizations' => $organizations,
+            // 'departments' => $departments
+
             'departments' => Organization::distinct()->pluck('department')
         ]);
     }

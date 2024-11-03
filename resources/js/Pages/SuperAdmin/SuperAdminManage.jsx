@@ -36,7 +36,7 @@ export default function SuperAdminManage({
         useState(departments);
     const [edit, setEdit] = useState(false);
     const [allOrganizations, setAllOrganizations] = useState(
-        organizations.data || []
+        organizations.data
     );
 
     // Initialize visibleStates with the current page's organizations
