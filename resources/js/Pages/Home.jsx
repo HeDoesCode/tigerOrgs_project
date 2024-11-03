@@ -146,8 +146,8 @@ function Home({
                     section: section,
                     email: googleUser?.email,
                     college: college,
-                    firstname: googleUser?.firstname, // Include firstname from googleUser
-                    lastname: googleUser?.lastname, // Include lastname from googleUser
+                    firstname: googleUser?.firstname,
+                    lastname: googleUser?.lastname,
                 };
 
                 // Validate all required fields
@@ -171,11 +171,9 @@ function Home({
 
                 const response = await Inertia.post("/api/register", postData, {
                     onSuccess: () => {
-                        // Redirect to dashboard on success
                         Inertia.visit("/");
                     },
                     onError: (errors) => {
-                        // Handle validation errors
                         setErrors(errors);
                     },
                 });
@@ -183,7 +181,6 @@ function Home({
                 console.error("Submission error:", error);
 
                 if (error.response) {
-                    // Handle validation errors from the server
                     const serverErrors = error.response.data?.errors;
                     if (serverErrors) {
                         const formattedErrors = {};
