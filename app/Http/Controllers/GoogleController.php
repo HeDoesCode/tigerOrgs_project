@@ -83,47 +83,46 @@ class GoogleController extends Controller
 }
 
 
+    public function register(Request $request)
+    {
+        try {
+            // Validate the incoming request
+            $validatedData = $request->validate([
+                'userID' => 'required|string|max:10',
+                'section' => 'nullable|string',
+                'email' => 'required|email|unique:users,email',  
+                'college' => 'required|string',
+                'firstname' => 'required|string', 
+                'lastname' => 'required|string' 
+            ]);
+            
+            $user = User::updateOrCreate(
+                ['email' => $validatedData['email']], 
+                [
+                    'userID' => $validatedData['userID'],
+                    'section' => $validatedData['section'],
+                    'college' => $validatedData['college'],
+                    'status' => 'student', 
+                    'firstname' => $validatedData['firstname'], 
+                    'lastname' => $validatedData['lastname'] 
+                ]
+            );
 
-public function register(Request $request)
-{
-    try {
-        // Validate the incoming request
-        $validatedData = $request->validate([
-            'userID' => 'required|string|max:10',
-            'section' => 'nullable|string',
-            'email' => 'required|email|unique:users,email',  
-            'college' => 'required|string',
-            'firstname' => 'required|string', 
-            'lastname' => 'required|string' 
-        ]);
-        
-        $user = User::updateOrCreate(
-            ['email' => $validatedData['email']], 
-            [
-                'userID' => $validatedData['userID'],
-                'section' => $validatedData['section'],
-                'college' => $validatedData['college'],
-                'status' => 'student', 
-                'firstname' => $validatedData['firstname'], 
-                'lastname' => $validatedData['lastname'] 
-            ]
-        );
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        // Return validation errors with a proper structure
-        return response()->json([
-            'success' => false,
-            'message' => 'Validation failed',
-            'errors' => $e->validator->errors(), // This will give structured validation errors
-        ], 422);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Registration failed',
-            'error' => $e->getMessage() // This will provide the actual error message
-        ], 500);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Return validation errors with a proper structure
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->validator->errors(), 
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Registration failed',
+                'error' => $e->getMessage() 
+            ], 500);
+        }
     }
-}
 
 
 }

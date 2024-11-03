@@ -7,6 +7,7 @@ import { useState } from "react";
 import IconMailFilled from "@/Components/Icons/IconMailFilled";
 import KeywordSelect from "@/Components/Organizations/KeywordSelect";
 import InputContainer from "@/Pages/Profile/InputContainer";
+import { Inertia } from "@inertiajs/inertia";
 
 function Home({
     bgImage,
@@ -105,13 +106,11 @@ function Home({
         const [userId, setUserId] = useState(googleUser.id || "");
         const [section, setSection] = useState(googleUser.section || "");
         const [college, setCollege] = useState(googleUser.college || "");
-
         const [errors, setErrors] = useState({});
         const [isSubmitting, setIsSubmitting] = useState(false);
 
         const validateForm = () => {
             const newErrors = {};
-            console.log("Validating form with:", { userId, section, college });
 
             if (!userId.trim()) {
                 newErrors.userIdError = "Specify ID Number";
@@ -132,45 +131,91 @@ function Home({
         };
 
         const handleSubmit = async () => {
-            const formErrors = validateForm(); // Ensure this checks all required fields
+            setErrors({});
+
+            const formErrors = validateForm();
             if (Object.keys(formErrors).length > 0) {
                 setErrors(formErrors);
-                return; // Exit if there are validation errors
+                return;
             }
 
             setIsSubmitting(true);
             try {
-                // Log the values being sent for debugging
                 const postData = {
                     userID: userId,
                     section: section,
-                    email: googleUser.email,
+                    email: googleUser?.email,
                     college: college,
+                    firstname: googleUser?.firstname, // Include firstname from googleUser
+                    lastname: googleUser?.lastname, // Include lastname from googleUser
                 };
 
-                console.log("Submitting data:", postData);
+                // Validate all required fields
+                const requiredFields = [
+                    "userID",
+                    "section",
+                    "email",
+                    "college",
+                    "firstname",
+                    "lastname",
+                ];
+                const missingFields = requiredFields.filter(
+                    (field) => !postData[field]
+                );
 
-                await Inertia.post("/api/register", postData);
-                // Handle successful registration (like redirecting or showing a success message)
+                if (missingFields.length > 0) {
+                    throw new Error(
+                        `Missing required fields: ${missingFields.join(", ")}`
+                    );
+                }
+
+                const response = await Inertia.post("/api/register", postData, {
+                    onSuccess: () => {
+                        // Redirect to dashboard on success
+                        Inertia.visit("/");
+                    },
+                    onError: (errors) => {
+                        // Handle validation errors
+                        setErrors(errors);
+                    },
+                });
             } catch (error) {
-                // Handle any errors returned from the backend
-                console.error("Submission error:", error.response?.data);
-                setErrors({ submit: "Registration failed. Please try again." });
+                console.error("Submission error:", error);
+
+                if (error.response) {
+                    // Handle validation errors from the server
+                    const serverErrors = error.response.data?.errors;
+                    if (serverErrors) {
+                        const formattedErrors = {};
+                        Object.keys(serverErrors).forEach((key) => {
+                            formattedErrors[`${key}Error`] =
+                                serverErrors[key][0];
+                        });
+                        setErrors(formattedErrors);
+                    } else {
+                        setErrors({
+                            submit:
+                                error.response.data?.message ||
+                                "Server error occurred",
+                        });
+                    }
+                } else if (error.request) {
+                    setErrors({
+                        submit: "No response from server. Please check your connection.",
+                    });
+                } else {
+                    setErrors({
+                        submit:
+                            error.message ||
+                            "Registration failed. Please try again.",
+                    });
+                }
+
+                Toast.error("Registration failed. Please try again.");
             } finally {
                 setIsSubmitting(false);
             }
         };
-
-        console.log({
-            googleUser,
-            id: userId,
-            firstname: googleUser.firstname,
-            lastname: googleUser.lastname,
-            section: section,
-            email: googleUser.email,
-            college: college,
-            status: status,
-        });
 
         return (
             <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[50]">
@@ -212,7 +257,6 @@ function Home({
                                         </p>
                                     )}
                                 </div>
-
                                 <div>
                                     <SectionInput
                                         currentSection={section}
