@@ -38,9 +38,9 @@ class GoogleController extends Controller
 
     // Check if the name is provided and split it
     if (!empty($googleUser->name)) {
-        $nameParts = explode(' ', $googleUser->name, 2); // Split into two parts
-        $firstname = $nameParts[0]; // The first part is the first name
-        $lastname = isset($nameParts[1]) ? $nameParts[1] : ''; // The second part is the last name (if exists)
+        $nameParts = explode(' ', $googleUser->name, 2); 
+        $firstname = $nameParts[0]; 
+        $lastname = isset($nameParts[1]) ? $nameParts[1] : '';
     }
 
     if (AuthBypassEnum::bypassCheck($googleUser->email)) {
@@ -48,9 +48,9 @@ class GoogleController extends Controller
             User::firstOrCreate(
                 ['email' => $googleUser->email],
                 [
-                    'userID' => '0000000001', // Consider generating a unique ID
-                    'firstname' => $firstname, // Use the extracted firstname
-                    'lastname' => $lastname, // Use the extracted lastname
+                    'userID' => '0000000001', 
+                    'firstname' => $firstname, 
+                    'lastname' => $lastname, 
                     'status' => 'osa',
                     'college' => 'osa'
                 ]
@@ -67,14 +67,13 @@ class GoogleController extends Controller
     $registeredUser = User::where('email', $googleUser->email)->first();
 
     if ($registeredUser == null) {
-        // Render Home with isNewUser flag as true
         return Inertia::render('Home', [
             'isLoggedIn' => false,
             'isNewUser' => true,
             'googleUser' => [
                 'email' => $googleUser->email,
-                'firstname' => $firstname, // Now defined
-                'lastname' => $lastname, // Now defined
+                'firstname' => $firstname, 
+                'lastname' => $lastname, 
             ],
         ]);
     }
@@ -110,19 +109,19 @@ public function register(Request $request)
             ]
         );
 
-        return redirect()->route('some.route')->with('success', 'User registered successfully!');
-
     } catch (\Illuminate\Validation\ValidationException $e) {
-        return Inertia::render('Register', [
-            'errors' => $e->validator->errors()->getMessages(),
-            'userInput' => $request->all() 
-        ]);
-    } 
-    catch (\Exception $e) {
-        return Inertia::render('Register', [
-            'error' => 'Registration failed: ' . $e->getMessage(),
-            'userInput' => $request->all() 
-        ]);
+        // Return validation errors with a proper structure
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation failed',
+            'errors' => $e->validator->errors(), // This will give structured validation errors
+        ], 422);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Registration failed',
+            'error' => $e->getMessage() // This will provide the actual error message
+        ], 500);
     }
 }
 

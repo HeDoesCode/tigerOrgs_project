@@ -7,7 +7,6 @@ import { useState } from "react";
 import IconMailFilled from "@/Components/Icons/IconMailFilled";
 import KeywordSelect from "@/Components/Organizations/KeywordSelect";
 import InputContainer from "@/Pages/Profile/InputContainer";
-import { Inertia } from "@inertiajs/inertia";
 
 function Home({
     bgImage,
@@ -133,24 +132,29 @@ function Home({
         };
 
         const handleSubmit = async () => {
-            const formErrors = validateForm();
+            const formErrors = validateForm(); // Ensure this checks all required fields
             if (Object.keys(formErrors).length > 0) {
                 setErrors(formErrors);
-                return;
+                return; // Exit if there are validation errors
             }
 
             setIsSubmitting(true);
             try {
-                await Inertia.post("/api/register", {
+                // Log the values being sent for debugging
+                const postData = {
                     userID: userId,
                     section: section,
                     email: googleUser.email,
                     college: college,
-                });
+                };
+
+                console.log("Submitting data:", postData);
+
+                await Inertia.post("/api/register", postData);
                 // Handle successful registration (like redirecting or showing a success message)
             } catch (error) {
                 // Handle any errors returned from the backend
-                console.error(error.response?.data);
+                console.error("Submission error:", error.response?.data);
                 setErrors({ submit: "Registration failed. Please try again." });
             } finally {
                 setIsSubmitting(false);
@@ -161,7 +165,7 @@ function Home({
             googleUser,
             id: userId,
             firstname: googleUser.firstname,
-            lasttname: googleUser.lastname,
+            lastname: googleUser.lastname,
             section: section,
             email: googleUser.email,
             college: college,
@@ -174,9 +178,7 @@ function Home({
                     <div className="w-full max-w-[65rem] flex flex-col items-center drop-shadow shadow-black rounded-[2rem] space-y-3 bg-[#F4F4F4] border border-gray-300">
                         <div className="h-36 w-full flex flex-col justify-center px-12 space-y-3 bg-[#ffd875] rounded-[2rem]">
                             <span className="poetsen-one text-xl sm:text-3xl uppercase">
-                                {googleUser.firstname && googleUser.lastname
-                                    ? `${googleUser.firstname} ${googleUser.lastname}`
-                                    : "Name not available"}{" "}
+                                {`${googleUser.firstname} ${googleUser.lastname}`}
                             </span>
                             <div className="flex gap-x-3 text-sm sm:text-base">
                                 <div className="hidden sm:contents">
