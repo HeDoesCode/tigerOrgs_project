@@ -45,6 +45,38 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
         roleID: 2,
     });
 
+    const [searchMainQuery, setSearchMainQuery] = useState("");
+
+    const debouncedSearchHandler = debounce((value) => {
+        router.get(
+            route("superadmin.invite"),
+            { search: value },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            }
+        );
+    }, 300);
+
+    const handleMainSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchMainQuery(value);
+        debouncedSearchHandler(value);
+    };
+
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
     //search for users
     const handleSearchChange = async (e) => {
         const query = e.target.value;
@@ -55,7 +87,6 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                 const response = await axios.get("/superadmin/search-users", {
                     params: { query },
                 });
-
                 setSearchResults(response.data);
             } catch (error) {
                 console.error("Error fetching result:", error);
@@ -97,7 +128,6 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
     useEffect(() => {
         const filterOrganizations = () => {
             let filtered = availableOrganizations;
-
             if (orgSearchQuery) {
                 filtered = filtered.filter(
                     (org) =>
@@ -109,10 +139,8 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                             .includes(orgSearchQuery.toLowerCase())
                 );
             }
-
             setFilteredOrganizations(filtered);
         };
-
         filterOrganizations();
     }, [orgSearchQuery, availableOrganizations]);
 
@@ -134,7 +162,6 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
 
     const handleInvite = (e) => {
         e.preventDefault();
-
         post(`/superadmin/addadmin/${selectedOrg}/${data.userID}`);
     };
 
@@ -148,7 +175,6 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
     };
 
     //for searching the user on the main search bar
-    const [searchMainQuery, setSearchMainQuery] = useState("");
     const [allUsers, setAllOrganizations] = useState(users);
     const [filteredUsers, setFilteredUsers] = useState(users?.data || []);
     useEffect(() => {
@@ -168,10 +194,6 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
 
         filterUsers();
     }, [searchMainQuery, allUsers]);
-
-    const handleMainSearchChange = (e) => {
-        setSearchMainQuery(e.target.value);
-    };
 
     return (
         <div className="w-full">
@@ -230,7 +252,7 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                     {searchResults.map((user) => (
                                         <VerticalCard
                                             key={user.userID}
-                                            gridcol="grid-cols-4"
+                                            gridcol="grid-col-1 md:grid-cols-4"
                                         >
                                             <div className="text-sm font-bold content-center text-center">
                                                 {user.firstname} {user.lastname}
@@ -238,7 +260,7 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                             <div className="truncate col-span-2 content-center text-sm font-semibold text-center">
                                                 {user.email}
                                             </div>
-                                            <div className="sm px-4 text-sm content-center ">
+                                            <div className="sm px-4 text-sm flex items-center justify-center ">
                                                 <AdminDialogForInvite
                                                     title="Assign Role for Student"
                                                     description={
@@ -293,9 +315,9 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                             </AdminDialog>
                         </div>
                         <div className="grid grid-rows-1 p-5 gap-2">
-                            {Array.isArray(filteredUsers) &&
-                                filteredUsers.map((user) => (
-                                    <VerticalCard gridcol="md:grid-cols-12">
+                            {users.data &&
+                                users.data.map((user) => (
+                                    <VerticalCard gridcol="grid grid-cols-1 sm:grid-cols-12">
                                         <div className=" col-span-3 content-center">
                                             <h1 className="md:ml-2 text-center md:text-left font-bold">
                                                 {user.firstname} {user.lastname}
@@ -412,7 +434,7 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                     </VerticalCard>
                                 ))}
                             <div className="fixed w-screen bottom-0 left-0 right-0 pl-8 sm:pl-24 pr-10 pb-3 flex justify-center">
-                                <CustomPagination page={allUsers} />
+                                <CustomPagination page={users} />
                             </div>
                         </div>
                     </div>

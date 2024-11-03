@@ -14,6 +14,8 @@ import { Inertia } from "@inertiajs/inertia";
 function SuperAdminLayout({ children }) {
     const { url } = usePage();
     const routePath = (routeName) => new URL(route(routeName)).pathname;
+    const currentPath = new URL(url, window.location.origin).pathname; // Combine with origin
+
     return (
         <Layout headerContent={<HeaderContent />} sidebar={<SideBarContent />}>
             {children}
@@ -47,8 +49,6 @@ function SuperAdminLayout({ children }) {
                     <div
                         className={`min-h-16 min-w-16 size-16 flex items-center justify-center p-2`}
                     >
-                        {/* logo */}
-                        {/* <IconMenu3 size='27' /> */}
                         <img
                             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s"
                             alt="test"
@@ -67,8 +67,8 @@ function SuperAdminLayout({ children }) {
                         href={route("superadmin.status")}
                         desc="Organizations"
                         current={
-                            url === routePath("superadmin.status") ||
-                            url === routePath("superadmin.invite")
+                            currentPath === routePath("superadmin.status") ||
+                            currentPath === routePath("superadmin.invite")
                         }
                     />
                     <SideBarLink
@@ -76,8 +76,10 @@ function SuperAdminLayout({ children }) {
                         href={route("superadmin.loginhistory")}
                         desc="Activity&nbsp;Log"
                         current={
-                            url === routePath("superadmin.loginhistory") ||
-                            url === routePath("superadmin.invitehistory")
+                            currentPath ===
+                                routePath("superadmin.loginhistory") ||
+                            currentPath ===
+                                routePath("superadmin.invitehistory")
                         }
                     />
                     <SideBarLink
@@ -85,8 +87,9 @@ function SuperAdminLayout({ children }) {
                         href={route("superadmin.dataupload")}
                         desc="Manage&nbsp;Data"
                         current={
-                            url === routePath("superadmin.dataupload") ||
-                            url === routePath("superadmin.filedownload")
+                            currentPath ===
+                                routePath("superadmin.dataupload") ||
+                            currentPath === routePath("superadmin.filedownload")
                         }
                     />
                 </nav>
