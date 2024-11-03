@@ -286,10 +286,6 @@ class AdminController extends Controller
                             DB::table('organization_contacts')->where('orgID', $orgID)->delete();
                             // dd($pageState['pageData']['contacts']);
                             if (isset($pageState['pageData']['contacts'])) {
-                                foreach ($pageState['pageData']['contacts'] as $index => $_) {
-                                    $pageState['pageData']['contacts'][$index]['orgID'] = $orgID;
-                                    unset($pageState['pageData']['contacts'][$index]['contactID']);
-                                }
                                 DB::table('organization_contacts')->insert($pageState['pageData']['contacts']);
                             }
                             break;
