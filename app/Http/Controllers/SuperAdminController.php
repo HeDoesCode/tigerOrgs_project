@@ -118,23 +118,37 @@ class SuperAdminController extends Controller
 
     
 
-    public function manage()
-    {
-
-        $organizations = Organization::withCount('members')     
-        // ->get();
-        ->paginate(12);
-
-
-        $recruitment = DB::table('settings')->where('name', 'Recruitment')->value('status');
-
-
-        return Inertia::render('SuperAdmin/SuperAdminManage', [
-            'recruitment'=> $recruitment,
-            'organizations' => $organizations,
-            'departments' => Organization::distinct()->pluck('department')
-        ]);
+public function manage(Request $request)
+{
+    $query = Organization::query()->withCount('members');
+    
+    if ($request->filled('search')) {
+        $searchTerm = $request->search;
+        $query->where(function($q) use ($searchTerm) {
+            $q->where('name', 'LIKE', "%{$searchTerm}%")
+              ->orWhere('department', 'LIKE', "%{$searchTerm}%");
+        });
     }
+    
+    if ($request->filled('department') && $request->department !== 'All') {
+        $query->where('department', $request->department);
+    }
+    
+    $organizations = $query->paginate(12)
+                         ->withQueryString(); 
+    
+    $recruitment = DB::table('settings')
+                    ->where('name', 'Recruitment')
+                    ->value('status');
+
+    return Inertia::render('SuperAdmin/SuperAdminManage', [
+        'recruitment' => $recruitment,
+        'organizations' => $organizations,
+        'departments' => Organization::distinct()->pluck('department'),
+        'filters' => $request->only(['search', 'department']) 
+    ]);
+}
+
 
     public function toggleRecruitment(Request $request)
     {
@@ -232,32 +246,41 @@ class SuperAdminController extends Controller
         ]);
     }
 
-    public function invite()
-    {
-        $admins = User::join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
+    public function invite(Request $request)
+{
+    $query = User::query()
+        ->join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
+        ->where('organization_user_role.roleID', 2)
+        ->select('users.userID', 'users.email', 'users.firstname', 'users.lastname', 'users.college', 'users.status')
+        ->distinct()
+        ->withCount('organizations');
 
-            ->where('organization_user_role.roleID', 2)
-            ->select('users.userID', 'users.email', 'users.firstname', 'users.lastname', 'users.college', 'users.status')
-            ->distinct()
-            ->withCount('organizations')
-            // ->get();
-            ->paginate(20);
-
-
-
-        $userRoles = DB::table('organization_user_role')
-            ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
-            ->join('organizations', 'organization_user_role.orgID', '=', 'organizations.orgID')
-            ->get();
-
-
-
-        return Inertia::render('SuperAdmin/SuperAdminInvite', [
-            'users' => $admins,
-            'userRoles' => $userRoles,
-            'organizations' => Organization::all()
-        ]);
+    // Add search functionality
+    if ($request->filled('search')) {
+        $searchTerm = $request->search;
+        $query->where(function($q) use ($searchTerm) {
+            $q->where('firstname', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('lastname', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('email', 'LIKE', "%{$searchTerm}%")
+                ->orWhereRaw("CONCAT(firstname, ' ', lastname) LIKE ?", ["%{$searchTerm}%"])
+                ->orWhereRaw("CONCAT(lastname, ' ', firstname) LIKE ?", ["%{$searchTerm}%"]);
+        });
     }
+
+    $admins = $query->paginate(20)->withQueryString();
+
+    $userRoles = DB::table('organization_user_role')
+        ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
+        ->join('organizations', 'organization_user_role.orgID', '=', 'organizations.orgID')
+        ->get();
+
+    return Inertia::render('SuperAdmin/SuperAdminInvite', [
+        'users' => $admins,
+        'userRoles' => $userRoles,
+        'organizations' => Organization::all(),
+        'filters' => $request->only(['search'])
+    ]);
+}
 
 
     public function search(Request $request)
