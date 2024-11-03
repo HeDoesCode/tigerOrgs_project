@@ -13,7 +13,7 @@ const FacebookPage = memo(function FacebookPage({ className, link = '' }) {
                 fbScript.onload = () => {
                     window.FB.init({
                         xfbml: true,
-                        version: 'v16.0',
+                        version: 'v21.0',
                     });
                     window.FB.XFBML.parse();
                 };
