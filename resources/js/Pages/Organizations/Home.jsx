@@ -172,7 +172,7 @@ function Home({
 
     function SocialIFrame() {
         return (
-            <Tile childrenCN='h-fit' name="Social Activities" id='facebookLink'>
+            <Tile childrenCN='h-fit flex justify-center scale-100 max-[468px]:scale-75 lg:scale-100' name="Social Activities" id='facebookLink'>
                 <FacebookPage link={pageData.fb_link} />
                 {editing && editing.social}
             </Tile>
