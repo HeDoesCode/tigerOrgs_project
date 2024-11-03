@@ -284,7 +284,10 @@ class AdminController extends Controller
                         }
                     case 'contacts': {
                             DB::table('organization_contacts')->where('orgID', $orgID)->delete();
-                            DB::table('organization_contacts')->insert($pageState['pageData']['contacts']);
+                            // dd($pageState['pageData']['contacts']);
+                            if (isset($pageState['pageData']['contacts'])) {
+                                DB::table('organization_contacts')->insert($pageState['pageData']['contacts']);
+                            }
                             break;
                         }
                     case 'officers': {
