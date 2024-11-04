@@ -1,0 +1,72 @@
+// SectionInput.jsx
+import React, { useState } from "react";
+import InputContainer from "./InputContainer";
+
+const SectionInput = ({ user }) => {
+    const [sectionString, setSectionString] = useState(user.section || "");
+    const router = useRouter();
+
+    const handleSectionStringChange = (e) => {
+        setSectionString(e.target.value);
+    };
+
+    const handleSectionKeyDown = (e) => {
+        if (e.key === "Enter") patchSection(sectionString);
+    };
+
+    const patchSection = (section) => {
+        if (section === "" || sectionString === user.section) {
+            return;
+        } else {
+            router.patch(route("update.user.section"), {
+                section,
+            });
+        }
+    };
+
+    const userSectionError = user.section != null ? null : "Specify Section"; // if section exists, no error
+
+    return (
+        <InputContainer
+            title="Section"
+            error={
+                userSectionError || sectionString !== user.section
+                    ? "Unsaved"
+                    : ""
+            }
+        >
+            <div className="flex">
+                <input
+                    type="text"
+                    maxLength={10}
+                    placeholder={"[YEAR]-[SECTION] ex. 3-ITG"}
+                    className="w-full rounded-l-lg focus:border-black border-transparent"
+                    value={sectionString}
+                    onChange={handleSectionStringChange}
+                    onKeyDown={handleSectionKeyDown}
+                />
+                {sectionString !== user.section && (
+                    <button
+                        className="px-3 border-l border-l-gray-200"
+                        onClick={() => setSectionString(user.section || "")}
+                    >
+                        Cancel
+                    </button>
+                )}
+                <button
+                    className={`rounded-r-lg border-l border-l-gray-200 px-3 ${
+                        sectionString !== user.section
+                            ? "hover:bg-black/5 text-black"
+                            : "cursor-not-allowed text-gray-500"
+                    }`}
+                    disabled={sectionString === user.section}
+                    onClick={() => patchSection(sectionString)}
+                >
+                    Save
+                </button>
+            </div>
+        </InputContainer>
+    );
+};
+
+export default SectionInput;
