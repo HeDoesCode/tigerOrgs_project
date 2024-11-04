@@ -23,7 +23,6 @@ import {
 } from "@/Components/ui/select";
 
 export default function SuperAdminManage({
-    recruitment = false,
     organizations = { data: [] },
     departments = [],
     filters = {},
@@ -38,8 +37,6 @@ export default function SuperAdminManage({
     );
     const [availableDepartments, setAvailableDepartments] =
         useState(departments);
-    const [isRecruitmentEnabled, setIsRecruitmentEnabled] =
-        useState(recruitment);
     const [edit, setEdit] = useState(false);
 
     const [visibleStates, setVisibleStates] = useState(() => {
@@ -55,26 +52,6 @@ export default function SuperAdminManage({
     const [filteredOrganizations, setFilteredOrganizations] = useState(
         organizations?.data || []
     );
-
-    const handleRecruitmentToggle = (checked) => {
-        router.post(
-            route("superadmin.toggle-recruitment"),
-            {
-                status: checked,
-            },
-            {
-                preserveState: true,
-                preserveScroll: true,
-                onSuccess: () => {
-                    setIsRecruitmentEnabled(checked);
-                    router.visit(route("superadmin.status"));
-                },
-                onError: () => {
-                    console.error("Failed to toggle recruitment status");
-                },
-            }
-        );
-    };
 
     useEffect(() => {
         const filterOrganizations = () => {
@@ -203,46 +180,7 @@ export default function SuperAdminManage({
                             link: "superadmin.invite",
                         },
                     ]}
-                    title={`Recruitment ${
-                        recruitment ? " Enabled" : " Disabled"
-                    }`}
-                    dialog={
-                        <AdminDialog
-                            title="Enable/Disable Recruitment"
-                            description="Note: When the recruitment is enabled, student leaders will be able turn on the recruitment within their organization and will be open to students. Disabling will turn off this feature on their side and will turn off the recruitment status of all the organizations."
-                            trigger={
-                                <div
-                                    className={`text-sm ml-3 -mt-1 ${
-                                        isRecruitmentEnabled
-                                            ? "text-red-600"
-                                            : "text-green-600"
-                                    } underline underline-offset-2`}
-                                >
-                                    Click here to
-                                    {isRecruitmentEnabled
-                                        ? " disable"
-                                        : " enable"}
-                                </div>
-                            }
-                        >
-                            <label
-                                className="pr-[15px] text-[15px] leading-none"
-                                htmlFor="airplane-mode"
-                            >
-                                Recruitment
-                            </label>
-                            <div className="flex">
-                                <Switch
-                                    id="recruitment-toggle"
-                                    className="mr-2"
-                                    checked={isRecruitmentEnabled}
-                                    onCheckedChange={handleRecruitmentToggle}
-                                    aria-readonly
-                                />
-                                {isRecruitmentEnabled ? "On" : "Off"}
-                            </div>
-                        </AdminDialog>
-                    }
+                    title={`Manage Organizations`}
                     searchbar={
                         <Searchbar
                             className="col-span-3"

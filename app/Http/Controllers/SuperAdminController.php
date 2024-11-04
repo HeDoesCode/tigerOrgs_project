@@ -150,38 +150,7 @@ public function manage(Request $request)
 }
 
 
-    public function toggleRecruitment(Request $request)
-    {
-    $status = $request->input('status');
     
-    DB::table('settings')
-        ->where('name', 'Recruitment')
-        ->update(['status' => $status]);
-
-        if($status){
-
-            session()->flash('toast', [
-                'title' => 'Recruitment Enabled for All Organization',
-                'description' => 'Status Updated Successfully!',
-                'variant' => 'success'
-            ]);
-        }else{
-            DB::table('organizations')
-            ->update(['recruiting' => false]);
-
-            session()->flash('toast', [
-                'title' => 'Recruitment Disabled for All Organization',
-                'description' => 'Status Updated Successfully!',
-                'variant' => 'destructive'
-            ]);
-        }
-
-    return Inertia::render('SuperAdmin/SuperAdminManage', [
-        'recruitment' => $status,
-        'organizations' => Organization::withCount('members')->get(),
-        'departments' => Organization::distinct()->pluck('department')
-    ]);
-    }
 
 
     public function updateOrganizations(Request $request)
@@ -680,5 +649,47 @@ public function manage(Request $request)
             ->header('Content-Disposition', 'attachment; filename=' . $filename)
             ->header('Content-Type', 'application/json');
     }
+
+    //settings
+
+    public function settings()
+{
+    $settings = DB::table('settings')
+        ->whereIn('name', ['Recruitment', 'Manual Registration'])
+        ->pluck('status', 'name');
+
+    return Inertia::render('SuperAdmin/SuperAdminSettings', [
+        'recruitment' => $settings['Recruitment'] ?? false,
+        'manualreg' => $settings['Manual Registration'] ?? false,
+    ]);
+}
+
+
+public function toggleSetting(Request $request)
+{
+    $status = $request->input('status');
+    $settingName = $request->input('setting_name');
+
+    DB::table('settings')
+        ->where('name', $settingName)
+        ->update(['status' => $status]);
+
+    $message = $status
+        ? ucfirst($settingName) . " Enabled Successfully"
+        : ucfirst($settingName) . " Disabled Successfully";
+
+    session()->flash('toast', [
+        'title' => $message,
+        'description' => 'Status Updated Successfully!',
+        'variant' => $status ? 'success' : 'destructive'
+    ]);
+
+    if (!$status && $settingName === 'Recruitment') {
+        DB::table('organizations')->update(['recruiting' => false]);
+    }
+
+    return redirect()->route('superadmin.settings');
+}
+
 
 }

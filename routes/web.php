@@ -66,7 +66,6 @@ Route::prefix('/superadmin/')
         });
 
         //manage page
-        Route::post('toggle-recruitment', 'toggleRecruitment')->name('toggle-recruitment');
         Route::get('invite', 'invite')->name('invite');
         Route::get('status', 'manage')->name('status');
         Route::get('status/search-org', 'searchOrg');
@@ -96,6 +95,10 @@ Route::prefix('/superadmin/')
         Route::get('invitehistory', function () {
             return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
         })->name('invitehistory');
+
+        //settings page
+        Route::get('settings', 'settings')->name('settings');
+        Route::post('toggle-settings', 'toggleSetting')->name('toggle-setting');
     });
 
 // admin routes
