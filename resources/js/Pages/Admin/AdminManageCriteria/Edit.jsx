@@ -137,13 +137,13 @@ function Edit({ orgID, criteriaData }) {
                                         onClick={handleReset}
                                         className="bg-gray-600 hover:bg-gray-700 text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
                                     >
-                                        Reset Changes
+                                        Reset
                                     </button>
                                     <button
                                         type="submit"
                                         className="bg-[#04aa6dd5] hover:bg-[#04AA6D] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
                                     >
-                                        Save Changes
+                                        Save
                                     </button>
                                 </div>
                             </form>
