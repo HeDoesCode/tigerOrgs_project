@@ -169,45 +169,30 @@ function Home({
                     );
                 }
 
-                const response = await Inertia.post("/api/register", postData, {
-                    onSuccess: () => {
-                        Inertia.visit("/");
+                // Using Inertia directly for the POST request
+                await Inertia.post("/api/register", postData, {
+                    onSuccess: (response) => {
+                        // Check if we got a response with redirect information
+                        if (response?.redirect) {
+                            window.location.href = response.redirect;
+                        } else {
+                            // Fallback to home page
+                            window.location.href = "/";
+                        }
                     },
                     onError: (errors) => {
                         setErrors(errors);
+                        Toast.error("Registration failed. Please try again.");
                     },
+                    preserveState: true,
                 });
             } catch (error) {
                 console.error("Submission error:", error);
-
-                if (error.response) {
-                    const serverErrors = error.response.data?.errors;
-                    if (serverErrors) {
-                        const formattedErrors = {};
-                        Object.keys(serverErrors).forEach((key) => {
-                            formattedErrors[`${key}Error`] =
-                                serverErrors[key][0];
-                        });
-                        setErrors(formattedErrors);
-                    } else {
-                        setErrors({
-                            submit:
-                                error.response.data?.message ||
-                                "Server error occurred",
-                        });
-                    }
-                } else if (error.request) {
-                    setErrors({
-                        submit: "No response from server. Please check your connection.",
-                    });
-                } else {
-                    setErrors({
-                        submit:
-                            error.message ||
-                            "Registration failed. Please try again.",
-                    });
-                }
-
+                setErrors({
+                    submit:
+                        error.message ||
+                        "Registration failed. Please try again.",
+                });
                 Toast.error("Registration failed. Please try again.");
             } finally {
                 setIsSubmitting(false);

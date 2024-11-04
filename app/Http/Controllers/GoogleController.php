@@ -25,6 +25,8 @@ class GoogleController extends Controller
         $googleUser = Socialite::driver('google')->user();
 
         
+
+        
     } catch (Exception $e) {
         session()->flash('toast', [
             'title' => 'Login Error',
@@ -59,11 +61,12 @@ class GoogleController extends Controller
 
     $registeredUser = User::where('email', $googleUser->email)->first();
 
+
     $ManualReg = DB::table('settings')->where('id', 2)->value('status');
 
     if ($registeredUser == null && $ManualReg === 0 ) {
         return abort(403, 'Only currently registered/enrolled students of the University of Santo Tomas can use this application.');
-    }else {
+    }else if ($registeredUser == null && $ManualReg === 1) {
         return Inertia::render('Home', [
             'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
             'tiger1' => asset('src/background/tiger1.png'),
@@ -76,54 +79,58 @@ class GoogleController extends Controller
                 'lastname' => $googleUser->user['family_name'], 
             ],
         ]);
+    }else{
+        Auth::login($registeredUser, session()->pull('remember_me', 'false'));
+        return redirect()->intended('/');
     }
 
-    Auth::login($registeredUser, session()->pull('remember_me', 'false'));
+    
 
     //redirect after successful login
-    return redirect()->intended('/');
+    
 }
 
 
-    public function register(Request $request)
-    {
-        try {
-            // Validate the incoming request
-            $validatedData = $request->validate([
-                'userID' => 'required|string|max:10',
-                'section' => 'nullable|string',
-                'email' => 'required|email|unique:users,email',  
-                'college' => 'required|string',
-                'firstname' => 'required|string', 
-                'lastname' => 'required|string' 
-            ]);
-            
-            $user = User::updateOrCreate(
-                ['email' => $validatedData['email']], 
-                [
-                    'userID' => $validatedData['userID'],
-                    'section' => $validatedData['section'],
-                    'college' => $validatedData['college'],
-                    'status' => 'student', 
-                    'firstname' => $validatedData['firstname'], 
-                    'lastname' => $validatedData['lastname'] 
-                ]
-            );
+public function register(Request $request)
+{
+    try {
+        // Validate the incoming request
+        $validatedData = $request->validate([
+            'userID' => 'required|string|max:10',
+            'section' => 'nullable|string',
+            'email' => 'required|email',  // Removed unique constraint since we're using updateOrCreate
+            'college' => 'required|string',
+            'firstname' => 'required|string', 
+            'lastname' => 'required|string' 
+        ]);
+        
+        $user = User::updateOrCreate(
+            ['email' => $validatedData['email']], 
+            [
+                'userID' => $validatedData['userID'],
+                'section' => $validatedData['section'],
+                'college' => $validatedData['college'],
+                'status' => 'student', 
+                'firstname' => $validatedData['firstname'], 
+                'lastname' => $validatedData['lastname'] 
+            ]
+        );
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
+    } catch (\Illuminate\Validation\ValidationException $e) {
             // Return validation errors with a proper structure
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $e->validator->errors(), 
-            ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Registration failed',
-                'error' => $e->getMessage() 
-            ], 500);
-        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation failed',
+            'errors' => $e->validator->errors(), 
+        ], 422);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Registration failed',
+            'error' => $e->getMessage() 
+        ], 500);
+    }
+
     }
 
 
