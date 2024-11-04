@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Exception;
 use App\AuthBypassEnum;
+use Illuminate\Support\Facades\DB;
 
 class GoogleController extends Controller
 {
@@ -58,9 +59,15 @@ class GoogleController extends Controller
 
     $registeredUser = User::where('email', $googleUser->email)->first();
 
+    $ManualReg = DB::table('settings')->where('id', 2)->value('status');
 
-    if ($registeredUser == null) {
+    if ($registeredUser == null && $ManualReg === 0 ) {
+        return abort(403, 'Only currently registered/enrolled students of the University of Santo Tomas can use this application.');
+    }else {
         return Inertia::render('Home', [
+            'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
+            'tiger1' => asset('src/background/tiger1.png'),
+            'tiger2' => asset('src/background/tiger2.png'),
             'isLoggedIn' => false,
             'isNewUser' => true,
             'googleUser' => [
