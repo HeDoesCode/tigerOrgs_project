@@ -281,10 +281,6 @@ function AdminManageForms({
                                             onSelect: (e) => e.preventDefault(),
                                         },
                                         {
-                                            name: "Disable Criteria",
-                                            onSelect: () => null,
-                                        },
-                                        {
                                             name: `${
                                                 item.deployed
                                                     ? "Withdraw"

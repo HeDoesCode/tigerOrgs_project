@@ -7,6 +7,18 @@ import IconHistory from "@/Components/Icons/IconHistory";
 import IconPlus from "@/Components/Icons/IconPlus";
 import IconDelete from "@/Components/Icons/IconDelete";
 import IconEdit from "@/Components/Icons/IconEdit";
+import AdminDropdownMenu from "@/Components/Admin/AdminInvDropdownMenu";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog";
 
 export function Index({ orgID, criteriaData }) {
     const handleDelete = (criteriaID) => {
@@ -48,57 +60,105 @@ export function Index({ orgID, criteriaData }) {
                     ]}
                     title="Manage Criteria"
                 >
-                    <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-4 gap-5 p-5">
-                        <Link
-                            href={route("admin.criteria.create", { orgID })}
-                            className=" bg-white flex items-center justify-center rounded-lg hover:bg-gray-100 min-h-14 hover:scale-[1.03] transition-all duration-300 ease-in-out"
-                        >
-                            <div className="text-gray-500 bg-gray-200 size-8 p-1 rounded-full">
-                                <IconPlus />
-                            </div>{" "}
-                            <p className="text-black poppins ml-2">
-                                Create Criteria
-                            </p>
-                        </Link>
-                    </div>
                     <div className="p-5">
-                        <h1 className="mb-4">
-                            Created Positions and Qualifications
-                        </h1>
-                        <ul>
-                            {criteriaData.map((criteria) => {
-                                return (
-                                    <li
-                                        key={criteria.criteriaID}
-                                        className="p-5 mb-3 rounded bg-white grid grid-cols-12 gap-3"
-                                    >
-                                        <div className="grid grid-cols-subgrid col-span-10 align-middle items-center">
-                                            {criteria.name}
+                        <div className="poppins mb-5">
+                            <>
+                                <span className="font-semibold">
+                                    Information about the Criteria:
+                                </span>
+                                &nbsp; Specify all the requirements or skills
+                                you expect applicants to possess. You have the
+                                option to link this criteria to your chosen
+                                forms and will serve as the basis for evaluating
+                                applications. Each criterion will contribute to
+                                a similarity score, making it easier to assess
+                                how well an applicant's qualifications match
+                                your expectations when reviewing applications
+                                for a specific form.
+                            </>
+                        </div>
+                        <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-4 gap-5 ">
+                            <Link
+                                href={route("admin.criteria.create", { orgID })}
+                                className=" bg-white flex items-center justify-center rounded-lg hover:bg-gray-100 min-h-14 hover:scale-[1.03] transition-all duration-300 ease-in-out"
+                            >
+                                <div className="text-gray-500 bg-gray-200 size-8 p-1 rounded-full">
+                                    <IconPlus />
+                                </div>{" "}
+                                <p className="text-black poppins ml-2">
+                                    Create Criteria
+                                </p>
+                            </Link>
+
+                            {criteriaData.map((criteria) => (
+                                <AdminDropdownMenu
+                                    key={criteria.criteriaID}
+                                    triggerContent={
+                                        <div
+                                            className={` bg-white flex items-center justify-center rounded-lg hover:bg-gray-100 min-h-14 hover:scale-[1.03] transition-all duration-300 ease-in-out`}
+                                        >
+                                            <p className="text-black poppins ml-2 line-clamp-2">
+                                                {criteria.name}
+                                            </p>
                                         </div>
-                                        <a
-                                            href={route("admin.criteria.edit", [
-                                                criteria.orgID,
-                                                criteria.criteriaID,
-                                            ])}
-                                        >
-                                            <button className="bg-green-600 w-full p-2 rounded hover:bg-green-700 text-white text-lg flex justify-center items-center gap-x-2">
-                                                <IconEdit /> Edit
-                                            </button>
-                                        </a>
-                                        <button
-                                            className="bg-red-500 w-fill p-2 rounded hover:bg-red-600 text-white text-lg flex justify-center items-center gap-x-2"
-                                            onClick={() =>
-                                                handleDelete(
-                                                    criteria.criteriaID
-                                                )
-                                            }
-                                        >
-                                            <IconDelete /> Delete
-                                        </button>
-                                    </li>
-                                );
-                            })}
-                        </ul>
+                                    }
+                                    title="Select Action"
+                                    dropdownItems={[
+                                        {
+                                            name: "Edit Criteria",
+                                            onSelect: () =>
+                                                router.get(
+                                                    route(
+                                                        "admin.criteria.edit",
+                                                        [
+                                                            criteria.orgID,
+                                                            criteria.criteriaID,
+                                                        ]
+                                                    )
+                                                ),
+                                        },
+                                        {
+                                            name: (
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger>
+                                                        Delete Criteria
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Delete criteria
+                                                                "{criteria.name}
+                                                                " permanently?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action
+                                                                cannot be
+                                                                undone.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                onClick={() =>
+                                                                    handleDelete(
+                                                                        criteria.criteriaID
+                                                                    )
+                                                                }
+                                                            >
+                                                                Continue
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            ),
+                                            onSelect: (e) => e.preventDefault(),
+                                        },
+                                    ]}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </MainAdminFrame>
             </AdminLayout>

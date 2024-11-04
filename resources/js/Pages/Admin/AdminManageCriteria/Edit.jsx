@@ -68,16 +68,19 @@ function Edit({ orgID, criteriaData }) {
                             params: { orgID },
                         },
                     ]}
-                    title="Create Criteria"
+                    title="Edit Criteria"
                 >
-                    <form
-                        action=""
-                        method="POST"
-                        className="bg-white p-6 rounded"
-                        onSubmit={handleSubmit}
-                    >
-                        <ul>
-                            <li className="mb-4">
+                    <div className=" bg-white min-h-screen ">
+                        <div className="flex flex-col justify-center m-4 p-4 max-w-3xl mx-auto rounded-xl">
+                            <h1 className="font-semibold text-3xl mb-4 px-2 text-center">
+                                Edit Criteria
+                            </h1>
+                            <form
+                                action=""
+                                method="POST"
+                                className="bg-whiterounded"
+                                onSubmit={handleSubmit}
+                            >
                                 <label htmlFor="name" className="block">
                                     Name<span className="text-red-600">*</span>{" "}
                                     {errors.name ? (
@@ -91,15 +94,14 @@ function Edit({ orgID, criteriaData }) {
                                 <input
                                     type="text"
                                     id="name"
-                                    className="w-full block rounded"
+                                    className="w-full bg-transparent rounded-xl border-[1.5px] border-x-stone-600 mb-4 p-2"
                                     placeholder="Position title..."
+                                    required
                                     value={data.name}
                                     onChange={(e) =>
                                         setData("name", e.target.value)
                                     }
                                 />
-                            </li>
-                            <li className="mb-4">
                                 <label htmlFor="desc" className="block">
                                     Description
                                     <span className="text-red-600">*</span>{" "}
@@ -114,38 +116,39 @@ function Edit({ orgID, criteriaData }) {
                                 <textarea
                                     name=""
                                     id="desc"
-                                    className="w-full h-96 rounded"
+                                    className="w-full bg-transparent rounded-xl border-[1.5px] h-96 border-x-stone-600 mb-2"
                                     placeholder="Describe the criteria that the candidate must possess..."
+                                    required
                                     value={data.description}
                                     onChange={(e) => {
                                         setData("description", e.target.value);
                                     }}
                                 ></textarea>
-                            </li>
-                            <li className="mb-4">
-                                <button
-                                    type="button"
-                                    onClick={handleCancel}
-                                    className="bg-gray-600 hover:bg-gray-700 text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleReset}
-                                    className="bg-gray-600 hover:bg-gray-700 text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
-                                >
-                                    Reset Changes
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="bg-[#04aa6dd5] hover:bg-[#04AA6D] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
-                                >
-                                    Save Changes
-                                </button>
-                            </li>
-                        </ul>
-                    </form>
+                                <div className="flex justify-end space-x-3">
+                                    <button
+                                        type="button"
+                                        onClick={handleCancel}
+                                        className="bg-gray-600 hover:bg-gray-700 text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleReset}
+                                        className="bg-gray-600 hover:bg-gray-700 text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
+                                    >
+                                        Reset Changes
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-[#04aa6dd5] hover:bg-[#04AA6D] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full"
+                                    >
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </MainAdminFrame>
             </AdminLayout>
         </div>
