@@ -22,6 +22,8 @@ class GoogleController extends Controller
 {
     try {
         $googleUser = Socialite::driver('google')->user();
+
+        
     } catch (Exception $e) {
         session()->flash('toast', [
             'title' => 'Login Error',
@@ -32,25 +34,15 @@ class GoogleController extends Controller
         return redirect()->route('login');
     }
 
-    // Initialize firstname and lastname
-    $firstname = '';
-    $lastname = '';
-
-    // Check if the name is provided and split it
-    if (!empty($googleUser->name)) {
-        $nameParts = explode(' ', $googleUser->name, 2); 
-        $firstname = $nameParts[0]; 
-        $lastname = isset($nameParts[1]) ? $nameParts[1] : '';
-    }
-
+    //for superadmin
     if (AuthBypassEnum::bypassCheck($googleUser->email)) {
         if (!User::where('email', $googleUser->email)->first()) {
             User::firstOrCreate(
                 ['email' => $googleUser->email],
                 [
                     'userID' => '0000000001', 
-                    'firstname' => $firstname, 
-                    'lastname' => $lastname, 
+                    'firstname' => $googleUser->user['given_name'], 
+                    'lastname' => $googleUser->user['family_name'], 
                     'status' => 'osa',
                     'college' => 'osa'
                 ]
@@ -66,19 +58,22 @@ class GoogleController extends Controller
 
     $registeredUser = User::where('email', $googleUser->email)->first();
 
+
     if ($registeredUser == null) {
         return Inertia::render('Home', [
             'isLoggedIn' => false,
             'isNewUser' => true,
             'googleUser' => [
                 'email' => $googleUser->email,
-                'firstname' => $firstname, 
-                'lastname' => $lastname, 
+                'firstname' => $googleUser->user['given_name'], 
+                'lastname' => $googleUser->user['family_name'], 
             ],
         ]);
     }
 
     Auth::login($registeredUser, session()->pull('remember_me', 'false'));
+
+    //redirect after successful login
     return redirect()->intended('/');
 }
 
