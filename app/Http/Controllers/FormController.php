@@ -374,9 +374,9 @@ class FormController extends Controller
                                 [
                                     'userID' => $validated['userID'],
                                     'orgID' => $validated['orgID'],
+                                    'roleID' => 1.
                                 ],
                                 [
-                                    'roleID' => 1,
                                     'created_at' => now(),
                                     'updated_at' => now(),
                                 ]
