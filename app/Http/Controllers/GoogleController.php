@@ -22,9 +22,7 @@ class GoogleController extends Controller
     public function googlecallback()
 {
     try {
-        $googleUser = Socialite::driver('google');
-
-        return $googleUser->stateless()->user();
+        $googleUser = Socialite::driver('google')->stateless()->user();
         
     } catch (Exception $e) {
         session()->flash('toast', [
