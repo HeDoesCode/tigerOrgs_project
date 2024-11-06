@@ -6,6 +6,7 @@ import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import DotsVertical from "@/Components/DotsVertical";
 import AdminDialog from "@/Components/Admin/AdminDialog";
+import { useEffect } from "react";
 
 import { useState } from "react";
 import {
@@ -154,23 +155,23 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                         <div className="grid grid-cols-1 min-h-[500px] h-[500px] overflow-auto">
                                             <table className="mr-5 ml-5 sm:ml-0 sm:mr-3 bg-white divide-y min-h-[500px] rounded-r-xl rounded-l-xl sm:rounded-r-xl sm:rounded-l-none divide-gray-200">
                                                 <thead>
-                                                    <tr className=" hidden font-bold sm:grid-cols-9 py-4 text-center">
-                                                        <th className="col-span-12 sm:col-span-2 text-sm">
+                                                    <tr className="hidden sm:grid grid-cols-1  sm:grid-cols-9 py-4 text-center ">
+                                                        <th className="col-span-1 sm:col-span-2 text-sm">
                                                             Full Name
                                                         </th>
-                                                        <th className="col-span-12 sm:col-span-2 text-sm">
+                                                        <th className="col-span-1 sm:col-span-2 text-sm">
                                                             College
                                                         </th>
-                                                        <th className="col-span-12 sm:col-span-2 text-sm">
+                                                        <th className="col-span-1 sm:col-span-2 text-sm">
                                                             Email
                                                         </th>
-                                                        <th className="col-span-12 sm:col-span-1 text-sm">
+                                                        <th className="col-span-1 sm:col-span-1 text-sm">
                                                             Date Submitted
                                                         </th>
-                                                        <th className="col-span-12 sm:col-span-1 text-sm">
+                                                        <th className="col-span-1 sm:col-span-1 text-sm">
                                                             Similarity Score
                                                         </th>
-                                                        <th className="col-span-12 sm:col-span-1 text-sm">
+                                                        <th className="col-span-1 sm:col-span-1 text-sm">
                                                             Actions
                                                         </th>
                                                     </tr>
@@ -253,6 +254,28 @@ function ApplicationResponses({ application, orgID, selectedFormId }) {
 
     const user = application.user;
 
+    const [isMember, setIsMember] = useState(false);
+
+    useEffect(() => {
+        const checkMembershipStatus = async () => {
+            try {
+                const response = await fetch(
+                    route("admin.check-membership", {
+                        userID: user?.userID,
+                        orgID: orgID,
+                    })
+                );
+                const data = await response.json();
+                setIsMember(data.exists);
+            } catch (error) {
+                console.error("Error checking membership:", error);
+            }
+        };
+
+        if (user?.userID) {
+            checkMembershipStatus();
+        }
+    }, [user?.userID, orgID]);
     const [status, setStatus] = useState("accepted");
 
     const handleStatusValue = (value) => {
@@ -331,170 +354,186 @@ function ApplicationResponses({ application, orgID, selectedFormId }) {
                     90% Match
                 </div>
             </td>
-            <td className="col-span-1 grid-cols-2 text-sm grid sm:grid-cols-2">
-                <div className="col-span-1 sm:col-span-1 content-center justify-self-center">
-                    <AdminDialog
-                        title="Answer of the Applicant"
-                        trigger={
-                            <div className=" justify-self-center underline content-center underline-offset-2">
-                                View <span className="sm:hidden">Response</span>
-                            </div>
-                        }
-                    >
-                        <div className="space-y-4">
-                            <h3 className="text-md font-bold">
-                                Applicant Details
-                            </h3>
-                            <p>
-                                <strong>Name:</strong> {user?.firstname}{" "}
-                                {user?.lastname}
-                            </p>
-                            <p>
-                                <strong>Email:</strong> {user?.email}
-                            </p>
-                            <p>
-                                <strong>College:</strong> {user?.college}
-                            </p>
-                            <hr className="my-4" />
-                            <h3 className="text-lg font-bold">
-                                Application Answers
-                            </h3>
-                            <div className="px-6 py-8">
-                                <h1 className="text-3xl font-bold  text-gray-900 mb-6">
-                                    {application.userData.name}
-                                </h1>
-                                {application.userData.desc && (
-                                    <p className="text-gray-600  mb-8">
-                                        {application.userData.desc}
-                                    </p>
-                                )}
 
-                                {Object.keys(errors).length > 0 && (
-                                    <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
-                                        <div className="flex">
-                                            <div className="flex-shrink-0">
-                                                <svg
-                                                    className="h-5 w-5 text-red-400"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </div>
-                                            <div className="ml-3">
-                                                <h3 className="font-medium text-red-800">
-                                                    There were errors with your
-                                                    submission
-                                                </h3>
-                                                <ul className="mt-2 text-red-700 list-disc list-inside">
-                                                    {Object.keys(errors).map(
-                                                        (error, index) => (
-                                                            <li key={index}>
-                                                                {errors[error]}
-                                                            </li>
-                                                        )
-                                                    )}
-                                                </ul>
+            {!isMember ? (
+                <td className="sm:col-span-1 grid-cols-2 text-sm grid sm:grid-cols-2">
+                    <div className="col-span-1 sm:col-span-1 content-center justify-self-center">
+                        <AdminDialog
+                            title="Answer of the Applicant"
+                            trigger={
+                                <div className=" justify-self-center underline content-center underline-offset-2">
+                                    View{" "}
+                                    <span className="sm:hidden">Response</span>
+                                </div>
+                            }
+                        >
+                            <div className="space-y-4">
+                                <h3 className="text-md font-bold">
+                                    Applicant Details
+                                </h3>
+                                <p>
+                                    <strong>Name:</strong> {user?.firstname}{" "}
+                                    {user?.lastname}
+                                </p>
+                                <p>
+                                    <strong>Email:</strong> {user?.email}
+                                </p>
+                                <p>
+                                    <strong>College:</strong> {user?.college}
+                                </p>
+                                <hr className="my-4" />
+                                <h3 className="text-lg font-bold">
+                                    Application Answers
+                                </h3>
+                                <div className="px-6 py-8">
+                                    <h1 className="text-3xl font-bold  text-gray-900 mb-6">
+                                        {application.userData.name}
+                                    </h1>
+                                    {application.userData.desc && (
+                                        <p className="text-gray-600  mb-8">
+                                            {application.userData.desc}
+                                        </p>
+                                    )}
+
+                                    {Object.keys(errors).length > 0 && (
+                                        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+                                            <div className="flex">
+                                                <div className="flex-shrink-0">
+                                                    <svg
+                                                        className="h-5 w-5 text-red-400"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                <div className="ml-3">
+                                                    <h3 className="font-medium text-red-800">
+                                                        There were errors with
+                                                        your submission
+                                                    </h3>
+                                                    <ul className="mt-2 text-red-700 list-disc list-inside">
+                                                        {Object.keys(
+                                                            errors
+                                                        ).map(
+                                                            (error, index) => (
+                                                                <li key={index}>
+                                                                    {
+                                                                        errors[
+                                                                            error
+                                                                        ]
+                                                                    }
+                                                                </li>
+                                                            )
+                                                        )}
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )}
-
-                                <ul className="space-y-6">
-                                    {application.userData.layout.map(
-                                        (item, index) => (
-                                            <RenderFormItemAnswers
-                                                key={index}
-                                                item={item}
-                                            />
-                                        )
                                     )}
-                                </ul>
-                            </div>
-                        </div>
-                    </AdminDialog>
-                </div>
 
-                <div className="col-span-1 sm:col-span-1 content-center justify-self-center">
-                    <AdminDialog
-                        title={`Set the Status for Applicant ${user?.firstname} ${user?.lastname}`}
-                        trigger={
-                            <DotsVertical
-                                onClick={() => {
-                                    handleUserSelect(user?.userID);
-                                    handleApplicationSelect(
-                                        application.applicationID
-                                    );
-                                }}
-                            />
-                        }
-                    >
-                        <form
-                            onSubmit={handleStatusSubmit}
-                            className="space-y-4"
-                        >
-                            <div className="space-y-2">
-                                <label className="block text-sm font-bold text-gray-700">
-                                    Select a Status to be Set for this
-                                    Application:
-                                </label>
-                                <Select
-                                    defaultValue={
-                                        application.status === "submitted"
-                                            ? "accepted"
-                                            : application.status
-                                    }
-                                    onValueChange={handleStatusValue}
-                                >
-                                    <SelectTrigger className="w-full h-12 mb border-gray-300 bg-transparent">
-                                        <SelectValue placeholder="Set Status" />
-                                    </SelectTrigger>
-                                    <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand">
-                                        <SelectItem value="accepted">
-                                            Mark as Accepted
-                                        </SelectItem>
-                                        <SelectItem value="pending">
-                                            Mark as Pending
-                                        </SelectItem>
-                                        <SelectItem value="rejected">
-                                            Mark as Rejected
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <label className="block text-sm font-bold text-gray-700">
-                                    Attach a Message/Reason:
-                                </label>
-                                <textarea
-                                    className="block w-full px-4 h-44 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    placeholder={
-                                        status === "pending"
-                                            ? "(This field is required)"
-                                            : "(Optional)"
-                                    }
-                                    onChange={(e) =>
-                                        handleInputMessageValue(e.target.value)
-                                    }
+                                    <ul className="space-y-6">
+                                        {application.userData.layout.map(
+                                            (item, index) => (
+                                                <RenderFormItemAnswers
+                                                    key={index}
+                                                    item={item}
+                                                />
+                                            )
+                                        )}
+                                    </ul>
+                                </div>
+                            </div>
+                        </AdminDialog>
+                    </div>
+
+                    <div className="col-span-1 sm:col-span-1 content-center justify-self-center">
+                        <AdminDialog
+                            title={`Set the Status for Applicant ${user?.firstname} ${user?.lastname}`}
+                            trigger={
+                                <DotsVertical
+                                    onClick={() => {
+                                        handleUserSelect(user?.userID);
+                                        handleApplicationSelect(
+                                            application.applicationID
+                                        );
+                                    }}
                                 />
-                            </div>
+                            }
+                        >
+                            <form
+                                onSubmit={handleStatusSubmit}
+                                className="space-y-4"
+                            >
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-bold text-gray-700">
+                                        Select a Status to be Set for this
+                                        Application:
+                                    </label>
+                                    <Select
+                                        defaultValue={
+                                            application.status === "submitted"
+                                                ? "accepted"
+                                                : application.status
+                                        }
+                                        onValueChange={handleStatusValue}
+                                    >
+                                        <SelectTrigger className="w-full h-12 mb border-gray-300 bg-transparent">
+                                            <SelectValue placeholder="Set Status" />
+                                        </SelectTrigger>
+                                        <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand">
+                                            <SelectItem value="accepted">
+                                                Mark as Accepted
+                                            </SelectItem>
+                                            <SelectItem value="pending">
+                                                Mark as Pending
+                                            </SelectItem>
+                                            <SelectItem value="rejected">
+                                                Mark as Rejected
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <label className="block text-sm font-bold text-gray-700">
+                                        Attach a Message/Reason:
+                                    </label>
+                                    <textarea
+                                        className="block w-full px-4 h-44 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder={
+                                            status === "pending"
+                                                ? "(This field is required)"
+                                                : "(Optional)"
+                                        }
+                                        onChange={(e) =>
+                                            handleInputMessageValue(
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </div>
 
-                            <div className="mt-4 grid justify-items-end">
-                                <button
-                                    type="submit"
-                                    className="flex px-9 shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white"
-                                >
-                                    <span className="ml-2 poppins truncate sm:block">
-                                        Set Status
-                                    </span>
-                                </button>
-                            </div>
-                        </form>
-                    </AdminDialog>
-                </div>
-            </td>
+                                <div className="mt-4 grid justify-items-end">
+                                    <button
+                                        type="submit"
+                                        className="flex px-9 shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white"
+                                    >
+                                        <span className="ml-2 poppins truncate sm:block">
+                                            Set Status
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>
+                        </AdminDialog>
+                    </div>
+                </td>
+            ) : (
+                <td className="col-span-1 grid-cols-1 text-sm font-bold grid sm:grid-cols-1">
+                    Already a Member
+                </td>
+            )}
         </tr>
     );
 }

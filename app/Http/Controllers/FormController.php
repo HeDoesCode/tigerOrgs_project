@@ -314,6 +314,16 @@ class FormController extends Controller
         }
     }
 
+        public function checkMembership(Request $request)
+        {
+            $exists = DB::table('organization_user_role')
+                ->where('userID', $request->userID)
+                ->where('orgID', $request->orgID)
+                ->exists();
+
+            return response()->json(['exists' => $exists]);
+        }
+
         public function setStatus(Request $request, $orgID){
             try {
                 $validated = $request->validate([
@@ -346,19 +356,59 @@ class FormController extends Controller
                 if (in_array($validated['status'], ['accepted', 'rejected'])) {
                     $application->status = $validated['status'];
                     $application->save();
-        
-                    session()->flash('toast', [
-                        'title' => 'Status updated successfully',
-                        'description' => 'The application status has been updated.',
-                        'variant' => 'success'
-                    ]);
+
+                    //put here the logic when the user is accepted, it will be a member of the org
+                    //should be added in the organization user role
+
+                    
 
                     if($validated['status'] === "accepted"){
-                        $user->notify(new AcceptedApplicationNotification($org, $validated['message']));
+
+                        $exists = DB::table('organization_user_role')
+                        ->where('userID', $validated['userID'])
+                        ->where('orgID', $validated['orgID'])
+                        ->exists();
+
+                        if($exists){
+
+                            session()->flash('toast', [
+                                'title' => 'The user is already inside the organization',
+                                'variant' => 'destructive'
+                            ]);
+
+                            return redirect()->back();
+                        }else{
+                            DB::table('organization_user_role')->insert(
+                                [
+                                    'userID' => $validated['userID'],
+                                    'orgID' => $validated['orgID'],
+                                ],
+                                [
+                                    'roleID' => 1,
+                                    'created_at' => now(),
+                                    'updated_at' => now(),
+                                ]
+                            );
+                
+                            session()->flash('toast', [
+                                'title' => 'Status updated successfully',
+                                'description' => 'The applicatant has been accepted and added to the members list.',
+                                'variant' => 'success'
+                            ]);
+    
+                            $user->notify(new AcceptedApplicationNotification($org, $validated['message']));
+                        }
+
                     }
 
                     if($validated['status'] === "rejected"){
                         $user->notify(new RejectedApplicationNotification($org, $validated['message']));
+            
+                        session()->flash('toast', [
+                            'title' => 'Status updated successfully',
+                            'description' => 'The applicationt has been rejected.',
+                            'variant' => 'success'
+                        ]);
                     }
         
                     return redirect()->back();
