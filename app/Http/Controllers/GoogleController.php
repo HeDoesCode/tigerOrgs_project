@@ -23,9 +23,6 @@ class GoogleController extends Controller
 {
     try {
         $googleUser = Socialite::driver('google')->user();
-
-        
-
         
     } catch (Exception $e) {
         session()->flash('toast', [
