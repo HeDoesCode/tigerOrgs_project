@@ -2,11 +2,13 @@ import MainAdminFrame from "@/Components/MainAdminFrame";
 import SuperAdminLayout from "@/Layouts/SuperAdminLayout";
 import { Head, useForm } from "@inertiajs/react";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CustomFileInput from "@/Components/CustomFileInput";
+import UploadProgress from "@/Components/Admin/UploadProgress";
 
 function SuperAdminDataUpload() {
     const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
 
     const { data, setData, post, reset } = useForm({
         studentFile: null,
@@ -27,16 +29,56 @@ function SuperAdminDataUpload() {
     const handleUpload = (e) => {
         e.preventDefault();
         setUploading(true);
+        setUploadProgress(0);
+
+        const progressInterval = setInterval(() => {
+            setUploadProgress((prev) => {
+                if (prev >= 90) {
+                    clearInterval(progressInterval);
+                    return 90;
+                }
+                return prev + 10;
+            });
+        }, 500);
 
         post(route("superadmin.dataupload.file"), {
+            onProgress: (progress) => {
+                if (progress.percentage) {
+                    setUploadProgress(Math.min(90, progress.percentage));
+                }
+            },
             onSuccess: () => {
-                reset();
+                setUploadProgress(100);
+                setTimeout(() => {
+                    reset();
+                    setUploading(false);
+                    setUploadProgress(0);
+                }, 1000);
+            },
+            onError: () => {
+                clearInterval(progressInterval);
+                setUploading(false);
+                setUploadProgress(0);
             },
             onFinish: () => {
-                setUploading(false);
+                clearInterval(progressInterval);
             },
         });
     };
+
+    const handleBeforeUnload = (e) => {
+        if (uploading) {
+            e.preventDefault();
+            e.returnValue = "";
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [uploading]);
 
     return (
         <div className="w-full">
@@ -66,6 +108,7 @@ function SuperAdminDataUpload() {
                             <CustomFileInput
                                 handleFileChange={handleFileChange}
                                 fileType="Student File"
+                                disabled={uploading}
                             />
                         </div>
 
@@ -77,6 +120,7 @@ function SuperAdminDataUpload() {
                             <CustomFileInput
                                 handleFileChange={handleFileChange}
                                 fileType="Organization File"
+                                disabled={uploading}
                             />
                         </div>
                     </div>
@@ -89,6 +133,11 @@ function SuperAdminDataUpload() {
                             {uploading ? "Uploading..." : "Upload Files"}
                         </button>
                     </div>
+
+                    <UploadProgress
+                        progress={uploadProgress}
+                        isUploading={uploading}
+                    />
                 </MainAdminFrame>
             </SuperAdminLayout>
         </div>

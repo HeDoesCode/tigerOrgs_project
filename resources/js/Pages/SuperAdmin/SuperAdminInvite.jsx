@@ -314,132 +314,146 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                 </div>
                             </AdminDialog>
                         </div>
-                        <div className="grid grid-rows-1 p-5 gap-2">
-                            {users.data &&
-                                users.data.map((user) => (
-                                    <VerticalCard
-                                        key={user.userID}
-                                        gridcol="grid grid-cols-1 sm:grid-cols-12"
-                                    >
-                                        <div className=" col-span-3 content-center">
-                                            <h1 className="md:ml-2 text-center md:text-left font-bold">
-                                                {user.firstname} {user.lastname}
-                                            </h1>
-                                        </div>
-                                        <div className="col-span-3 content-center">
-                                            <h1 className="text-center font-semibold truncate text-gray-500">
-                                                {user.email}
-                                            </h1>
-                                        </div>
-                                        <div className="col-span-3 content-center">
-                                            <h1 className=" text-center text-sm font-semibold text-gray-500">
-                                                {user.college}
-                                            </h1>
-                                        </div>
-                                        <div className="col-span-2 px-4 text-sm flex items-center justify-center ">
-                                            <AdminDialog
+                        {users.data.length === 0 ? (
+                            <div className="m-14 sm:m-48 text-xl font-thin text-center">
+                                No Assigned Admin Found
+                            </div>
+                        ) : (
+                            <div className="grid grid-rows-1 p-5 gap-2">
+                                {users.data &&
+                                    users.data.map((user) => (
+                                        <VerticalCard
+                                            key={user.userID}
+                                            gridcol="grid grid-cols-1 sm:grid-cols-12"
+                                        >
+                                            <div className=" col-span-3 content-center">
+                                                <h1 className="md:ml-2 text-center md:text-left font-bold">
+                                                    {user.firstname}{" "}
+                                                    {user.lastname}
+                                                </h1>
+                                            </div>
+                                            <div className="col-span-3 content-center">
+                                                <h1 className="text-center font-semibold truncate text-gray-500">
+                                                    {user.email}
+                                                </h1>
+                                            </div>
+                                            <div className="col-span-3 content-center">
+                                                <h1 className=" text-center text-sm font-semibold text-gray-500">
+                                                    {user.college}
+                                                </h1>
+                                            </div>
+                                            <div className="col-span-2 px-4 text-sm flex items-center justify-center ">
+                                                <AdminDialog
+                                                    trigger={
+                                                        <h1
+                                                            onClick={() => {
+                                                                getUser(
+                                                                    user.userID
+                                                                );
+                                                            }}
+                                                            className="px-4 text-center font-semibold rounded-xl poppins bg-green-50 border-2 border-green-600 text-green-800"
+                                                        >
+                                                            Joined{" "}
+                                                            {
+                                                                user.organizations_count
+                                                            }{" "}
+                                                            {user.organizations_count >
+                                                            1
+                                                                ? "Organizations"
+                                                                : "Organization"}
+                                                        </h1>
+                                                    }
+                                                    title={`Assigned Organizations for ${user.firstname} ${user.lastname}`}
+                                                >
+                                                    {currentUserOrgs.length !==
+                                                    0 ? (
+                                                        <div className="grid sm:grid-cols-2 overflow-auto grid-cols-1 gap-4 p-5">
+                                                            {currentUserOrgs.map(
+                                                                (
+                                                                    organization
+                                                                ) => (
+                                                                    <AdminOrgInvCard
+                                                                        isDeleting={
+                                                                            true
+                                                                        }
+                                                                        key={
+                                                                            organization.orgID
+                                                                        }
+                                                                        userRoles={
+                                                                            currentUserRoles
+                                                                        }
+                                                                        organization={
+                                                                            organization
+                                                                        }
+                                                                        onClick={() => {}}
+                                                                        selectedOrg={
+                                                                            selectedOrg
+                                                                        }
+                                                                        onDelete={
+                                                                            handleDeleteRole
+                                                                        }
+                                                                    />
+                                                                )
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="m-14 sm:m-48 text-xl font-thin text-center">
+                                                            No Organization
+                                                            Found
+                                                        </div>
+                                                    )}
+                                                </AdminDialog>
+                                            </div>
+
+                                            <AdminDialogForInvite
+                                                title="Assign Role for Student"
+                                                description={
+                                                    <div>
+                                                        Asssign{" "}
+                                                        <span className="font-bold">
+                                                            {user.firstname}{" "}
+                                                            {user.lastname}{" "}
+                                                        </span>
+                                                        to what organization?
+                                                    </div>
+                                                }
                                                 trigger={
-                                                    <h1
+                                                    //change this
+                                                    <div
                                                         onClick={() => {
                                                             getUser(
                                                                 user.userID
                                                             );
                                                         }}
-                                                        className="px-4 text-center font-semibold rounded-xl poppins bg-green-50 border-2 border-green-600 text-green-800"
+                                                        className="flex items-center  justify-center"
                                                     >
-                                                        Joined{" "}
-                                                        {
-                                                            user.organizations_count
-                                                        }{" "}
-                                                        {user.organizations_count >
-                                                        1
-                                                            ? "Organizations"
-                                                            : "Organization"}
-                                                    </h1>
+                                                        <div className="hover:bg-gray-300 rounded-full p-2">
+                                                            <IconInvite />
+                                                        </div>
+                                                    </div>
                                                 }
-                                                title={`Assigned Organizations for ${user.firstname} ${user.lastname}`}
-                                            >
-                                                {currentUserOrgs.length !==
-                                                0 ? (
-                                                    <div className="grid sm:grid-cols-2 overflow-auto grid-cols-1 gap-4 p-5">
-                                                        {currentUserOrgs.map(
-                                                            (organization) => (
-                                                                <AdminOrgInvCard
-                                                                    isDeleting={
-                                                                        true
-                                                                    }
-                                                                    key={
-                                                                        organization.orgID
-                                                                    }
-                                                                    userRoles={
-                                                                        currentUserRoles
-                                                                    }
-                                                                    organization={
-                                                                        organization
-                                                                    }
-                                                                    onClick={() => {}}
-                                                                    selectedOrg={
-                                                                        selectedOrg
-                                                                    }
-                                                                    onDelete={
-                                                                        handleDeleteRole
-                                                                    }
-                                                                />
-                                                            )
-                                                        )}
-                                                    </div>
-                                                ) : (
-                                                    <div className="m-14 sm:m-48 text-xl font-thin text-center">
-                                                        No Organization Found
-                                                    </div>
-                                                )}
-                                            </AdminDialog>
-                                        </div>
-
-                                        <AdminDialogForInvite
-                                            title="Assign Role for Student"
-                                            description={
-                                                <div>
-                                                    Asssign{" "}
-                                                    <span className="font-bold">
-                                                        {user.firstname}{" "}
-                                                        {user.lastname}{" "}
-                                                    </span>
-                                                    to what organization?
-                                                </div>
-                                            }
-                                            trigger={
-                                                //change this
-                                                <div
-                                                    onClick={() => {
-                                                        getUser(user.userID);
-                                                    }}
-                                                    className="flex items-center  justify-center"
-                                                >
-                                                    <div className="hover:bg-gray-300 rounded-full p-2">
-                                                        <IconInvite />
-                                                    </div>
-                                                </div>
-                                            }
-                                            handleInvite={handleInvite}
-                                            filteredOrganizations={
-                                                filteredOrganizations
-                                            }
-                                            currentUserRoles={currentUserRoles}
-                                            selectedOrg={selectedOrg}
-                                            processing={processing}
-                                            getOrg={getOrg}
-                                            orgSearchQuery={orgSearchQuery}
-                                            handleOrgSearchChange={
-                                                handleOrgSearchChange
-                                            }
-                                        />
-                                    </VerticalCard>
-                                ))}
-                            <div className="fixed w-screen bottom-0 left-0 right-0 pl-8 sm:pl-24 pr-10 pb-3 flex justify-center">
-                                <CustomPagination page={users} />
+                                                handleInvite={handleInvite}
+                                                filteredOrganizations={
+                                                    filteredOrganizations
+                                                }
+                                                currentUserRoles={
+                                                    currentUserRoles
+                                                }
+                                                selectedOrg={selectedOrg}
+                                                processing={processing}
+                                                getOrg={getOrg}
+                                                orgSearchQuery={orgSearchQuery}
+                                                handleOrgSearchChange={
+                                                    handleOrgSearchChange
+                                                }
+                                            />
+                                        </VerticalCard>
+                                    ))}
+                                <div className="fixed w-screen bottom-0 left-0 right-0 pl-8 sm:pl-24 pr-10 pb-3 flex justify-center">
+                                    <CustomPagination page={users} />
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </MainAdminFrame>
             </SuperAdminLayout>
