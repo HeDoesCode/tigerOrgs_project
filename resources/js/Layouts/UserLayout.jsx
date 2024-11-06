@@ -483,10 +483,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                         >
                             <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
                                 <img
-                                    src={
-                                        application.organization.logo ||
-                                        "/api/placeholder/64/64"
-                                    }
+                                    src={`/storage/logo/${application.organization.logo}`}
                                     alt={application.organization.name}
                                     className="size-full object-cover"
                                 />
