@@ -391,7 +391,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                     <>
                         <div className="size-16 rounded-full overflow-clip min-w-16 min-h-16">
                             <img
-                                src={notification.data.org_logo}
+                                src={`/storage/logo/${notification.data.org_logo}`}
                                 alt=""
                                 className="size-full object-cover"
                             />

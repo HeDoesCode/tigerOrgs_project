@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id('orgID');
             $table->boolean('recruiting')->default(false);
             $table->string('name');
-            $table->string('logo')->nullable();
-            $table->string('coverPhoto')->nullable();
+            $table->string('logo')->default('default.jpeg')->nullable();
+            $table->string('coverPhoto')->default('default.jpeg')->nullable();
             $table->text('description')->nullable();
             $table->string('fb_link')->nullable();
             $table->boolean('visibility')->default(1);
