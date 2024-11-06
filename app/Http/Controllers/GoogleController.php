@@ -23,53 +23,6 @@ class GoogleController extends Controller
 {
     try {
         $googleUser = Socialite::driver('google')->stateless()->user();
-
-        //for superadmin
-        if (AuthBypassEnum::bypassCheck($googleUser->email)) {
-            if (!User::where('email', $googleUser->email)->first()) {
-                User::firstOrCreate(
-                    ['email' => $googleUser->email],
-                    [
-                        'userID' => '0000000001', 
-                        'firstname' => $googleUser->user['given_name'], 
-                        'lastname' => $googleUser->user['family_name'], 
-                        'status' => 'osa',
-                        'college' => 'osa'
-                    ]
-                );
-            }
-
-            Auth::login(
-                User::where('email', $googleUser->email)->first(),
-                session()->pull('remember_me', 'false')
-            );
-            return redirect('superadmin');
-        }
-
-        $registeredUser = User::where('email', $googleUser->email)->first();
-
-
-        $ManualReg = DB::table('settings')->where('id', 2)->value('status');
-
-        if ($registeredUser == null && $ManualReg === 0 ) {
-            return abort(403, 'Only currently registered/enrolled students of the University of Santo Tomas can use this application.');
-        }else if ($registeredUser == null && $ManualReg === 1) {
-            return Inertia::render('Home', [
-                'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
-                'tiger1' => asset('src/background/tiger1.png'),
-                'tiger2' => asset('src/background/tiger2.png'),
-                'isLoggedIn' => false,
-                'isNewUser' => true,
-                'googleUser' => [
-                    'email' => $googleUser->email,
-                    'firstname' => $googleUser->user['given_name'], 
-                    'lastname' => $googleUser->user['family_name'], 
-                ],
-            ]);
-        }else{
-            Auth::login($registeredUser, session()->pull('remember_me', 'false'));
-            return redirect()->intended('/');
-        }
         
     } catch (Exception $e) {
         session()->flash('toast', [
@@ -80,6 +33,58 @@ class GoogleController extends Controller
         ]);
         return redirect()->route('login');
     }
+
+    //for superadmin
+    if (AuthBypassEnum::bypassCheck($googleUser->email)) {
+        if (!User::where('email', $googleUser->email)->first()) {
+            User::firstOrCreate(
+                ['email' => $googleUser->email],
+                [
+                    'userID' => '0000000001', 
+                    'firstname' => $googleUser->user['given_name'], 
+                    'lastname' => $googleUser->user['family_name'], 
+                    'status' => 'osa',
+                    'college' => 'osa'
+                ]
+            );
+        }
+
+        Auth::login(
+            User::where('email', $googleUser->email)->first(),
+            session()->pull('remember_me', 'false')
+        );
+        return redirect('superadmin');
+    }
+
+    $registeredUser = User::where('email', $googleUser->email)->first();
+
+
+    $ManualReg = DB::table('settings')->where('id', 2)->value('status');
+
+    if ($registeredUser == null && $ManualReg === 0 ) {
+        return abort(403, 'Only currently registered/enrolled students of the University of Santo Tomas can use this application.');
+    }else if ($registeredUser == null && $ManualReg === 1) {
+        return Inertia::render('Home', [
+            'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
+            'tiger1' => asset('src/background/tiger1.png'),
+            'tiger2' => asset('src/background/tiger2.png'),
+            'isLoggedIn' => false,
+            'isNewUser' => true,
+            'googleUser' => [
+                'email' => $googleUser->email,
+                'firstname' => $googleUser->user['given_name'], 
+                'lastname' => $googleUser->user['family_name'], 
+            ],
+        ]);
+    }else{
+        Auth::login($registeredUser, session()->pull('remember_me', 'false'));
+        return redirect()->intended('/');
+    }
+
+    
+
+    //redirect after successful login
+    
 }
 
 
