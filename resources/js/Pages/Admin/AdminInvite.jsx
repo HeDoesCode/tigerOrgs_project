@@ -125,6 +125,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                 description="Send Notification to the members of your Organization"
                                 trigger={
                                     <AdminButton
+                                        asChild
                                         className="mr-2 sm:mt-0 bg-white hover:bg-gray-800 hover:text-white"
                                         icon={<IconBellFilled />}
                                         name="Send Announcement"
@@ -171,6 +172,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                 description="Search to add manually to the Organization"
                                 trigger={
                                     <AdminButton
+                                        asChild
                                         className="mr-2 sm:mt-0 bg-white hover:bg-gray-800 hover:text-white"
                                         icon={<IconInvite />}
                                         name="Add Member Manually"

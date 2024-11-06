@@ -9,7 +9,7 @@ import {
 import IconEdit from "../Icons/IconEdit";
 import AdminAlertDialog from "./AdminAlertDialog";
 
-function AdminEditMenu({ userID, orgID, roleID, onRoleChange }) {
+function AdminEditMenu({ userID, orgID, roleID }) {
     const { data, setData, post, processing } = useForm({
         userID,
     });
@@ -18,14 +18,6 @@ function AdminEditMenu({ userID, orgID, roleID, onRoleChange }) {
         post(route(`admin.${action}`, { orgID }), {
             preserveState: true,
             preserveScroll: true,
-            onSuccess: () => {
-                // Handle success and call onRoleChange
-                if (action === "make-admin") {
-                    onRoleChange(2); // 2 represents Admin role
-                } else if (action === "make-member") {
-                    onRoleChange(1); // 1 represents Member role
-                }
-            },
         });
     };
 

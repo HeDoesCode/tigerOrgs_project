@@ -61,7 +61,8 @@ function SuperAdminSettings({ recruitment = false, manualreg = false }) {
                                 title="Enable/Disable Recruitment"
                                 description="Enabling recruitment allows student leaders to manage recruitment statuses. Disabling it will turn off recruitment for all organizations."
                                 trigger={
-                                    <button
+                                    <div
+                                        role="button"
                                         className={`underline font-bold ${
                                             isRecruitmentEnabled
                                                 ? "text-red-600"
@@ -72,7 +73,7 @@ function SuperAdminSettings({ recruitment = false, manualreg = false }) {
                                             ? "Disable"
                                             : "Enable"}{" "}
                                         Recruitment
-                                    </button>
+                                    </div>
                                 }
                             >
                                 <div className="flex items-center space-x-3 mt-4">
@@ -110,7 +111,8 @@ function SuperAdminSettings({ recruitment = false, manualreg = false }) {
                                 description="Enabling manual registration allows students to manually register their UST Gmail account on the website. Only use this feature
                                 if there is no data acquired from the OICT."
                                 trigger={
-                                    <button
+                                    <div
+                                        role="button"
                                         className={`underline font-bold ${
                                             isManualRegEnabled
                                                 ? "text-red-600"
@@ -121,7 +123,7 @@ function SuperAdminSettings({ recruitment = false, manualreg = false }) {
                                             ? "Disable"
                                             : "Enable"}{" "}
                                         Manual Registration
-                                    </button>
+                                    </div>
                                 }
                             >
                                 <div className="flex items-center space-x-3 mt-4">

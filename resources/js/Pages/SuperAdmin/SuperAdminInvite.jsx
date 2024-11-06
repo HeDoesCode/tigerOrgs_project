@@ -317,7 +317,10 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                         <div className="grid grid-rows-1 p-5 gap-2">
                             {users.data &&
                                 users.data.map((user) => (
-                                    <VerticalCard gridcol="grid grid-cols-1 sm:grid-cols-12">
+                                    <VerticalCard
+                                        key={user.userID}
+                                        gridcol="grid grid-cols-1 sm:grid-cols-12"
+                                    >
                                         <div className=" col-span-3 content-center">
                                             <h1 className="md:ml-2 text-center md:text-left font-bold">
                                                 {user.firstname} {user.lastname}

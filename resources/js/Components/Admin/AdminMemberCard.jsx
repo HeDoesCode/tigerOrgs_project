@@ -51,46 +51,6 @@ function AdminMemberCard({
                                 userID={userID}
                                 orgID={orgID}
                                 roleID={roleID}
-                                onRoleChange={(newRoleID) => {
-                                    // Update the local state here
-                                    if (newRoleID === 2) {
-                                        setAllAdmins((prev) => [
-                                            ...prev,
-                                            {
-                                                userID,
-                                                firstname,
-                                                lastname,
-                                                email,
-                                                college,
-                                                roleID: 2,
-                                            },
-                                        ]);
-                                        setAllMembers((prev) =>
-                                            prev.filter(
-                                                (member) =>
-                                                    member.userID !== userID
-                                            )
-                                        );
-                                    } else {
-                                        setAllMembers((prev) => [
-                                            ...prev,
-                                            {
-                                                userID,
-                                                firstname,
-                                                lastname,
-                                                email,
-                                                college,
-                                                roleID: 1,
-                                            },
-                                        ]);
-                                        setAllAdmins((prev) =>
-                                            prev.filter(
-                                                (admin) =>
-                                                    admin.userID !== userID
-                                            )
-                                        );
-                                    }
-                                }}
                             />
                         </div>
                         {/* <div className="mx-1 text-gray-500 cursor-pointer">
