@@ -26,10 +26,9 @@ class GoogleController extends Controller
         
     } catch (Exception $e) {
         session()->flash('toast', [
-            'title' => 'Login Error',
-            'description' => 'There was an error logging in. Please try again later.',
+            'title' => 'Please authenticate again with your new account',
             'duration' => 5000,
-            'variant' => 'destructive'
+            'variant' => 'neutral'
         ]);
         return redirect()->route('login');
     }
