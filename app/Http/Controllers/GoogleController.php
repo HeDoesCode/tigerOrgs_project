@@ -28,6 +28,7 @@ class GoogleController extends Controller
 
         
     } catch (Exception $e) {
+        dd($e);
         session()->flash('toast', [
             'title' => 'Login Error',
             'description' => 'There was an error logging in. Please try again later.',
