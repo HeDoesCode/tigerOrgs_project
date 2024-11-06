@@ -363,21 +363,13 @@ class FormController extends Controller
                     
 
                     if($validated['status'] === "accepted"){
-
-                        $exists = DB::table('organization_user_role')
+                        try{
+                            $exists = DB::table('organization_user_role')
                         ->where('userID', $validated['userID'])
                         ->where('orgID', $validated['orgID'])
                         ->exists();
 
-                        if($exists){
-
-                            session()->flash('toast', [
-                                'title' => 'The user is already inside the organization',
-                                'variant' => 'destructive'
-                            ]);
-
-                            return redirect()->back();
-                        }else{
+                        if(!$exists){
                             DB::table('organization_user_role')->insert(
                                 [
                                     'userID' => $validated['userID'],
@@ -397,8 +389,29 @@ class FormController extends Controller
                             ]);
     
                             $user->notify(new AcceptedApplicationNotification($org, $validated['message']));
+
+                            
+                        }else{
+
+                            session()->flash('toast', [
+                                'title' => 'The user is already inside the organization',
+                                'variant' => 'destructive'
+                            ]);
+
+                            return redirect()->back();
+                            
                         }
 
+                        }catch (Exception $e) {
+                            session()->flash('toast', [
+                                'title' => 'Error on status Accepted',
+                                'description' => 'Please try again.',
+                                'variant' => 'destructive'
+                            ]);
+                            return redirect()->back();
+                        }
+
+                    
                     }
 
                     if($validated['status'] === "rejected"){
