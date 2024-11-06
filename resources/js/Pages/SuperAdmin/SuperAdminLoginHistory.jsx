@@ -7,7 +7,6 @@ import VerticalCard from "@/Components/VerticalCard";
 import CustomPagination from "@/Components/CustomPagination";
 
 export default function SuperAdminLoginHistory({ loginEntries }) {
-
     return (
         <div className="w-full">
             <Head title="OSA Dashboard" />
@@ -18,11 +17,6 @@ export default function SuperAdminLoginHistory({ loginEntries }) {
                             icon: <IconCheckBox />,
                             label: "Login History",
                             link: "superadmin.loginhistory",
-                        },
-                        {
-                            icon: <IconInvite />,
-                            label: "Invite History",
-                            link: "superadmin.invitehistory",
                         },
                     ]}
                     title="Activity Log"

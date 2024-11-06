@@ -19,6 +19,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog";
+import IconStars from "@/Components/Icons/IconStars";
 
 export function Index({ orgID, criteriaData }) {
     const handleDelete = (criteriaID) => {
@@ -46,13 +47,7 @@ export function Index({ orgID, criteriaData }) {
                             params: { orgID },
                         },
                         {
-                            icon: <IconHistory />,
-                            label: "Form History",
-                            link: "admin.formhistory",
-                            params: { orgID },
-                        },
-                        {
-                            icon: <IconCheckBox />,
+                            icon: <IconStars />,
                             label: "Manage Criteria",
                             link: "admin.criteria.index",
                             params: { orgID },

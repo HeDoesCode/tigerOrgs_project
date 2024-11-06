@@ -104,6 +104,23 @@ class AdminController extends Controller
     {
         $recruiting = $request->input('status');
 
+        $isVisible = DB::table('organizations')
+            ->where('orgID', $orgID)
+            ->value('visibility');
+        
+            $isVisible = (bool) $isVisible;
+
+        if(!$isVisible){
+            session()->flash('toast', [
+                'title' => "You can't perform this action.",
+                'description' => 'Your Organization is hidden.',
+                'variant' => 'destructive'
+            ]);
+
+            return redirect()->back()->with('error');
+
+        }
+
         DB::table('organizations')
             ->where('orgID', $orgID)
             ->update(['recruiting' => $recruiting]);

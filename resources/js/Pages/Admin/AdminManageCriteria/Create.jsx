@@ -1,6 +1,7 @@
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
 import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
+import IconStars from "@/Components/Icons/IconStars";
 import MainAdminFrame from "@/Components/MainAdminFrame";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Head, useForm } from "@inertiajs/react";
@@ -36,13 +37,7 @@ function Create({ orgID }) {
                             params: { orgID },
                         },
                         {
-                            icon: <IconHistory />,
-                            label: "Form History",
-                            link: "admin.formhistory",
-                            params: { orgID },
-                        },
-                        {
-                            icon: <IconCheckBox />,
+                            icon: <IconStars />,
                             label: "Manage Criteria",
                             link: "admin.criteria.index",
                             params: { orgID },

@@ -156,8 +156,13 @@ public function manage(Request $request)
     public function updateOrganizations(Request $request)
     {
         foreach ($request->organizations as $organization) {
-            Organization::where('orgID', $organization['id'])
-                ->update(['visibility' => $organization['visibility']]);
+            $dataToUpdate = ['visibility' => $organization['visibility']];
+            if (!$organization['visibility']) {
+                $dataToUpdate['recruiting'] = false;
+
+            }
+
+            Organization::where('orgID', $organization['id'])->update($dataToUpdate);
         }
 
         session()->flash('toast', [

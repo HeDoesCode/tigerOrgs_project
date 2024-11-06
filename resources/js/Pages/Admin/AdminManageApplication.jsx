@@ -6,6 +6,7 @@ import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import DotsVertical from "@/Components/DotsVertical";
 import AdminDialog from "@/Components/Admin/AdminDialog";
+
 import { useState } from "react";
 import {
     Select,
@@ -22,6 +23,7 @@ import {
 } from "@/Components/ui/accordion";
 import RenderFormItem from "@/Components/Forms/Form-Renderer/RenderFormItem";
 import RenderFormItemAnswers from "@/Components/Forms/Form-Renderer/RenderFormItemAnswers";
+import IconStars from "@/Components/Icons/IconStars";
 
 function AdminManageApplication({ orgID, formsWithApplications }) {
     const [selectedFormId, setSelectedFormId] = useState(null);
@@ -54,13 +56,7 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                             params: { orgID },
                         },
                         {
-                            icon: <IconHistory />,
-                            label: "Form History",
-                            link: "admin.formhistory",
-                            params: { orgID },
-                        },
-                        {
-                            icon: <IconCheckBox />,
+                            icon: <IconStars />,
                             label: "Manage Criteria",
                             link: "admin.criteria.index",
                             params: { orgID },

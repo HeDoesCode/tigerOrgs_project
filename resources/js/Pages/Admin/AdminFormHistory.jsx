@@ -11,6 +11,7 @@ import IconForms from "@/Components/Icons/IconForms";
 import IconHistory from "@/Components/Icons/IconHistory";
 import IconEye from "@/Components/Icons/IconEye";
 import AdminDialog from "@/Components/Admin/AdminDialog";
+import IconStars from "@/Components/Icons/IconStars";
 
 function AdminFormHistory({ orgID }) {
     return (
@@ -32,13 +33,7 @@ function AdminFormHistory({ orgID }) {
                             params: { orgID },
                         },
                         {
-                            icon: <IconHistory />,
-                            label: "Form History",
-                            link: "admin.formhistory",
-                            params: { orgID },
-                        },
-                        {
-                            icon: <IconCheckBox />,
+                            icon: <IconStars />,
                             label: "Manage Criteria",
                             link: "admin.criteria.index",
                             params: { orgID },
