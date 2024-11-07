@@ -41,10 +41,10 @@
     outline: 1px solid red !important;
 }
 
-/*
-html {
-    overflow: hidden;
-} */
+/* can be removed */
+button {
+    user-select: none;
+}
 
 /* Fonts */
 

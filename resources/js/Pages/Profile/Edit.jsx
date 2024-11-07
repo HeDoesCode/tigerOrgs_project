@@ -4,9 +4,47 @@ import { Head, router } from "@inertiajs/react";
 import KeywordSelect from "@/Components/Organizations/KeywordSelect";
 import React, { useState } from "react";
 import InputContainer from "./InputContainer";
-function Edit({ user, activeUserKeywords, keywords }) {
+import IconCircleMinus from "@/Components/Icons/IconCircleMinus";
+function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
     const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
-    const userSectionError = user.section != null ? null : "Specify Section"; // if section exists, no error
+    const userSectionError = user.section != null ? null : "Specify Section";
+
+    const [currentFollowedOrgs, setCurrentFollowedOrgs] = useState(
+        [...followedOrgs] || []
+    );
+
+    const [editing, setEditing] = useState(false);
+
+    const handleSave = () => {
+        if (
+            JSON.stringify(currentFollowedOrgs) === JSON.stringify(followedOrgs)
+        ) {
+            setEditing(false);
+            return;
+        }
+
+        const followedOrgIDs = followedOrgs.map(({ orgID }) => orgID);
+        const currentFollowedOrgIDs = currentFollowedOrgs.map(
+            ({ orgID }) => orgID
+        );
+        const unfollowedOrgs = followedOrgIDs.filter(
+            (item) => !currentFollowedOrgIDs.includes(item)
+        );
+        router.patch(route("update.user.follows"), unfollowedOrgs, {
+            onSuccess: () => setEditing(false),
+        });
+    };
+
+    const visitOrg = (orgID) => {
+        router.get(route("organizations.home", orgID));
+    };
+
+    const removeOrg = (orgID) => {
+        setCurrentFollowedOrgs((prevState) => {
+            const newState = prevState.filter((org) => org.orgID !== orgID);
+            return newState;
+        });
+    };
 
     return (
         <div className="w-full">
@@ -15,7 +53,7 @@ function Edit({ user, activeUserKeywords, keywords }) {
                 <div className="w-full poppins text-lg md:text-xl font-bold mt-3 mb-5">
                     Manage <span className="text-[#ffb700]">Profile</span>
                 </div>
-                <div className="mt-4 w-full flex justify-center px-5">
+                <div className="mt-4 w-full flex flex-col items-center px-5 gap-6">
                     <div className="w-full max-w-[65rem] flex flex-col items-center drop-shadow shadow-black rounded-[2rem] space-y-3 bg-[#F4F4F4] border border-gray-300">
                         <div className="h-36 w-full flex flex-col justify-center px-12 space-y-3 bg-[#ffd875] rounded-[2rem]">
                             <span className="poetsen-one text-xl sm:text-3xl uppercase ">
@@ -64,10 +102,82 @@ function Edit({ user, activeUserKeywords, keywords }) {
                             </div>
                         </div>
                     </div>
+                    <div className="w-full max-w-[65rem] drop-shadow shadow-black rounded-[2rem] p-8 bg-[#F4F4F4] border border-gray-300">
+                        <div className="w-full flex justify-between mb-5">
+                            <span className="font-bold mb-4">
+                                Your followed organizations:
+                            </span>
+                            {followedOrgs.length !== 0 && (
+                                <div className="h-10 flex gap-x-4 items-center">
+                                    <span className="text-sm text-slate-400/80 italic">
+                                        {editing && "Click to unfollow"}
+                                    </span>
+                                    <button
+                                        className={`px-3 select-none py-1 text-center w-20 rounded-md h-full ${
+                                            editing
+                                                ? "bg-sky-400"
+                                                : "bg-slate-300"
+                                        }`}
+                                        onClick={
+                                            editing
+                                                ? handleSave
+                                                : () => setEditing(true)
+                                        }
+                                    >
+                                        {editing ? "Save" : "Edit"}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                        <div className="w-full grid grid-cols-[repeat(auto-fill,_minmax(20rem,1fr))] gap-4">
+                            {currentFollowedOrgs.map((org, index) => (
+                                <FollowedOrganizationTile
+                                    org={org}
+                                    key={index}
+                                />
+                            ))}
+                            {currentFollowedOrgs.length == 0 && (
+                                <span className="text-sm text-slate-400/80 italic">
+                                    No followed organizations...
+                                </span>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </UserLayout>
         </div>
     );
+
+    function FollowedOrganizationTile({ org }) {
+        return (
+            <button
+                className="flex items-center gap-x-3 hover:bg-slate-800 py-2 rounded-lg hover:text-white text-black bg-transparent transition-all"
+                onClick={
+                    editing
+                        ? () => removeOrg(org.orgID)
+                        : () => visitOrg(org.orgID)
+                }
+            >
+                <div>
+                    <IconCircleMinus
+                        fill="#ef4444"
+                        stroke="white"
+                        size="27"
+                        className={editing ? "block ml-3" : "hidden"}
+                    />
+                </div>
+                <div className="flex items-center gap-x-2">
+                    <img
+                        src={`storage/logo/${org.logo}`}
+                        className="aspect-square rounded-full size-12"
+                    />
+                    <div className="flex-1 line-clamp-2 leading-5 text-left">
+                        {org.name}
+                    </div>
+                </div>
+            </button>
+        );
+    }
 
     function SectionInput() {
         const [sectionString, setSectionString] = useState(user.section || "");

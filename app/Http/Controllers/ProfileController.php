@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Inertia\Inertia;
-use Inertia\Response;
 use App\Models\Keyword;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -13,18 +13,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
     public function edit()
     {
-
         $user = Auth::user();
-        // dd($user->section);
-        // dd($user);
 
         $keywords = Keyword::pluck('keyword', 'keyID');
-        // ... and parse into array of objects
         $keywordsArray = $keywords->map(function ($keyword, $keyID) {
             return [
                 'keyID' => $keyID,
@@ -41,10 +34,14 @@ class ProfileController extends Controller
             ->get()
             ->toArray();
 
+        $followedOrgIDs = Organization::join('organization_followers', 'organization_followers.orgID', 'organizations.orgID')
+            ->where('userID', Auth::id())->select('organizations.orgID', 'organizations.name', 'organizations.logo')->get()->toArray();
+
         return Inertia::render('Profile/Edit', [
             'user' => $user,
             'keywords' => $keywordsArray,
             'activeUserKeywords' => $activeUserKeywords,
+            'followedOrgs' => $followedOrgIDs,
         ]);
     }
 
@@ -55,8 +52,6 @@ class ProfileController extends Controller
             'activeKeywords.*.keyID' => 'required|numeric|exists:keywords,keyID',
             'activeKeywords.*.keyword' => 'required|string|max:255',
         ]);
-
-        // $newKeywords = $validatedData['activeKeywords'];
 
         $user = User::where('userID', Auth::id())->first();
 
@@ -89,21 +84,10 @@ class ProfileController extends Controller
 
     public function updateUserSection(Request $request)
     {
-        // $request->merge([
-        //     'section' => strtoupper($request->input('section'))
-        // ]);
-
-        // $validatedData = $request->validate([
-        //     // 'section' => 'string'
-        //     'section' => ['required', 'regex:/^\d-[A-Z]+$/']
-
-        // ]);
-
         $request->merge([
             'section' => strtoupper($request->input('section'))
         ]);
 
-        // Create the validator instance
         $validator = Validator::make($request->all(), [
             // 'section' => ['required', 'regex:/^\d-[A-Z]+$/'],
             'section' => ['required'],
@@ -119,8 +103,6 @@ class ProfileController extends Controller
             return null;
         }
 
-        // return dd($validator->fails());
-
         $user = User::where('userID', Auth::id())->first();
 
         $user->section = $request->input('section') ?: null;
@@ -130,7 +112,6 @@ class ProfileController extends Controller
         if ($user->save()) {
             session()->flash('toast', [
                 'title' => 'Section Update Successful',
-                // 'description' => "$queryResult",
                 'variant' => 'success',
                 'duration' => 2000,
             ]);
@@ -146,90 +127,42 @@ class ProfileController extends Controller
         $this->edit();
     }
 
+    public function updateUserFollows(Request $request)
+    {
 
+        $validator = Validator::make($request->all(), [
+            'unfollowedOrgIDs' => 'array',
+            'unfollowedOrgIDs.*' => 'integer',
+        ]);
 
+        if ($validator->fails()) {
+            session()->flash('toast', [
+                'title' => 'Unfollow Organizations Failed',
+                'description' => "An error occurred while updating your followed organizations.",
+                'variant' => 'destructive',
+                'duration' => 4000,
+            ]);
+            return redirect()->back();
+        };
 
+        $unfollowedOrgIDs = $request->all();
 
+        $results = DB::table('organization_followers')->where('userID', Auth::id())
+            ->whereIn('orgID', $unfollowedOrgIDs);
 
+        if ($results->get()->count() !== count($unfollowedOrgIDs)) {
+            abort(400);
+        }
 
+        $results->delete();
 
+        session()->flash('toast', [
+            'title' => 'Unfollow Organizations Success',
+            'description' => "Successfully unfollowed organization/s.",
+            'variant' => 'success',
+            'duration' => 3000,
+        ]);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // /**
-    //  * Update the user's profile information.
-    //  */
-    // public function update(ProfileUpdateRequest $request): RedirectResponse
-    // {
-    //     $request->user()->fill($request->validated());
-
-    //     if ($request->user()->isDirty('email')) {
-    //         $request->user()->email_verified_at = null;
-    //     }
-
-    //     $request->user()->save();
-
-    //     return Redirect::route('profile.edit');
-    // }
-
-    // /**
-    //  * Delete the user's account.
-    //  */
-    // public function destroy(Request $request): RedirectResponse
-    // {
-    //     $request->validate([
-    //         'password' => ['required', 'current_password'],
-    //     ]);
-
-    //     $user = $request->user();
-
-    //     Auth::logout();
-
-    //     $user->delete();
-
-    //     $request->session()->invalidate();
-    //     $request->session()->regenerateToken();
-
-    //     return Redirect::to('/');
-    // }
-
+        return redirect()->back();
+    }
 }

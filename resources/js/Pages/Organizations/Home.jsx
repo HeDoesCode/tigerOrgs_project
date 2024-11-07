@@ -28,8 +28,6 @@ function Home({
 }) {
     const { toast } = useToast();
 
-    console.log('latestOfficerUpdate:', pageData.latestOfficerUpdate)
-
     const copyToClipboard = (text) => {
         navigator.clipboard
             .writeText(text)
@@ -90,16 +88,21 @@ function Home({
                 className={`w-full bg-white p-4 md:p-7 rounded-lg flex flex-col ${className} space-y-1 relative`}
                 id={id}
             >
-                <div className={`poppins text-lg font-extrabold ${nameCN}`}>{name}</div>
-                <div className={`w-full block whitespace-pre-line ${childrenCN}`}>{children}</div>
+                <div className={`poppins text-lg font-extrabold ${nameCN}`}>
+                    {name}
+                </div>
+                <div
+                    className={`w-full block whitespace-pre-line ${childrenCN}`}
+                >
+                    {children}
+                </div>
             </div>
         );
     }
 
     function AboutUsContainer() {
-
         return (
-            <Tile name="About Us" id='aboutUs'>
+            <Tile name="About Us" id="aboutUs">
                 {pageData.aboutUs}
                 {editing && editing.aboutUs}
             </Tile>
@@ -107,7 +110,6 @@ function Home({
     }
 
     function ContactsContainer() {
-
         const platformIcons = {
             email: <IconMailFilled />,
             instagram: <IconInstagram />,
@@ -118,7 +120,7 @@ function Home({
         };
 
         return (
-            <Tile name="Contacts and Information" id='contacts'>
+            <Tile name="Contacts and Information" id="contacts">
                 <ul className="w-full space-y-2 pl-2 relative">
                     {pageData.contacts.map((contact, index) => (
                         <li
@@ -127,7 +129,9 @@ function Home({
                         >
                             <div className="flex gap-x-2">
                                 <div>{platformIcons[contact.platform]}</div>
-                                <div className="font-semibold">{contact.name}:</div>
+                                <div className="font-semibold">
+                                    {contact.name}:
+                                </div>
                             </div>
                             <button
                                 className="truncate flex-1 text-left hover:outline hover:outline-1 rounded-md hover:outline-gray-500 hover:px-2 transition-all"
@@ -147,7 +151,7 @@ function Home({
         const officers = pageData.officers;
 
         return (
-            <Tile name="Officers" className='h-full' id='officers'>
+            <Tile name="Officers" className="h-full" id="officers">
                 <ul className="w-full space-y-2 pl-2">
                     {/* {officers.map((officer, index) => ( */}
                     {officers.map((officer, index) => (
@@ -155,7 +159,11 @@ function Home({
                             <span className="mr-3">•</span>
                             <div>
                                 <div className="nunito font-extrabold text-md leading-6">
-                                    {officer?.user?.firstname}{officer?.user?.middlename ? ` ${officer?.user?.middlename[0]}.` : ''} {officer?.user?.lastname}
+                                    {officer?.user?.firstname}
+                                    {officer?.user?.middlename
+                                        ? ` ${officer?.user?.middlename[0]}.`
+                                        : ""}{" "}
+                                    {officer?.user?.lastname}
                                 </div>
                                 <div className="-mt-1 quicksand text-sm">
                                     {officer.position}
@@ -164,7 +172,11 @@ function Home({
                         </li>
                     ))}
                 </ul>
-                <div className="absolute top-3 right-3 text-xs text-slate-400/70 italic text-right leading-3">Last Update:<br />{pageData.latestOfficerUpdate}</div>
+                <div className="absolute top-3 right-3 text-xs text-slate-400/70 italic text-right leading-3">
+                    Last Update:
+                    <br />
+                    {pageData.latestOfficerUpdate}
+                </div>
                 {editing && editing.officers}
             </Tile>
         );
@@ -172,7 +184,7 @@ function Home({
 
     function SocialIFrame() {
         return (
-            <Tile name="Social Activities" id='facebookLink'>
+            <Tile name="Social Activities" id="facebookLink">
                 <FacebookPage link={pageData.fb_link} />
                 {editing && editing.social}
             </Tile>
@@ -180,7 +192,6 @@ function Home({
     }
 
     function PhotoScrollArea() {
-
         return (
             <Tile
                 name="Showcase Photos"
@@ -188,7 +199,7 @@ function Home({
                 className="overflow-x-hidden"
             >
                 <div className="h-52 md:h-80 w-full flex flex-row overflow-x-auto gap-x-6 pb-1 relative">
-                    {pageData['photos'].map((photo, index) => (
+                    {pageData["photos"].map((photo, index) => (
                         <Dialog key={index}>
                             <DialogTrigger className="contents">
                                 <div className="h-full flex-shrink-0 relative rounded-xl overflow-clip min-w-32">
@@ -224,7 +235,6 @@ function Home({
             </Tile>
         );
     }
-
 }
 
 export default Home;

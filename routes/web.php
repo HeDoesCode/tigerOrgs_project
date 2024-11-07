@@ -35,13 +35,14 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
     Route::patch('/update-user-section', [ProfileController::class, 'updateUserSection'])->name('update.user.section');
+    Route::patch('/update-user-follows', [ProfileController::class, 'updateUserFollows'])->name('update.user.follows');
 
     //for notif
     Route::get('/notifications/fetch', [NotificationController::class, 'fetch'])->name('notifications.fetch');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
     Route::post('/applications/{application}/status', [NotificationController::class, 'updateStatus'])->name('notifications.updateStatus');
 
-    
+
     Route::prefix('organizations')->group(function () {
         Route::get('/', [OrganizationController::class, 'browse'])->name('organizations');
         Route::get('/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
@@ -50,7 +51,6 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
 
         // form page/s
         Route::get('/{orgID}/apply/{formID}', [OrganizationController::class, 'apply'])->name('organizations.apply')->middleware([IsRecruiting::class, 'isMember:block']);
-        
     });
 
     Route::post('/{orgID}/form-submission/{formID}', [FormController::class, 'submitForm'])->name('formSubmission')->middleware([IsRecruiting::class, 'isMember:block']);
@@ -123,7 +123,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::get('formhistory', 'formhistory')->name('formhistory');
         Route::patch('setStatus', [FormController::class, 'setStatus'])->name('setStatus');
         Route::get('/check-membership/{userID}', [FormController::class, 'checkMembership'])
-        ->name('check-membership');
+            ->name('check-membership');
 
         // manage admin
         Route::get('search-users', 'search');
