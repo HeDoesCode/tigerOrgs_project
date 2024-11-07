@@ -106,6 +106,8 @@ function Home({
         const [userId, setUserId] = useState(googleUser.id || "");
         const [section, setSection] = useState(googleUser.section || "");
         const [college, setCollege] = useState(googleUser.college || "");
+        const [middlename, setMiddlename] = useState(googleUser.middlename || "");
+
         const [errors, setErrors] = useState({});
         const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -118,10 +120,11 @@ function Home({
 
             if (!section.trim()) {
                 newErrors.userSectionError = "Specify Section";
-            } else if (!/^\d{1}-[A-Za-z]+$/.test(section)) {
-                newErrors.userSectionError =
-                    "Section must be in format: Year-Section (e.g., 3-ITG)";
-            }
+            } 
+
+            if (!middlename.trim()) {
+                newErrors.userMiddlenameError = "Specify Middle Name";
+            } 
 
             if (!college?.trim()) {
                 newErrors.collegeError = "College affiliation is required";
@@ -148,6 +151,9 @@ function Home({
                     college: college,
                     firstname: googleUser?.firstname,
                     lastname: googleUser?.lastname,
+                    middlename: middlename,
+                
+
                 };
 
                 // Validate all required fields
@@ -158,6 +164,7 @@ function Home({
                     "college",
                     "firstname",
                     "lastname",
+                    "middlename",
                 ];
                 const missingFields = requiredFields.filter(
                     (field) => !postData[field]
@@ -229,6 +236,17 @@ function Home({
                                     )}
                                 </div>
                                 <div>
+                                    <MiddlenameInput
+                                        currentMiddlename={middlename}
+                                        onChange={setMiddlename}
+                                    />
+                                    {errors.middlenameError && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.middlenameError}
+                                        </p>
+                                    )}
+                                </div>
+                                <div>
                                     <CollegeInput
                                         currentCollege={college}
                                         onChange={setCollege}
@@ -283,7 +301,7 @@ function Home({
 
         const handleSectionStringChange = (e) => {
             setSectionString(e.target.value);
-            onChange(e.target.value); // Pass value up to parent
+            onChange(e.target.value); 
         };
 
         return (
@@ -305,7 +323,7 @@ function Home({
 
         const handleIdStringChange = (e) => {
             setIdString(e.target.value);
-            onChange(e.target.value); // Pass value up to parent
+            onChange(e.target.value); 
         };
 
         return (
@@ -331,15 +349,15 @@ function Home({
 
         const handleCollegeStringChange = (e) => {
             setCollegeString(e.target.value);
-            onChange(e.target.value); // Update parent component's college state
+            onChange(e.target.value); 
         };
 
         return (
-            <InputContainer title="College:">
+            <InputContainer title="Affiliation:">
                 <div className="flex">
                     <input
                         type="text"
-                        placeholder="College"
+                        placeholder="Ex: College of Computing Sciences"
                         className="w-full rounded-l-lg focus:border-black border-transparent"
                         value={collegeString}
                         onChange={handleCollegeStringChange}
@@ -348,6 +366,36 @@ function Home({
                 {userCollegeError && (
                     <p className="text-red-500 text-xs mt-1">
                         {userCollegeError}
+                    </p>
+                )}
+            </InputContainer>
+        );
+    }
+
+    function MiddlenameInput({ currentMiddlename, userMiddlenameError, onChange }) {
+        const [middlenameString, setMiddlenameString] = useState(
+            currentMiddlename || ""
+        );
+
+        const handleMiddlenameStringChange = (e) => {
+            setMiddlenameString(e.target.value);
+            onChange(e.target.value); 
+        };
+
+        return (
+            <InputContainer title="Middlename">
+                <div className="flex">
+                    <input
+                        type="text"
+                        placeholder="Middlename"
+                        className="w-full rounded-l-lg focus:border-black border-transparent"
+                        value={middlenameString}
+                        onChange={handleMiddlenameStringChange}
+                    />
+                </div>
+                {userMiddlenameError && (
+                    <p className="text-red-500 text-xs mt-1">
+                        {userMiddlenameError}
                     </p>
                 )}
             </InputContainer>

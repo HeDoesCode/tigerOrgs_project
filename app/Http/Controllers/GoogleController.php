@@ -80,8 +80,6 @@ class GoogleController extends Controller
         return redirect()->intended('/');
     }
 
-    
-
     //redirect after successful login
     
 }
@@ -94,10 +92,11 @@ public function register(Request $request)
         $validatedData = $request->validate([
             'userID' => 'required|string|max:10',
             'section' => 'nullable|string',
-            'email' => 'required|email',  // Removed unique constraint since we're using updateOrCreate
+            'email' => 'required|email', 
             'college' => 'required|string',
             'firstname' => 'required|string', 
-            'lastname' => 'required|string' 
+            'lastname' => 'required|string', 
+            'middlename' => 'required|string' 
         ]);
         
         $user = User::updateOrCreate(
@@ -108,7 +107,9 @@ public function register(Request $request)
                 'college' => $validatedData['college'],
                 'status' => 'student', 
                 'firstname' => $validatedData['firstname'], 
-                'lastname' => $validatedData['lastname'] 
+                'lastname' => $validatedData['lastname'],
+                'middlename' => $validatedData['middlename'] 
+
             ]
         );
 
@@ -126,8 +127,5 @@ public function register(Request $request)
             'error' => $e->getMessage() 
         ], 500);
     }
-
     }
-
-
 }
