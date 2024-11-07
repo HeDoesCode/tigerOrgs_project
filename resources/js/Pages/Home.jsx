@@ -120,11 +120,11 @@ function Home({
 
             if (!section.trim()) {
                 newErrors.userSectionError = "Specify Section";
-            } 
+            }
 
             if (!middlename.trim()) {
                 newErrors.userMiddlenameError = "Specify Middle Name";
-            } 
+            }
 
             if (!college?.trim()) {
                 newErrors.collegeError = "College affiliation is required";
@@ -152,7 +152,7 @@ function Home({
                     firstname: googleUser?.firstname,
                     lastname: googleUser?.lastname,
                     middlename: middlename,
-                
+
 
                 };
 
@@ -301,7 +301,7 @@ function Home({
 
         const handleSectionStringChange = (e) => {
             setSectionString(e.target.value);
-            onChange(e.target.value); 
+            onChange(e.target.value);
         };
 
         return (
@@ -323,7 +323,7 @@ function Home({
 
         const handleIdStringChange = (e) => {
             setIdString(e.target.value);
-            onChange(e.target.value); 
+            onChange(e.target.value);
         };
 
         return (
@@ -349,7 +349,7 @@ function Home({
 
         const handleCollegeStringChange = (e) => {
             setCollegeString(e.target.value);
-            onChange(e.target.value); 
+            onChange(e.target.value);
         };
 
         return (
@@ -379,7 +379,7 @@ function Home({
 
         const handleMiddlenameStringChange = (e) => {
             setMiddlenameString(e.target.value);
-            onChange(e.target.value); 
+            onChange(e.target.value);
         };
 
         return (

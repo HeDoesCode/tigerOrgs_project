@@ -26,7 +26,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 dayjs.extend(relativeTime);
 
 function UserLayout({ children, bgImage, noPadding }) {
-    const footer_minHeight = "";
     const { url } = usePage();
     const routePath = (routeName) => new URL(route(routeName)).pathname;
 

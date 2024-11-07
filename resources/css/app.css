@@ -41,7 +41,10 @@
     outline: 1px solid red !important;
 }
 
-
+/*
+html {
+    overflow: hidden;
+} */
 
 /* Fonts */
 
