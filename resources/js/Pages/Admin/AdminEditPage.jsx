@@ -348,6 +348,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         }
                     />
                 }
+                editErrors={errors['changesMade.storage.coverPhoto']}
             >
                 <label>
                     Select an image:{" "}
@@ -476,6 +477,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         }
                     />
                 }
+                editErrors={errors['changesMade.storage.logo']}
             >
                 <label>
                     Select an image:{" "}
@@ -485,7 +487,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                 </label>
                 <input
                     type="file"
-                    accept="image/png, image/jpg, image/jpeg"
+                    accept="image/png, image/jpg, image/jpeg, image/webp"
                     onChange={handleImageChange}
                 />
                 <div className="font-bold text-sm text-red-500">{error}</div>
@@ -561,6 +563,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         previewChangeProps={{ onClick: handleSavePreview }}
                     />
                 }
+                editErrors={errors['pageState.pageLayoutData.keywords']}
             >
                 <EditorKeywordSelect
                     keywords={keywords}
@@ -616,6 +619,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         previewChangeProps={{ onClick: handleSavePreview }}
                     />
                 }
+                editErrors={errors['pageState.pageData.aboutUs']}
             >
                 <textarea
                     placeholder="Your description here..."
@@ -716,6 +720,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         previewChangeProps={{ onClick: handleSavePreview }}
                     />
                 }
+                editErrors={errors['pageState.pageData.contacts']}
             >
                 <div className="border border-slate-400 w-full p-2 overflow-x-auto">
                     <table className="w-full min-w-96">
@@ -1000,6 +1005,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         previewChangeProps={{ onClick: handleSavePreview }}
                         resetProps={{ onClick: handleReset }}
                     />}
+                editErrors={errors['pageState.pageData.officers']}
             >
                 <table>
                     <thead>
@@ -1181,6 +1187,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         previewChangeProps={{ onClick: handleSavePreview }}
                     />
                 }
+                editErrors={errors['pageState.pageData.fb_link']}
             >
                 <input
                     type="text"
@@ -1362,6 +1369,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         previewChangeProps={{ onClick: handleSavePreview }}
                     />
                 }
+                editErrors={errors['changesMade.storage.photos'] || errors['pageState.pageData.photos']}
             >
                 <table>
                     <thead>

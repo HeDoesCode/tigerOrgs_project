@@ -226,7 +226,7 @@ function OrganizationLayout({
 
     function CoverPhoto() {
         return (
-            <div className="max-h-[25rem] min-h-10 h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
+            <div className="max-h-[25rem] min-h-36 h-fit rounded-b-[2rem] border-b-[0.15rem] border-b-[#AAAAAA] overflow-clip flex items-center relative z-0">
                 <img
                     src={pageLayoutData.coverPhoto}
                     alt="Organization Cover Photo"

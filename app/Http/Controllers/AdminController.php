@@ -228,20 +228,49 @@ class AdminController extends Controller
             'pageState.pageData.photos.*.caption' => 'sometimes|required|string|max:255',
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $errorMessages = [
+            'changesMade.storage.coverPhoto.image' => 'The cover photo must be a valid image file.',
+            'changesMade.storage.coverPhoto.mimes' => 'The cover photo must be a file of type: jpeg, png, jpg.',
+            'changesMade.storage.coverPhoto.max' => 'The cover photo may not be greater than 2 MB.',
 
-        if ($validator->fails()) {
-            session()->flash('toast', [
-                'title' => 'Failed to save your changes.',
-                'description' => 'One or more of your changes caused an error. Please check your changes and try again.',
-                'duration' => 5000,
-                'variant' => 'destructive'
-            ]);
+            'pageState.pageData.aboutUs.max' => 'The about us section must not exceed 65535 characters.',
 
-            return redirect()->back()
-                ->withErrors($validator) // Flash the validation errors to the session
-                ->withInput(); // Optionally flash the old input to the session
-        }
+            'pageState.pageLayoutData.keywords.*.keyID.exists' => 'The selected keyword does not exist.',
+
+            'pageState.pageData.contacts.*.contactID.exists' => 'The selected contact ID does not exist.',
+            'pageState.pageData.contacts.*.platform.in' => 'The platform must be one of the following: facebook, instagram, linkedin, email, x, default.',
+            'pageState.pageData.contacts.*.address.max' => 'The contact address must not exceed 255 characters.',
+
+            'pageState.pageData.fb_link.url' => 'The Facebook link must be a valid URL.',
+            'pageState.pageData.fb_link.max' => 'The Facebook link must not exceed 255 characters.',
+
+            'pageState.pageData.officers.*.userID.exists' => 'The selected user does not exist.',
+            'pageState.pageData.officers.*.position.max' => 'The officer position must not exceed 255 characters.',
+
+            // Custom message for the photo name validation
+            'changesMade.storage.photos.*.image' => 'Each photo must be a valid image file.',
+            'changesMade.storage.photos.*.mimes' => 'Each photo must be a file of type: jpeg, png, jpg.',
+            'changesMade.storage.photos.*.max' => 'Each photo may not be greater than 2 MB.',
+            'pageState.pageData.photos.required' => 'At least one photo is required.',
+            'pageState.pageData.photos.*.caption.required' => 'Each photo must have a caption.',
+            'pageState.pageData.photos.*.caption.max' => 'Photo captions must not exceed 255 characters.',
+        ];
+
+        // $validator = Validator::make($request->all(), $rules);
+        $request->validate($rules, $errorMessages);
+
+        // if ($validator->fails()) {
+        //     session()->flash('toast', [
+        //         'title' => 'Failed to save your changes.',
+        //         'description' => 'One or more of your changes caused an error. Please check your changes and try again.',
+        //         'duration' => 5000,
+        //         'variant' => 'destructive'
+        //     ]);
+
+        //     return redirect()->back()
+        //         ->withErrors($validator) // Flash the validation errors to the session
+        //         ->withInput(); // Optionally flash the old input to the session
+        // }
 
         $changesMade = $request->input('changesMade');
         $organization = Organization::findOrFail($orgID);
@@ -250,221 +279,220 @@ class AdminController extends Controller
             $changes = $request->input('changesMade')['changes'];
             $pageState = $request->input('pageState');
 
-            // try {
-            foreach ($changes as $key => $_) {
-                switch ($key) {
-                    case 'coverPhoto': {
-                            // ignore if original file is default.jpeg | delete original file
-                            // if (Organization::find($orgID)->coverPhoto !== 'default.jpeg' && Storage::exists('public/coverPhoto', Organization::find($orgID)->coverPhoto)) {
-                            if (Organization::find($orgID)->coverPhoto !== 'default.jpeg') {
-                                Storage::delete('public/coverPhoto/' . Organization::find($orgID)->coverPhoto);
-                            }
-                            // store new coverPhoto with new filename
-                            $newFile = $request->file('changesMade.storage.coverPhoto'); // retrieve the file
-                            $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
-                            $newFile->storeAs('public/coverPhoto', $newFile_filename); // store in storage
-                            // change coverPhoto attribute of org in DB
-                            $organization->coverPhoto = $newFile_filename;
-                            break;
-                        }
-                    case 'logo': {
-                            // ignore if original file is default.jpeg | delete original file
-                            if (Organization::find($orgID)->logo !== 'default.jpeg'/* && Storage::exists('public/logo', Organization::find($orgID)->logo)*/) {
-                                Storage::delete('public/logo/' . Organization::find($orgID)->logo);
-                            }
-                            // store new logo with new filename
-                            $newFile = $request->file('changesMade.storage.logo'); // retrieve the file
-                            $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
-                            $newFile->storeAs('public/logo', $newFile_filename); // store in storage
-                            // change logo attribute of org in DB
-                            $organization->logo = $newFile_filename;
-                            break;
-                        }
-                    case 'keywords': {
-                            $newRecords = [];
-                            foreach ($pageState['pageLayoutData']['metadata']['keywords'] as $item) {
-                                $newRecords[] = [
-                                    'orgID' => $orgID,
-                                    'keyID' => $item['keyID']
-                                ];
-                            }
-                            // deletion
-                            DB::table('organization_keywords')
-                                ->where('orgID', $orgID)->delete();
-                            // insertion
-                            DB::table('organization_keywords')->insert($newRecords);
-                            break;
-                        };
-                    case 'aboutUs': {
-                            $organization->description = $request->input('pageState.pageData.aboutUs');
-                            break;
-                        }
-                    case 'contacts': {
-                            DB::table('organization_contacts')->where('orgID', $orgID)->delete();
-                            // dd($pageState['pageData']['contacts']);
-                            if (isset($pageState['pageData']['contacts'])) {
-                                foreach ($pageState['pageData']['contacts'] as $index => $_) {
-                                    $pageState['pageData']['contacts'][$index]['orgID'] = $orgID;
-                                    unset($pageState['pageData']['contacts'][$index]['contactID']);
+            try {
+                foreach ($changes as $key => $_) {
+                    switch ($key) {
+                        case 'coverPhoto': {
+                                // ignore if original file is default.jpeg | delete original file
+                                // if (Organization::find($orgID)->coverPhoto !== 'default.jpeg' && Storage::exists('public/coverPhoto', Organization::find($orgID)->coverPhoto)) {
+                                if (Organization::find($orgID)->coverPhoto !== 'default.jpeg') {
+                                    Storage::delete('public/coverPhoto/' . Organization::find($orgID)->coverPhoto);
                                 }
-                                DB::table('organization_contacts')->insert($pageState['pageData']['contacts']);
+                                // store new coverPhoto with new filename
+                                $newFile = $request->file('changesMade.storage.coverPhoto'); // retrieve the file
+                                $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
+                                $newFile->storeAs('public/coverPhoto', $newFile_filename); // store in storage
+                                // change coverPhoto attribute of org in DB
+                                $organization->coverPhoto = $newFile_filename;
+                                break;
                             }
-                            break;
-                        }
-                    case 'officers': {
-                            $newOfficersArray = $pageState['pageData']['officers'];
-                            $oldOfficersArray = Officer::where('orgID', $orgID)->get()->toArray(); // before operations
-
-                            // handle deletion
-                            $missingOfficerIDs = array_diff(array_column($oldOfficersArray, 'officerID'), array_column($newOfficersArray, 'officerID'));
-                            foreach ($missingOfficerIDs as $id) {
-                                Officer::where(['orgID' => $orgID, 'officerID' => $id])->delete();
+                        case 'logo': {
+                                // ignore if original file is default.jpeg | delete original file
+                                if (Organization::find($orgID)->logo !== 'default.jpeg'/* && Storage::exists('public/logo', Organization::find($orgID)->logo)*/) {
+                                    Storage::delete('public/logo/' . Organization::find($orgID)->logo);
+                                }
+                                // store new logo with new filename
+                                $newFile = $request->file('changesMade.storage.logo'); // retrieve the file
+                                $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
+                                $newFile->storeAs('public/logo', $newFile_filename); // store in storage
+                                // change logo attribute of org in DB
+                                $organization->logo = $newFile_filename;
+                                break;
                             }
-
-                            // check if all students are part of org
-                            $orgMemberIDs = DB::table('organization_user_role')
-                                ->where('orgID', $orgID)
-                                ->select('userID')
-                                ->get()
-                                ->pluck('userID')
-                                ->toArray();
-                            $countDiffNewOfficersToOrgMembers = count(array_diff(array_column($newOfficersArray, 'userID'), $orgMemberIDs));
-                            if ($countDiffNewOfficersToOrgMembers != 0) {
-                                session()->flash('toast', [
-                                    'title' => 'Failed to save your changes.',
-                                    'description' => 'Possible data tampering detected. Please inform your administrators and try again later.',
-                                    'duration' => 5000,
-                                    'variant' => 'destructive'
-                                ]);
-
-                                return redirect()->back();
-                            }
-
-                            // handle insertion
-                            foreach ($newOfficersArray as $index => $officer) {
-                                // check if officerID is null
-                                if ($officer['officerID'] === null) { // insert new record
-                                    $newOfficerID = Officer::create([
+                        case 'keywords': {
+                                $newRecords = [];
+                                foreach ($pageState['pageLayoutData']['metadata']['keywords'] as $item) {
+                                    $newRecords[] = [
                                         'orgID' => $orgID,
-                                        'userID' => $officer['userID'],
-                                        'position' => $officer['position']
-                                    ])->officerID;
-                                    $newOfficersArray[$index]['officerID'] = $newOfficerID;
+                                        'keyID' => $item['keyID']
+                                    ];
                                 }
+                                // deletion
+                                DB::table('organization_keywords')
+                                    ->where('orgID', $orgID)->delete();
+                                // insertion
+                                DB::table('organization_keywords')->insert($newRecords);
+                                break;
+                            };
+                        case 'aboutUs': {
+                                $organization->description = $request->input('pageState.pageData.aboutUs');
+                                break;
                             }
-
-                            // handle update/rearrange | covers both functionalities
-                            $dbOfficers = Officer::where('orgID', $orgID)->get();
-                            $count = 0;
-                            foreach ($newOfficersArray as $officer) {
-                                $dbOfficers[$count]->userID = $officer['userID'];
-                                $dbOfficers[$count]->position = $officer['position'];
-                                $dbOfficers[$count]->save();
-                                ++$count;
+                        case 'contacts': {
+                                DB::table('organization_contacts')->where('orgID', $orgID)->delete();
+                                // dd($pageState['pageData']['contacts']);
+                                if (isset($pageState['pageData']['contacts'])) {
+                                    foreach ($pageState['pageData']['contacts'] as $index => $_) {
+                                        $pageState['pageData']['contacts'][$index]['orgID'] = $orgID;
+                                        unset($pageState['pageData']['contacts'][$index]['contactID']);
+                                    }
+                                    DB::table('organization_contacts')->insert($pageState['pageData']['contacts']);
+                                }
+                                break;
                             }
+                        case 'officers': {
+                                $newOfficersArray = $pageState['pageData']['officers'];
+                                $oldOfficersArray = Officer::where('orgID', $orgID)->get()->toArray(); // before operations
 
-                            break;
-                        }
-                    case 'social': {
-                            $organization->fb_link = $request->input('pageState.pageData.fb_link');
-                            break;
-                        }
-                    case 'photos': {
-                            $newPhotoArray = $pageState['pageData']['photos'];
-                            $storagePhotos = $request->file('changesMade.storage.photos');
-                            $orgPhotos = Photo::where('orgID', $orgID)->get();
-                            // checking if any photos are deleted
-                            $orgPhotoIDs = $orgPhotos->pluck('photoID')->toArray();
-                            $newPhotoIDs = array_column($newPhotoArray, 'photoID');
-                            $missingPhotoIDs = array_diff($orgPhotoIDs, $newPhotoIDs);
-                            if (!empty($missingPhotoIDs)) { // a photoID is missing from original (DB)
-                                // remove deleted photos from storage. if default.jpeg, ignore.
-                                $deletedPhotoFilenames = Photo::whereIn('photoID', $missingPhotoIDs)->get()->pluck('filename');
-                                foreach ($deletedPhotoFilenames as $item) {
-                                    if ($item !== 'default.jpeg') {
-                                        Storage::delete('public/photo/' . $item);
+                                // handle deletion
+                                $missingOfficerIDs = array_diff(array_column($oldOfficersArray, 'officerID'), array_column($newOfficersArray, 'officerID'));
+                                foreach ($missingOfficerIDs as $id) {
+                                    Officer::where(['orgID' => $orgID, 'officerID' => $id])->delete();
+                                }
+
+                                // check if all students are part of org
+                                $orgMemberIDs = DB::table('organization_user_role')
+                                    ->where('orgID', $orgID)
+                                    ->select('userID')
+                                    ->get()
+                                    ->pluck('userID')
+                                    ->toArray();
+                                $countDiffNewOfficersToOrgMembers = count(array_diff(array_column($newOfficersArray, 'userID'), $orgMemberIDs));
+                                if ($countDiffNewOfficersToOrgMembers != 0) {
+                                    session()->flash('toast', [
+                                        'title' => 'Failed to save your changes.',
+                                        'description' => 'Possible data tampering detected. Please inform your administrators and try again later.',
+                                        'duration' => 5000,
+                                        'variant' => 'destructive'
+                                    ]);
+
+                                    return redirect()->back();
+                                }
+
+                                // handle insertion
+                                foreach ($newOfficersArray as $index => $officer) {
+                                    // check if officerID is null
+                                    if ($officer['officerID'] === null) { // insert new record
+                                        $newOfficerID = Officer::create([
+                                            'orgID' => $orgID,
+                                            'userID' => $officer['userID'],
+                                            'position' => $officer['position']
+                                        ])->officerID;
+                                        $newOfficersArray[$index]['officerID'] = $newOfficerID;
                                     }
                                 }
-                                // delete rows not in the newPhotoArray
-                                Photo::whereIn('photoID', $missingPhotoIDs)->delete();
+
+                                // handle update/rearrange | covers both functionalities
+                                $dbOfficers = Officer::where('orgID', $orgID)->get();
+                                $count = 0;
+                                foreach ($newOfficersArray as $officer) {
+                                    $dbOfficers[$count]->userID = $officer['userID'];
+                                    $dbOfficers[$count]->position = $officer['position'];
+                                    $dbOfficers[$count]->save();
+                                    ++$count;
+                                }
+
+                                break;
                             }
-
-                            foreach ($newPhotoArray as $index => $photo) {
-                                // handle new rows
-                                $origPhoto = Photo::find($photo['photoID']);
-                                if ($photo['photoID'] === null) {
-                                    // dump('new photo detected. Inserting:');
-                                    $newFile = $storagePhotos[$index]; // retrieve the file
-                                    $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
-                                    $newFile->storeAs('public/photo', $newFile_filename); // store in storage
-                                    $newPhoto_id = Photo::create([
-                                        'orgID' => $orgID,
-                                        'caption' => $photo['caption'],
-                                        'filename' => $newFile_filename,
-                                    ])->photoID;
-
-                                    $newPhotoArray[$index]['photoID'] = $newPhoto_id;
-                                    $newPhotoArray[$index]['filename'] = $newFile_filename;
-                                } else { // handle row update/s
-                                    // handle caption change
-                                    $tempNewName = '';
-                                    if ($photo['caption'] !== $origPhoto->caption) {
-                                        $origPhoto->caption = $photo['caption'];
-                                        $origPhoto->save();
-                                    }
-                                    if ($photo['filename'] !== Storage::url('photo/' . $origPhoto->filename)) { // image file has changed
-                                        // filename default.jpeg check is already enforced in validation
-                                        // delete old photo in storage
-                                        if ($origPhoto->filename !== 'default.jpeg') {
-                                            Storage::delete('public/photo/' . $origPhoto->filename);
+                        case 'social': {
+                                $organization->fb_link = $request->input('pageState.pageData.fb_link');
+                                break;
+                            }
+                        case 'photos': {
+                                $newPhotoArray = $pageState['pageData']['photos'];
+                                $storagePhotos = $request->file('changesMade.storage.photos');
+                                $orgPhotos = Photo::where('orgID', $orgID)->get();
+                                // checking if any photos are deleted
+                                $orgPhotoIDs = $orgPhotos->pluck('photoID')->toArray();
+                                $newPhotoIDs = array_column($newPhotoArray, 'photoID');
+                                $missingPhotoIDs = array_diff($orgPhotoIDs, $newPhotoIDs);
+                                if (!empty($missingPhotoIDs)) { // a photoID is missing from original (DB)
+                                    // remove deleted photos from storage. if default.jpeg, ignore.
+                                    $deletedPhotoFilenames = Photo::whereIn('photoID', $missingPhotoIDs)->get()->pluck('filename');
+                                    foreach ($deletedPhotoFilenames as $item) {
+                                        if ($item !== 'default.jpeg') {
+                                            Storage::delete('public/photo/' . $item);
                                         }
-                                        // generate new filename
+                                    }
+                                    // delete rows not in the newPhotoArray
+                                    Photo::whereIn('photoID', $missingPhotoIDs)->delete();
+                                }
+
+                                foreach ($newPhotoArray as $index => $photo) {
+                                    // handle new rows
+                                    $origPhoto = Photo::find($photo['photoID']);
+                                    if ($photo['photoID'] === null) {
+                                        // dump('new photo detected. Inserting:');
                                         $newFile = $storagePhotos[$index]; // retrieve the file
                                         $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
                                         $newFile->storeAs('public/photo', $newFile_filename); // store in storage
-                                        // update Photo filename and save()
-                                        $origPhoto->filename = $newFile_filename;
-                                        $tempNewName = $newFile_filename;
-                                        $origPhoto->save();
-                                    } else {
-                                        $tempNewName = $origPhoto->filename;
+                                        $newPhoto_id = Photo::create([
+                                            'orgID' => $orgID,
+                                            'caption' => $photo['caption'],
+                                            'filename' => $newFile_filename,
+                                        ])->photoID;
+
+                                        $newPhotoArray[$index]['photoID'] = $newPhoto_id;
+                                        $newPhotoArray[$index]['filename'] = $newFile_filename;
+                                    } else { // handle row update/s
+                                        // handle caption change
+                                        $tempNewName = '';
+                                        if ($photo['caption'] !== $origPhoto->caption) {
+                                            $origPhoto->caption = $photo['caption'];
+                                            $origPhoto->save();
+                                        }
+                                        if ($photo['filename'] !== Storage::url('photo/' . $origPhoto->filename)) { // image file has changed
+                                            // delete old photo in storage
+                                            if ($origPhoto->filename !== 'default.jpeg') {
+                                                Storage::delete('public/photo/' . $origPhoto->filename);
+                                            }
+                                            // generate new filename
+                                            $newFile = $storagePhotos[$index]; // retrieve the file
+                                            $newFile_filename = uniqid() . '.' . $newFile->getClientOriginalExtension(); // set new unique name
+                                            $newFile->storeAs('public/photo', $newFile_filename); // store in storage
+                                            // update Photo filename and save()
+                                            $origPhoto->filename = $newFile_filename;
+                                            $tempNewName = $newFile_filename;
+                                            $origPhoto->save();
+                                        } else {
+                                            $tempNewName = $origPhoto->filename;
+                                        }
+                                        $newPhotoArray[$index]['filename'] = $tempNewName;
                                     }
-                                    $newPhotoArray[$index]['filename'] = $tempNewName;
                                 }
+                                // update all photos using $newPhotoArray
+                                $origPhotos = Photo::where('orgID', $orgID)->get();
+                                $count = 0;
+                                foreach ($newPhotoArray as $photo) {
+                                    $origPhotos[$count]->caption = $photo['caption'];
+                                    $origPhotos[$count]->filename = $photo['filename'];
+                                    $origPhotos[$count]->save();
+                                    ++$count;
+                                }
+                                break;
                             }
-                            // update all photos using $newPhotoArray
-                            $origPhotos = Photo::where('orgID', $orgID)->get();
-                            $count = 0;
-                            foreach ($newPhotoArray as $photo) {
-                                $origPhotos[$count]->caption = $photo['caption'];
-                                $origPhotos[$count]->filename = $photo['filename'];
-                                $origPhotos[$count]->save();
-                                ++$count;
-                            }
-                            break;
-                        }
+                    }
                 }
+
+                $organization->save();
+
+                session()->flash('toast', [
+                    'title' => 'Page changes saved successfully.',
+                    'duration' => 2000,
+                    'variant' => 'success'
+                ]);
+
+                return Inertia::location(route('admin.editpage', [$orgID]));
+            } catch (Exception $e) {
+                session()->flash('toast', [
+                    'title' => 'Failed to save your changes.',
+                    'description' => 'Something went wrong on our end. Please inform your administrators and try again later.',
+                    'duration' => 5000,
+                    'variant' => 'destructive'
+                ]);
+
+                return redirect()->back();
             }
-
-            $organization->save();
-
-            session()->flash('toast', [
-                'title' => 'Page changes saved successfully.',
-                'duration' => 2000,
-                'variant' => 'success'
-            ]);
-
-            return Inertia::location(route('admin.editpage', [$orgID]));
-            // } catch (Exception $e) {
-            //     session()->flash('toast', [
-            //         'title' => 'Failed to save your changes.',
-            //         'description' => 'Something went wrong on our end. Please inform your administrators and try again later.',
-            //         'duration' => 5000,
-            //         'variant' => 'destructive'
-            //     ]);
-
-            //     return redirect()->back();
-            // }
         } else {
             return redirect()->back();
         }
