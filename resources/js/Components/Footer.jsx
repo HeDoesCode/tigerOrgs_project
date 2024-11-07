@@ -20,11 +20,16 @@ function Footer() {
                         </Link>
                         . <br />
                         <br />
-                        <span className="text-xs text-slate-400">
+                        <a
+                            className="text-xs text-slate-400 underline"
+                            href="https://www.google.com/maps/place/Tan+Yan+Kee+Student+Center/@14.6105927,120.9863906,17z/data=!4m10!1m2!2m1!1sRoom+212+2nd+Floor,+UST+Tan+Yan+Kee+Student+Center,+University+of+Santo+Tomas,+Espa%C3%B1a+Blvd.,+Sampaloc,+Manila+Philippines+1015.!3m6!1s0x3397b60071fcebb3:0xfdfb6b896ebe80db!8m2!3d14.61138!4d120.9883517!15sCoABUm9vbSAyMTIgMm5kIEZsb29yLCBVU1QgVGFuIFlhbiBLZWUgU3R1ZGVudCBDZW50ZXIsIFVuaXZlcnNpdHkgb2YgU2FudG8gVG9tYXMsIEVzcGHDsWEgQmx2ZC4sIFNhbXBhbG9jLCBNYW5pbGEgUGhpbGlwcGluZXMgMTAxNS6SAQ1zdHVkZW50X3VuaW9u4AEA!16s%2Fg%2F1tdyn9mg?entry=ttu&g_ep=EgoyMDI0MTAyOS4wIKXMDSoASAFQAw%3D%3D"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             Room 212 2nd Floor, UST Tan Yan Kee Student Center,
                             University of Santo Tomas, España Blvd., Sampaloc,
                             Manila Philippines 1015.
-                        </span>
+                        </a>
                     </p>
                 </div>
                 <div className="flex flex-col w-min">
