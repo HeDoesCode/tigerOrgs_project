@@ -15,7 +15,14 @@
     <!-- Scripts -->
     @routes
     @viteReactRefresh
-    @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
+
+    @if(env('APP_ENV') === 'production'){
+        @vite(['resources/js/app.js'])
+    }@else{
+        @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
+    }
+    @endif
+    
     @inertiaHead
 </head>
 
