@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Smalot\PdfParser\Parser;
+use Illuminate\Support\Str;
 
 class FormController extends Controller
 {
@@ -183,10 +184,7 @@ class FormController extends Controller
 
     private function prepareText($text)
     {
-        $text = strtolower($text);
-        $text = trim($text);
-        $text = str_replace(" ", "_", $text);
-        return $text;
+        return strtolower(trim(str_replace(" ", "_", $text)));
     }
 
     private function buildRules($formLayout)
@@ -195,6 +193,7 @@ class FormController extends Controller
         
         foreach ($formLayout as $input) {
             $inputRules = [];
+            $fieldName = $this->prepareText($input['name']);
 
             if ($input['required']) {
                 array_push($inputRules, 'required');
@@ -213,106 +212,136 @@ class FormController extends Controller
                     array_push($inputRules, 'email');
                     break;
                 case "image_upload":
-                    array_push($inputRules, 'file', 'max:4096', 'image', 'mimes:png,jpg,jpeg');
+                    if ($input['required']) {
+                        $inputRules = ['required', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120']; // 5MB limit
+                    } else {
+                        $inputRules = ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'];
+                    }
                     break;
                 case "file_upload":
-                    array_push($inputRules, 'file', 'max:4096', 'extensions:pdf');
+                    if ($input['required']) {
+                        $inputRules = ['required', 'file', 'mimes:pdf,doc,docx', 'max:5120'];
+                    } else {
+                        $inputRules = ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'];
+                    }
+                    break;
+                case "checkbox":
+                    array_push($inputRules, 'array');
+                    if (!empty($input['options'])) {
+                        array_push($inputRules, 'in:' . implode(',', array_map(fn($opt) => $this->prepareText($opt), $input['options'])));
+                    }
+                    break;
+                case "radio":
+                case "select":
+                    if (!empty($input['options'])) {
+                        array_push($inputRules, 'in:' . implode(',', array_map(fn($opt) => $this->prepareText($opt), $input['options'])));
+                    }
                     break;
             }
-            $fieldName = $this->prepareText($input['name']);
-            $rules[$fieldName] = $inputRules;
+            
+            $rules[$fieldName] = implode('|', $inputRules);
         }
 
         return $rules;
     }
 
     public function submitForm(Request $request)
-    {
-        try {
-            $user = Auth::user();
-            $validated = $request->validate([
-                'orgID' => 'required',
-                'formID' => 'required',
-                'userData' => 'required|array',
-                'formLayout' => 'required|array'
-            ]);
-    
-            if (!$validated) {
-                session()->flash('toast', [
-                    'title' => 'Error submitting the form',
-                    'description' => 'Please double check your inputs in the form.',
-                    'variant' => 'destructive'
-                ]);
-            }
-    
-            $formLayout = $validated['formLayout'];
-            $userData = $validated['userData'];
+{
+    try {
+        $user = Auth::user();
+        
+        // Validate basic form data
+        $validated = $request->validate([
+            'orgID' => 'required',
+            'formID' => 'required',
+            'userData' => 'required|array',
+            'formLayout' => 'required|array'
+        ]);
 
+        $formLayout = $validated['formLayout'];
+        $userData = $validated['userData'];
+
+        // Build and apply validation rules for form fields
+        $fieldRules = $this->buildRules($formLayout['layout']);
+        $validatedFields = $request->validate($fieldRules);
+
+        // Process form data
+        foreach ($formLayout['layout'] as &$item) {
+            // Convert field name to the same format as in userData
+            $fieldName = $this->prepareText($item['name']);
             
-    
-            foreach ($formLayout['layout'] as &$item) {
-                $fieldName = $item['name'];
-                $key = str_replace(' ', '_', strtolower($fieldName));
-                
-                if ($item['type'] === 'file_upload') {
-                    // check if we have the file in userData
-                    if (isset($userData[$key]) && $userData[$key] instanceof \Illuminate\Http\UploadedFile) {
-                        $file = $userData[$key];
-
+            // Check if this field exists in userData
+            if (isset($userData[$fieldName])) {
+                // Handle file uploads
+                if (in_array($item['type'], ['file_upload', 'image_upload'])) {
+                    if ($userData[$fieldName] instanceof \Illuminate\Http\UploadedFile) {
+                        $file = $userData[$fieldName];
                         
+                        // Generate unique filename
+                        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+                        
+                        // Store file in appropriate directory
+                        $path = $file->storeAs(
+                            'form-uploads/' . $validated['formID'],
+                            $filename,
+                            'public'
+                        );
+
+                        // Store file information
+                        $item['value'] = [
+                            'original_filename' => $file->getClientOriginalName(),
+                            'stored_filename' => $filename,
+                            'mime_type' => $file->getClientMimeType(),
+                            'file_size' => $file->getSize(),
+                            'file_path' => $path,
+                            'uploaded_at' => now()->toDateTimeString()
+                        ];
+
+                        // For PDF files, extract text content
                         if ($file->getClientMimeType() === 'application/pdf') {
                             try {
                                 $parser = new Parser();
                                 $pdf = $parser->parseFile($file->getRealPath());
-                                $text = $pdf->getText();
-    
-                                // store the extracted text in the item's value
-                                $item['value'] = [
-                                    'content' => $text,
-                                    'original_filename' => $file->getClientOriginalName(),
-                                    'extracted_at' => now()->toDateTimeString(),
-                                    'file_size' => $file->getSize()
-                                ];
+                                $item['value']['extracted_text'] = $pdf->getText();
                             } catch (\Exception $e) {
-                                
-                                throw new Exception('Failed to parse PDF: ' . $e->getMessage());
+                                \Log::warning('PDF text extraction failed: ' . $e->getMessage());
                             }
-                        } else {
-                            throw new Exception('Uploaded file must be a PDF');
                         }
                     }
-                } elseif (isset($userData[$key])) {
-                    $item['value'] = $userData[$key];
+                } else {
+                    // For non-file fields, directly assign the value from userData
+                    $item['value'] = $userData[$fieldName];
                 }
-    
             }
-    
-            DB::table('applications')->insert([
-                'userID' => $user->userID,
-                'orgID' => $validated['orgID'],
-                'formID' => $validated['formID'],
-                'userData' => json_encode($formLayout),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-    
-            session()->flash('toast', [
-                'title' => 'Application Submitted',
-                'description' => 'Your application has been recorded. Please wait for the admin to process it.',
-                'variant' => 'success'
-            ]);
-    
-            return redirect()->route('organizations.home', ['orgID' => $validated['orgID']]);
-            
-        } catch (Exception $e) {
-            session()->flash('toast', [
-                'title' => 'Error Processing PDF',
-                'description' => $e->getMessage(),
-                'variant' => 'destructive'
-            ]);
-            return redirect()->back();
         }
+
+        // Store form submission
+        DB::table('applications')->insert([
+            'userID' => $user->userID,
+            'orgID' => $validated['orgID'],
+            'formID' => $validated['formID'],
+            'userData' => json_encode($formLayout),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        session()->flash('toast', [
+            'title' => 'Application Submitted',
+            'description' => 'Your application has been recorded. Please wait for the admin to process it.',
+            'variant' => 'success'
+        ]);
+
+        return redirect()->route('organizations.home', ['orgID' => $validated['orgID']]);
+        
+    } catch (\Exception $e) {
+        session()->flash('toast', [
+            'title' => 'Error Processing Form',
+            'description' => $e->getMessage(),
+            'variant' => 'destructive'
+        ]);
+        return redirect()->back();
     }
+}
 
         public function checkMembership(Request $request)
         {

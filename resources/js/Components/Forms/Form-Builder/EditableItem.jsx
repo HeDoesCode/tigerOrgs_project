@@ -3,6 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import GripHorizontal from "@/Components/Icons/Grip-Horizontal";
 import EditSimpleItem from "./EditSimpleItem";
 import EditMultiChoiceItem from "./EditMultiChoiceItem";
+import EditImageUploadItem from "./EditImageUploadItem";
 
 // Define a mapping from item types to more descriptive labels
 const typeLabels = {
@@ -40,9 +41,11 @@ function EditableItem({ id, item }) {
                         </h3>
                     </div>
 
-                    {item.type === "select" ||
-                    item.type === "radio" ||
-                    item.type === "checkbox" ? (
+                    {item.type === "image_upload" ? (
+                        <EditImageUploadItem id={id} item={item} />
+                    ) : item.type === "select" ||
+                      item.type === "radio" ||
+                      item.type === "checkbox" ? (
                         <EditMultiChoiceItem id={id} item={item} />
                     ) : (
                         <EditSimpleItem id={id} item={item} />
