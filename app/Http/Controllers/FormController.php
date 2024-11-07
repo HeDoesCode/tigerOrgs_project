@@ -497,7 +497,7 @@ class FormController extends Controller
 
         private function deleteApplicationFiles($application) {
             try {
-                $formData = json_decode($application->formData, true);
+                $formData = $application->userData;
                 
                 if (!$formData || !isset($formData['layout'])) {
                     return;
