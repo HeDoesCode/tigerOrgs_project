@@ -9,6 +9,7 @@ use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Organization;
+use App\Models\Photo;
 use App\Notifications\MakeAdminNotification;
 use App\Notifications\RemoveAdminNotification;
 use Illuminate\Http\Request;
@@ -542,10 +543,15 @@ public function manage(Request $request)
             foreach ($newOrgNames as $newOrgName) {
                 $newOrgData = collect($submittedData)->firstWhere('name', $newOrgName);
     
-                Organization::create([
+                $organizationID = Organization::create([
                     'name' => $newOrgData['name'],
                     'department' => $newOrgData['department'],
+                ])->orgID;
+
+                Photo::create([
+                    'orgID' => $organizationID,
                 ]);
+
             }
         }
         
