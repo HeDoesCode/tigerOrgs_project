@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Smalot\PdfParser\Parser;
 use Illuminate\Support\Str;
@@ -250,7 +251,6 @@ class FormController extends Controller
     try {
         $user = Auth::user();
         
-        // Validate basic form data
         $validated = $request->validate([
             'orgID' => 'required',
             'formID' => 'required',
@@ -261,33 +261,25 @@ class FormController extends Controller
         $formLayout = $validated['formLayout'];
         $userData = $validated['userData'];
 
-        // Build and apply validation rules for form fields
         $fieldRules = $this->buildRules($formLayout['layout']);
         $validatedFields = $request->validate($fieldRules);
 
-        // Process form data
         foreach ($formLayout['layout'] as &$item) {
-            // Convert field name to the same format as in userData
             $fieldName = $this->prepareText($item['name']);
             
-            // Check if this field exists in userData
             if (isset($userData[$fieldName])) {
-                // Handle file uploads
                 if (in_array($item['type'], ['file_upload', 'image_upload'])) {
                     if ($userData[$fieldName] instanceof \Illuminate\Http\UploadedFile) {
                         $file = $userData[$fieldName];
                         
-                        // Generate unique filename
                         $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
                         
-                        // Store file in appropriate directory
                         $path = $file->storeAs(
                             'form-uploads/' . $validated['formID'],
                             $filename,
                             'public'
                         );
 
-                        // Store file information
                         $item['value'] = [
                             'original_filename' => $file->getClientOriginalName(),
                             'stored_filename' => $filename,
@@ -297,7 +289,6 @@ class FormController extends Controller
                             'uploaded_at' => now()->toDateTimeString()
                         ];
 
-                        // For PDF files, extract text content
                         if ($file->getClientMimeType() === 'application/pdf') {
                             try {
                                 $parser = new Parser();
@@ -309,7 +300,7 @@ class FormController extends Controller
                         }
                     }
                 } else {
-                    // For non-file fields, directly assign the value from userData
+                    // for non-file fields, directly assign the value from userData
                     $item['value'] = $userData[$fieldName];
                 }
             }
@@ -383,6 +374,8 @@ class FormController extends Controller
                 }
         
                 if (in_array($validated['status'], ['accepted', 'rejected'])) {
+                    $this->deleteApplicationFiles($application);
+
                     $application->status = $validated['status'];
                     $application->save();
 
@@ -502,7 +495,32 @@ class FormController extends Controller
         }
         
 
-
+        private function deleteApplicationFiles($application) {
+            try {
+                $formData = json_decode($application->formData, true);
+                
+                if (!$formData || !isset($formData['layout'])) {
+                    return;
+                }
+        
+                foreach ($formData['layout'] as $item) {
+                    if (
+                        in_array($item['type'], ['file_upload', 'image_upload']) && 
+                        isset($item['value']) &&
+                        isset($item['value']['file_path'])
+                    ) {
+                        // Delete the file from storage
+                        if (Storage::disk('public')->exists($item['value']['file_path'])) {
+                            Storage::disk('public')->delete($item['value']['file_path']);
+                        }
+                    }
+                }
+            } catch (Exception $e) {
+                \Log::error('Error deleting application files: ' . $e->getMessage());
+                // Continue execution even if file deletion fails
+            }
+        }
+        
 
 
 }
