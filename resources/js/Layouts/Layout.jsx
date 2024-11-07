@@ -13,13 +13,13 @@ function Layout({
     footer,
     noPadding,
 }) {
-    const { toast } = useToast()
-    const { flash } = usePage().props
+    const { toast } = useToast();
+    const { flash } = usePage().props;
     useEffect(() => {
         if (flash.toast) {
-            toast(flash.toast)
+            toast(flash.toast);
         }
-    }, [flash.toast])
+    }, [flash.toast]);
 
     const bgStyle = {
         backgroundImage: `url("${bgImage}")`,
@@ -30,13 +30,16 @@ function Layout({
     return (
         <>
             <div
-                className={`${sidebar ? "pl-0 sm:pl-16" : ''} flex mx-auto select-none max-w-[1920px]`}
+                className={`${
+                    sidebar ? "pl-0 sm:pl-16" : ""
+                } flex mx-auto select-none max-w-[1920px]`}
             >
                 <Header />
                 <div className="z-50">{sidebar}</div>
                 <main
-                    className={`w-full overflow-x-hidden h-screen ${noPadding ? "pt-16" : "pt-[4rem]"
-                        } ${noPadding || "pl-4 pr-0"} select-text flex flex-col`}
+                    className={`w-full overflow-x-hidden h-screen ${
+                        noPadding ? "pt-16" : "pt-[4rem]"
+                    } ${noPadding || "pl-4 pr-0"} select-text flex flex-col`}
                     style={bgImage ? bgStyle : {}}
                 >
                     <div className="flex flex-col h-full w-full overflow-y-auto overflow-x-clip">
@@ -45,7 +48,11 @@ function Layout({
                     </div>
                 </main>
             </div>
-            <Toaster className='z-[+1]' />
+            <Toaster className="z-[+1]" />
+            <span className="text-xs text-transparent select-none pointer-events-none fixed -bottom-10">
+                Devs: Joseph Paduga, Laurence Arcilla, Arvin Alkuino, Ethan
+                Catacutan
+            </span>
         </>
     );
 
@@ -53,7 +60,9 @@ function Layout({
         return (
             <div className="relative">
                 <div
-                    className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 h-16 ${sidebar && 'pl-16'}
+                    className={`fixed left-0 right-0 top-0 flex flex-row items-center justify-between space-x-2 h-16 ${
+                        sidebar && "pl-16"
+                    }
                      bg-[#EEEEEE] px-4 border-gray-400 border-b-[1px] z-40`}
                 >
                     <Link className="contents" href="/">

@@ -5,28 +5,46 @@ import IconInstagram from "./Icons/Social/IconInstagram";
 
 function Footer() {
     return (
-        <div className={`min-h-36 mt-5 -mx-4 pt-10 pb-4 inter font-extralight text-sm bg-[#EEEEEE] flex justify-center`}>
+        <div
+            className={`min-h-36 mt-5 -mx-4 pt-10 pb-4 inter font-extralight text-sm bg-[#EEEEEE] flex justify-center`}
+        >
             <div className="flex space-x-2 mx-10 sm:mx-24 md:mx-52 border-gray-300 border-t-[1px] pt-3 pb-5 w-full max-w-[70rem] h-fit">
                 <div className="flex-1">
-                    <p className="leading-6">No Copyright 2024 © TigerOrgs Project <br />
-                        In partnership with the <Link><span className="underline">University of Santo Tomas</span></Link>.
+                    <p className="leading-6">
+                        No Copyright 2024 © TigerOrgs Project <br />
+                        Property of the{" "}
+                        <Link>
+                            <span className="underline">
+                                Office for Student Affairs
+                            </span>
+                        </Link>
+                        . <br />
+                        <br />
+                        <span className="text-xs text-slate-400">
+                            Room 212 2nd Floor, UST Tan Yan Kee Student Center,
+                            University of Santo Tomas, España Blvd., Sampaloc,
+                            Manila Philippines 1015.
+                        </span>
                     </p>
-                    <span className="text-xs text-transparent select-none">Devs: Joseph Paduga, Laurence Arcilla, Arvin Alkuino, Ethan Catacutan</span>
                 </div>
                 <div className="flex flex-col w-min">
                     <ul>
                         <li>
                             <SocialLink
-                                icon={<IconFacebookRoundFilled size='100%' />}
-                                text={'@ust.edu.ph'}
-                                href={'facebook.com'}
+                                icon={<IconFacebookRoundFilled size="100%" />}
+                                text={"USTOSAOfficial"}
+                                href={
+                                    "https://www.facebook.com/USTOSAOfficial/"
+                                }
                             />
                         </li>
                         <li>
                             <SocialLink
-                                icon={<IconInstagram size='100%' />}
-                                text={'@ust.edu.ph'}
-                                href={'instagram.com'}
+                                icon={<img src="/src/ust_logo.png" />}
+                                text={"ust.edu.ph"}
+                                href={
+                                    "https://www.ust.edu.ph/administrative-offices/office-for-student-affairs/"
+                                }
                             />
                         </li>
                     </ul>
@@ -37,14 +55,17 @@ function Footer() {
 
     function SocialLink({ icon, text, href, customSize }) {
         return (
-            <a className="space-x-2 flex items-center text-[#333333] py-2 px-3 hover:underline hover:bg-gray-300 rounded-xl" href={href}>
-                <div className={customSize || "size-6"}>
-                    {icon}
-                </div>
+            <a
+                className="space-x-2 flex items-center text-[#333333] py-2 px-3 hover:underline hover:bg-gray-300 rounded-xl"
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <div className={customSize || "size-6"}>{icon}</div>
                 <span>{text}</span>
             </a>
-        )
+        );
     }
 }
 
-export default Footer
+export default Footer;
