@@ -17,7 +17,7 @@
     @viteReactRefresh
 
     @if(env('APP_ENV') === 'production'){
-        @vite(['resources/js/app.js'])
+        @vite(['resources/js/app.jsx'])
     }@else{
         @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
     }
