@@ -750,23 +750,36 @@ class AdminController extends Controller
 
 
     public function applications($orgID)
-    {
-        $organization = Organization::find($orgID);
+{
+    $organization = Organization::find($orgID);
 
+    $formsWithApplications = Form::where('orgID', $orgID)
+        ->with(['applications' => function ($query) {
+            $query->select('applicationID', 'formID', 'userID', 'userData', 'similarityScore', 'status', 'created_at')
+                ->with('user:userID,firstname,lastname,email,college');
+        }])
+        ->get(['formID', 'formLayout', 'orgID']);
 
-        $formsWithApplications = Form::where('orgID', $orgID)
-            ->with(['applications' => function ($query) {
-                $query->select('applicationID', 'formID', 'userID', 'userData', 'similarityScore', 'status', 'created_at')
-                    ->with('user:userID,firstname,lastname,email,college');
-            }])
-            ->get(['formID', 'formLayout', 'orgID']);
+   
+    $formsWithApplications = $formsWithApplications->map(function ($form) use ($orgID) {
+        $form->applications = $form->applications->map(function ($application) use ($orgID) {
 
+            $isMember = DB::table('organization_user_role')
+                ->where('userID', $application->userID)
+                ->where('orgID', $orgID)
+                ->exists();
+            
+            $application->isMember = $isMember;
+            return $application;
+        });
+        return $form;
+    });
 
-        return Inertia::render('Admin/AdminManageApplication', [
-            'orgID' => $organization->orgID,
-            'formsWithApplications' => $formsWithApplications,
-        ]);
-    }
+    return Inertia::render('Admin/AdminManageApplication', [
+        'orgID' => $organization->orgID,
+        'formsWithApplications' => $formsWithApplications,
+    ]);
+}
 
     public function formhistory($orgID)
     {

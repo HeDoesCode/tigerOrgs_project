@@ -253,29 +253,8 @@ function ApplicationResponses({ application, orgID, selectedFormId }) {
     };
 
     const user = application.user;
+    const isMember = application.isMember;
 
-    const [isMember, setIsMember] = useState(false);
-
-    useEffect(() => {
-        const checkMembershipStatus = async () => {
-            try {
-                const response = await fetch(
-                    route("admin.check-membership", {
-                        userID: user?.userID,
-                        orgID: orgID,
-                    })
-                );
-                const data = await response.json();
-                setIsMember(data.exists);
-            } catch (error) {
-                console.error("Error checking membership:", error);
-            }
-        };
-
-        if (user?.userID) {
-            checkMembershipStatus();
-        }
-    }, [user?.userID, orgID]);
     const [status, setStatus] = useState("accepted");
 
     const handleStatusValue = (value) => {
