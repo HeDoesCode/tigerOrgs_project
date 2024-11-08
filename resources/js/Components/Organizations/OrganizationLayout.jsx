@@ -24,8 +24,8 @@ function OrganizationLayout({
     children,
     pageLayoutData,
     withFollow,
+    preview = false,
 }) {
-
     const toggleFollow = () => {
         router.get(route("organizations.follow", pageLayoutData.orgID), {
             preserveState: true,
@@ -35,7 +35,7 @@ function OrganizationLayout({
 
     return (
         <div className="w-full">
-            {editing ? (
+            {editing || preview ? (
                 <PageContent />
             ) : (
                 <UserLayout noPadding>
@@ -46,7 +46,7 @@ function OrganizationLayout({
     );
 
     function PageContent() {
-        const forms = pageLayoutData.forms
+        const forms = pageLayoutData.forms;
         const qrValue = () => {
             return route("organizations.home", { orgID: pageLayoutData.orgID });
         };
@@ -68,13 +68,17 @@ function OrganizationLayout({
                                 </div>
                             </div>
                         </div>
-                        {route().current() === 'organizations.home' && (
+                        {route().current() === "organizations.home" && (
                             <div className="pt-8 space-y-2 inter font-bold">
-                                {!editing && pageLayoutData.recruiting && (
+                                {!editing &&
+                                    pageLayoutData.recruiting &&
                                     (forms.length == 1 ? (
                                         <Link
                                             className="contents"
-                                            href={route("organizations.apply", [pageLayoutData.orgID, forms[0]['formID']])}
+                                            href={route("organizations.apply", [
+                                                pageLayoutData.orgID,
+                                                forms[0]["formID"],
+                                            ])}
                                         >
                                             <div className="flex flex-nowrap justify-center items-center px-4 py-2 rounded-full bg-[#FFCB11] border-[0.15rem] border-[#AAAAAA] relative h-12">
                                                 Apply
@@ -95,31 +99,50 @@ function OrganizationLayout({
                                             </DialogTrigger>
                                             <DialogContent>
                                                 <DialogHeader>
-                                                    <DialogTitle>Select Application Form</DialogTitle>
-                                                    <DialogDescription className="contents">
-                                                    </DialogDescription>
+                                                    <DialogTitle>
+                                                        Select Application Form
+                                                    </DialogTitle>
+                                                    <DialogDescription className="contents"></DialogDescription>
                                                 </DialogHeader>
                                                 <div className="size-full flex flex-col gap-y-2 mt-3">
-                                                    {forms.map((form, index) => (
-                                                        <Link
-                                                            key={index}
-                                                            href={route('organizations.apply', [pageLayoutData.orgID, form['formID']])}
-                                                            className="px-4 h-12 rounded-lg bg-slate-200 flex items-center cursor-pointer hover:font-bold transition-all gap-x-2"
-                                                        >
-                                                            <IconFileText />
-                                                            {form['formLayout']['name']}
-                                                        </Link>
-                                                    ))}
+                                                    {forms.map(
+                                                        (form, index) => (
+                                                            <Link
+                                                                key={index}
+                                                                href={route(
+                                                                    "organizations.apply",
+                                                                    [
+                                                                        pageLayoutData.orgID,
+                                                                        form[
+                                                                            "formID"
+                                                                        ],
+                                                                    ]
+                                                                )}
+                                                                className="px-4 h-12 rounded-lg bg-slate-200 flex items-center cursor-pointer hover:font-bold transition-all gap-x-2"
+                                                            >
+                                                                <IconFileText />
+                                                                {
+                                                                    form[
+                                                                        "formLayout"
+                                                                    ]["name"]
+                                                                }
+                                                            </Link>
+                                                        )
+                                                    )}
                                                     {forms.length === 0 && (
                                                         <span className="font-bold text-red-600 flex">
-                                                            <IconAlertCircleFilled />&nbsp;Please contact your organization administrators.<br /> (Error: No deployed form.)
+                                                            <IconAlertCircleFilled />
+                                                            &nbsp;Please contact
+                                                            your organization
+                                                            administrators.
+                                                            <br /> (Error: No
+                                                            deployed form.)
                                                         </span>
                                                     )}
                                                 </div>
                                             </DialogContent>
                                         </Dialog>
-                                    ))
-                                )}
+                                    ))}
 
                                 {/* remove route if editing */}
                                 {withFollow && withFollow ? (
@@ -164,20 +187,29 @@ function OrganizationLayout({
                         </div>
                     </div>
 
-                    <div className={`px-5 py-2 md:px-12 my-3 ${pageLayoutData.metadata.keywords.length === 0 && !editing ? 'hidden' : 'flex'} items-center text-xs opacity-80 cursor-default`}>
+                    <div
+                        className={`px-5 py-2 md:px-12 my-3 ${
+                            pageLayoutData.metadata.keywords.length === 0 &&
+                            !editing
+                                ? "hidden"
+                                : "flex"
+                        } items-center text-xs opacity-80 cursor-default`}
+                    >
                         <div className="relative min-h-12 min-w-32 w-full flex items-center flex-wrap gap-2">
-                            {pageLayoutData.metadata.keywords.map(item => (
-                                <div key={item.keyID}
+                            {pageLayoutData.metadata.keywords.map((item) => (
+                                <div
+                                    key={item.keyID}
                                     className="bg-slate-300 px-3 py-1 rounded-md h-fit"
                                 >
                                     {item.keyword}
                                 </div>
                             ))}
-                            {pageLayoutData.metadata.keywords.length === 0 && editing && (
-                                <div className="text-slate-500 italic">
-                                    This organization has no keywords.
-                                </div>
-                            )}
+                            {pageLayoutData.metadata.keywords.length === 0 &&
+                                editing && (
+                                    <div className="text-slate-500 italic">
+                                        This organization has no keywords.
+                                    </div>
+                                )}
                             {editing && editing.keywords}
                         </div>
                     </div>
@@ -186,7 +218,7 @@ function OrganizationLayout({
                     <section className="h-fit px-5 md:px-12 space-y-3 md:space-y-8">
                         {children}
                     </section>
-                </div >
+                </div>
             </>
         );
 

@@ -263,7 +263,7 @@ export default function SuperAdminManage({
                                 No Organizations Found
                             </div>
                         ) : (
-                            <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 p-5">
+                            <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 p-5 pb-20">
                                 {organizations.data.map((organization) => (
                                     <AdminOrgCard
                                         key={organization.orgID}

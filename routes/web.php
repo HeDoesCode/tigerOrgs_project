@@ -73,6 +73,7 @@ Route::prefix('/superadmin/')
         Route::post('addOrg', 'addOrg')->name('addOrg');
         Route::post('editOrg', 'editOrg')->name('editOrg');
         Route::delete('deleteOrg/{id}', 'deleteOrg')->name('deleteOrg');
+        Route::get('previewOrganizationData/{orgID}', 'previewOrganizationData')->name('fetchOrgData');
 
         //invite page
         Route::get('invite/search-users', 'searchUser');

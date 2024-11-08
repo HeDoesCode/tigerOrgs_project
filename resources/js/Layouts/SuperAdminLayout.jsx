@@ -55,6 +55,10 @@ function SuperAdminLayout({ children }) {
                     </div>
                     <div className="text-center mr-3 font-bold text-xs leading-4 line-clamp-3 h-min my-auto w-32 overflow-clip">
                         <div className="w-32 min-w-32">
+                            <span className="text-[0.65rem] text-slate-400">
+                                (Superadmin)
+                            </span>
+                            <br />
                             Office for Student Affairs
                         </div>
                     </div>
