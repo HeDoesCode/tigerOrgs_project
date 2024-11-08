@@ -55,6 +55,7 @@ function Home({
             recruiting={recruiting}
             editing={editing}
             withFollow={withFollow}
+            preview={true}
         >
             {/* About Us */}
             <AboutUsContainer />

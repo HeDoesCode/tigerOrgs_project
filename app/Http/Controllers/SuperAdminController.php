@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Form;
+use App\Models\Officer;
 use PDO;
 use Exception;
 use Carbon\Carbon;
@@ -16,6 +18,7 @@ use Illuminate\Http\Request;
 use PhpParser\Node\Expr\PostDec;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -25,22 +28,23 @@ class SuperAdminController extends Controller
 {
     //manage org functions
 
-    public function addOrg(Request $request){
-        
+    public function addOrg(Request $request)
+    {
+
 
         try {
-            $validated = $request-> validate([
+            $validated = $request->validate([
                 'name' => 'required|unique:organizations',
                 'department' => 'required',
-    
+
             ]);
 
             DB::table('organizations')->updateOrInsert([
-                'recruiting'=> false,
-                'name'=> $validated['name'],
+                'recruiting' => false,
+                'name' => $validated['name'],
                 'department' => $validated['department'],
                 'visibility' => 1,
-                
+
             ]);
 
             session()->flash('toast', [
@@ -61,31 +65,31 @@ class SuperAdminController extends Controller
 
             return redirect()->back()->with('error', 'An error occurred while assigning the admin role.');
         }
-   
     }
 
 
-    public function editOrg(Request $request) {
+    public function editOrg(Request $request)
+    {
         try {
             $organization = Organization::findOrFail($request->orgId);
-    
+
             $validated = $request->validate([
                 'orgId' => 'required',
                 'name' => ['required', Rule::unique('organizations', 'name')->ignore($organization->orgID, 'orgID')],
                 'department' => 'required',
             ]);
-    
+
             $organization->update([
                 'name' => $validated['name'],
                 'department' => $validated['department'],
             ]);
-    
+
             session()->flash('toast', [
                 'title' => 'Saved',
                 'description' => 'Organization edited successfully!',
                 'variant' => 'success'
             ]);
-    
+
             return redirect()->back()->with([
                 'organizations' => Organization::all(),
                 'departments' => Organization::distinct('department')->pluck('department'),
@@ -96,62 +100,62 @@ class SuperAdminController extends Controller
                 'description' => 'Organization already exists.',
                 'variant' => 'destructive'
             ]);
-    
+
             return redirect()->back()->with('error', 'An error occurred while editing the organization.');
         }
     }
 
     public function deleteOrg($id)
-{
-    $organization = Organization::findOrFail($id);
+    {
+        $organization = Organization::findOrFail($id);
 
-    
-    $organization->delete();
 
-    session()->flash('toast', [
-        'title' => 'Deleted',
-        'description' => 'Organization deleted successfully!',
-        'variant' => 'success'
-    ]);
+        $organization->delete();
 
-    return redirect()->back();
-}
+        session()->flash('toast', [
+            'title' => 'Deleted',
+            'description' => 'Organization deleted successfully!',
+            'variant' => 'success'
+        ]);
 
-    
-
-public function manage(Request $request)
-{
-    $query = Organization::query()->withCount('members');
-    
-    if ($request->filled('search')) {
-        $searchTerm = $request->search;
-        $query->where(function($q) use ($searchTerm) {
-            $q->where('name', 'LIKE', "%{$searchTerm}%")
-              ->orWhere('department', 'LIKE', "%{$searchTerm}%");
-        });
+        return redirect()->back();
     }
-    
-    if ($request->filled('department') && $request->department !== 'All') {
-        $query->where('department', $request->department);
+
+
+
+    public function manage(Request $request)
+    {
+        $query = Organization::query()->withCount('members');
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('department', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        if ($request->filled('department') && $request->department !== 'All') {
+            $query->where('department', $request->department);
+        }
+
+        $organizations = $query->paginate(12)
+            ->withQueryString();
+
+        $recruitment = DB::table('settings')
+            ->where('name', 'Recruitment')
+            ->value('status');
+
+        return Inertia::render('SuperAdmin/SuperAdminManage', [
+            'recruitment' => $recruitment,
+            'organizations' => $organizations,
+            'departments' => Organization::distinct()->pluck('department'),
+            'filters' => $request->only(['search', 'department'])
+        ]);
     }
-    
-    $organizations = $query->paginate(12)
-                         ->withQueryString(); 
-    
-    $recruitment = DB::table('settings')
-                    ->where('name', 'Recruitment')
-                    ->value('status');
-
-    return Inertia::render('SuperAdmin/SuperAdminManage', [
-        'recruitment' => $recruitment,
-        'organizations' => $organizations,
-        'departments' => Organization::distinct()->pluck('department'),
-        'filters' => $request->only(['search', 'department']) 
-    ]);
-}
 
 
-    
+
 
 
     public function updateOrganizations(Request $request)
@@ -160,7 +164,6 @@ public function manage(Request $request)
             $dataToUpdate = ['visibility' => $organization['visibility']];
             if (!$organization['visibility']) {
                 $dataToUpdate['recruiting'] = false;
-
             }
 
             Organization::where('orgID', $organization['id'])->update($dataToUpdate);
@@ -213,7 +216,7 @@ public function manage(Request $request)
                     ->orWhere('email', 'LIKE', "%" . $request->input('query') . "%");
             });
         }
-        
+
         $users = $query->get();
 
         return response()->json([
@@ -222,40 +225,40 @@ public function manage(Request $request)
     }
 
     public function invite(Request $request)
-{
-    $query = User::query()
-        ->join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
-        ->where('organization_user_role.roleID', 2)
-        ->select('users.userID', 'users.email', 'users.firstname', 'users.lastname', 'users.college', 'users.status')
-        ->distinct()
-        ->withCount('organizations');
+    {
+        $query = User::query()
+            ->join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
+            ->where('organization_user_role.roleID', 2)
+            ->select('users.userID', 'users.email', 'users.firstname', 'users.lastname', 'users.college', 'users.status')
+            ->distinct()
+            ->withCount('organizations');
 
-    // Add search functionality
-    if ($request->filled('search')) {
-        $searchTerm = $request->search;
-        $query->where(function($q) use ($searchTerm) {
-            $q->where('firstname', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('lastname', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('email', 'LIKE', "%{$searchTerm}%")
-                ->orWhereRaw("CONCAT(firstname, ' ', lastname) LIKE ?", ["%{$searchTerm}%"])
-                ->orWhereRaw("CONCAT(lastname, ' ', firstname) LIKE ?", ["%{$searchTerm}%"]);
-        });
+        // Add search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('firstname', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('lastname', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('email', 'LIKE', "%{$searchTerm}%")
+                    ->orWhereRaw("CONCAT(firstname, ' ', lastname) LIKE ?", ["%{$searchTerm}%"])
+                    ->orWhereRaw("CONCAT(lastname, ' ', firstname) LIKE ?", ["%{$searchTerm}%"]);
+            });
+        }
+
+        $admins = $query->paginate(20)->withQueryString();
+
+        $userRoles = DB::table('organization_user_role')
+            ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
+            ->join('organizations', 'organization_user_role.orgID', '=', 'organizations.orgID')
+            ->get();
+
+        return Inertia::render('SuperAdmin/SuperAdminInvite', [
+            'users' => $admins,
+            'userRoles' => $userRoles,
+            'organizations' => Organization::all(),
+            'filters' => $request->only(['search'])
+        ]);
     }
-
-    $admins = $query->paginate(20)->withQueryString();
-
-    $userRoles = DB::table('organization_user_role')
-        ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
-        ->join('organizations', 'organization_user_role.orgID', '=', 'organizations.orgID')
-        ->get();
-
-    return Inertia::render('SuperAdmin/SuperAdminInvite', [
-        'users' => $admins,
-        'userRoles' => $userRoles,
-        'organizations' => Organization::all(),
-        'filters' => $request->only(['search'])
-    ]);
-}
 
 
     public function search(Request $request)
@@ -282,20 +285,20 @@ public function manage(Request $request)
             'roleID' => 'required|exists:roles,roleID',
         ]);
 
-        
+
 
 
 
         try {
 
             $currentAdminCount = DB::table('organization_user_role')
-            ->where('orgID', $validated['orgID'])
-            ->where('roleID', '=', '2') 
-            ->count();
+                ->where('orgID', $validated['orgID'])
+                ->where('roleID', '=', '2')
+                ->count();
 
 
             if ($currentAdminCount >= 3) {
-                
+
                 session()->flash('toast', [
                     'title' => 'Failed to the add the user',
                     'description' => 'The organization already has the maximum number of admins (Max: 3).',
@@ -372,37 +375,37 @@ public function manage(Request $request)
     //for specific org
 
     public function deleteAdminRole($userID, $orgID)
-{
-    try {
-        DB::table('organization_user_role')
-            ->where('userID', $userID)
-            ->where('orgID', $orgID)
-            ->where('roleID', 2)
-            ->delete();
+    {
+        try {
+            DB::table('organization_user_role')
+                ->where('userID', $userID)
+                ->where('orgID', $orgID)
+                ->where('roleID', 2)
+                ->delete();
 
             $user = User::find($userID);
             $org = Organization::find($orgID);
 
             $user->notify(new RemoveAdminNotification($org, $user));
 
-        session()->flash('toast', [
-            'title' => 'Success',
-            'description' => 'Admin role removed successfully!',
-            'variant' => 'success'
-        ]);
+            session()->flash('toast', [
+                'title' => 'Success',
+                'description' => 'Admin role removed successfully!',
+                'variant' => 'success'
+            ]);
 
 
 
-        return redirect()->route('superadmin.invite');
-    } catch (Exception $e) {
-        session()->flash('toast', [
-            'title' => 'Failed',
-            'description' => 'Failed to remove admin role.',
-            'variant' => 'destructive'
-        ]);
-        return redirect()->back();
+            return redirect()->route('superadmin.invite');
+        } catch (Exception $e) {
+            session()->flash('toast', [
+                'title' => 'Failed',
+                'description' => 'Failed to remove admin role.',
+                'variant' => 'destructive'
+            ]);
+            return redirect()->back();
+        }
     }
-}
 
 
 
@@ -413,24 +416,25 @@ public function manage(Request $request)
         return Inertia::render('SuperAdmin/SuperAdminDataUpload');
     }
 
-    private function handleStudentUpload($studentFile) {
-        $studentData = fopen($studentFile, 'r');            
+    private function handleStudentUpload($studentFile)
+    {
+        $studentData = fopen($studentFile, 'r');
         $studentChunks = [];
 
         try {
             $dumpHeader = fgetcsv($studentData); // skip the header in the csv file
-            
+
             while ($data = fgetcsv($studentData)) {
                 $existingUser = User::find($data[0]);
 
-                if ($existingUser != null) {         
-                    if ($existingUser->email != $data[1]) {  // to check if user has changed their email 
+                if ($existingUser != null) {
+                    if ($existingUser->email != $data[1]) {  // to check if user has changed their email
                         $existingUser->email = $data[1];
                         $existingUser->save();
                     }
                 } else {
                     $studentChunks[] = [
-                        "userID" => $data[0],   
+                        "userID" => $data[0],
                         "email" => $data[1],
                         "firstname" => $data[2],
                         "lastname" => $data[3],
@@ -449,7 +453,7 @@ public function manage(Request $request)
 
             if (!empty($studentChunks)) { // insert the rest in studentChunks
                 User::insert($studentChunks);
-            }    
+            }
         } catch (Exception $e) {
             // TO-DO: return with proper error
             session()->flash('toast', [
@@ -470,7 +474,8 @@ public function manage(Request $request)
         return redirect()->back();
     }
 
-    private function handleOrganizationUpload($organizationFile) {
+    private function handleOrganizationUpload($organizationFile)
+    {
         try {
             $fileTypeValidator = Validator::make(['organizationFile' => $organizationFile], [
                 'organizationFile' => ['required', 'file', 'mimes:json']
@@ -482,12 +487,12 @@ public function manage(Request $request)
                     'description' => 'File type must be JSON (.json)',
                     'variant' => 'destructive'
                 ]);
-                
+
                 return redirect()->back()->with('error');
             }
 
-            $submittedData= json_decode(file_get_contents($organizationFile), true);
-            
+            $submittedData = json_decode(file_get_contents($organizationFile), true);
+
             $contentValidator = Validator::make($submittedData, [
                 '*.name' => ['required', 'string'],
                 '*.department' => ['required', 'string'],
@@ -502,7 +507,6 @@ public function manage(Request $request)
 
                 return redirect()->back()->with('error');
             }
-
         } catch (Exception $e) {
             session()->flash('toast', [
                 'title' => 'Failed to upload',
@@ -510,19 +514,18 @@ public function manage(Request $request)
                 'variant' => 'destructive'
             ]);
             return redirect()->back()->with('error');
-            
         }
-        
+
         $existingOrgs = Organization::all()->toArray();
 
         $submittedDataNames = [];
         $existingOrgNames = [];
 
-        foreach($submittedData as $org) {
+        foreach ($submittedData as $org) {
             $submittedDataNames[] = $org['name'];
         }
 
-        foreach($existingOrgs as $org) {
+        foreach ($existingOrgs as $org) {
             $existingOrgNames[] = $org['name'];
         }
 
@@ -534,7 +537,7 @@ public function manage(Request $request)
 
         // get the name of the newly added orgs
         $newOrgNames = array_diff($submittedDataNames, $existingOrgNames);
-    
+
         if (!empty($orgNamesToHide)) {
             Organization::whereIn('name', $orgNamesToHide)->update(['visibility' => false]);
         }
@@ -542,7 +545,7 @@ public function manage(Request $request)
         if (!empty($newOrgNames)) {
             foreach ($newOrgNames as $newOrgName) {
                 $newOrgData = collect($submittedData)->firstWhere('name', $newOrgName);
-    
+
                 $organizationID = Organization::create([
                     'name' => $newOrgData['name'],
                     'department' => $newOrgData['department'],
@@ -551,11 +554,10 @@ public function manage(Request $request)
                 Photo::create([
                     'orgID' => $organizationID,
                 ]);
-
             }
         }
-        
-    
+
+
         session()->flash('toast', [
             'title' => 'File Uploaded Successfully',
             'description' => 'The organization list and status was updated',
@@ -564,7 +566,8 @@ public function manage(Request $request)
         return redirect()->back();
     }
 
-    public function upload(Request $request) {
+    public function upload(Request $request)
+    {
         if ($request->studentFile == null && $request->organizationFile == null) {
             session()->flash('toast', [
                 'title' => 'Failed to upload',
@@ -576,10 +579,10 @@ public function manage(Request $request)
 
         if ($request->studentFile != null) {
             $this->handleStudentUpload($request->file('studentFile'));
-        } 
-        if ($request->organizationFile != null) { 
+        }
+        if ($request->organizationFile != null) {
             $this->handleOrganizationUpload($request->file('organizationFile'));
-        } 
+        }
     }
 
     // Activity log tab functions
@@ -637,25 +640,25 @@ public function manage(Request $request)
     {
         $organizations = Organization::with(['members' => function ($query) {
             $query->select('users.userID', 'firstname', 'lastname', 'email')
-                  ->orderBy('lastname');
+                ->orderBy('lastname');
         }])->get()
-        ->map(function ($org) {
-            return [
-                'organization_name' => $org->name,
-                'members' => $org->members->map(function ($member) {
-                    return [
-                        'firstName' => $member->firstname,
-                        'middleName' => $member->middlename,
-                        'lastname' => $member->lastname,
-                        'studentNumber' => $member->userID,
-                    ];
-                })
-            ];
-        });
+            ->map(function ($org) {
+                return [
+                    'organization_name' => $org->name,
+                    'members' => $org->members->map(function ($member) {
+                        return [
+                            'firstName' => $member->firstname,
+                            'middleName' => $member->middlename,
+                            'lastname' => $member->lastname,
+                            'studentNumber' => $member->userID,
+                        ];
+                    })
+                ];
+            });
 
 
         $filename = 'organizations-members-' . date('Y-m-d') . '.json';
-        
+
         return response()->json($organizations)
             ->header('Content-Disposition', 'attachment; filename=' . $filename)
             ->header('Content-Type', 'application/json');
@@ -664,43 +667,134 @@ public function manage(Request $request)
     //settings
 
     public function settings()
-{
-    $settings = DB::table('settings')
-        ->whereIn('name', ['Recruitment', 'Manual Registration'])
-        ->pluck('status', 'name');
+    {
+        $settings = DB::table('settings')
+            ->whereIn('name', ['Recruitment', 'Manual Registration'])
+            ->pluck('status', 'name');
 
-    return Inertia::render('SuperAdmin/SuperAdminSettings', [
-        'recruitment' => $settings['Recruitment'] ?? false,
-        'manualreg' => $settings['Manual Registration'] ?? false,
-    ]);
-}
-
-
-public function toggleSetting(Request $request)
-{
-    $status = $request->input('status');
-    $settingName = $request->input('setting_name');
-
-    DB::table('settings')
-        ->where('name', $settingName)
-        ->update(['status' => $status]);
-
-    $message = $status
-        ? ucfirst($settingName) . " Enabled Successfully"
-        : ucfirst($settingName) . " Disabled Successfully";
-
-    session()->flash('toast', [
-        'title' => $message,
-        'description' => 'Status Updated Successfully!',
-        'variant' => $status ? 'success' : 'destructive'
-    ]);
-
-    if (!$status && $settingName === 'Recruitment') {
-        DB::table('organizations')->update(['recruiting' => false]);
+        return Inertia::render('SuperAdmin/SuperAdminSettings', [
+            'recruitment' => $settings['Recruitment'] ?? false,
+            'manualreg' => $settings['Manual Registration'] ?? false,
+        ]);
     }
 
-    return redirect()->route('superadmin.settings');
-}
+
+    public function toggleSetting(Request $request)
+    {
+        $status = $request->input('status');
+        $settingName = $request->input('setting_name');
+
+        DB::table('settings')
+            ->where('name', $settingName)
+            ->update(['status' => $status]);
+
+        $message = $status
+            ? ucfirst($settingName) . " Enabled Successfully"
+            : ucfirst($settingName) . " Disabled Successfully";
+
+        session()->flash('toast', [
+            'title' => $message,
+            'description' => 'Status Updated Successfully!',
+            'variant' => $status ? 'success' : 'destructive'
+        ]);
+
+        if (!$status && $settingName === 'Recruitment') {
+            DB::table('organizations')->update(['recruiting' => false]);
+        }
+
+        return redirect()->route('superadmin.settings');
+    }
 
 
+
+
+
+
+
+    public function previewOrganizationData($orgID)
+    {
+        $organization = Organization::withCount('members')
+            ->with('officers.user')
+            ->with('contacts')
+            ->find($orgID);
+
+        $officers = Officer::where('orgID', $orgID);
+
+        if ($officers->exists()) {
+            $latestCreatedAt = $officers->max('created_at');
+            $latestUpdatedAt = $officers->max('updated_at');
+
+            // Get the most recent date and format it
+            $latestOfficerUpdateDate = Carbon::parse(max($latestCreatedAt, $latestUpdatedAt))
+                ->format('M. d, Y');
+        } else {
+            $latestOfficerUpdateDate = 'N/A';
+        }
+
+        $pageData = [
+            'metadata' => [
+                'organizationName' => $organization->name,
+                'members' => $organization->members_count,
+            ],
+            'aboutUs' => $organization->description,
+            'fb_link' => $organization->fb_link,
+            'contacts' => $organization->contacts,
+            'officers' => $organization->officers,
+            'latestOfficerUpdate' => $latestOfficerUpdateDate,
+            'photos' => $this->getOrgPhotos($orgID),
+        ];
+
+        return response()->json([
+            'pageData' => $pageData,
+            'pageLayoutData' => $this->getPageLayoutData($orgID),
+            'withFollow' => true,
+        ]);
+    }
+
+    public function getOrgPhotos($orgID)
+    {
+        $organization = Organization::with('photos')->find($orgID);
+        $photos = [];
+
+        foreach ($organization->photos as $photo) {
+            $photos[] = [
+                'photoID' => $photo['photoID'],
+                'orgID' => $photo['orgID'],
+                'caption' => $photo['caption'],
+                'filename' => Storage::url('public/photo/' . $photo['filename']),
+            ];
+        }
+
+        return $photos;
+    }
+
+    public function getPageLayoutData($orgID)
+    {
+        $organization = Organization::withCount('members')
+            ->with('keywords')
+            ->findOrFail($orgID);
+
+        $isInOrgHome = true;
+
+        $deployedForms = $isInOrgHome
+            ? Form::where([
+                'orgID' => $orgID,
+                'deployed' => true,
+            ])->get()
+            : [];
+
+        return [
+            'forms' => $deployedForms,
+            'orgID' => $organization->orgID,
+            'logo' => Storage::url("public/logo/" . $organization->logo),
+            'coverPhoto' => Storage::url("public/coverPhoto/" . $organization->coverPhoto),
+            'metadata' => [
+                'keywords' => $organization->keywords ?: [],
+                'department' => $organization->department,
+                'organizationName' => $organization->name,
+                'members' => $organization->members_count,
+            ],
+            'recruiting' => $organization->recruiting,
+        ];
+    }
 }
