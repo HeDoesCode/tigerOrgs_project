@@ -1,15 +1,32 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FormActionsContext } from "../Context/FormActionsContext";
 import { useForm } from "@inertiajs/react";
+import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
+import { Alert, AlertDescription, AlertTitle } from "@/Components/ui/alert";
 
-function EditMultiChoiceItem({ id, item }) {
+function EditMultiChoiceItem({ id, item, required }) {
     const { delete: handleDeleteItem, edit: handleEditItem } =
         useContext(FormActionsContext);
 
+    const [showAlert, setShowAlert] = useState(false);
+
+    useEffect(() => {
+        if (showAlert) {
+            const timer = setTimeout(() => {
+                setShowAlert(false);
+            }, 4000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [showAlert]);
+
     const { data, setData, post, processing, errors } = useForm({
-        question: (item.name !== "") ? item.name : "" ,
-        required: (item.required),
-        options: item.options || [],
+        question: item.name !== "" ? item.name : "",
+        required: item.required,
+        options:
+            item.options && item.options.length > 0
+                ? item.options
+                : ["Option 1"],
     });
 
     function handleAddOption() {
@@ -28,7 +45,7 @@ function EditMultiChoiceItem({ id, item }) {
 
     function handleDeleteOption(index) {
         if (data.options.length === 1) {
-            alert("Options cannot be empty");
+            setShowAlert(true);
             return;
         }
 
@@ -46,70 +63,108 @@ function EditMultiChoiceItem({ id, item }) {
     }, [data]);
 
     return (
-        <form onSubmit={handleSave}>
-            <ul>
-                <li className="mb-2 rounded-2xl px-2">
-                    <input
-                        className="w-full bg-transparent rounded-xl border-1 border-x-stone-600"
-                        type="text"
-                        value={data.question}
-                        onChange={(e) => setData("question", e.target.value)}
-                        placeholder="Type Question here..."
-                        required
-                    />
-                </li>
+        <ul>
+            <li className="mb-2 rounded-2xl px-2">
+                <input
+                    className="w-full bg-transparent rounded-xl border-1 border-x-stone-600"
+                    type="text"
+                    value={data.question}
+                    onChange={(e) => setData("question", e.target.value)}
+                    placeholder="Type Question here..."
+                    required={required}
+                    minLength={1}
+                    pattern=".{1,}"
+                    title="Question is required"
+                    onInvalid={(e) => {
+                        e.target.setCustomValidity("Please enter a question");
+                    }}
+                    onInput={(e) => {
+                        e.target.setCustomValidity("");
+                    }}
+                />
+            </li>
 
-                <li className="mb-2 px-2">
-                    <ul>
-                        {data.options.map((option, index) => (
-                            <li key={index} className="flex items-center mb-2">
-                                <input
-                                    className="w-full p-1 rounded border border-gray-300"
-                                    type="text"
-                                    value={option}
-                                    onChange={(e) => handleEditOption(index, e.target.value)}
-                                />
-                                <button
-                                    className="ml-2 text-red-500"
-                                    onClick={() => handleDeleteOption(index)}
-                                    type="button"
-                                >
-                                    Remove
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+            <li className="mb-2 px-2">
+                <ul>
+                    {data.options.map((option, index) => (
+                        <li key={index} className="flex items-center mb-2">
+                            <input
+                                className="w-full p-1 rounded border border-gray-300"
+                                type="text"
+                                value={option}
+                                onChange={(e) =>
+                                    handleEditOption(index, e.target.value)
+                                }
+                                required={required}
+                                minLength={1}
+                                pattern=".{1,}"
+                                title="Option is required"
+                                onInvalid={(e) => {
+                                    e.target.setCustomValidity(
+                                        "Please enter an option"
+                                    );
+                                }}
+                                onInput={(e) => {
+                                    e.target.setCustomValidity("");
+                                }}
+                            />
+                            <button
+                                className="ml-2 text-red-500"
+                                onClick={() => handleDeleteOption(index)}
+                                type="button"
+                            >
+                                Remove
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </li>
+            <li className="mb-2 px-2">
+                <button
+                    className=" rounded-xl bg-gray-200 px-4 py-2 border hover:bg-gray-300 w-full transition ease-in-out diuration-200"
+                    type="button"
+                    onClick={handleAddOption}
+                >
+                    + Add Option
+                </button>
+            </li>
+            <div className="flex justify-end ">
+                <li className="flex items-center gap-2 m-2 px-2 rounded-2xl border-black size-fit  ">
+                    <input
+                        className="rounded-2xl"
+                        type="checkbox"
+                        id={`required_${id}`}
+                        onChange={() => setData("required", !data.required)}
+                        checked={data.required}
+                    />
+                    <label htmlFor={`required_${id}`}> Required</label>
+                    <label className="">|</label>
+                    <AdminAlertDialog
+                        trigger={
+                            <div
+                                className="py-2 underline text-red-500"
+                                type="button"
+                            >
+                                Delete Item
+                            </div>
+                        }
+                        title={`Confirm Deletion?`}
+                        description="The component will be deleted from the layout."
+                        accept="Confirm"
+                        onclick={() => handleDeleteItem(id)}
+                    ></AdminAlertDialog>
                 </li>
-                <li className="mb-2 px-2">
-                    <button
-                        className=" rounded-xl bg-gray-200 px-4 py-2 border hover:bg-gray-300 w-full transition ease-in-out diuration-200"
-                        type="button"
-                        onClick={handleAddOption}
-                    >
-                        + Add Option
-                    </button>
-                </li>
-                <div className="flex justify-end ">
-                    <li className="flex items-center gap-2 m-2 px-2 rounded-2xl border-black size-fit  ">
-                        <input
-                            className="rounded-2xl"
-                            type="checkbox"
-                            id={`required_${id}`}
-                            onChange={() => setData("required", !data.required)}
-                            checked={data.required}
-                        />
-                        <label htmlFor={`required_${id}`}> Required</label>
-                        <label className="">|</label>
-                        <button
-                            className=" py-2 underline text-red-500 "
-                            onClick={() => handleDeleteItem(id)}
-                        >
-                            Delete Item
-                        </button>
-                    </li>
-                </div>
-            </ul>
-        </form>
+            </div>
+            {showAlert && (
+                <Alert variant="destructive" className="mb-4">
+                    <AlertTitle>Options cannot be empty</AlertTitle>
+                    <AlertDescription>
+                        At least one option is required. Please add more options
+                        before removing.
+                    </AlertDescription>
+                </Alert>
+            )}
+        </ul>
     );
 }
 

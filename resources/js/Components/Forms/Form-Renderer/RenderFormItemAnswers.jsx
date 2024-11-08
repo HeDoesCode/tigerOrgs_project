@@ -1,7 +1,7 @@
 import FormResponseDisplay from "./FormResponseDisplay";
 
-function RenderFormItemAnswers({ item }) {
-    return <FormResponseDisplay item={item} />;
+function RenderFormItemAnswers({ item, orgID }) {
+    return <FormResponseDisplay item={item} orgID={orgID} />;
 }
 
 export default RenderFormItemAnswers;

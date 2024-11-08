@@ -444,6 +444,7 @@ function ApplicationResponses({ application, orgID, selectedFormId }) {
                                                     <RenderFormItemAnswers
                                                         key={index}
                                                         item={item}
+                                                        orgID={orgID}
                                                     />
                                                 )
                                             )}

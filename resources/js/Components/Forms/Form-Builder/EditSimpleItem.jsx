@@ -1,64 +1,71 @@
 import { useForm } from "@inertiajs/react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { FormActionsContext } from "../Context/FormActionsContext";
-import { useEffect } from "react";
+import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
 
-function EditSimpleItem({ id, item }) {
-    const { data, setData, post, processing, errors } = useForm({
-        question: (item.name !== "") ? item.name:"" ,
-        required: (item.required),
+function EditSimpleItem({ id, item, required }) {
+    const { data, setData } = useForm({
+        question: item.name || "",
+        required: item.required || false,
     });
 
     const { delete: handleDeleteItem, edit: handleEditItem } =
         useContext(FormActionsContext);
-
-    function handleSave(e) {
-        e.preventDefault();
-        handleEditItem(id, data);
-    }
 
     useEffect(() => {
         handleEditItem(id, data);
     }, [data]);
 
     return (
-        <form onSubmit={handleSave}>
-            <ul>
-                <li className="mb-2 rounded-2xl px-2">
+        <div className="space-y-4">
+            <div className="flex flex-col px-2 space-y-2">
+                <input
+                    type="text"
+                    className="w-full bg-transparent rounded-xl border-1 border-x-stone-600"
+                    value={data.question}
+                    onChange={(e) => setData("question", e.target.value)}
+                    placeholder="Type Question here..."
+                    required={required}
+                    minLength={1}
+                    pattern=".{1,}"
+                    title="Question is required"
+                    onInvalid={(e) => {
+                        e.target.setCustomValidity("Please enter a question");
+                    }}
+                    onInput={(e) => {
+                        e.target.setCustomValidity("");
+                    }}
+                />
+            </div>
+
+            <div className="flex justify-end ">
+                <li className="flex items-center gap-2 m-2 px-2 rounded-2xl border-black size-fit  ">
                     <input
-                        className="w-full bg-transparent rounded-xl border-[1.5px] border-x-stone-600"
-                        type="text"
-                        value={data.question}
-                        onChange={(e) => setData("question", e.target.value)}
-                        placeholder="Type Question here..."
-                        required
+                        className="rounded-2xl"
+                        type="checkbox"
+                        id={`required_${id}`}
+                        onChange={() => setData("required", !data.required)}
+                        checked={data.required}
                     />
+                    <label htmlFor={`required_${id}`}> Required</label>
+                    <label className="">|</label>
+                    <AdminAlertDialog
+                        trigger={
+                            <div
+                                className="py-2 underline text-red-500"
+                                type="button"
+                            >
+                                Delete Item
+                            </div>
+                        }
+                        title={`Confirm Deletion?`}
+                        description="The component will be deleted from the layout."
+                        accept="Confirm"
+                        onclick={() => handleDeleteItem(id)}
+                    ></AdminAlertDialog>
                 </li>
-                <div className="flex justify-end ">
-                    <li className="flex items-center gap-2 m-2 px-2 rounded-2xl border-black size-fit  ">
-                        <input
-                            className="rounded-2xl "
-                            type="checkbox"
-                            id={`required_${id}`}
-                            onChange={() => setData("required", !data.required)}
-                            checked={data.required}
-                        />
-                        <label htmlFor={`required_${id}`}> Required</label>
-                        <label className="">|</label>
-
-                        <button
-                            className=" py-2 underline text-red-500 "
-                            onClick={() => handleDeleteItem(id)}
-                        >
-                            Delete Item
-                        </button>
-                    </li>
-                </div>
-
-                <li className="grid grid-cols-2">
-                </li>
-            </ul>
-        </form>
+            </div>
+        </div>
     );
 }
 

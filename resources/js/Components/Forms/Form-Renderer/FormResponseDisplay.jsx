@@ -1,6 +1,6 @@
 import React from "react";
 
-const FormResponseDisplay = ({ item }) => {
+const FormResponseDisplay = ({ item, orgID }) => {
     const renderValue = () => {
         if (!item.value)
             return <span className="text-gray-500">No response</span>;
@@ -44,7 +44,9 @@ const FormResponseDisplay = ({ item }) => {
                         <div className="space-y-2">
                             <div className="relative w-full max-w-md rounded-lg overflow-hidden border border-gray-200">
                                 <img
-                                    src={`/storage/${item.value.file_path}`}
+                                    src={`/admin/${orgID}/file/view/${encodeURIComponent(
+                                        item.value.file_path
+                                    )}`}
                                     alt={item.value.original_filename}
                                     className="w-full h-auto object-cover"
                                 />
@@ -88,7 +90,9 @@ const FormResponseDisplay = ({ item }) => {
                                     />
                                 </svg>
                                 <a
-                                    href={`/storage/${item.value.file_path}`}
+                                    href={`/admin/${orgID}/file/view/${encodeURIComponent(
+                                        item.value.file_path
+                                    )}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-blue-600 hover:text-blue-800 underline"
@@ -127,7 +131,7 @@ const FormResponseDisplay = ({ item }) => {
             <div className="space-y-2">
                 <h4 className="font-medium text-gray-900">
                     {item.name}
-                    {item.required && (
+                    {item.required === "1" && (
                         <span className="text-red-500 ml-1">*</span>
                     )}
                 </h4>
