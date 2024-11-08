@@ -42,13 +42,21 @@ function EditableItem({ id, item }) {
                     </div>
 
                     {item.type === "image_upload" ? (
-                        <EditImageUploadItem id={id} item={item} />
+                        <EditImageUploadItem
+                            id={id}
+                            item={item}
+                            required={true}
+                        />
                     ) : item.type === "select" ||
                       item.type === "radio" ||
                       item.type === "checkbox" ? (
-                        <EditMultiChoiceItem id={id} item={item} />
+                        <EditMultiChoiceItem
+                            id={id}
+                            item={item}
+                            required={true}
+                        />
                     ) : (
-                        <EditSimpleItem id={id} item={item} />
+                        <EditSimpleItem id={id} item={item} required={true} />
                     )}
                 </div>
             </div>

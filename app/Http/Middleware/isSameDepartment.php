@@ -28,7 +28,7 @@ class isSameDepartment
         $org = Organization::findOrFail($orgID);
         $orgDepartment = $org->department;
 
-        if($orgDepartment === "University-Wide"){
+        if($orgDepartment === "University Wide"){
             return $next($request);
         }   
 

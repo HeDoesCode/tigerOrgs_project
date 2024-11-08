@@ -1,43 +1,47 @@
-import { router, usePage } from "@inertiajs/react";
+import { router, usePage, useForm } from "@inertiajs/react";
 import RenderFormItem from "./RenderFormItem";
-import Pre from "@/Components/Pre";
 import { useEffect } from "react";
+import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
 
 function FormRenderer({ formLayout, orgID, formID }) {
-    const { errors } = usePage().props; // Get validation errors from Inertia
+    const { errors, old } = usePage().props;
 
-    /**
-     *
-     * Pointers
-     * - pa make sure na yung form description supported mahabang text
-     *
-     */
+    // Initialize form data with useForm from Inertia
+    const { data, setData, post, reset } = useForm({
+        userData: {},
+        formLayout,
+        orgID,
+        formID,
+    });
+
+    // Set old values on mount if available
+    useEffect(() => {
+        if (old) {
+            const initialData = {};
+            formLayout.layout.forEach((item) => {
+                const name = prepareText(item.name);
+                if (old[name] !== undefined) {
+                    initialData[name] = old[name];
+                }
+            });
+            setData("userData", initialData);
+        }
+    }, [old, formLayout, setData]);
+
+    function handleFormChange(name, value) {
+        setData("userData", {
+            ...data.userData,
+            [name]: value,
+        });
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
 
-        const formData = new FormData(e.target);
-        const userData = {};
-
-        // Iterate through the form fields and add them to the userData object
-        for (const [key, value] of formData.entries()) {
-            userData[key] = value;
-        }
-
-        // Pass the userData object to the server-side route
-        router.post(
-            route("formSubmission", { orgID, formID }),
-            {
-                userData,
-                formLayout,
-                orgID,
-                formID,
-            },
-            { preserveState: true, preserveScroll: true }
-        );
-
-        console.log(userData);
-        console.log(formData);
+        post(route("formSubmission", { orgID, formID }), {
+            preserveState: true,
+            preserveScroll: true,
+        });
     }
 
     return (
@@ -47,19 +51,12 @@ function FormRenderer({ formLayout, orgID, formID }) {
                     className="bg-white shadow-md rounded-lg overflow-hidden"
                     onSubmit={handleSubmit}
                 >
-                    {/* <Pre object={formLayout["layout"]} /> /}
-                {/ <button
-                type="button"
-                onClick={() => console.log(formLayout["layout"])}
-            >
-                Log item
-            </button> */}
                     <div className="px-6 py-8">
-                        <h1 className="text-3xl font-bold  text-gray-900 mb-6">
+                        <h1 className="text-3xl font-bold text-gray-900 mb-6">
                             {formLayout.name}
                         </h1>
                         {formLayout.desc && (
-                            <p className="text-gray-600  mb-8">
+                            <p className="text-gray-600 mb-8">
                                 {formLayout.desc}
                             </p>
                         )}
@@ -101,18 +98,37 @@ function FormRenderer({ formLayout, orgID, formID }) {
 
                         <ul className="space-y-6">
                             {formLayout.layout.map((item, index) => (
-                                <RenderFormItem key={index} item={item} />
+                                <RenderFormItem
+                                    key={index}
+                                    item={item}
+                                    value={
+                                        data.userData[prepareText(item.name)]
+                                    }
+                                    onChange={(value) =>
+                                        handleFormChange(
+                                            prepareText(item.name),
+                                            value
+                                        )
+                                    }
+                                />
                             ))}
                         </ul>
                     </div>
 
                     <div className="px-6 py-4 bg-gray-50 flex justify-between">
-                        <button
-                            type="reset"
-                            className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            Clear Form
-                        </button>
+                        <AdminAlertDialog
+                            trigger={
+                                <div
+                                    type="reset"
+                                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Clear Form
+                                </div>
+                            }
+                            title={`Are you sure you want to reset all the inputs in the form?`}
+                            accept="Confirm"
+                            onclick={() => reset()}
+                        ></AdminAlertDialog>
                         <button
                             type="submit"
                             className="inline-flex items-center px-4 py-2 border border-transparent font-medium rounded-md shadow-sm text-white bg-[#04aa6dd5] hover:bg-[#04AA6D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -124,6 +140,10 @@ function FormRenderer({ formLayout, orgID, formID }) {
             </div>
         </div>
     );
+}
+
+function prepareText(name) {
+    return name.toLowerCase().trim().replaceAll(" ", "_");
 }
 
 export default FormRenderer;
