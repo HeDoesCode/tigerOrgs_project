@@ -1,9 +1,6 @@
 import IconExit from "@/Components/Icons/IconExit";
 import Layout from "./Layout";
 import { Link } from "@inertiajs/react";
-import IconUserSearch from "@/Components/Icons/IconUserSearch";
-import IconFolder from "@/Components/Icons/IconFolder";
-import { useState } from "react";
 import IconMenu3 from "@/Components/Icons/IconMenu3";
 import IconList from "@/Components/Icons/IconList";
 import IconHistory from "@/Components/Icons/IconHistory";
@@ -51,7 +48,7 @@ function SuperAdminLayout({ children }) {
                         className={`min-h-16 min-w-16 size-16 flex items-center justify-center p-2`}
                     >
                         <img
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhcNkJ7-IxlXnLfMbPwT4l1LROZeDmxoO3A&s"
+                            src="/OSA logo.png"
                             alt="test"
                             className="bg-cover rounded-full"
                         />
