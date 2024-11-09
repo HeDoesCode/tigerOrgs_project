@@ -538,13 +538,17 @@
     <div class="h-screen flex justify-center min-h-screen bg-gray-300 items-center">
         <div class="max-w-xl mx-auto px-4">
             <div class="w-full flex justify-center mb-6 text-6xl font-bold tracking-wider">@yield('code')</div>
-            <div class="flex items-center">
-                <div class="px-4 text-lg font-bold text-gray-black border-r border-gray-400 tracking-wider">
-                    <div class="size-8 flex items-center justify-center pb-1 rounded-full text-white bg-black">
-                        {{ ':(' }}</div>
+            <div class="flex items-center sm:flex-row flex-col gap-5">
+                <div
+                    class="px-4 text-lg font-bold text-gray-black border-0 sm:border-r border-gray-400 tracking-wider flex flex-col items-center sm:items-end gap-y-1">
+                    <div class="size-8 flex flex-col items-center justify-center pb-1 rounded-full text-white bg-black">
+                        {{ ':(' }}
+                    </div>
+                    <div class="text-sm text-gray-black uppercase tracking-wider">
+                        @yield('title')
+                    </div>
                 </div>
-
-                <div class="ml-4 text-lg text-gray-black uppercase tracking-wider">
+                <div class="text-lg text-gray-black uppercase tracking-wider sm:text-left text-center">
                     @yield('message')
                 </div>
             </div>
