@@ -206,32 +206,39 @@ function ImageUploadInput({ name, required, onChange, allowedTypes }) {
 }
 
 function CheckboxInput({ name, options, required, value = [], onChange }) {
+    const preparedName = prepareText(name);
     const [error, setError] = useState(false);
+
+    const preparedValues = Array.isArray(value)
+        ? value.map((v) => prepareText(v))
+        : [];
 
     const handleCheckboxChange = (event) => {
         const { value: checkboxValue, checked } = event.target;
         let updatedValues;
 
         if (checked) {
-            // Add the checkbox value if it's checked
-            updatedValues = [...value, checkboxValue];
+            updatedValues = [...preparedValues, checkboxValue];
         } else {
-            // Remove the checkbox value if it's unchecked
-            if (value.length === 1 && required) {
-                // Prevent unchecking if it's the last checked item and required
+            if (preparedValues.length === 1 && required) {
                 setError(true);
                 return;
             }
-            updatedValues = value.filter((v) => v !== checkboxValue);
+            updatedValues = preparedValues.filter((v) => v !== checkboxValue);
         }
 
-        // Clear error if there is more than one item selected
         setError(required && updatedValues.length === 0);
-        onChange(updatedValues || []);
-    };
 
-    // Ensure value is always an array
-    const currentValues = Array.isArray(value) ? value : [];
+        onChange(
+            updatedValues
+                .map(
+                    (prepared) =>
+                        options.find((opt) => prepareText(opt) === prepared) ||
+                        prepared
+                )
+                .map((opt) => prepareText(opt))
+        );
+    };
 
     return (
         <li className="mb-4">
@@ -241,25 +248,30 @@ function CheckboxInput({ name, options, required, value = [], onChange }) {
                     {required && <span className="text-red-500 ml-1">*</span>}
                 </legend>
                 <div className="space-y-2">
-                    {options.map((option, index) => (
-                        <div key={index} className="flex items-center">
-                            <input
-                                type="checkbox"
-                                name={name}
-                                id={`${name}-${index}`}
-                                value={option}
-                                checked={currentValues.includes(option)}
-                                onChange={handleCheckboxChange}
-                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                            />
-                            <label
-                                htmlFor={`${name}-${index}`}
-                                className="ml-2 block text-gray-700"
-                            >
-                                {option}
-                            </label>
-                        </div>
-                    ))}
+                    {options.map((option, index) => {
+                        const preparedOption = prepareText(option);
+                        return (
+                            <div key={index} className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    name={preparedName}
+                                    id={`${preparedName}-${index}`}
+                                    value={preparedOption} // Important: Use prepared value here
+                                    checked={preparedValues.includes(
+                                        preparedOption
+                                    )}
+                                    onChange={handleCheckboxChange}
+                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                />
+                                <label
+                                    htmlFor={`${preparedName}-${index}`}
+                                    className="ml-2 block text-gray-700"
+                                >
+                                    {option}
+                                </label>
+                            </div>
+                        );
+                    })}
                 </div>
                 {error && (
                     <p className="text-sm text-red-600">
