@@ -25,6 +25,7 @@ function Home({
     pageData,
     pageLayoutData,
     withFollow,
+    preview,
 }) {
     const { toast } = useToast();
 
@@ -55,7 +56,7 @@ function Home({
             recruiting={recruiting}
             editing={editing}
             withFollow={withFollow}
-            preview={true}
+            preview={preview}
         >
             {/* About Us */}
             <AboutUsContainer />
