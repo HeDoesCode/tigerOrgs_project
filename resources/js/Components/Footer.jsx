@@ -11,14 +11,14 @@ function Footer() {
             <div className="flex space-x-2 mx-10 sm:mx-24 md:mx-52 border-gray-300 border-t-[1px] pt-3 pb-5 w-full max-w-[70rem] h-fit">
                 <div className="flex-1">
                     <p className="leading-6">
-                        No Copyright 2024 © TigerOrgs Project <br />
+                        {/* No Copyright 2024 © TigerOrgs Project <br /> */}
                         Property of the{" "}
                         <Link>
                             <span className="underline">
-                                Office for Student Affairs
+                                Office for Student Affairs.
                             </span>
                         </Link>
-                        . <br />
+                        <br />
                         <br />
                         <a
                             className="text-xs text-slate-400 underline"
@@ -45,7 +45,12 @@ function Footer() {
                         </li>
                         <li>
                             <SocialLink
-                                icon={<img src="/src/ust_logo.png" />}
+                                icon={
+                                    <img
+                                        src="OSA logo.png"
+                                        className="rounded-full border border-slate-500"
+                                    />
+                                }
                                 text={"ust.edu.ph"}
                                 href={
                                     "https://www.ust.edu.ph/administrative-offices/office-for-student-affairs/"
