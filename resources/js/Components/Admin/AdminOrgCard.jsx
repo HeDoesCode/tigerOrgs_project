@@ -217,7 +217,7 @@ function AdminOrgCard({
                         <DialogDescription />
                     </DialogHeader>
                     {homePageData === null ? (
-                        <div className="w-full h-52 o flex items-center justify-center">
+                        <div className="w-full h-52 flex items-center justify-center">
                             <div className="w-[40px] flex justify-center">
                                 <div className="dot-flashing" />
                             </div>
