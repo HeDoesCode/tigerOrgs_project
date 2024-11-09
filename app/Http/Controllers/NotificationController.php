@@ -26,6 +26,7 @@ public function fetch()
     }
 
     $notifications = $user->notifications; 
+
     $unreadCount = $user->unreadNotifications()->count(); 
 
     return response()->json([
@@ -33,6 +34,27 @@ public function fetch()
         'unreadCount' => $unreadCount,
     ]);
 }
+
+
+public function applicationFetch()
+{
+    $user = Auth::user();
+
+    if (!$user) {
+        return response()->json(['applications' => []]);
+    }
+
+    $applications = $user->applications()
+        ->with(['organization', 'form'])
+        ->latest()
+        ->get();
+
+    return response()->json([
+        'applications' => $applications,
+    ]);
+}
+
+
 
 public function updateStatus(Application $application, Request $request)
 {

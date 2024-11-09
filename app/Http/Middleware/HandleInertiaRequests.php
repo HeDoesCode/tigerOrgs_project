@@ -48,7 +48,7 @@ class HandleInertiaRequests extends Middleware
 
                 'unreadNotificationsCount' => $request->user() ? $request->user()->unreadNotifications()->count() : 0, 
                 'notifications' => $request->user() ? $request->user()->notifications()->get() : [],
-                'applications' => $request->user() ? $request->user()->applications()->with('organization')->latest()->get() : []
+                'applications' => $request->user() ? $request->user()->applications()->with(['organization', 'form'])->latest()->get() : []
             ]
         );
     }

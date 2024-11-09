@@ -203,18 +203,20 @@ function FormBuilder({ orgID, formData, criterias }) {
                     </DndContext>
                 </FormActionsContext.Provider>
 
-                <div className="flex text-xs text-center rounded-3xl bg-gray-200 m-2">
+                <div className="flex flex-wrap sm:flex-nowrap  text-xs text-center rounded-3xl bg-gray-200 m-2">
                     {inputTypes.map((input) => (
                         <button
                             type="button"
                             key={input.type}
-                            className="rounded-3xl w-full py-4 hover:bg-gray-300 transition ease-in-out duration-200"
+                            className="flex flex-col items-center justify-center rounded-3xl w-1/4 sm:w-full py-3 sm:py-4 px-1 hover:bg-gray-300 transition ease-in-out duration-200"
                             onClick={() => handleAddItem(input.type)}
                         >
                             <div className="w-6 h-6 mx-auto">
                                 {input.icon && <input.icon />}
                             </div>
-                            <span>{input.type}</span>
+                            <span className="mt-1 text-[10px] sm:text-xs">
+                                {input.type}
+                            </span>
                         </button>
                     ))}
                 </div>

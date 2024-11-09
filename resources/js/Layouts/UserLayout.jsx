@@ -42,7 +42,11 @@ function UserLayout({ children, bgImage, noPadding }) {
 
     function HeaderContent() {
         const { props } = usePage();
-        const { unreadNotificationsCount: initialCount, notifications } = props;
+        const {
+            unreadNotificationsCount: initialCount,
+            notifications,
+            applications,
+        } = props;
         const [count, setCount] = useState(initialCount);
 
         return (
@@ -95,6 +99,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                             unreadNotificationsCount={count}
                             setUnreadNotificationsCount={setCount}
                             notifications={notifications}
+                            applications={applications}
                         />
                     </li>
                     <li>
@@ -132,6 +137,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                         unreadNotificationsCount={count}
                         setUnreadNotificationsCount={setCount}
                         notifications={notifications}
+                        applications={applications}
                     />
                     <HeaderDropdownMenu
                         triggerContent={
@@ -203,11 +209,14 @@ function UserLayout({ children, bgImage, noPadding }) {
             unreadNotificationsCount: initialCount,
             notifications: initialNotifications = [],
             setUnreadNotificationsCount,
+            applications: initialApplications = [],
         }) {
             const [notifications, setNotifications] =
                 useState(initialNotifications);
             const [count, setCount] = useState(initialCount);
             const { auth } = usePage().props;
+            const [applications, setApplications] =
+                useState(initialApplications);
 
             useEffect(() => {
                 if (!auth || !auth.user) {
@@ -215,30 +224,38 @@ function UserLayout({ children, bgImage, noPadding }) {
                     return;
                 }
 
-                const fetchNotifications = async () => {
+                const fetchData = async () => {
                     try {
-                        const response = await axios.get(
-                            route("notifications.fetch")
-                        ); // Replace with your fetch route
-                        setNotifications(response.data.notifications); // Adjust according to your response structure
-                        setCount(response.data.unreadCount); // Adjust according to your response structure
-                        setUnreadNotificationsCount(response.data.unreadCount); // Update parent state
-                    } catch (error) {}
+                        const [notificationsResponse, applicationsResponse] =
+                            await Promise.all([
+                                axios.get(route("notifications.fetch")),
+                                axios.get(route("applications.fetch")),
+                            ]);
+
+                        setNotifications(
+                            notificationsResponse.data.notifications
+                        );
+                        setCount(notificationsResponse.data.unreadCount);
+                        setUnreadNotificationsCount(
+                            notificationsResponse.data.unreadCount
+                        );
+                        setApplications(applicationsResponse.data.applications);
+                    } catch (error) {
+                        console.error("Error fetching data:", error);
+                    }
                 };
 
-                fetchNotifications();
+                fetchData();
 
                 const intervalId = setInterval(() => {
-                    fetchNotifications();
+                    fetchData();
                 }, 5000);
 
-                // Clean up the interval on unmount
                 return () => clearInterval(intervalId);
             }, [auth, setUnreadNotificationsCount]);
 
             const markAllAsRead = async () => {
                 try {
-                    console.log("Marked as read");
                     await axios.post(route("notifications.markAllRead"));
                     setCount(0);
                     setUnreadNotificationsCount(0);
@@ -378,7 +395,9 @@ function UserLayout({ children, bgImage, noPadding }) {
                                 </div>
                             </TabsContent>
                             <TabsContent value="applications">
-                                <ApplicationNotifications />
+                                <ApplicationNotifications
+                                    applications={applications}
+                                />
                             </TabsContent>
                         </div>
                     </Tabs>
@@ -402,7 +421,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                             <div
                                 className="poppins line-clamp-2 text-sm font-light mt-1"
                                 dangerouslySetInnerHTML={{
-                                    __html: notification.data.message, // Renders the HTML, including <br />
+                                    __html: notification.data.message,
                                 }}
                             ></div>
                             <div className="poppins text-[0.7rem] text-gray-500 leading-3 mt-2">
@@ -443,8 +462,8 @@ function UserLayout({ children, bgImage, noPadding }) {
         }
     }
 
-    function ApplicationNotifications() {
-        const { applications } = usePage().props;
+    function ApplicationNotifications({ applications }) {
+        // const { applications } = usePage().props;
 
         const getStatusColor = (status) => {
             switch (status) {
@@ -494,9 +513,8 @@ function UserLayout({ children, bgImage, noPadding }) {
                                     </div>
                                 </div>
                                 <div className="poppins line-clamp-2 text-sm font-light mt-1">
-                                    Current status of your application:{" "}
-                                    {application.form}
-                                    {console.log(application)}
+                                    Form Applied:{" "}
+                                    {application.form.formLayout["name"]}
                                 </div>
                                 <div className="mt-1 flex flex-nowrap space-x-5 poppins text-xs text-white">
                                     <div
