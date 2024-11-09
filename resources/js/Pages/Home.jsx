@@ -123,7 +123,7 @@ function Home({
             }
 
             if (!middlename.trim()) {
-                newErrors.userMiddlenameError = "Specify Middle Name";
+                newErrors.userMiddlenameError = "Your Middle Name is required";
             }
 
             if (!college?.trim()) {
@@ -240,9 +240,9 @@ function Home({
                                         currentMiddlename={middlename}
                                         onChange={setMiddlename}
                                     />
-                                    {errors.middlenameError && (
+                                    {errors.userMiddlenameError && (
                                         <p className="text-red-500 text-xs mt-1">
-                                            {errors.middlenameError}
+                                            {errors.userMiddlenameError}
                                         </p>
                                     )}
                                 </div>
@@ -309,7 +309,7 @@ function Home({
                 <input
                     type="text"
                     maxLength={10}
-                    placeholder="[YEAR]-[SECTION] ex. 3-ITG"
+                    placeholder="[YEAR]-[SECTION]"
                     className="w-full rounded-lg focus:border-black border-transparent"
                     value={sectionString}
                     onChange={handleSectionStringChange}
@@ -357,7 +357,7 @@ function Home({
                 <div className="flex">
                     <input
                         type="text"
-                        placeholder="Ex: College of Computing Sciences"
+                        placeholder="Ex: COLLEGE OF INFORMATION AND COMPUTING SCIENCES"
                         className="w-full rounded-l-lg focus:border-black border-transparent"
                         value={collegeString}
                         onChange={handleCollegeStringChange}
@@ -383,11 +383,11 @@ function Home({
         };
 
         return (
-            <InputContainer title="Middlename">
+            <InputContainer title="Middle Name">
                 <div className="flex">
                     <input
                         type="text"
-                        placeholder="Middlename"
+                        placeholder="MIDDLE NAME"
                         className="w-full rounded-l-lg focus:border-black border-transparent"
                         value={middlenameString}
                         onChange={handleMiddlenameStringChange}
