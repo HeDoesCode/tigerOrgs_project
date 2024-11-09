@@ -10,6 +10,7 @@ const typeLabels = {
     text: "Text Input",
     number: "Number Input",
     select: "Select Dropdown",
+    email: "Email Input",
     radio: "Multiple Choice",
     checkbox: "Checkboxes",
     file_upload: "PDF Upload",
@@ -26,17 +27,17 @@ function EditableItem({ id, item }) {
     };
 
     return (
-        <div className="p-2" ref={setNodeRef} {...attributes} style={style}>
+        <div className="py-2" ref={setNodeRef} {...attributes} style={style}>
             <div
                 className="drag-handle justify-center items-center flex bg-neutral-200 rounded-t-2xl"
                 {...listeners}
             >
                 <GripHorizontal />
             </div>
-            <div className=" border p-3 bg-[#F3F3F3] rounded-bl-lg rounded-br-lg">
+            <div className=" border p-3 bg-[#F3F3F3] rounded-b-2xl ">
                 <div className="">
-                    <div className="w-44  ">
-                        <h3 className="px-3 py-1 text-black text-sm underline font-medium">
+                    <div className="w-44  mb-3">
+                        <h3 className="px-3 py-1 text-black/50 text-sm underline font-medium">
                             {typeLabels[item.type] || item.type}
                         </h3>
                     </div>

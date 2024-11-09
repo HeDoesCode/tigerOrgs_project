@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { FormActionsContext } from "../Context/FormActionsContext";
 import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
 import { Alert, AlertDescription, AlertTitle } from "@/Components/ui/alert";
+import IconTrash from "@/Components/Icons/IconTrash";
 
 function EditImageUploadItem({ id, item, required }) {
     const { data, setData } = useForm({
@@ -64,11 +65,11 @@ function EditImageUploadItem({ id, item, required }) {
         <ul>
             <li className="mb-2 rounded-2xl px-2">
                 <input
-                    className="w-full bg-transparent rounded-xl border-[1.5px] border-x-stone-600"
+                    className="w-full bg-white rounded-xl border-1 border-slate-300"
                     type="text"
                     value={data.question}
                     onChange={(e) => setData("question", e.target.value)}
-                    placeholder="Type Question here..."
+                    placeholder="Type question here..."
                     required={required}
                     minLength={1}
                     pattern=".{1,}"
@@ -101,6 +102,7 @@ function EditImageUploadItem({ id, item, required }) {
                                     className="flex items-center gap-1"
                                 >
                                     <input
+                                        className="rounded-md"
                                         type="checkbox"
                                         checked={data.allowedTypes.includes(
                                             type
@@ -172,7 +174,7 @@ function EditImageUploadItem({ id, item, required }) {
             <div className="flex justify-end">
                 <li className="flex items-center gap-2 m-2 px-2 rounded-2xl border-black size-fit">
                     <input
-                        className="rounded-2xl"
+                        className="rounded-md"
                         type="checkbox"
                         id={`required_${id}`}
                         onChange={() => setData("required", !data.required)}
@@ -184,10 +186,10 @@ function EditImageUploadItem({ id, item, required }) {
                     <AdminAlertDialog
                         trigger={
                             <div
-                                className="py-2 underline text-red-500"
+                                className="py-2 underline text-black/50"
                                 type="button"
                             >
-                                Delete Item
+                                <IconTrash />
                             </div>
                         }
                         title={`Confirm Deletion?`}

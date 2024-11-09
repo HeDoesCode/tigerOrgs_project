@@ -2,6 +2,7 @@ import { useForm } from "@inertiajs/react";
 import { useContext, useEffect } from "react";
 import { FormActionsContext } from "../Context/FormActionsContext";
 import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
+import IconTrash from "@/Components/Icons/IconTrash";
 
 function EditSimpleItem({ id, item, required }) {
     const { data, setData } = useForm({
@@ -21,10 +22,10 @@ function EditSimpleItem({ id, item, required }) {
             <div className="flex flex-col px-2 space-y-2">
                 <input
                     type="text"
-                    className="w-full bg-transparent rounded-xl border-1 border-x-stone-600"
+                    className="w-full bg-white rounded-xl border-1 border-slate-300"
                     value={data.question}
                     onChange={(e) => setData("question", e.target.value)}
-                    placeholder="Type Question here..."
+                    placeholder="Type question here..."
                     required={required}
                     minLength={1}
                     pattern=".{1,}"
@@ -39,9 +40,9 @@ function EditSimpleItem({ id, item, required }) {
             </div>
 
             <div className="flex justify-end ">
-                <li className="flex items-center gap-2 m-2 px-2 rounded-2xl border-black size-fit  ">
+                <li className="flex items-center gap-2  px-2 rounded-2xl border-black size-fit ">
                     <input
-                        className="rounded-2xl"
+                        className="rounded-md"
                         type="checkbox"
                         id={`required_${id}`}
                         onChange={() => setData("required", !data.required)}
@@ -52,10 +53,10 @@ function EditSimpleItem({ id, item, required }) {
                     <AdminAlertDialog
                         trigger={
                             <div
-                                className="py-2 underline text-red-500"
+                                className="py-2 underline text-black/50"
                                 type="button"
                             >
-                                Delete Item
+                                <IconTrash />
                             </div>
                         }
                         title={`Confirm Deletion?`}

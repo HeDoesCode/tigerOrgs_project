@@ -3,6 +3,9 @@ import { FormActionsContext } from "../Context/FormActionsContext";
 import { useForm } from "@inertiajs/react";
 import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
 import { Alert, AlertDescription, AlertTitle } from "@/Components/ui/alert";
+import IconDelete from "@/Components/Icons/IconDelete";
+import IconX from "@/Components/Icons/IconX";
+import IconTrash from "@/Components/Icons/IconTrash";
 
 function EditMultiChoiceItem({ id, item, required }) {
     const { delete: handleDeleteItem, edit: handleEditItem } =
@@ -32,7 +35,7 @@ function EditMultiChoiceItem({ id, item, required }) {
     function handleAddOption() {
         const updatedOptions = [
             ...data.options,
-            `option ${data.options.length + 1}`,
+            `Option ${data.options.length + 1}`,
         ];
         setData("options", updatedOptions);
     }
@@ -64,13 +67,13 @@ function EditMultiChoiceItem({ id, item, required }) {
 
     return (
         <ul>
-            <li className="mb-2 rounded-2xl px-2">
+            <li className="mb-4 rounded-2xl px-2">
                 <input
-                    className="w-full bg-transparent rounded-xl border-1 border-x-stone-600"
+                    className="w-full bg-white rounded-xl border-1 border-slate-300"
                     type="text"
                     value={data.question}
                     onChange={(e) => setData("question", e.target.value)}
-                    placeholder="Type Question here..."
+                    placeholder="Type question here..."
                     required={required}
                     minLength={1}
                     pattern=".{1,}"
@@ -89,9 +92,10 @@ function EditMultiChoiceItem({ id, item, required }) {
                     {data.options.map((option, index) => (
                         <li key={index} className="flex items-center mb-2">
                             <input
-                                className="w-full p-1 rounded border border-gray-300"
+                                className="w-full  rounded-xl border-1 border-slate-300 bg-white/80"
                                 type="text"
                                 value={option}
+                                placeholder={option}
                                 onChange={(e) =>
                                     handleEditOption(index, e.target.value)
                                 }
@@ -109,11 +113,11 @@ function EditMultiChoiceItem({ id, item, required }) {
                                 }}
                             />
                             <button
-                                className="ml-2 text-red-500"
+                                className="ml-2 text-black/50"
                                 onClick={() => handleDeleteOption(index)}
                                 type="button"
                             >
-                                Remove
+                                <IconX />
                             </button>
                         </li>
                     ))}
@@ -129,9 +133,9 @@ function EditMultiChoiceItem({ id, item, required }) {
                 </button>
             </li>
             <div className="flex justify-end ">
-                <li className="flex items-center gap-2 m-2 px-2 rounded-2xl border-black size-fit  ">
+                <li className="flex items-center gap-2  px-2 rounded-2xl border-black size-fit  ">
                     <input
-                        className="rounded-2xl"
+                        className="rounded-md"
                         type="checkbox"
                         id={`required_${id}`}
                         onChange={() => setData("required", !data.required)}
@@ -142,10 +146,10 @@ function EditMultiChoiceItem({ id, item, required }) {
                     <AdminAlertDialog
                         trigger={
                             <div
-                                className="py-2 underline text-red-500"
+                                className="py-2 underline text-black/50"
                                 type="button"
                             >
-                                Delete Item
+                                <IconTrash />
                             </div>
                         }
                         title={`Confirm Deletion?`}
