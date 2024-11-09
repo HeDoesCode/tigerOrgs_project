@@ -2,13 +2,15 @@ import MainAdminFrame from "@/Components/MainAdminFrame";
 import SuperAdminLayout from "@/Layouts/SuperAdminLayout";
 import { Head, useForm } from "@inertiajs/react";
 import IconCheckBox from "@/Components/Icons/IconCheckBox";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CustomFileInput from "@/Components/CustomFileInput";
 import UploadProgress from "@/Components/Admin/UploadProgress";
 
 function SuperAdminDataUpload() {
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const progressIntervalRef = useRef(null);
+    const lastProgressRef = useRef(0);
 
     const { data, setData, post, reset } = useForm({
         studentFile: null,
@@ -26,28 +28,46 @@ function SuperAdminDataUpload() {
         }
     };
 
+    const cleanupUpload = () => {
+        if (progressIntervalRef.current) {
+            clearInterval(progressIntervalRef.current);
+            progressIntervalRef.current = null;
+        }
+        lastProgressRef.current = 0;
+    };
+
     const handleUpload = (e) => {
         e.preventDefault();
         setUploading(true);
         setUploadProgress(0);
+        lastProgressRef.current = 0;
 
-        const progressInterval = setInterval(() => {
+        progressIntervalRef.current = setInterval(() => {
             setUploadProgress((prev) => {
-                if (prev >= 90) {
-                    clearInterval(progressInterval);
-                    return 90;
+                if (prev < lastProgressRef.current) {
+                    return lastProgressRef.current;
                 }
-                return prev + 10;
+
+                const increment = Math.max(1, 10 * (1 - prev / 100));
+                const nextProgress = Math.min(85, prev + increment);
+
+                return nextProgress;
             });
-        }, 500);
+        }, 1000);
 
         post(route("superadmin.dataupload.file"), {
             onProgress: (progress) => {
                 if (progress.percentage) {
-                    setUploadProgress(Math.min(90, progress.percentage));
+                    const realProgress = Math.min(90, progress.percentage);
+                    lastProgressRef.current = realProgress;
+
+                    setUploadProgress((prev) =>
+                        realProgress > prev ? realProgress : prev
+                    );
                 }
             },
             onSuccess: () => {
+                cleanupUpload();
                 setUploadProgress(100);
                 setTimeout(() => {
                     reset();
@@ -56,12 +76,12 @@ function SuperAdminDataUpload() {
                 }, 1000);
             },
             onError: () => {
-                clearInterval(progressInterval);
+                cleanupUpload();
                 setUploading(false);
                 setUploadProgress(0);
             },
             onFinish: () => {
-                clearInterval(progressInterval);
+                cleanupUpload();
             },
         });
     };
@@ -77,6 +97,7 @@ function SuperAdminDataUpload() {
         window.addEventListener("beforeunload", handleBeforeUnload);
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
+            cleanupUpload();
         };
     }, [uploading]);
 

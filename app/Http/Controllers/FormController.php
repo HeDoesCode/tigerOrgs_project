@@ -189,166 +189,188 @@ class FormController extends Controller
     }
 
     private function buildRules($formLayout)
-{
-    $rules = [];
-    
-    foreach ($formLayout as $input) {
-        $inputRules = [];
-        $fieldName = $this->prepareText($input['name']);
-
-        if ($input['required']) {
-            array_push($inputRules, 'required');
-        } else {
-            array_push($inputRules, 'nullable');
-        }
-
-        switch ($input['type']) {
-            case "text":
-                array_push($inputRules, 'string');
-                break;
-            case "number":
-                array_push($inputRules, 'numeric');
-                break;
-            case "email":
-                array_push($inputRules, 'email');
-                break;
-            case "image_upload":
-                if ($input['required']) {
-                    $inputRules = ['required', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'];
-                } else {
-                    $inputRules = ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'];
-                }
-                break;
-            case "file_upload":
-                if ($input['required']) {
-                    $inputRules = ['required', 'file', 'mimes:pdf,doc,docx', 'max:5120'];
-                } else {
-                    $inputRules = ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'];
-                }
-                break;
-            case "checkbox":
-                // Update checkbox validation
-                array_push($inputRules, 'array');
-                if (!empty($input['options'])) {
-                    // Each value in the array should be one of the allowed options
-                    array_push($inputRules, 'in:' . implode(',', array_map(fn($opt) => $opt, $input['options'])));
-                }
-                break;
-            case "radio":
-            case "select":
-                if (!empty($input['options'])) {
-                    array_push($inputRules, 'in:' . implode(',', array_map(fn($opt) => $this->prepareText($opt), $input['options'])));
-                }
-                break;
-        }
+    {
+        $rules = [];
         
-        $rules[$fieldName] = implode('|', $inputRules);
-    }
+        foreach ($formLayout as $input) {
+            $inputRules = [];
+            $fieldName = $this->prepareText($input['name']);
 
-    return $rules;
-}
+            if ($input['required']) {
+                array_push($inputRules, 'required');
+            } else {
+                array_push($inputRules, 'nullable');
+            }
+
+            switch ($input['type']) {
+                case "text":
+                    array_push($inputRules, 'string');
+                    break;
+                case "number":
+                    array_push($inputRules, 'numeric');
+                    break;
+                case "email":
+                    array_push($inputRules, 'email');
+                    break;
+                case "image_upload":
+                    if ($input['required']) {
+                        $inputRules = ['required', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'];
+                    } else {
+                        $inputRules = ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg', 'max:5120'];
+                    }
+                    break;
+                case "file_upload":
+                    if ($input['required']) {
+                        $inputRules = ['required', 'file', 'mimes:pdf,doc,docx', 'max:5120'];
+                    } else {
+                        $inputRules = ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'];
+                    }
+                    break;
+                case "checkbox":
+                    array_push($inputRules, 'array');
+                    if (!empty($input['options'])) {
+                        array_push($inputRules, 'in:' . implode(',', array_map(fn($opt) => $this->prepareText($opt), $input['options'])));
+                    }
+                    break;
+                case "radio":
+                case "select":
+                    if (!empty($input['options'])) {
+                        array_push($inputRules, 'in:' . implode(',', array_map(fn($opt) => $this->prepareText($opt), $input['options'])));
+                    }
+                    break;
+            }
+            
+            $rules[$fieldName] = implode('|', $inputRules);
+        }
+
+        return $rules;
+    }
 
     public function submitForm(Request $request)
-{
-    try {
-        $user = Auth::user();
-        
-        $formLayout = $request->input('formLayout');
-        if (!$formLayout || !isset($formLayout['layout'])) {
-            throw new \Exception('Invalid form layout provided');
-        }
+    {
+        try {
+            $user = Auth::user();
 
-        $fieldRules = $this->buildRules($formLayout['layout']);
-        
-        $validationRules = [
-            'orgID' => 'required',
-            'formID' => 'required',
-            'userData' => 'required|array',
-            'formLayout' => 'required|array',
-        ];
-
-        foreach ($fieldRules as $field => $rule) {
-            $validationRules['userData.' . $field] = $rule;
-        }
-
-        $validated = $request->validate($validationRules);
-        
-        foreach ($formLayout['layout'] as &$item) {
-            $fieldName = $this->prepareText($item['name']);
             
-            if (isset($validated['userData'][$fieldName])) {
-                if ($item['type'] === 'checkbox') {
+            $formLayout = $request->input('formLayout');
+            if (!$formLayout || !isset($formLayout['layout'])) {
+                throw new \Exception('Invalid form layout provided');
+            }
 
-                    $item['value'] = is_array($validated['userData'][$fieldName]) 
-                        ? $validated['userData'][$fieldName] 
-                        : [$validated['userData'][$fieldName]];
-                } elseif (in_array($item['type'], ['file_upload', 'image_upload'])) {
-                    if ($validated['userData'][$fieldName] instanceof \Illuminate\Http\UploadedFile) {
-                        $file = $validated['userData'][$fieldName];
+            $fieldRules = $this->buildRules($formLayout['layout']);
+
+            
+            $validationRules = [
+                'orgID' => 'required',
+                'formID' => 'required',
+                'userData' => 'required|array',
+                'formLayout' => 'required|array',
+            ];
+
+            foreach ($fieldRules as $field => $rule) {
+                $validationRules['userData.' . $field] = $rule;
+            }
+
+            $validated = $request->validate($validationRules);
+            
+            foreach ($formLayout['layout'] as &$item) {
+                $fieldName = $this->prepareText($item['name']);
+                
+                if (isset($validated['userData'][$fieldName])) {
+                    if ($item['type'] === 'checkbox') {
+                        // Ensure we have an array of values
+                        $checkboxValues = is_array($validated['userData'][$fieldName]) 
+                            ? $validated['userData'][$fieldName] 
+                            : [$validated['userData'][$fieldName]];
                         
-                        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-                        
-                        $path = $file->storeAs(
-                            'form-uploads/' . $validated['formID'],
-                            $filename,
-                            'local'
-                        );
+                        // Convert the prepared values back to original options
+                        $originalValues = array_map(function($preparedValue) use ($item) {
+                            // Find the original option that matches the prepared value
+                            foreach ($item['options'] as $option) {
+                                if ($this->prepareText($option) === $preparedValue) {
+                                    return $option;
+                                }
+                            }
+                            return $preparedValue; // fallback to prepared value if no match found
+                        }, $checkboxValues);
 
+                        $item['value'] = $originalValues;
+                    } elseif (in_array($item['type'], ['file_upload', 'image_upload'])) {
+                        if ($validated['userData'][$fieldName] instanceof \Illuminate\Http\UploadedFile) {
+                            $file = $validated['userData'][$fieldName];
+                            
+                            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+                            
+                            $path = $file->storeAs(
+                                'form-uploads/' . $validated['formID'],
+                                $filename,
+                                'local'
+                            );
 
-                        $item['value'] = [
-                            'original_filename' => $file->getClientOriginalName(),
-                            'stored_filename' => $filename,
-                            'mime_type' => $file->getClientMimeType(),
-                            'file_size' => $file->getSize(),
-                            'file_path' => $path,
-                            'uploaded_at' => now()->toDateTimeString()
-                        ];
+                            $item['value'] = [
+                                'original_filename' => $file->getClientOriginalName(),
+                                'stored_filename' => $filename,
+                                'mime_type' => $file->getClientMimeType(),
+                                'file_size' => $file->getSize(),
+                                'file_path' => $path,
+                                'uploaded_at' => now()->toDateTimeString()
+                            ];
 
-                        if ($file->getClientMimeType() === 'application/pdf') {
-                            try {
-                                $parser = new Parser();
-                                $pdf = $parser->parseFile($file->getRealPath());
-                                $item['value']['extracted_text'] = $pdf->getText();
-                            } catch (\Exception $e) {
-                                \Log::warning('PDF text extraction failed: ' . $e->getMessage());
+                            if ($file->getClientMimeType() === 'application/pdf') {
+                                try {
+                                    $parser = new Parser();
+                                    $pdf = $parser->parseFile($file->getRealPath());
+                                    $item['value']['extracted_text'] = $pdf->getText();
+                                } catch (\Exception $e) {
+                                    \Log::warning('PDF text extraction failed: ' . $e->getMessage());
+                                }
                             }
                         }
+                    } else {
+                        // For radio/select inputs, convert back to original option if needed
+                        if (in_array($item['type'], ['radio', 'select']) && isset($item['options'])) {
+                            foreach ($item['options'] as $option) {
+                                if ($this->prepareText($option) === $validated['userData'][$fieldName]) {
+                                    $item['value'] = $option;
+                                    break;
+                                }
+                            }
+                        } else {
+                            $item['value'] = $validated['userData'][$fieldName];
+                        }
                     }
-                } else {
-                    $item['value'] = $validated['userData'][$fieldName];
                 }
             }
+
+            DB::table('applications')->insert([
+                'userID' => $user->userID,
+                'orgID' => $validated['orgID'],
+                'formID' => $validated['formID'],
+                'userData' => json_encode($formLayout),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            session()->flash('toast', [
+                'title' => 'Application Submitted',
+                'description' => 'Your application has been recorded. Please wait for the admin to process it.',
+                'variant' => 'success'
+            ]);
+
+            return redirect()->route('organizations.home', ['orgID' => $validated['orgID']]);
+            
+        } catch (\Exception $e) {
+            $request->flash();
+            
+            session()->flash('toast', [
+                'title' => 'Error Processing Form',
+                'description' => $e->getMessage(),
+                'variant' => 'destructive'
+            ]);
+            
+            return redirect()->back()->withInput();
         }
-
-        DB::table('applications')->insert([
-            'userID' => $user->userID,
-            'orgID' => $validated['orgID'],
-            'formID' => $validated['formID'],
-            'userData' => json_encode($formLayout),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        session()->flash('toast', [
-            'title' => 'Application Submitted',
-            'description' => 'Your application has been recorded. Please wait for the admin to process it.',
-            'variant' => 'success'
-        ]);
-
-        return redirect()->route('organizations.home', ['orgID' => $validated['orgID']]);
-        
-    } catch (\Exception $e) {
-        $request->flash();
-        
-        session()->flash('toast', [
-            'title' => 'Error Processing Form',
-            'description' => $e->getMessage(),
-            'variant' => 'destructive'
-        ]);
-        
-        return redirect()->back()->withInput();
     }
-}
 
         //for viewing  photos and pdf that is stored on local storage
         public function viewFile($orgID, $file_path)
