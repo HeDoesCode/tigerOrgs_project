@@ -47,7 +47,7 @@ class GoogleController extends Controller
             session()->invalidate();
             session()->regenerateToken();
             
-            return redirect()->back();
+            return redirect()->route('login');
     }
 }
 }
