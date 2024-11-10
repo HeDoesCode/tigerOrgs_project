@@ -7,7 +7,7 @@ enum SuperadminEnum: string
     public static function emails(): array
     {
         return [ // replace all with single email (OSA) on deployment
-            'josephvictor.paduga.cics@ust.edu.ph',
+            // 'josephvictor.paduga.cics@ust.edu.ph',
             'test.email.cics@ust.edu.ph',
             // 'arvin.alkuino.cics@ust.edu.ph',
             // 'laurencearvin.arcilla.cics@ust.edu.ph',
