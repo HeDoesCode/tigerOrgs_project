@@ -2,11 +2,13 @@ import GoogleLogo from "@/Components/Icons/GoogleLogo";
 import Logo from "@/Components/Logo";
 import { useState } from "react";
 
-function GoogleLoginModal({ rememberMe, handleCheckboxChange }) {
+function GoogleLoginModal({ handleCheckboxChange }) {
     const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
 
     const openPrivacyModal = () => setIsPrivacyModalOpen(true);
     const closePrivacyModal = () => setIsPrivacyModalOpen(false);
+
+    const [rememberMe, setRememberMe] = useState(false);
 
     return (
         <div className="fixed inset-0 h-screen w-screen flex justify-center items-center backdrop-blur-sm bg-gray-700/20 z-[50]">
@@ -39,7 +41,9 @@ function GoogleLoginModal({ rememberMe, handleCheckboxChange }) {
                                     id="rememberme"
                                     className="checked:bg-[#ffb700] cursor-pointer"
                                     checked={rememberMe}
-                                    onChange={handleCheckboxChange}
+                                    onChange={(e) =>
+                                        setRememberMe(e.target.checked)
+                                    }
                                 />
                                 <span>Remember Me</span>
                             </label>

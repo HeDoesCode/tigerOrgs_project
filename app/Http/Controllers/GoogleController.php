@@ -17,25 +17,17 @@ class GoogleController extends Controller
 {
     public function googlepage(Request $request)
     {
-        session()->put('remember_me', $request->input('remember_me', false));
-            
-        session()->save();
-            
-        return Socialite::driver('google')
-            ->with(['prompt' => 'select_account',
-                    'hd' => 'ust.edu.ph'
-            ])
-            ->redirect();
+        session()->put('remember_me', request('remember_me'));
+        return Socialite::driver('google')->redirect();
     }
 
     public function googlecallback(Request $request)
     {
         try {
             $socialiteUser = Socialite::driver('google')->user();
-            
+
             $controller = new AuthenticatedSessionController;
             return $controller->store($socialiteUser);
-
         } catch (InvalidStateException $e) {
 
             session()->flash('toast', [
@@ -46,8 +38,8 @@ class GoogleController extends Controller
 
             session()->invalidate();
             session()->regenerateToken();
-            
+
             return redirect()->route('login');
+        }
     }
-}
 }
