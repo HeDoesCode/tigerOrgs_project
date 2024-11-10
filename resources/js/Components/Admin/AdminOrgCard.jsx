@@ -233,7 +233,7 @@ function AdminOrgCard({
                                 pageData={homePageData.pageData}
                                 pageLayoutData={homePageData.pageLayoutData}
                                 withFollow={homePageData.withFollow}
-                                preview={false}
+                                preview={true}
                             />
                         </div>
                     )}
