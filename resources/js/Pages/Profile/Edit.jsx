@@ -106,13 +106,13 @@ function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
                         </div>
                     </div>
                     <div className="w-full max-w-[65rem] drop-shadow shadow-black rounded-[2rem] p-8 bg-[#F4F4F4] border border-gray-300">
-                        <div className="w-full flex justify-between mb-5">
+                        <div className="w-full flex justify-between mb-5 gap-x-2">
                             <span className="font-bold mb-4">
                                 Your followed organizations:
                             </span>
                             {followedOrgs.length !== 0 && (
                                 <div className="h-10 flex gap-x-4 items-center">
-                                    <span className="text-sm text-slate-400/80 italic">
+                                    <span className="text-sm hidden sm:block text-slate-400/80 italic">
                                         {editing && "Click to unfollow"}
                                     </span>
                                     <button
@@ -132,7 +132,8 @@ function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
                                 </div>
                             )}
                         </div>
-                        <div className="w-full grid grid-cols-[repeat(auto-fill,_minmax(20rem,1fr))] gap-4">
+                        <div className="w-full grid sm:grid-cols-[repeat(auto-fill,_minmax(15rem,1fr))] gap-4">
+                            {/* <div className="w-full flex flex-col sm:grid sm:grid-cols-[repeat(auto-fill,_minmax(20rem,1fr))] gap-4"> */}
                             {currentFollowedOrgs.map((org, index) => (
                                 <FollowedOrganizationTile
                                     org={org}
