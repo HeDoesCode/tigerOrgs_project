@@ -24,7 +24,7 @@ Route::get('/', function () {
         'tiger1' => asset('src/background/tiger1.png'),
         'tiger2' => asset('src/background/tiger2.png'),
     ]);
-})->middleware(['auth', 'verified'])->name('index');
+})->middleware(['auth', 'verified', 'isSuperAdmin:block'])->name('index');
 
 Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -59,7 +59,7 @@ Route::prefix('/superadmin/')
     ->controller(SuperAdminController::class)->group(function () {
         Route::get('/', function () {
             return redirect('superadmin/status');
-        });
+        })->name('index');
 
         //manage page
         Route::get('invite', 'invite')->name('invite');
