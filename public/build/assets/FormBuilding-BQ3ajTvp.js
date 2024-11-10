@@ -1,1 +1,0 @@
-import{j as r}from"./app-h74hxgxF.js";import{F as i}from"./FormBuilder-E-5AdNz4.js";import"./AdminAlertDialog-Dj5uqTDC.js";import"./alert-dialog-gjy1flUZ.js";import"./utils-Bk34F7LL.js";import"./index-CLqQc1E7.js";import"./button-B7Do0KW0.js";import"./alert-DD9l2SKY.js";function d(){return r.jsx("div",{children:r.jsx(i,{})})}export{d as default};
