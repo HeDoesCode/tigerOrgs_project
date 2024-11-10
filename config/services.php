@@ -14,11 +14,12 @@ return [
     |
     */
     'google' => [
-        'client_id' => '440120132994-vp12qj5pmdv9uajtvq0rfsstj8ohhqac.apps.googleusercontent.com',
+        'client_id' => env('GOOGLE_CLIENT_ID'),
 
-        'client_secret' => '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',
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
 
         'redirect' =>  env('APP_ENV') == 'local' ? 'http://127.0.0.1:8000/auth/google/callback' : 'https://www.tigerorgs.com/auth/google/callback',
+        
 
         // 'redirect' =>  'https://www.tigerorgs.com/auth/google/callback',
     ],

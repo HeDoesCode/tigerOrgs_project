@@ -11,21 +11,43 @@ use Inertia\Inertia;
 use Exception;
 use App\SuperadminEnum;
 use Illuminate\Support\Facades\DB;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class GoogleController extends Controller
 {
-    public function googlepage()
+    public function googlepage(Request $request)
     {
-        session()->put('remember_me', request('remember_me'));
-        return Socialite::driver('google')->redirect();
+        session()->put('remember_me', $request->input('remember_me', false));
+            
+        session()->save();
+            
+        return Socialite::driver('google')
+            ->with(['prompt' => 'select_account',
+                    'hd' => 'ust.edu.ph'
+            ])
+            ->redirect();
     }
 
-    public function googlecallback()
+    public function googlecallback(Request $request)
     {
-        $socialiteUser = Socialite::driver('google')->user();
-        // dd((Socialite::driver('google')->user()));
+        try {
+            $socialiteUser = Socialite::driver('google')->user();
+            
+            $controller = new AuthenticatedSessionController;
+            return $controller->store($socialiteUser);
 
-        $controller = new AuthenticatedSessionController;
-        return $controller->store($socialiteUser);
+        } catch (InvalidStateException $e) {
+
+            session()->flash('toast', [
+                'title' => 'Authentication session expired.',
+                'description' => 'Please try again.',
+                'variant' => 'destructive'
+            ]);
+
+            session()->invalidate();
+            session()->regenerateToken();
+            
+            return redirect()->back();
     }
+}
 }
