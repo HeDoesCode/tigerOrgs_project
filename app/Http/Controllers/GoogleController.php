@@ -41,6 +41,8 @@ class GoogleController extends Controller
                 'variant' => 'destructive'
             ]);
 
+            // wag destroy session mawawala yung toast message
+
             return redirect()->route('login');
         }
 
