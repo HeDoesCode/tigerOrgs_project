@@ -18,7 +18,10 @@ class GoogleController extends Controller
     public function googlepage(Request $request)
     {
         session()->put('remember_me', request('remember_me'));
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')->with([
+            'prompt' => 'select_account',
+            'hd' => 'ust.edu.ph'
+        ])->redirect();
     }
 
     public function googlecallback(Request $request)
