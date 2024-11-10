@@ -58,7 +58,7 @@ class AuthenticatedSessionController extends Controller
             );
 
             request()->session()->regenerate();
-            return redirect()->route('superadmin');
+            return redirect()->route('superadmin.index');
         }
 
 
