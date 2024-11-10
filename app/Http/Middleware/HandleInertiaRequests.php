@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
             [
                 'flash' => [
                     'toast' => session()->get('toast'),
+                    'old' => session()->getOldInput(),
                 ],
                 'auth' => [
                     'user' => $request->user(),

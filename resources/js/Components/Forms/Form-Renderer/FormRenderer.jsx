@@ -4,9 +4,8 @@ import { useEffect } from "react";
 import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
 
 function FormRenderer({ formLayout, orgID, formID }) {
-    const { errors, old } = usePage().props;
+    const { errors, flash } = usePage().props;
 
-    // Initialize form data with useForm from Inertia
     const { data, setData, post, reset } = useForm({
         userData: {},
         formLayout,
@@ -14,19 +13,32 @@ function FormRenderer({ formLayout, orgID, formID }) {
         formID,
     });
 
-    // Set old values on mount if available
     useEffect(() => {
-        if (old) {
+        if (flash?.old?.userData) {
+            const oldUserData = flash.old.userData;
             const initialData = {};
+
             formLayout.layout.forEach((item) => {
                 const name = prepareText(item.name);
-                if (old[name] !== undefined) {
-                    initialData[name] = old[name];
+                if (oldUserData[name] !== undefined) {
+                    if (item.type === "checkbox") {
+                        try {
+                            initialData[name] =
+                                typeof oldUserData[name] === "string"
+                                    ? JSON.parse(oldUserData[name])
+                                    : oldUserData[name];
+                        } catch (e) {
+                            initialData[name] = oldUserData[name];
+                        }
+                    } else {
+                        initialData[name] = oldUserData[name];
+                    }
                 }
             });
+
             setData("userData", initialData);
         }
-    }, [old, formLayout, setData]);
+    }, [flash?.old, formLayout]);
 
     function handleFormChange(name, value) {
         setData("userData", {
@@ -41,6 +53,9 @@ function FormRenderer({ formLayout, orgID, formID }) {
         post(route("formSubmission", { orgID, formID }), {
             preserveState: true,
             preserveScroll: true,
+            onError: (errors) => {
+                console.error("Form submission errors:", errors);
+            },
         });
     }
 
@@ -128,7 +143,7 @@ function FormRenderer({ formLayout, orgID, formID }) {
                             title={`Are you sure you want to reset all the inputs in the form?`}
                             accept="Confirm"
                             onclick={() => reset()}
-                        ></AdminAlertDialog>
+                        />
                         <button
                             type="submit"
                             className="inline-flex items-center px-4 py-2 border border-transparent font-medium rounded-md shadow-sm text-white bg-[#04aa6dd5] hover:bg-[#04AA6D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
