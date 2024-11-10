@@ -20,7 +20,8 @@ class GoogleController extends Controller
         session()->put('remember_me', request('remember_me'));
         return Socialite::driver('google')->with([
             'prompt' => 'select_account',
-            'hd' => 'ust.edu.ph'
+            'hd' => 'ust.edu.ph',
+            'hl' => 'en'
         ])->redirect();
     }
 
