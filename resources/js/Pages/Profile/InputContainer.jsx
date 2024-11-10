@@ -1,6 +1,6 @@
 import React from "react";
 
-const InputContainer = ({ children, className, error, title, ...props }) => {
+const InputContainer = ({ children, className, error, title }) => {
     const hasRequiredChild = React.Children.toArray(children).some(
         (child) => React.isValidElement(child) && child.props.required
     );

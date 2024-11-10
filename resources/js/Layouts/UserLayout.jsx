@@ -220,7 +220,7 @@ function UserLayout({ children, bgImage, noPadding }) {
 
             useEffect(() => {
                 if (!auth || !auth.user) {
-                    console.log("No user is authenticated or available.");
+                    // console.log("No user is authenticated or available.");
                     return;
                 }
 
@@ -241,7 +241,7 @@ function UserLayout({ children, bgImage, noPadding }) {
                         );
                         setApplications(applicationsResponse.data.applications);
                     } catch (error) {
-                        console.error("Error fetching data:", error);
+                        // console.error("Error fetching data:", error);
                     }
                 };
 

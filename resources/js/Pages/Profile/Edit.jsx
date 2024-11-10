@@ -6,7 +6,10 @@ import React, { useState } from "react";
 import InputContainer from "./InputContainer";
 import IconCircleMinus from "@/Components/Icons/IconCircleMinus";
 function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
-    const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
+    // const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
+    const fullName = `${user.lastname}, ${user.firstname}  ${
+        user.middlename[0] + "."
+    }`;
     const userSectionError = user.section != null ? null : "Specify Section";
 
     const [currentFollowedOrgs, setCurrentFollowedOrgs] = useState(
@@ -55,7 +58,7 @@ function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
                 </div>
                 <div className="mt-4 w-full flex flex-col items-center px-5 gap-6">
                     <div className="w-full max-w-[65rem] flex flex-col items-center drop-shadow shadow-black rounded-[2rem] space-y-3 bg-[#F4F4F4] border border-gray-300">
-                        <div className="h-36 w-full flex flex-col justify-center px-12 space-y-3 bg-[#ffd875] rounded-[2rem]">
+                        <div className="h-28 sm:h-36 w-full flex flex-col justify-center px-12 space-y-3 bg-[#ffd875] rounded-[2rem]">
                             <span className="poetsen-one text-xl sm:text-3xl uppercase ">
                                 {fullName}
                             </span>

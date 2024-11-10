@@ -23,13 +23,8 @@ Route::get('/', function () {
         'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
         'tiger1' => asset('src/background/tiger1.png'),
         'tiger2' => asset('src/background/tiger2.png'),
-        // 'canLogin' => Route::has('login'),
-        // 'canRegister' => Route::has('register'),
-        // 'laravelVersion' => Application::VERSION,
-        // 'phpVersion' => PHP_VERSION,
-        'isLoggedIn' => Auth::check(),
     ]);
-})->middleware(['auth', 'verified', 'isSuperAdmin:block'])->name('index');
+})->middleware(['auth', 'verified'])->name('index');
 
 Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -127,8 +122,8 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::get('/check-membership/{userID}', [FormController::class, 'checkMembership'])
             ->name('check-membership');
         Route::get('file/view/{file_path}', [FormController::class, 'viewFile'])
-        ->where('file_path', '.*')
-        ->name('file.view');
+            ->where('file_path', '.*')
+            ->name('file.view');
 
         // manage admin
         Route::get('search-users', 'search');
@@ -157,7 +152,6 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage']);
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
-Route::post('/api/register', [GoogleController::class, 'register']);
 
 // temporary testing route
 Route::get('/testing', [BackendTestingController::class, 'run'])->name('testing');

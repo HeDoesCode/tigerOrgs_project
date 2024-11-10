@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\AppSettings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
+use App\SuperadminEnum;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,20 +26,66 @@ class AuthenticatedSessionController extends Controller
             'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
             'tiger1' => asset('src/background/tiger1.png'),
             'tiger2' => asset('src/background/tiger2.png'),
-            'status' => session('status'),
+            'authModal' => 'login',
         ]);
     }
 
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    // public function store(LoginRequest $request): RedirectResponse
+    public function store($socialiteUser): RedirectResponse
     {
-        $request->authenticate();
+        // dd($socialiteUser);
 
-        $request->session()->regenerate();
+        if (SuperadminEnum::check($socialiteUser->email)) {
+            if (!User::where('email', $socialiteUser->email)->first()) {
+                User::firstOrCreate(
+                    ['email' => $socialiteUser->email],
+                    [
+                        'userID' => '0000000001',
+                        'firstname' => $socialiteUser->user['given_name'],
+                        'lastname' => $socialiteUser->user['family_name'],
+                        'status' => 'osa',
+                        'college' => 'osa'
+                    ]
+                );
+            }
 
-        return redirect()->intended(route('index', absolute: false));
+            Auth::login(
+                User::where('email', $socialiteUser->email)->first(),
+                session()->pull('remember_me', 'false')
+            );
+
+            request()->session()->regenerate();
+            return redirect()->route('superadmin');
+        }
+
+
+        if (AppSettings::isManualRegistration()) {
+            $registeredUserExists = User::where('email', $socialiteUser->email)->exists();
+
+            if ($registeredUserExists) { // if student exists in DB, redirect to index
+                $registeredUser = User::where('email', $socialiteUser->email)->firstOrFail();
+
+                Auth::login($registeredUser, session()->pull('remember_me', 'false'));
+                request()->session()->regenerate();
+                return redirect()->intended('/');
+            }
+
+            session()->put('socialiteUser', $socialiteUser);
+            return redirect()->route('register');
+        } else {
+            $registeredUser = User::where('email', $socialiteUser->email)->first();
+
+            if (!$registeredUser) {
+                abort(401, 'You are not permitted to access this application.');
+            }
+
+            Auth::login($registeredUser, session()->pull('remember_me', false));
+            request()->session()->regenerate();
+            return redirect()->intended('/');
+        }
     }
 
     /**

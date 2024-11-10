@@ -32,8 +32,9 @@ class HandleInertiaRequests extends Middleware
 
         // session()->flash('toast', [
         //     'title' => 'oh no',
-        //     'description' => 'ang daming bugs pare :(',
-        //     'variant' => 'destructive'
+        //     'description' => 'ang daming bugs pare :(', // optional. default: title only
+        //     'variant' => 'destructive' // optional. default: white bg
+        //     'duration' => '5000' // optional. default: 4000
         // ]);
 
         return array_merge(
@@ -46,7 +47,7 @@ class HandleInertiaRequests extends Middleware
                     'user' => $request->user(),
                 ],
 
-                'unreadNotificationsCount' => $request->user() ? $request->user()->unreadNotifications()->count() : 0, 
+                'unreadNotificationsCount' => $request->user() ? $request->user()->unreadNotifications()->count() : 0,
                 'notifications' => $request->user() ? $request->user()->notifications()->get() : [],
                 'applications' => $request->user() ? $request->user()->applications()->with(['organization', 'form'])->latest()->get() : []
             ]

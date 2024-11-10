@@ -114,6 +114,7 @@ button {
     animation-delay: 1s;
 }
 
+/* wag nyo to alisin animation to */
 @keyframes dot-flashing {
     0% {
         background-color: #858585;

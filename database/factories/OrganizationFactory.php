@@ -28,7 +28,7 @@ class OrganizationFactory extends Factory
             'Faculty of Arts and Letters',
             'College of Science',
             'College of Commerce and Business Administration',
-            'Alfredo M. Velayo College of Accountancy',
+            'College of Accountancy',
             'College of Architecture',
             'Faculty of Civil Law',
             'College of Education',

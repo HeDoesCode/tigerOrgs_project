@@ -27,6 +27,25 @@ class User extends Authenticatable
         'status',
     ];
 
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            // Convert fields to uppercase if they exist
+            if ($user->firstname) {
+                $user->firstname = strtoupper($user->firstname);
+            }
+            if ($user->lastname) {
+                $user->lastname = strtoupper($user->lastname);
+            }
+            if ($user->middlename) {
+                $user->middlename = strtoupper($user->middlename);
+            }
+            if ($user->section) {
+                $user->section = strtoupper($user->section);
+            }
+        });
+    }
+
     public function roles(): BelongsToMany
     {
         // return $this->belongsToMany(Role::class, 'user_roles', 'userID', 'roleID');
@@ -60,7 +79,7 @@ class User extends Authenticatable
 
     public function applications()
     {
-    return $this->hasMany(Application::class, 'userID', 'userID');
+        return $this->hasMany(Application::class, 'userID', 'userID');
     }
 
 
