@@ -390,7 +390,9 @@ function UserLayout({ children, bgImage, noPadding }) {
                                                 ) : null
                                         )
                                     ) : (
-                                        <p>No notifications available.</p>
+                                        <div className="text-center py-4 text-gray-500">
+                                            No notifications found.
+                                        </div>
                                     )}
                                 </div>
                             </TabsContent>
