@@ -50,7 +50,7 @@ function Footer() {
                             <SocialLink
                                 icon={
                                     <img
-                                        src="OSA logo.png"
+                                        src="/OSA logo.png"
                                         className="rounded-full border border-slate-500"
                                     />
                                 }
