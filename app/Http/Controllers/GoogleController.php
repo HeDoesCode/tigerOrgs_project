@@ -25,6 +25,7 @@ class GoogleController extends Controller
             'hl' => 'en'
         ])->redirect();
     }
+    
 
     public function googlecallback(Request $request)
     {
