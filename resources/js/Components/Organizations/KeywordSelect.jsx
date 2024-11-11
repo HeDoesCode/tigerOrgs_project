@@ -182,7 +182,7 @@ function KeywordSelect({ keywords, className, activeUserKeywords }) {
                             Reset
                         </button>
                     </div>
-                    <div className="w-full flex flex-wrap justify-center sm:justify-start gap-2 border-[1px] rounded-md border-gray-800 p-2 relative text-xs overflow-clip">
+                    <div className="w-full flex flex-wrap justify-center sm:justify-start min-h-8 h-fit gap-2 border-[1px] rounded-md border-gray-800 p-2 relative text-xs overflow-clip">
                         {activeKeywords.length !== 0 &&
                             activeKeywords.map((item, index) => (
                                 <EditableKeywordTile
