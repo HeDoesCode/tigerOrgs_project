@@ -3,11 +3,8 @@ import Logo from "@/Components/Logo";
 import Policy from "@/Components/ui/Custom/Policy";
 import { useState } from "react";
 
-function GoogleLoginModal({ handleCheckboxChange }) {
+function GoogleLoginModal() {
     const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
-
-    const openPrivacyModal = () => setIsPrivacyModalOpen(true);
-    const closePrivacyModal = () => setIsPrivacyModalOpen(false);
 
     const [rememberMe, setRememberMe] = useState(false);
 
@@ -59,7 +56,7 @@ function GoogleLoginModal({ handleCheckboxChange }) {
                             TigerOrgs. For more details, please read our&nbsp;
                             <button
                                 className="underline inline"
-                                onClick={openPrivacyModal}
+                                onClick={() => setIsPrivacyModalOpen(true)}
                             >
                                 Privacy Policy
                             </button>
@@ -68,7 +65,9 @@ function GoogleLoginModal({ handleCheckboxChange }) {
                     </div>
                 </div>
                 {isPrivacyModalOpen && (
-                    <PrivacyPolicy onClose={closePrivacyModal} />
+                    <PrivacyPolicy
+                        onClose={() => setIsPrivacyModalOpen(false)}
+                    />
                 )}
             </div>
         </div>
