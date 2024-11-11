@@ -23,9 +23,9 @@ class AuthenticatedSessionController extends Controller
     public function create(): Response
     {
         if (Auth::check()) {
-            return redirect()->route('/');
+            return redirect()->intended('/');
         }
-        
+
         return Inertia::render('Home', [
             'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
             'tiger1' => asset('src/background/tiger1.png'),
