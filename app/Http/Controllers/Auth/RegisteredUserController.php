@@ -75,7 +75,7 @@ class RegisteredUserController extends Controller
         }
 
         $validatedData = $request->validate([
-            'userID' => 'required|string|size:10|regex:/^[0-9]+$/',
+            'userID' => 'required|string|size:10|regex:/^[0-9]+$/|unique:users,userID',
             'middleName' => 'nullable|string|max:255',
             'college' => 'required|string|exists:organizations,department|not_in:University Wide',
             'section' => 'nullable|string|max:255',
@@ -84,6 +84,7 @@ class RegisteredUserController extends Controller
             'userID.string' => 'The Student ID must be a valid string.',
             'userID.size' => 'The Student ID must be exactly 10 characters.',
             'userID.regex' => 'The Student ID must be numeric.',
+            'userID.unique' => 'This Student ID is already in use. Contact OSA immediately for your concerns.',
         ]);
 
         $socialiteUser = session()->pull('socialiteUser');
