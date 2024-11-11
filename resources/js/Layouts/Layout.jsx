@@ -32,18 +32,18 @@ function Layout({
             <div
                 className={`${
                     sidebar ? "pl-0 sm:pl-16" : ""
-                } flex mx-auto select-none max-w-[1920px]`}
+                } flex mx-auto select-none max-w-[1920px] overflow-hidden`}
             >
                 <Header />
                 <div className="z-50">{sidebar}</div>
                 <main
-                    className={`w-full overflow-x-hidden h-screen ${
+                    className={`w-full overflow-hidden h-screen overflow-y-clip ${
                         noPadding ? "pt-16" : "pt-[4rem] pl-4"
                     } select-text flex flex-col`}
                     style={bgImage ? bgStyle : {}}
                 >
                     <div
-                        className={`flex flex-col h-full w-full overflow-y-auto overflow-x-clip ${
+                        className={`flex flex-col h-full w-full overflow-y-auto overflow-x-hidden ${
                             noPadding || "pr-2"
                         }`}
                     >
