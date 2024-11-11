@@ -104,6 +104,10 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
     ->name('admin.')
     ->controller(AdminController::class)
     ->group(function () {
+        Route::get('/', function ($orgID) {
+            return redirect()->route('admin.editpage', $orgID);
+        })->name('index');
+
         Route::get('editpage', 'edit')->name('editpage');
         Route::post('save/{section}', 'saveEdit');
         Route::post('save', 'saveEdit')->name('saveEditPage');
