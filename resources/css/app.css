@@ -18,9 +18,21 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(155, 155, 155, 0.5);
+    background-color: rgba(155, 155, 155, 0.7);
     border-radius: 20px;
-    border: transparent;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(155, 155, 155, 0.9);
+}
+
+::-webkit-scrollbar-thumb:focus {
+    background-color: rgba(155, 155, 155, 1);
+}
+
+::-webkit-scrollbar:active {
+    background-color: rgba(155, 155, 155, 1);
 }
 
 /* Test Classes */
