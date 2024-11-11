@@ -7,9 +7,9 @@ import InputContainer from "./InputContainer";
 import IconCircleMinus from "@/Components/Icons/IconCircleMinus";
 function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
     // const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
-    const fullName = `${user.lastname}, ${user.firstname}  ${
-        user.middlename[0] + "."
-    }`;
+    const fullName = `${user.lastname}, ${user.firstname}
+    ${user.middlename ? ` ${user.middlename[0]}.` : ""}`;
+
     const userSectionError = user.section != null ? null : "Specify Section";
 
     const [currentFollowedOrgs, setCurrentFollowedOrgs] = useState(
