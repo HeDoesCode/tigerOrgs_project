@@ -38,11 +38,15 @@ function Layout({
                 <div className="z-50">{sidebar}</div>
                 <main
                     className={`w-full overflow-x-hidden h-screen ${
-                        noPadding ? "pt-16" : "pt-[4rem]"
-                    } ${noPadding || "pl-4 pr-0"} select-text flex flex-col`}
+                        noPadding ? "pt-16" : "pt-[4rem] pl-4"
+                    } select-text flex flex-col`}
                     style={bgImage ? bgStyle : {}}
                 >
-                    <div className="flex flex-col h-full w-full overflow-y-auto overflow-x-clip">
+                    <div
+                        className={`flex flex-col h-full w-full overflow-y-auto overflow-x-clip ${
+                            noPadding || "pr-2"
+                        }`}
+                    >
                         {children}
                         {footer && <Footer />}
                     </div>
