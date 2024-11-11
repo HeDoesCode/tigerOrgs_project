@@ -19,7 +19,7 @@ function Footer() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            Office for Student Affairs.
+                            UST Office for Student Affairs.
                         </a>
                         <br />
                         <br />
