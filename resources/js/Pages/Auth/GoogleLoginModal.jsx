@@ -1,5 +1,6 @@
 import GoogleLogo from "@/Components/Icons/GoogleLogo";
 import Logo from "@/Components/Logo";
+import Policy from "@/Components/ui/Custom/Policy";
 import { useState } from "react";
 
 function GoogleLoginModal({ handleCheckboxChange }) {
@@ -57,7 +58,7 @@ function GoogleLoginModal({ handleCheckboxChange }) {
                             use your information to enhance your experience on
                             TigerOrgs. For more details, please read our&nbsp;
                             <button
-                                className="underline"
+                                className="underline inline"
                                 onClick={openPrivacyModal}
                             >
                                 Privacy Policy
