@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Meta;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,6 +23,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
+        Meta::addMeta('description', "UST's centralized student organization management and discovery.");
+
         if (Auth::check()) {
             return redirect()->intended('/');
         }

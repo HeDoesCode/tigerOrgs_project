@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\isAdmin;
+use App\Http\Middleware\isHiddenOrganization;
 use App\Http\Middleware\isMember;
 use App\Http\Middleware\isSuperAdmin;
 use Illuminate\Foundation\Application;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'isAdmin' => isAdmin::class,
             'isSuperAdmin' => isSuperAdmin::class,
             'isMember' => isMember::class,
+            'isHiddenOrganization' => isHiddenOrganization::class,
         ]);
 
         //
