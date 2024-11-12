@@ -17,6 +17,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FormController;
 use App\Http\Middleware\IsRecruiting;
 use App\Http\Middleware\isSameDepartment;
+use App\Meta;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -26,7 +27,7 @@ Route::get('/', function () {
     ]);
 })->middleware(['auth', 'verified', 'isSuperAdmin:block'])->name('index');
 
-Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
+Route::middleware(['auth', 'isSuperAdmin:block', 'isHiddenOrganization:block'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/update-user-keywords', [ProfileController::class, 'updateUserKeywords'])->name('update.user.keywords');
     Route::patch('/update-user-section', [ProfileController::class, 'updateUserSection'])->name('update.user.section');
@@ -42,7 +43,6 @@ Route::middleware(['auth', 'isSuperAdmin:block'])->group(function () {
     Route::prefix('organizations')->group(function () {
         Route::get('/', [OrganizationController::class, 'browse'])->name('organizations');
         Route::get('/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
-        // Route::get('/organizations/{orgID}/process', [OrganizationController::class, 'process'])->name('organizations.process');
         Route::get('/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
 
         // form page/s
