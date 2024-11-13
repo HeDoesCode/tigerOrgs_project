@@ -154,11 +154,11 @@ function Organizations({
                                 </SelectTrigger>
                                 <SelectContent
                                     className="border-gray-500 bg-[#EEEEEE] quicksand"
-                                    ref={(ref) => {
-                                        if (!ref) return;
-                                        ref.ontouchstart = (e) =>
-                                            e.preventDefault();
-                                    }}
+                                    // ref={(ref) => {
+                                    //     if (!ref) return;
+                                    //     ref.ontouchstart = (e) =>
+                                    //         e.preventDefault();
+                                    // }}
                                 >
                                     <SelectItem
                                         value="All"
@@ -170,6 +170,7 @@ function Organizations({
                                         <SelectItem
                                             key={index}
                                             value={department}
+                                            onClick={(e) => e.stopPropagation()}
                                             className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
                                         >
                                             {department}
@@ -180,10 +181,11 @@ function Organizations({
                         </ControlContainer>
 
                         <ControlContainer
-                            className={` items-center !mt-3 ${Object.keys(queryParameters).length !== 0
-                                ? "flex"
-                                : "hidden"
-                                }`}
+                            className={` items-center !mt-3 ${
+                                Object.keys(queryParameters).length !== 0
+                                    ? "flex"
+                                    : "hidden"
+                            }`}
                         >
                             <button
                                 className="w-fit px-3 py-1 bg-[#ffb700] hover:bg-[#f1ad00] rounded-lg text-sm"
@@ -318,7 +320,7 @@ function Organizations({
                                             key={index}
                                             orgBg={
                                                 org.photos &&
-                                                    org.photos.length > 0
+                                                org.photos.length > 0
                                                     ? org.photos[0].filename
                                                     : "https://placehold.co/500x800"
                                             }
