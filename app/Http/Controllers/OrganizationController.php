@@ -258,7 +258,9 @@ class OrganizationController extends Controller
             ]);
         }
 
-        $this->visit($orgID);
+        return redirect()->back();
+
+        // $this->visit($orgID);
     }
 
     public function process($orgID)
