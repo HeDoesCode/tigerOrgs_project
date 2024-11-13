@@ -41,7 +41,7 @@ class HandleInertiaRequests extends Middleware
             parent::share($request),
             [
                 'flash' => [
-                    'toast' => session()->pull('toast'),
+                    'toast' => session()->get('toast'),
                     'old' => session()->getOldInput(),
                 ],
                 'auth' => [

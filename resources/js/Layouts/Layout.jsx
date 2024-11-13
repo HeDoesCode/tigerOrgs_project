@@ -17,7 +17,7 @@ function Layout({
     const { flash } = usePage().props;
     useEffect(() => {
         if (flash.toast) {
-            console.log(flash.toast);
+            // console.log(flash.toast);
             toast(flash.toast);
         }
     }, [flash.toast]);
