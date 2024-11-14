@@ -169,12 +169,12 @@ class KeywordSeeder extends Seeder
         ];
         // other contemporary keywords
 
-
-        foreach ($keywords as $keyword) {
-            // Keyword::create(['name' => $keyword]);
-            DB::table('keywords')->insert([
-                'keyword' => $keyword,
-            ]);
-        };
+        DB::table('keywords')->insert($keywords);
+        // foreach ($keywords as $keyword) {
+        //     // Keyword::create(['name' => $keyword]);
+        //     DB::table('keywords')->insert([
+        //         'keyword' => $keyword,
+        //     ]);
+        // };
     }
 }
