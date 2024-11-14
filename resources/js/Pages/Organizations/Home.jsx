@@ -198,7 +198,7 @@ function Home({
             <Tile
                 name="Showcase Photos"
                 id="photos"
-                className="overflow-hidden"
+                className="overflow-x-hidden overflow-y-auto"
             >
                 <div className="h-52 md:h-80 w-full flex flex-row overflow-x-auto gap-x-6 pb-1 relative">
                     {pageData["photos"].map((photo, index) => (

@@ -242,7 +242,7 @@ class OrganizationController extends Controller
             session()->flash('toast', [
                 'title' => "You unfollowed {$organizationName}!",
                 'description' => 'You will no longer receive public notifications from this organization.',
-                'duration' => 5000,
+                // 'duration' => 5000,
             ]);
         } else {  // User is not following org
             DB::table('organization_followers')->insert([
@@ -254,7 +254,7 @@ class OrganizationController extends Controller
                 'title' => "You are now following {$organizationName}!",
                 'description' => 'You will now receive public notifications from this organization.',
                 'variant' => 'success',
-                'duration' => 5000,
+                // 'duration' => 5000,
             ]);
         }
 
