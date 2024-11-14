@@ -23,6 +23,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
+        Meta::addMeta('description', "UST's centralized student organization management and discovery.");
+
         if (Auth::check()) {
             return redirect()->intended('/');
         }
