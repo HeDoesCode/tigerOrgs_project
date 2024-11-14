@@ -22,7 +22,7 @@ class OrganizationFactory extends Factory
     {
         self::$i++;
         $departments = [
-            'University Wide',
+            'University-Wide',
             'College of Information and Computing Sciences',
             'Faculty of Engineering',
             'Faculty of Arts and Letters',

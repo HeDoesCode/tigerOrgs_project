@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
         $affiliations = Organization::all()
             ->pluck('department') // Get all departments
             ->filter(function ($department) {
-                return $department !== 'University Wide'; // Remove 'University Wide'
+                return $department !== 'University-Wide'; // Remove 'University-Wide'
             })
             ->unique() // Ensure departments are unique
             ->sort() // Sort departments alphabetically
@@ -77,7 +77,7 @@ class RegisteredUserController extends Controller
         $validatedData = $request->validate([
             'userID' => 'required|string|size:10|regex:/^[0-9]+$/|unique:users,userID',
             'middleName' => 'nullable|string|max:255',
-            'college' => 'required|string|exists:organizations,department|not_in:University Wide',
+            'college' => 'required|string|exists:organizations,department|not_in:University-Wide',
             'section' => 'nullable|string|max:255',
         ], [
             'userID.required' => 'The Student ID is required.',
