@@ -17,6 +17,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FormController;
 use App\Http\Middleware\IsRecruiting;
 use App\Http\Middleware\isSameDepartment;
+use App\Meta;
 
 Route::get('/', function () {
     return Inertia::render('Home', [

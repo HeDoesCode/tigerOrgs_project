@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Meta;
 
 class AuthenticatedSessionController extends Controller
 {
