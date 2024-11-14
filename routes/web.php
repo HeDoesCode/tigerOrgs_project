@@ -20,8 +20,6 @@ use App\Http\Middleware\isSameDepartment;
 use App\Meta;
 
 Route::get('/', function () {
-    Meta::addMeta('description', "UST's centralized student organization management and discovery.");
-
     return Inertia::render('Home', [
         'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
         'tiger1' => asset('src/background/tiger1.png'),
