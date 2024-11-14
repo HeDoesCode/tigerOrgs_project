@@ -27,7 +27,7 @@ function OrganizationLayout({
     preview = false,
 }) {
     const toggleFollow = () => {
-        router.get(route("organizations.follow", pageLayoutData.orgID), {
+        router.patch(route("organizations.follow", pageLayoutData.orgID), {
             preserveState: true,
             preserveScroll: true,
         });

@@ -43,7 +43,7 @@ Route::middleware(['auth', 'isSuperAdmin:block', 'isHiddenOrganization:block'])-
     Route::prefix('organizations')->group(function () {
         Route::get('/', [OrganizationController::class, 'browse'])->name('organizations');
         Route::get('/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
-        Route::get('/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
+        Route::patch('/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
 
         // form page/s
         Route::get('/{orgID}/apply/{formID}', [OrganizationController::class, 'apply'])->name('organizations.apply')->middleware([IsRecruiting::class, 'isMember:block']);
