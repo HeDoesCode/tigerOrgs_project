@@ -44,7 +44,7 @@ function Home({ bgImage, tiger1, tiger2, authModal = false, user }) {
             <Head title={headName[authModal] || "Home"} />
             <UserLayout bgImage={bgImage} noPadding>
                 <div className="w-full flex-1 flex justify-center items-center relative">
-                    <img
+                    {/* <img
                         className="absolute bottom-[-3.3rem] sm:bottom-[-4.3rem] right-[3%] h-36 sm:h-56"
                         src={tiger1}
                         alt="tiger1"
@@ -55,7 +55,7 @@ function Home({ bgImage, tiger1, tiger2, authModal = false, user }) {
                         src={tiger2}
                         alt="tiger2"
                         onError={hideImage}
-                    />
+                    /> */}
                     <div className="flex flex-col items-center mx-7 w-full max-w-[35rem] relative">
                         <Logo
                             className="mb-14 text-[15cqw] sm:text-[7rem] sm:mb-20"
