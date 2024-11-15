@@ -26,10 +26,10 @@ function SuperAdminLayout({ children }) {
         };
 
         return (
-            <div className="flex-1 flex justify-end">
+            <div className="flex-1 flex justify-end ">
                 <button
                     onClick={handleLogout}
-                    className="p-3 -m-3 hover:bg-gray-800 hover:text-white rounded-xl"
+                    className="p-3 -m-3 hover:bg-gray-800 hover:text-white rounded-xl duration-300"
                 >
                     <IconExit size="27" />
                 </button>

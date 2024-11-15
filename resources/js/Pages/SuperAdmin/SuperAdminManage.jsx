@@ -233,7 +233,7 @@ export default function SuperAdminManage({
                             {!edit ? (
                                 <div className="flex">
                                     <AdminButton
-                                        className="bg-white hover:bg-gray-800 hover:text-white"
+                                        className="py-2 bg-white hover:bg-gray-800 hover:text-white"
                                         onClick={toggleEdit}
                                         icon={<IconEdit />}
                                         name="Edit"
