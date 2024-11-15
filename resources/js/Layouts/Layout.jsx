@@ -20,7 +20,7 @@ function Layout({
             // console.log(flash.toast);
             toast(flash.toast);
         }
-    }, [flash.toast]);
+    }, [flash]);
 
     const bgStyle = {
         backgroundImage: `url("${bgImage}")`,
