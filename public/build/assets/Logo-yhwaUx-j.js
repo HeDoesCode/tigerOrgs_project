@@ -1,0 +1,1 @@
+import{j as s}from"./app-Bk8zY1Bz.js";function a({className:e,leftClass:n,rightClass:t}){return s.jsxs("div",{className:`poetsen-one text-2xl ${e} select-none`,children:[s.jsx("span",{className:`text-[#ffb700] ${n}`,children:"Tiger"}),s.jsx("span",{className:t,children:"Orgs"})]})}export{a as L};
