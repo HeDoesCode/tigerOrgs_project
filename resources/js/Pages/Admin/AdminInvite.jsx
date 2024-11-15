@@ -118,7 +118,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                     title={`Admin Invitation - ${organizationName}`}
                 >
                     <div>
-                        <div className="flex justify-end me-5 mt-5">
+                        <div className="flex justify-end me-5 mt-5 ">
                             {/* Dialog for Sending Notification */}
                             <AdminDialog
                                 title="Send Announcement"
@@ -126,7 +126,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                 trigger={
                                     <AdminButton
                                         asChild
-                                        className="mr-2 sm:mt-0 bg-white hover:bg-gray-800 hover:text-white"
+                                        className="mr-2 sm:mt-0 py-2 bg-white hover:bg-gray-800 hover:text-white duration-300"
                                         icon={<IconBellFilled />}
                                         name="Send Announcement"
                                     />
@@ -156,7 +156,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                     <div className="mt-4 grid justify-items-end">
                                         <button
                                             type="submit"
-                                            className="flex px-9  shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white"
+                                            className="flex px-9  shadow-lg rounded-2xl bg-white hover:bg-gray-800 hover:text-white "
                                         >
                                             <span className="ml-2  poppins truncate sm:block">
                                                 Announce
@@ -173,7 +173,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                 trigger={
                                     <AdminButton
                                         asChild
-                                        className="mr-2 sm:mt-0 bg-white hover:bg-gray-800 hover:text-white"
+                                        className="mr-2 sm:mt-0 py-2 bg-white hover:bg-gray-800 hover:text-white duration-300"
                                         icon={<IconInvite />}
                                         name="Add Member Manually"
                                     />

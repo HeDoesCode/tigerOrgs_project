@@ -233,7 +233,7 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                 trigger={
                                     <div
                                         role="button"
-                                        className="mr-2 bg-white flex px-9  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white"
+                                        className="mr-2 py-2 bg-white flex px-9  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white"
                                         name="Assign"
                                     >
                                         <IconInvite />

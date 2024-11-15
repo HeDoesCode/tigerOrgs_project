@@ -43,7 +43,7 @@ function MainAdminFrame({
                             return (
                                 <Link
                                     key={index}
-                                    className={`py-3 rounded-t-xl hover:bg-gray-800 hover:text-white text-md flex justify-center cursor-pointer ${
+                                    className={`py-3 rounded-t-xl hover:bg-gray-800 duration-200 hover:text-white text-md flex justify-center cursor-pointer ${
                                         route().current() === item.link ||
                                         item.altlink
                                             ? "border-b-2 border-[#FF9900] text-[#FF9900]"

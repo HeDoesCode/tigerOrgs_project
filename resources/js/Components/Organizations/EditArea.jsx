@@ -39,7 +39,7 @@ function EditArea({
                                 : "opacity-30 bg-gray-300/50"
                         }  group-hover:bg-gray-500/90 px-3 py-2 group-hover:opacity-100 text-black group-hover:text-white rounded-xl flex flex-nowrap select-none pointer-events-auto`}
                     >
-                        <IconPencil /> <span className="text-base">Edit</span>
+                        <IconPencil /> <span className="text-base ">Edit</span>
                     </div>
                 </div>
             </DialogTrigger>
