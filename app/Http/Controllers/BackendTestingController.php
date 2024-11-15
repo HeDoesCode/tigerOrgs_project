@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DataExtraction as JobsDataExtraction;
+use App\Models\DataExtraction;
+use App\Models\DataExtractionTools;
 use App\Models\Form;
 use App\Models\Organization;
 use App\Models\Photo;
@@ -51,6 +54,17 @@ class BackendTestingController extends Controller
         //     echo $form->formLayout;
         // }
 
+
+        return Inertia::render('TestingPages/NLP');
+    }
+
+    public function submit(Request $request)
+    {
+        if ($request->hasFile('resume')) {
+            $file = DataExtractionTools::parseFile($request->file('resume'));
+
+            JobsDataExtraction::dispatch($file);
+        }
     }
 
     public function renderForm() {
