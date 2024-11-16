@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('orgID')->constrained('organizations', 'orgID')->onDelete('cascade');
             $table->string('name');
             $table->longText('description');
+            $table->json('prepared_data')->nullable();
         });
     }
 

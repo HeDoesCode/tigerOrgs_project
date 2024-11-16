@@ -19,5 +19,6 @@ class Criteria extends Model
         'orgID',
         'name',
         'description',
+        'prepared_data',
     ];
 }
