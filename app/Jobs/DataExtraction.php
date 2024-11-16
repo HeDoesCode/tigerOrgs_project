@@ -30,8 +30,7 @@ class DataExtraction implements ShouldQueue
                 ->tokenize()
                 ->lemmatize()
                 ->removeStopWords()
-                ->removeSpecialChar()
-                ->NER();
+                ->removeSpecialChar();
                 
         logger($result);
     }

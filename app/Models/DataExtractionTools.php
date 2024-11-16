@@ -78,21 +78,21 @@ class DataExtractionTools extends Model
         }
 
         static::$data = array_filter($preparedData);
-        return new static;
+        return static::$data;
     }
 
-    public static function NER()
-    {
-        // dd(Storage::disk()->path("MITIE-models/english/caTIGERizer_model.dat"));
-        $NER_MODEL = new NER(Storage::disk()->path("MITIE-models/english/caTIGERizer_model.dat"));  
+    // scrapped
+    // public static function NER()
+    // {
+    //     $NER_MODEL = new NER(Storage::disk()->path("MITIE-models/english/caTIGERizer_model.dat"));  
         
-        $classifiedData = [];
+    //     $classifiedData = [];
 
-        foreach (static::$data as $token) {
-            $classifiedData[] = $NER_MODEL->entities($token);
-        }
+    //     foreach (static::$data as $token) {
+    //         $classifiedData[] = $NER_MODEL->entities($token);
+    //     }
         
-        return $classifiedData;
-    }
+    //     return $classifiedData;
+    // }
 
 }
