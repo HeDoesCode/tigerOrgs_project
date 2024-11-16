@@ -242,14 +242,14 @@ export default function SuperAdminManage({
                             ) : (
                                 <div className="flex">
                                     <AdminButton
-                                        className="mr-2 bg-green-100 hover:text-white hover:bg-green-800"
+                                        className="py-2 mr-2 bg-green-100 hover:text-white hover:bg-green-800"
                                         onClick={handleSave}
                                         icon={<IconSave />}
                                         name="Save"
                                         disabled={processing}
                                     />
                                     <AdminButton
-                                        className="mr-2 bg-red-100 hover:text-white hover:bg-red-800"
+                                        className="py-2 mr-2 bg-red-100 hover:text-white hover:bg-red-800"
                                         onClick={handleCancel}
                                         icon={<IconCancel />}
                                         name="Cancel"
