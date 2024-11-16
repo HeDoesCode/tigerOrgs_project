@@ -21,7 +21,7 @@ class GoogleController extends Controller
         session()->put('remember_me', request('remember_me'));
 
          if (env('APP_ENV') === "local") {
-            return $this->mockSocialite();
+            return $this->mockGooglecallback();
          }
         return Socialite::driver('google')->with([
             'prompt' => 'select_account',
@@ -30,7 +30,7 @@ class GoogleController extends Controller
         ])->redirect();
     }
     
-    public function mockSocialite() {
+    public function mockGooglecallback() {
 
       $socialiteUser = new \stdClass();
       $socialiteUser->email = env('APP_TEST_EMAIL');
