@@ -1,0 +1,800 @@
+Could not open input file: /home/joseph/webdev/tigerOrgs_project
+Could not open input file: /home/joseph/webdev/tigerOrgs_project
+Could not open input file: /home/joseph/webdev/tigerOrgs_project
+Could not open input file: /home/joseph/webdev/tigerOrgs_project
+Could not open input file: /home/joseph/webdev/tigerOrgs_project
+Could not open input file: /home/joseph/webdev/tigerOrgs_project
+Could not open input file: /home/joseph/webdev/tigerOrgs_project
+Could not open input file: /home/joseph/webdev/tigerOrgs_project
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed: Temporary failure in name resolution (Connection: mysql, SQL: select * from `cache` where `key` in (illuminate:queue:restart))
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+    809▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    810▕                 );
+    811▕             }
+    812▕ 
+  ➜ 813▕             throw new QueryException(
+    814▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    815▕             );
+    816▕         }
+    817▕     }
+
+      [2m+40 vendor frames [22m
+
+  41  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   UnexpectedValueException 
+
+  There is no existing directory at "/var/www/html/storage/logs" and it could not be created: Permission denied
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php:205
+    201▕             });
+    202▕             $status = mkdir($dir, 0777, true);
+    203▕             restore_error_handler();
+    204▕             if (false === $status && !is_dir($dir) && strpos((string) $this->errorMessage, 'File exists') === false) {
+  ➜ 205▕                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
+    206▕             }
+    207▕         }
+    208▕         $this->dirCreated = true;
+    209▕     }
+
+      [2m+13 vendor frames [22m
+
+  14  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   UnexpectedValueException 
+
+  There is no existing directory at "/var/www/html/storage/logs" and it could not be created: Permission denied
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php:205
+    201▕             });
+    202▕             $status = mkdir($dir, 0777, true);
+    203▕             restore_error_handler();
+    204▕             if (false === $status && !is_dir($dir) && strpos((string) $this->errorMessage, 'File exists') === false) {
+  ➜ 205▕                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
+    206▕             }
+    207▕         }
+    208▕         $this->dirCreated = true;
+    209▕     }
+
+      [2m+13 vendor frames [22m
+
+  14  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   UnexpectedValueException 
+
+  There is no existing directory at "/var/www/html/storage/logs" and it could not be created: Permission denied
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php:205
+    201▕             });
+    202▕             $status = mkdir($dir, 0777, true);
+    203▕             restore_error_handler();
+    204▕             if (false === $status && !is_dir($dir) && strpos((string) $this->errorMessage, 'File exists') === false) {
+  ➜ 205▕                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
+    206▕             }
+    207▕         }
+    208▕         $this->dirCreated = true;
+    209▕     }
+
+      [2m+13 vendor frames [22m
+
+  14  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   UnexpectedValueException 
+
+  There is no existing directory at "/var/www/html/storage/logs" and it could not be created: Permission denied
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php:205
+    201▕             });
+    202▕             $status = mkdir($dir, 0777, true);
+    203▕             restore_error_handler();
+    204▕             if (false === $status && !is_dir($dir) && strpos((string) $this->errorMessage, 'File exists') === false) {
+  ➜ 205▕                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
+    206▕             }
+    207▕         }
+    208▕         $this->dirCreated = true;
+    209▕     }
+
+      [2m+13 vendor frames [22m
+
+  14  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+
+
+   UnexpectedValueException 
+
+  There is no existing directory at "/var/www/html/storage/logs" and it could not be created: Permission denied
+
+  at /home/joseph/webdev/tigerOrgs_project/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php:205
+    201▕             });
+    202▕             $status = mkdir($dir, 0777, true);
+    203▕             restore_error_handler();
+    204▕             if (false === $status && !is_dir($dir) && strpos((string) $this->errorMessage, 'File exists') === false) {
+  ➜ 205▕                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
+    206▕             }
+    207▕         }
+    208▕         $this->dirCreated = true;
+    209▕     }
+
+      [2m+13 vendor frames [22m
+
+  14  /home/joseph/webdev/tigerOrgs_project/artisan:13
+      Illuminate\Foundation\Application::handleCommand()
+

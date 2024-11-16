@@ -19,9 +19,11 @@ services:
       IGNITION_LOCAL_SITES_PATH: '${PWD}'
     volumes:
       - '.:/var/www/html'
+      - ./docker/web/my-supervisor.conf:/etc/supervisor/conf.d/my-supervisor.conf #change with appropriate filename
     networks:
       - sail
     depends_on:
+      - phpmyadmin
       - mysql
   mysql:
     image: 'mysql/mysql-server:8.0'
@@ -33,7 +35,7 @@ services:
       MYSQL_DATABASE: '${DB_DATABASE}'
       MYSQL_USER: '${DB_USERNAME}'
       MYSQL_PASSWORD: '${DB_PASSWORD}'
-      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      # MYSQL_ALLOW_EMPTY_PASSWORD: 1
     volumes:
       - 'sail-mysql:/var/lib/mysql'
       - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
@@ -47,6 +49,14 @@ services:
         - '-p${DB_PASSWORD}'
       retries: 3
       timeout: 5s
+  phpmyadmin:
+    image: 'phpmyadmin:latest'
+    ports:
+      - 8080:80
+    networks:
+      - sail
+    environment:
+      - PMA_ARBITRARY=1
 networks:
   sail:
     driver: bridge
