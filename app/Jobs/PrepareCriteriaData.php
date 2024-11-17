@@ -7,7 +7,7 @@ use App\Models\DataExtractionTools;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
-class UpdateCriteria implements ShouldQueue
+class PrepareCriteriaData implements ShouldQueue
 {
     use Queueable;
 

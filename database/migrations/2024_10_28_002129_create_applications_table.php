@@ -22,6 +22,7 @@ return new class extends Migration
             $table->float('similarityScore')->nullable();//nullable muna for now
             $table->string('additionalInstructions')->nullable();
             $table->enum('status', ['submitted', 'accepted', 'pending', 'rejected'])->default('submitted');
+            $table->json('prepared_data')->nullable();
             $table->timestamps();
         });
     }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\UpdateCriteria;
+use App\Jobs\PrepareCriteriaData;
 use App\Models\Criteria;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -38,7 +38,7 @@ class CriteriaController extends Controller
                         ]);
 
         // prepare data in the background
-        UpdateCriteria::dispatch($createdCriteria->criteriaID);
+        PrepareCriteriaData::dispatch($createdCriteria->criteriaID);
 
         session()->flash('toast', [
             'title' => 'Criteria was successfully created!',
@@ -70,7 +70,7 @@ class CriteriaController extends Controller
         $editedCriteria->description = $validatedData['description'];
         $editedCriteria->save();
 
-        UpdateCriteria::dispatch($editedCriteria->criteriaID);
+        PrepareCriteriaData::dispatch($editedCriteria->criteriaID);
         
         session()->flash('toast', [
             'title' => 'Criteria was successfully updated!',

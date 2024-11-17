@@ -20,6 +20,7 @@ class Application extends Model
         'similarityScore',
         'additionalInstructions',
         'status',
+        'prepared_data',
     ];
 
     protected $casts = [

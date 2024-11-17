@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\PrepareApplicationData;
 use App\Models\Application;
 use App\Models\Criteria;
 use Exception;
@@ -342,14 +343,14 @@ class FormController extends Controller
                 }
             }
 
-            DB::table('applications')->insert([
+            $createdApplication = Application::create([
                 'userID' => $user->userID,
                 'orgID' => $validated['orgID'],
                 'formID' => $validated['formID'],
                 'userData' => json_encode($formLayout),
-                'created_at' => now(),
-                'updated_at' => now(),
             ]);
+
+            PrepareApplicationData::dispatch($createdApplication->applicationID);
 
             session()->flash('toast', [
                 'title' => 'Application Submitted',
