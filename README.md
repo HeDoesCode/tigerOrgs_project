@@ -31,70 +31,61 @@ session()->flash('toast', [
 - shadcn
 
 
+# Developement Environment Setup (with Docker)
 
-<!-- <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+1. Download and install docker with WSL2 Ubuntu
+2. Clone the repository
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+   * Either clone the repository directly inside Ubuntu with Git;
+   * or copy the cloned source files and paste inside Ubuntu with file explorer
+3. Open WSL Ubuntu. Set pwd to cloned repository root folder.
+4. Execute the following commands. Install the dependencies first if not installed.
 
-## About Laravel
+   1. `composer require laravel/sail --dev`
+   2. If docker-compose.yml is already present in the root directory:
+      * execute:`./vendor/bin/sail up -d --build`;
+      * else:`php artisan sail:install`
+   3. `./vendor/bin/sail up` (use -d flag to run in detached mode)
+   4. Enter container cli using`./vendor/bin/sail bash`
+   5. Sail will now handle your usual php commands.
+      * `./vendor/bin/sail artisan serve `
+      * `./vendor/bin/sail artisan queue:work `
+      * `./vendor/bin/sail bash npm run dev `
+5. To make executing sail commands easier, create an alias for `./vendor/bin/sail`.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+   * `alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'`
+   * To use alias, simply state "sail" then the command. For example:`sail up -d`
+6. Setup **Supervisor** ([source](https://medium.com/@danielarcher/how-to-use-supervisord-for-your-laravel-application-66015f104703)).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+   1. Install **Supervisor**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+      * `sudo apt-get install supervisor`
+   2. Create a new config file:
 
-## Learning Laravel
+      * `sudo nano /etc/supervisor/conf.d/laravel-worker.conf`
+   3. Put code inside laravel-worker.conf
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+      ```
+      [program:laravel-worker]
+      process_name=%(program_name)s_%(process_num)02d
+      command=docker exec [laravel container name] php [path to laravel app container]/artisan queue:work --sleep=3 --tries=3
+      autostart=true
+      autorestart=true
+      user=[user]
+      numprocs=1
+      redirect_stderr=true
+      stdout_logfile=/var/log/laravel-worker.log
+      ```
+      Replace [] with required text. Samples:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+      laravel container name: tigerorgs_project-laravel.test-1; Determine using `sail ps` or `sail ps -a`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+      path to laravel app container: /var/www/html
+   4. Load and Start **Supervisor**:
 
-## Laravel Sponsors
+      * `sudo supervisorctl reread`
+      * `sudo supervisorctl update`
+      * `sudo supervisorctl start laravel-worker:*`
+   5. Test the supervisor. Open a new WSL Ubuntu terminal and run tinker
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT). -->
+      * Dispatch a test job using`App\Jobs\TestJob::dispatch()`. Monitor the jobs table.
