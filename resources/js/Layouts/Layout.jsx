@@ -15,10 +15,11 @@ function Layout({
 }) {
     const { toast } = useToast();
     const { flash } = usePage().props;
+
     useEffect(() => {
         if (flash.toast) {
-            // console.log(flash.toast);
-            toast(flash.toast);
+            const { uniqid, ...realToast } = flash.toast;
+            toast(realToast);
         }
     }, [flash.toast]);
 
