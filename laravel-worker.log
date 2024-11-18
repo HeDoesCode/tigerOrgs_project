@@ -798,3 +798,53 @@ Could not open input file: /var/www/html/artisan
   14  /home/joseph/webdev/tigerOrgs_project/artisan:13
       Illuminate\Foundation\Application::handleCommand()
 
+no configuration file provided: not found
+Sail is not running.
+
+You may Sail using the following commands: './vendor/bin/sail up' or './vendor/bin/sail up -d'
+no configuration file provided: not found
+Sail is not running.
+
+You may Sail using the following commands: './vendor/bin/sail up' or './vendor/bin/sail up -d'
+no configuration file provided: not found
+Sail is not running.
+
+You may Sail using the following commands: './vendor/bin/sail up' or './vendor/bin/sail up -d'
+no configuration file provided: not found
+Sail is not running.
+
+You may Sail using the following commands: './vendor/bin/sail up' or './vendor/bin/sail up -d'
+no configuration file provided: not found
+Sail is not running.
+
+You may Sail using the following commands: './vendor/bin/sail up' or './vendor/bin/sail up -d'
+unknown shorthand flag: 'T' in -T
+See 'docker exec --help'.
+unknown shorthand flag: 'T' in -T
+See 'docker exec --help'.
+unknown shorthand flag: 'T' in -T
+See 'docker exec --help'.
+unknown shorthand flag: 'T' in -T
+See 'docker exec --help'.
+unknown shorthand flag: 'T' in -T
+See 'docker exec --help'.
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Could not open input file: /var/www/html/artisan
+Error response from daemon: No such container: laravel.test
+Error response from daemon: No such container: laravel.test
+Error response from daemon: No such container: laravel.test
+Error response from daemon: No such container: laravel.test
+Error response from daemon: No such container: laravel.test-1
+Error response from daemon: No such container: laravel.test-1
+Error response from daemon: No such container: laravel.test-1
+Error response from daemon: No such container: laravel.test-1
+context canceled
+  2024-11-17 18:44:48 App\Jobs\TestJob ............................... RUNNING
+  2024-11-17 18:44:48 App\Jobs\TestJob .......................... 37.45ms DONE
+context canceled
