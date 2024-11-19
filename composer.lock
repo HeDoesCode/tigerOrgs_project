@@ -4,52 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d1011f995fbc1134105a04b8e76a058",
+    "content-hash": "a5be8fcfc05681875b6616c9209486e2",
     "packages": [
-        {
-            "name": "ankane/mitie",
-            "version": "v0.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ankane/mitie-php.git",
-                "reference": "93cd204450347a6fdaa83cd1721887525493fbe2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ankane/mitie-php/zipball/93cd204450347a6fdaa83cd1721887525493fbe2",
-                "reference": "93cd204450347a6fdaa83cd1721887525493fbe2",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ffi": ">= 8.1",
-                "php": ">= 8.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^10"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Mitie\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSL-1.0"
-            ],
-            "authors": [
-                {
-                    "name": "Andrew Kane",
-                    "email": "andrew@ankane.org"
-                }
-            ],
-            "description": "Named-entity recognition for PHP",
-            "support": {
-                "issues": "https://github.com/ankane/mitie-php/issues",
-                "source": "https://github.com/ankane/mitie-php"
-            },
-            "time": "2024-07-01T00:43:48+00:00"
-        },
         {
             "name": "brick/math",
             "version": "0.12.1",
@@ -1299,16 +1255,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v11.31.0",
+            "version": "v11.32.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "365090ed2c68244e3141cdb5e247cdf3dfba2c40"
+                "reference": "bc2aad63f83ee5089be7b21cf29d645ccf31e927"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/365090ed2c68244e3141cdb5e247cdf3dfba2c40",
-                "reference": "365090ed2c68244e3141cdb5e247cdf3dfba2c40",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/bc2aad63f83ee5089be7b21cf29d645ccf31e927",
+                "reference": "bc2aad63f83ee5089be7b21cf29d645ccf31e927",
                 "shasum": ""
             },
             "require": {
@@ -1504,7 +1460,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-11-12T15:36:15+00:00"
+            "time": "2024-11-15T17:04:33+00:00"
         },
         {
             "name": "laravel/prompts",

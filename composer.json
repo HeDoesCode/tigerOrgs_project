@@ -6,7 +6,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "ankane/mitie": "^0.2.0",
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/breeze": "^2.1",
         "laravel/framework": "^11.9",
@@ -40,15 +39,12 @@
         }
     },
     "scripts": {
-        "post-install-cmd": "Mitie\\Vendor::check",
-
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-            "Mitie\\Vendor::check"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
