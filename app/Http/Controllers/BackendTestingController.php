@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CategorizeApplication;
 use App\Jobs\DataExtraction as JobsDataExtraction;
 use App\Models\DataExtraction;
 use App\Models\DataExtractionTools;
@@ -26,7 +27,7 @@ class BackendTestingController extends Controller
 
 
     public function run() {
-        
+    
         // dd($user);
 
         // $user->roles()->attach(3);
@@ -60,11 +61,7 @@ class BackendTestingController extends Controller
 
     public function submit(Request $request)
     {
-        if ($request->hasFile('resume')) {
-            $file = DataExtractionTools::parseFile($request->file('resume'));
-
-            JobsDataExtraction::dispatch($file);
-        }
+        CategorizeApplication::dispatch(1);
     }
 
     public function renderForm() {
