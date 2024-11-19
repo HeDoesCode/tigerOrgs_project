@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Unique;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -37,11 +38,17 @@ class HandleInertiaRequests extends Middleware
         //     'duration' => '5000' // optional. default: 4000
         // ]);
 
+        $toastcontent = null;
+        if (session()->has('toast')) {
+            $uniqid = uniqid();
+            $toastcontent = array_merge(session()->pull('toast'), ['uniqid' => $uniqid]);
+        }
+
         return array_merge(
             parent::share($request),
             [
                 'flash' => [
-                    'toast' => session()->get('toast'),
+                    'toast' => $toastcontent,
                     'old' => session()->getOldInput(),
                 ],
                 'auth' => [

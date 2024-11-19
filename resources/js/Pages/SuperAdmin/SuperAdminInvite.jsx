@@ -353,7 +353,7 @@ function SuperAdminInvite({ users, organizations, userRoles }) {
                                                             }}
                                                             className="px-4 text-center font-semibold rounded-xl poppins bg-green-50 border-2 border-green-600 text-green-800"
                                                         >
-                                                            Joined{" "}
+                                                            {" "}
                                                             {
                                                                 user.organizations_count
                                                             }{" "}

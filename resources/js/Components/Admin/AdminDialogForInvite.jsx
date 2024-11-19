@@ -71,7 +71,7 @@ function AdminDialogForInvite({
 
                     <div className="flex justify-end space-x-2">
                         <AdminButton
-                            className={`bg-white ${
+                            className={`py-2 bg-white ${
                                 isFormValid
                                     ? "hover:bg-green-800 hover:text-white"
                                     : "opacity-50 cursor-not-allowed"
