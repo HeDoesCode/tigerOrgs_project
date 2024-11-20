@@ -125,7 +125,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::patch('setStatus', [FormController::class, 'setStatus'])->name('setStatus');
         Route::get('/check-membership/{userID}', [FormController::class, 'checkMembership'])
             ->name('check-membership');
-        Route::get('file/view/{file_path}', [FormController::class, 'viewFile'])
+        Route::get('{applicationID}/file/view/{file_path}', [FormController::class, 'viewFile'])
             ->where('file_path', '.*')
             ->name('file.view');
 

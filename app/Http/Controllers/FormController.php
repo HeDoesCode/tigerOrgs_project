@@ -375,40 +375,73 @@ class FormController extends Controller
     }
 
         //for viewing  photos and pdf that is stored on local storage
-        public function viewFile($orgID, $file_path)
-        {
-            $application = DB::table('applications')->first();
-
-            if ($application) {
-                $userData = json_decode($application->userData, true);
+        public function viewFile($orgID, $applicationID, $file_path)
+{
+    // Decode the file path to avoid issues with special characters
+    $file_path = urldecode($file_path);
 
 
-            $filePath = null;
-            foreach ($userData['layout'] as $item) {
-                if (isset($item['value']['file_path']) && $item['value']['file_path'] === $file_path) {
-                    $filePath = $item['value']['file_path'];
-                    break;
-                }
-            }
+    // Fetch the first application
+    $application = DB::table('applications')->where('applicationID', $applicationID)->first();
+    
+    if ($application) {
+        // Decode userData from JSON to an associative array
+        $userData = $application->userData;
+        
+        // First decode to remove outer quotes
+        $decodedOnce = json_decode($userData, true);
 
-            
-            if ($filePath) {
-                if (Storage::disk('local')->exists($filePath)) {
-                    $mimeType = Storage::disk('local')->mimeType($filePath);
-                    $fileContent = Storage::disk('local')->get($filePath);
-
-                    return response($fileContent, 200)
-                        ->header('Content-Type', $mimeType)
-                        ->header('Content-Disposition', 'inline'); 
-                }
-
-                return abort(404, 'File not found');
-            } else {
-                return abort(403, 'Unauthorized access');
-            }
+        // If the first decode returns a string (double-encoded JSON), decode again
+        if (is_string($decodedOnce)) {
+            $userDataArray = json_decode($decodedOnce, true);
+        } else {
+            $userDataArray = $decodedOnce;
         }
 
+
+        
+
+        // Check if JSON decoding was successful
+        if (is_null($userDataArray)) {
+            return abort(400, 'Invalid JSON data in userData');
+        }
+
+        // Check if 'layout' exists and process it
+        if (isset($userDataArray['layout']) && is_array($userDataArray['layout'])) {
+            
+            foreach ($userDataArray['layout'] as $item) {
+                // Ensure the item has a 'value' and 'file_path'
+                
+                if (
+                    isset($item['value']['file_path']) &&
+                    $item['value']['file_path'] === $file_path
+                ) {
+
+
+                    $filePath = $item['value']['file_path'];
+
+                    // Serve the file if it exists in storage
+                    if (Storage::disk('local')->exists($filePath)) {
+                        return response()->file(storage_path("app/{$filePath}"));
+                    } else {
+                        return abort(404, 'File not found');
+                    }
+                }
+            }
+
+            // If no matching file was found
+            return abort(403, 'Unauthorized access');
+        }
     }
+
+    // If no application was found
+    return abort(404, 'Application not found');
+}
+
+
+
+
+
 
 
 
@@ -452,7 +485,7 @@ class FormController extends Controller
                 }
         
                 if (in_array($validated['status'], ['accepted', 'rejected'])) {
-                    $this->deleteApplicationFiles($application);
+                    // $this->deleteApplicationFiles($application);
 
                     $application->status = $validated['status'];
                     $application->save();
@@ -573,31 +606,32 @@ class FormController extends Controller
         }
         
 
-        private function deleteApplicationFiles($application) {
-            try {
-                $formData = $application->userData;
-                
-                if (!$formData || !isset($formData['layout'])) {
-                    return;
+        private function deleteApplicationFiles($application)
+{
+    try {
+        $formData = json_decode($application->userData, true);
+
+        if (!$formData || !isset($formData['layout'])) {
+            return;
+        }
+
+        foreach ($formData['layout'] as $item) {
+            if (
+                in_array($item['type'], ['file_upload', 'image_upload']) && 
+                isset($item['value']['file_path'])
+            ) {
+                // Delete the file from storage
+                if (Storage::disk('local')->exists($item['value']['file_path'])) {
+                    Storage::disk('local')->delete($item['value']['file_path']);
                 }
-        
-                foreach ($formData['layout'] as $item) {
-                    if (
-                        in_array($item['type'], ['file_upload', 'image_upload']) && 
-                        isset($item['value']) &&
-                        isset($item['value']['file_path'])
-                    ) {
-                        // Delete the file from storage
-                        if (Storage::disk('local')->exists($item['value']['file_path'])) {
-                            Storage::disk('local')->delete($item['value']['file_path']);
-                        }
-                    }
-                }
-            } catch (Exception $e) {
-                \Log::error('Error deleting application files: ' . $e->getMessage());
-                // Continue execution even if file deletion fails
             }
         }
+    } catch (Exception $e) {
+        \Log::error('Error deleting application files: ' . $e->getMessage());
+        // Continue execution even if file deletion fails
+    }
+}
+
         
 
 

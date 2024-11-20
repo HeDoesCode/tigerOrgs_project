@@ -331,6 +331,33 @@ function ApplicationResponses({
         setselectedApplicationId(applicationId);
     };
 
+    const parseUserData = () => {
+        if (!application?.userData) return null;
+
+        try {
+            // If it's already an object, return it as is
+            if (typeof application.userData === "object") {
+                return application.userData;
+            }
+
+            // If it's a string, parse it
+            return JSON.parse(application.userData);
+        } catch (error) {
+            console.error("Error parsing userData:", error);
+            return null;
+        }
+    };
+
+    const userData = parseUserData();
+
+    if (!userData || !userData.layout) {
+        return (
+            <div className="p-4 text-sm text-yellow-800 bg-yellow-50 rounded-lg">
+                No response data available
+            </div>
+        );
+    }
+
     function handleStatusSubmit(e) {
         e.preventDefault();
 
@@ -446,11 +473,11 @@ function ApplicationResponses({
                                     </h3>
                                     <div className="px-6 py-8">
                                         <h1 className="text-3xl font-bold  text-gray-900 mb-6">
-                                            {application.userData.name}
+                                            {userData.name}
                                         </h1>
                                         {application.userData.desc && (
                                             <p className="text-gray-600  mb-8">
-                                                {application.userData.desc}
+                                                {userData.desc}
                                             </p>
                                         )}
 
@@ -503,12 +530,15 @@ function ApplicationResponses({
                                         )}
 
                                         <ul className="space-y-6">
-                                            {application.userData.layout.map(
+                                            {userData.layout.map(
                                                 (item, index) => (
                                                     <RenderFormItemAnswers
                                                         key={index}
                                                         item={item}
                                                         orgID={orgID}
+                                                        applicationID={
+                                                            application.applicationID
+                                                        }
                                                     />
                                                 )
                                             )}

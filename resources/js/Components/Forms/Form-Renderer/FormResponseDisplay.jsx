@@ -1,6 +1,6 @@
 import React from "react";
 
-const FormResponseDisplay = ({ item, orgID }) => {
+const FormResponseDisplay = ({ item, orgID, applicationID }) => {
     const renderValue = () => {
         if (!item.value)
             return <span className="text-gray-500">No response</span>;
@@ -44,7 +44,7 @@ const FormResponseDisplay = ({ item, orgID }) => {
                         <div className="space-y-2">
                             <div className="relative w-full max-w-md rounded-lg overflow-hidden border border-gray-200">
                                 <img
-                                    src={`/admin/${orgID}/file/view/${encodeURIComponent(
+                                    src={`/admin/${orgID}/${applicationID}/file/view/${encodeURIComponent(
                                         item.value.file_path
                                     )}`}
                                     alt={item.value.original_filename}
@@ -90,7 +90,7 @@ const FormResponseDisplay = ({ item, orgID }) => {
                                     />
                                 </svg>
                                 <a
-                                    href={`/admin/${orgID}/file/view/${encodeURIComponent(
+                                    href={`/admin/${orgID}/${applicationID}/file/view/${encodeURIComponent(
                                         item.value.file_path
                                     )}`}
                                     target="_blank"
