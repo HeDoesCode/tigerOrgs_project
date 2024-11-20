@@ -32,9 +32,11 @@ class PrepareApplicationData implements ShouldQueue
         $userData = [];
 
         foreach ($layout as $inputItem) {
-            if (is_object($inputItem->value)) {
+            if (is_object($inputItem->value) && $inputItem->type == "file_upload") {
                 $userData[] = $inputItem->value->extracted_text;
                 continue;
+            } else {
+                continue; // skip the image value
             }
             $userData[] = $inputItem->value;
         }
