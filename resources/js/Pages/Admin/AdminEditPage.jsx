@@ -49,7 +49,7 @@ import { RotateCcw, Check } from "lucide-react";
 function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
     const { errors } = usePage().props;
     console.log("errors:", errors);
-    const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
+    const MAX_FILE_SIZE = 20 * 1024 * 1024; // 2 MB
 
     const [currentPageState, setCurrentPageState] = useState({
         pageData: { ...pageData },

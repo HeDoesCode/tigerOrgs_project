@@ -108,10 +108,10 @@ class AdminController extends Controller
         $isVisible = DB::table('organizations')
             ->where('orgID', $orgID)
             ->value('visibility');
-        
-            $isVisible = (bool) $isVisible;
 
-        if(!$isVisible){
+        $isVisible = (bool) $isVisible;
+
+        if (!$isVisible) {
             session()->flash('toast', [
                 'title' => "You can't perform this action.",
                 'description' => 'Your Organization is hidden.',
@@ -119,7 +119,6 @@ class AdminController extends Controller
             ]);
 
             return redirect()->back()->with('error');
-
         }
 
         DB::table('organizations')
@@ -168,10 +167,10 @@ class AdminController extends Controller
     {
         $rules = [
             // coverPhoto
-            'changesMade.storage.coverPhoto' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
+            'changesMade.storage.coverPhoto' => 'sometimes|image|mimes:jpeg,png,jpg|max:20480',
 
             // logo
-            'changesMade.storage.logo' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
+            'changesMade.storage.logo' => 'sometimes|image|mimes:jpeg,png,jpg|max:20480',
 
             // aboutUs
             'pageState.pageData.aboutUs' => 'nullable|string|max:65535',
@@ -205,7 +204,7 @@ class AdminController extends Controller
                 'sometimes',
                 'image',
                 'mimes:jpeg,png,jpg',
-                'max:2048',
+                'max:20480',
                 function ($attribute, $value, $fail) {
                     try {
                         if ($value->getClientOriginalName() === 'default.jpeg') {
@@ -779,36 +778,36 @@ class AdminController extends Controller
 
 
     public function applications($orgID)
-{
-    $organization = Organization::find($orgID);
+    {
+        $organization = Organization::find($orgID);
 
-    $formsWithApplications = Form::where('orgID', $orgID)
-        ->with(['applications' => function ($query) {
-            $query->select('applicationID', 'formID', 'userID', 'userData', 'similarityScore', 'status', 'created_at')
-                ->with('user:userID,firstname,lastname,email,college');
-        }])
-        ->get(['formID', 'formLayout', 'orgID']);
+        $formsWithApplications = Form::where('orgID', $orgID)
+            ->with(['applications' => function ($query) {
+                $query->select('applicationID', 'formID', 'userID', 'userData', 'similarityScore', 'status', 'created_at')
+                    ->with('user:userID,firstname,lastname,email,college');
+            }])
+            ->get(['formID', 'formLayout', 'orgID']);
 
-   
-    $formsWithApplications = $formsWithApplications->map(function ($form) use ($orgID) {
-        $form->applications = $form->applications->map(function ($application) use ($orgID) {
 
-            $isMember = DB::table('organization_user_role')
-                ->where('userID', $application->userID)
-                ->where('orgID', $orgID)
-                ->exists();
-            
-            $application->isMember = $isMember;
-            return $application;
+        $formsWithApplications = $formsWithApplications->map(function ($form) use ($orgID) {
+            $form->applications = $form->applications->map(function ($application) use ($orgID) {
+
+                $isMember = DB::table('organization_user_role')
+                    ->where('userID', $application->userID)
+                    ->where('orgID', $orgID)
+                    ->exists();
+
+                $application->isMember = $isMember;
+                return $application;
+            });
+            return $form;
         });
-        return $form;
-    });
 
-    return Inertia::render('Admin/AdminManageApplication', [
-        'orgID' => $organization->orgID,
-        'formsWithApplications' => $formsWithApplications,
-    ]);
-}
+        return Inertia::render('Admin/AdminManageApplication', [
+            'orgID' => $organization->orgID,
+            'formsWithApplications' => $formsWithApplications,
+        ]);
+    }
 
     public function formhistory($orgID)
     {
