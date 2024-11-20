@@ -195,7 +195,7 @@ function OrganizationLayout({
                                 : "flex"
                         } items-center text-xs opacity-80 cursor-default`}
                     >
-                        <div className="border border-slate-400 rounded-md px-3 py-1 relative min-h-12 min-w-32 w-full flex items-center flex-wrap gap-2">
+                        <div className="bg-slate-100 border border-slate-400 rounded-lg px-3 py-1 relative min-h-12 min-w-32 w-full flex items-center flex-wrap gap-2">
                             {pageLayoutData.metadata.keywords.map((item) => (
                                 <div
                                     key={item.keyID}

@@ -225,13 +225,13 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                     title="Edit Organization's Page"
                 >
                     <div
-                        className={`p-5 m-1 !border-2 border-transparent ${
+                        className={`p-5  !border-[2.5px] border-transparent ${
                             changesMade.all && "!border-red-500"
                         }`}
                     >
                         {changesMade.all && (
                             <div className="flex justify-end mb-2">
-                                <div className="px-3 py-1 text-sm text-white rounded-full bg-red-500">
+                                <div className="px-3 py-1 mb-3 text-sm text-white rounded-full bg-red-500">
                                     You Have Unsaved Changes
                                 </div>
                             </div>
@@ -1651,13 +1651,15 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
             <>
                 {changesMade.all && (
                     <form onSubmit={(e) => handleSave(e)} className="contents">
-                        <div className="gap-4 flex flex-col md:items-center md:flex-row mt-6">
+                        <div className="-mr-8 gap-4 flex flex-col md:items-center md:flex-row ">
                             <div className="flex gap-4">
                                 <button
-                                    className="flex items-center gap-2 px-6 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+                                    className="flex items-center gap-2 px-6 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
                                     onClick={handleResetAll}
                                 >
-                                    <RotateCcw size={16} />
+                                    <span className="hidden md:inline">
+                                        <RotateCcw size={16} />
+                                    </span>{" "}
                                     Reset All
                                 </button>
                                 <button
@@ -1669,8 +1671,9 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                                             <div className="dot-flashing" />
                                         </div>
                                     )}
-                                    <Check size={16} />
-
+                                    <span className="hidden md:inline">
+                                        <Check size={16} />
+                                    </span>
                                     <span>Save All Changes</span>
                                 </button>
                             </div>
