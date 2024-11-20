@@ -38,6 +38,11 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
     );
     const hasApplications = selectedForm?.applications?.length > 0;
 
+    function handleSubmit(e) {
+        e.preventDefault();
+        router.post(`/admin/${orgID}/categorizeApplications/${selectedFormId}`);
+    }
+
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
@@ -77,6 +82,7 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                             <ApplicationForms
                                                 key={form.formID}
                                                 formID={form.formID}
+                                                criteriaID={form.criteriaID}
                                                 name={form.formLayout?.name}
                                                 applicationCount={
                                                     form.applications?.length ||
@@ -111,6 +117,9 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                                                 formID={
                                                                     form.formID
                                                                 }
+                                                                criteriaID={
+                                                                    form.criteriaID
+                                                                }
                                                                 name={
                                                                     form
                                                                         .formLayout
@@ -141,7 +150,7 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                 </div>
 
                                 <div className="col-span-1 md:col-span-9 grid-cols-1 min-h-[500px]">
-                                    <div className="poppins col-span-1">
+                                    <div className="poppins col-span-1 flex justify-between">
                                         <h1 className="p-5">
                                             Application Responses for the form{" "}
                                             <span className="underline underline-offset-2">
@@ -150,7 +159,24 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                             </span>
                                             :
                                         </h1>
+                                        {console.log(formsWithApplications)}
+                                        {selectedFormId === null ? (
+                                            ""
+                                        ) : (
+                                            <form
+                                                onSubmit={handleSubmit}
+                                                className="py-4"
+                                            >
+                                                <button
+                                                    type="submit"
+                                                    className="mr-2 py-1 bg-white flex px-5  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white"
+                                                >
+                                                    Categorize
+                                                </button>
+                                            </form>
+                                        )}
                                     </div>
+
                                     {selectedForm && hasApplications ? (
                                         <div className="grid grid-cols-1 min-h-[500px] h-[500px] overflow-auto">
                                             <table className="mr-5 ml-5 sm:ml-0 sm:mr-3 bg-white divide-y min-h-[500px] rounded-r-xl rounded-l-xl sm:rounded-r-xl sm:rounded-l-none divide-gray-200">
@@ -165,12 +191,27 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                                         <th className="col-span-1 sm:col-span-2 text-sm">
                                                             Email
                                                         </th>
-                                                        <th className="col-span-1 sm:col-span-1 text-sm">
+                                                        <th
+                                                            className={`${
+                                                                selectedForm
+                                                                    .formLayout
+                                                                    .criteria ===
+                                                                ""
+                                                                    ? "col-span-2 sm:col-span-2"
+                                                                    : "col-span-1 sm:col-span-1"
+                                                            } text-sm`}
+                                                        >
                                                             Date Submitted
                                                         </th>
-                                                        <th className="col-span-1 sm:col-span-1 text-sm">
-                                                            Similarity Score
-                                                        </th>
+                                                        {selectedForm.formLayout
+                                                            .criteria === "" ? (
+                                                            ""
+                                                        ) : (
+                                                            <th className="col-span-1 sm:col-span-1 text-sm">
+                                                                Similarity Score
+                                                            </th>
+                                                        )}
+
                                                         <th className="col-span-1 sm:col-span-1 text-sm">
                                                             Actions
                                                         </th>
@@ -182,6 +223,11 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                                             <ApplicationResponses
                                                                 key={
                                                                     application.applicationID
+                                                                }
+                                                                criteria={
+                                                                    selectedForm
+                                                                        .formLayout
+                                                                        .criteria
                                                                 }
                                                                 application={
                                                                     application
@@ -221,6 +267,7 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
 
 function ApplicationForms({
     formID,
+    criteriaID,
     name,
     applicationCount,
     selected,
@@ -241,7 +288,12 @@ function ApplicationForms({
     );
 }
 
-function ApplicationResponses({ application, orgID, selectedFormId }) {
+function ApplicationResponses({
+    criteria,
+    application,
+    orgID,
+    selectedFormId,
+}) {
     const { errors } = usePage().props;
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -324,15 +376,27 @@ function ApplicationResponses({ application, orgID, selectedFormId }) {
             <td className="col-span-1 sm:col-span-2 text-sm content-center truncate">
                 {user?.email}
             </td>
-            <td className="col-span-1 sm:col-span-1 text-sm content-center">
+
+            <td
+                className={`${
+                    criteria === ""
+                        ? "col-span-1 sm:col-span-2"
+                        : "col-span-1 sm:col-span-1"
+                } text-sm content-center`}
+            >
                 {formatDate(application.created_at)}
             </td>
-            <td className="col-span-1 sm:col-span-1 px-4 text-sm content-center">
-                <div className={`bg-gray-500 rounded-xl text-white`}>
-                    {/* palagay code  */}
-                    90% Match
-                </div>
-            </td>
+            {criteria === "" ? (
+                ""
+            ) : (
+                <td className="col-span-1 sm:col-span-1 px-4 text-sm content-center">
+                    <div className={`bg-gray-500 rounded-xl text-white`}>
+                        {application.similarityScore
+                            ? `${application.similarityScore}%`
+                            : "Not yet graded"}
+                    </div>
+                </td>
+            )}
 
             {!isMember ? (
                 application.status === "accepted" ? (

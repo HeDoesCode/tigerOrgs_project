@@ -64,14 +64,15 @@ class FormController extends Controller
             Form::create([
                 'orgID' => $orgID,
                 'criteriaID' => $criteriaID,
+                'deployed' => 1,
                 'formLayout' => json_decode($formLayout),
                 'validationRules' => $validationRules,
             ]);
                         
 
             session()->flash('toast', [
-                'title' => 'Form Saved',
-                'description' => 'The form has been successfully saved.',
+                'title' => 'Form Saved and Deployed',
+                'description' => 'The form has been successfully saved and deployed.',
                 'duration' => 5000,
                 'variant' => 'success'
             ]);

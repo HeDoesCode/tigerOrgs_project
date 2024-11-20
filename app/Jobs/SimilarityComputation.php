@@ -46,7 +46,7 @@ class SimilarityComputation implements ShouldQueue
             $finalScore = $dotProduct / ($magnitudeA * $magnitudeB);
         }
         
-        $application->similarityScore = $finalScore * 100;
+        $application->similarityScore = round($finalScore * 100, 2);
         $application->save();
     }
 }

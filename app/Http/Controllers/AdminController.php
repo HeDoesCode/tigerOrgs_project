@@ -819,9 +819,9 @@ class AdminController extends Controller
         ]);
     }
 
-    public function categorizeApplications(Request $request)
+    public function categorizeApplications($orgID, $selectedFormId)
     {
-        CategorizeApplication::dispatch($request->input('formID')); 
+        CategorizeApplication::dispatch($selectedFormId); 
         
         session()->flash('toast', [
             'title' => 'Categorize Applications',

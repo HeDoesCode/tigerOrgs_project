@@ -113,6 +113,7 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::get('invite', 'invite')->name('invite');
         Route::post('addMember/{userID}', 'addMember')->name('add-member')->middleware(isSameDepartment::class);
         Route::get('applications', 'applications')->name('applications');
+        Route::post('categorizeApplications/{selectedFormId}', 'categorizeApplications')->name('categorizeApplications');
         Route::post('makeAnnouncement', 'makeAnnouncement')->name('makeAnnouncement');
 
         // manage forms
