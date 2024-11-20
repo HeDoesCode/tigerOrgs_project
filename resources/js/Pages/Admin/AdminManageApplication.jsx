@@ -418,7 +418,7 @@ function ApplicationResponses({
             ) : (
                 <td className="col-span-1 sm:col-span-1 px-4 text-sm content-center">
                     <div className={`bg-gray-500 rounded-xl text-white`}>
-                        {application.similarityScore === null
+                        {application.similarityScore !== null
                             ? `${application.similarityScore}%`
                             : "Not yet graded"}
                     </div>
