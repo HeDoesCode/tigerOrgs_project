@@ -638,7 +638,6 @@ class AdminController extends Controller
             $user = User::find($validated['userID']);
             $org = Organization::find($validated['orgID']);
 
-            $user->notify(new MakeAdminNotification($org, $user));
 
             return to_route('admin.invite', ['orgID' => $orgID]);
         } catch (Exception $e) {
