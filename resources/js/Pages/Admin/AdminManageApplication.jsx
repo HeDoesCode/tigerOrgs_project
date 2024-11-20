@@ -171,7 +171,7 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                                     type="submit"
                                                     className="mr-2 py-1 bg-white flex px-5  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white"
                                                 >
-                                                    Categorize
+                                                    Categorize Similarity Score
                                                 </button>
                                             </form>
                                         )}
