@@ -21,6 +21,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
+
 import {
     Dialog,
     DialogContent,
@@ -43,6 +44,7 @@ import IconSquareArrowDownFilled from "@/Components/Icons/IconSquareArrowDownFil
 import EditorKeywordSelect from "@/Components/Admin/EditPage/EditorKeywordSelect";
 import { useMemo } from "react";
 import React from "react";
+import { RotateCcw, Check } from "lucide-react";
 
 function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
     const { errors } = usePage().props;
@@ -230,7 +232,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         {changesMade.all && (
                             <div className="flex justify-end mb-2">
                                 <div className="px-3 py-1 text-sm text-white rounded-full bg-red-500">
-                                    Unsaved Changes
+                                    You Have Unsaved Changes
                                 </div>
                             </div>
                         )}
@@ -1250,7 +1252,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
 
         return (
             <EditArea
-                title="Set Facebook IFrame link"
+                title="Set Facebook Page URL link"
                 componentProps={{
                     // dialog: { open: true },
                     dialogTriggerCN: changesMade.changes?.social
@@ -1268,6 +1270,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
             >
                 <input
                     type="text"
+                    placeholder="https://www.facebook.com/yourpage"
                     value={editSocial || ""}
                     onBlur={() =>
                         setSocial((prevState) => {
@@ -1651,21 +1654,24 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                         <div className="gap-4 flex flex-col md:items-center md:flex-row mt-6">
                             <div className="flex gap-4">
                                 <button
-                                    className="px-3 py-2 bg-orange-400 rounded-lg whitespace-nowrap"
+                                    className="flex items-center gap-2 px-6 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
                                     onClick={handleResetAll}
                                 >
+                                    <RotateCcw size={16} />
                                     Reset All
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-3 py-2 bg-sky-400 rounded-lg whitespace-nowrap flex items-center gap-x-2"
+                                    className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors"
                                 >
                                     {progress && (
                                         <div className="w-[40px] flex justify-center">
                                             <div className="dot-flashing" />
                                         </div>
                                     )}
-                                    <span>Save Changes</span>
+                                    <Check size={16} />
+
+                                    <span>Save All Changes</span>
                                 </button>
                             </div>
                         </div>

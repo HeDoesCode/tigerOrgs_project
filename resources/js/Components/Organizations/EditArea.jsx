@@ -8,6 +8,8 @@ import {
     DialogFooter,
     DialogClose,
 } from "@/Components/ui/dialog";
+import { X, RotateCcw, Eye } from "lucide-react";
+
 import IconPencil from "../Icons/IconPencil";
 
 function EditArea({
@@ -64,19 +66,21 @@ EditArea.ActionButtons = ({ closeProps, resetProps, previewChangeProps }) => {
             <DialogClose asChild>
                 <button
                     type="button"
-                    className="px-3 py-2 bg-slate-300 rounded-lg"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors border border-gray-200"
                     {...closeProps}
                 >
-                    Close
+                    <X size={16} />
+                    Cancel
                 </button>
             </DialogClose>
             {resetProps && (
                 <DialogClose asChild>
                     <button
                         type="button"
-                        className="px-3 py-2 bg-orange-400 rounded-lg"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 text-gray-900 hover:bg-amber-600 transition-colors"
                         {...resetProps}
                     >
+                        <RotateCcw size={16} />
                         Reset
                     </button>
                 </DialogClose>
@@ -85,10 +89,11 @@ EditArea.ActionButtons = ({ closeProps, resetProps, previewChangeProps }) => {
                 <DialogClose asChild>
                     <button
                         type="button"
-                        className="px-3 py-2 bg-amber-400 rounded-lg"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500 text-gray-900 hover:bg-yellow-600 transition-colors"
                         {...previewChangeProps}
                     >
-                        Preview Changes
+                        <Eye size={16} />
+                        Preview
                     </button>
                 </DialogClose>
             )}

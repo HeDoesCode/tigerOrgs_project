@@ -195,7 +195,7 @@ function OrganizationLayout({
                                 : "flex"
                         } items-center text-xs opacity-80 cursor-default`}
                     >
-                        <div className="relative min-h-12 min-w-32 w-full flex items-center flex-wrap gap-2">
+                        <div className="border border-slate-400 rounded-md px-3 py-1 relative min-h-12 min-w-32 w-full flex items-center flex-wrap gap-2">
                             {pageLayoutData.metadata.keywords.map((item) => (
                                 <div
                                     key={item.keyID}
@@ -207,7 +207,8 @@ function OrganizationLayout({
                             {pageLayoutData.metadata.keywords.length === 0 &&
                                 editing && (
                                     <div className="text-slate-500 italic">
-                                        This organization has no keywords.
+                                        The organization has not yet set any
+                                        keywords.{" "}
                                     </div>
                                 )}
                             {editing && editing.keywords}
