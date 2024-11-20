@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Application;
 use App\Models\Criteria;
 use App\Models\Form;
+use Illuminate\Bus\Batch;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Bus;
@@ -37,42 +38,57 @@ class CategorizeApplication implements ShouldQueue
         if (is_null($form->criteria)) {
             return; // cancel categorize job since there is no criteria defined
         }
+
+        $batch = Bus::batch([])
+            ->finally(function(Batch $batch) {
+                $vectorizedData = [];
+                $jobs = [];
+                $counter = 0;
+                
+                while (true) {
+                    $key = $batch->id."_VectorizedApplication_".$counter;
+                    $cachedData = Cache::get($key);
+
+                    if (is_null($cachedData)) {
+                        break;
+                    }
+
+                    $vectorizedData[] = $cachedData;
+                    $counter++;
+                }
+
+                for ($i = 0; $i < (count($vectorizedData)-1); $i++) {
+                    $jobs[] = new SimilarityComputation($vectorizedData[$i], $vectorizedData[count($vectorizedData)-1]);
+                }
+
+                Bus::batch($jobs)
+                    ->finally(function() {
+                        logger("All jobs is done now");
+                    })->dispatch();
+            })->dispatch();
         
         $criteria = $form->criteria;
         $applicationData = []; 
         $jobs = [];
-        
+
+        // create jobs for appplications
         foreach ($form->applications as $index => $application) {
-            $jobs[] = new VectorizeData($application->applicationID, $this->processID, $index);
+            $jobs[] = new VectorizeData($application->applicationID, $batch->id, $index);
             $applicationData[] = json_decode($application->prepared_data, true);
         }
-
+        
         // add and vectorize the criteria too
         $applicationData[] = json_decode($criteria->prepared_data, true);
-        $jobs[] = new VectorizeData("JD", $this->processID, (count($applicationData)-1), $criteria->criteriaID);
+        $jobs[] = new VectorizeData("JD", $batch->id, (count($applicationData)-1), $criteria->criteriaID);
         
         // build the corpus
         $corpus = $this->buildCorpus($applicationData);
 
         // all related jobs can have access to the data
-        Cache::put($this->processID."_documents", $applicationData);
-        Cache::put($this->processID."_corpus", $corpus);
+        Cache::put($batch->id."_documents", $applicationData);
+        Cache::put($batch->id."_corpus", $corpus);
 
-        Bus::batch($jobs)
-            ->finally(function() {
-                logger("All jobs are done");
-            })->dispatch();
-
-            
-        // Bus::batch($jobs)
-        //     ->finally(function() {
-        //         Bus::batch([
-        //             new SimilarityComputation($this->processID),
-        //             new SimilarityComputation($this->processID),
-        //             new SimilarityComputation($this->processID),
-        //         ]);
-        //     })
-        //     ->dispatch();
+        $batch->add($jobs);
     }
 
     private function buildCorpus($applicationData) 

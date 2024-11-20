@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
-use Mitie\NER;
 use Smalot\PdfParser\Parser;
 use NlpTools\Tokenizers\WhitespaceTokenizer;
 use NlpTools\Utils\StopWords as RemoveStopWords;
@@ -27,7 +25,7 @@ class DataExtractionTools extends Model
 
     public static function parseInput($input)
     {
-        static::$data = $input;
+        static::$data = strtolower($input);
 
         return new static;
     }

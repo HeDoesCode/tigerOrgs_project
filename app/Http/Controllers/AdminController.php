@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CategorizeApplication;
 use Illuminate\Http\Request;
 use App\Models\Organization;
 use App\Models\Photo;
@@ -816,5 +817,18 @@ class AdminController extends Controller
         return Inertia::render('Admin/AdminFormHistory', [
             'orgID' => $organization->orgID,
         ]);
+    }
+
+    public function categorizeApplications(Request $request)
+    {
+        CategorizeApplication::dispatch($request->input('formID')); 
+        
+        session()->flash('toast', [
+            'title' => 'Categorize Applications',
+            'description' => 'Application are being categorize, this may take a while...',
+            'variant' => 'success'
+        ]);
+
+        return redirect()->back();
     }
 }
