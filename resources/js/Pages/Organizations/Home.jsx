@@ -60,6 +60,7 @@ function Home({
         >
             {/* About Us */}
             <AboutUsContainer />
+            <AnnouncementsContainer />
             <Head title={pageData.metadata.organizationName} />
             <div className="w-full flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-8">
                 <div className="flex flex-col space-y-3 md:space-y-8 wfull md:w-1/2">
@@ -107,6 +108,14 @@ function Home({
             <Tile name="About Us" id="aboutUs">
                 {pageData.aboutUs}
                 {editing && editing.aboutUs}
+            </Tile>
+        );
+    }
+
+    function AnnouncementsContainer() {
+        return (
+            <Tile name="Announcements" id="announcements">
+                hello world!
             </Tile>
         );
     }
