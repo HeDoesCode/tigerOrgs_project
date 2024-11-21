@@ -168,12 +168,30 @@ class OrganizationController extends Controller
             $latestOfficerUpdateDate = 'N/A';
         }
 
+        //put here logic for retrieving announcement
+
+        $announcement = DB::table('notifications')
+        ->where('type', 'App\Notifications\AdminAnnouncementNotification')
+        ->where('data->org_name', $organization->name)
+        ->get();
+
+        //add logic to see if auth user will be able to see announcement section
+
+        // dd(Auth::id());
+
+        $isMember = DB::table('organization_user_role')
+        ->where('userID', Auth::id())
+        ->where('orgID', $orgID)
+        ->exists();
+
+
         $pageData = [
             'metadata' => [
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,
             ],
             'aboutUs' => $organization->description,
+            'announcement' => $announcement,
             'fb_link' => $organization->fb_link,
             'contacts' => $organization->contacts,
             'officers' => $organization->officers,
@@ -187,6 +205,7 @@ class OrganizationController extends Controller
             ->exists();
 
         return Inertia::render('Organizations/Home', [
+            'isMember'=> $isMember,
             'pageData' => $pageData,
             'pageLayoutData' => $this->getPageLayoutData($orgID),
             'withFollow' => $followButton, // values: 1(can follow), 0(cannot follow/is already following), no parameter(not displayed)
@@ -301,6 +320,10 @@ class OrganizationController extends Controller
                 'deployed' => true,
             ])->get()
             : [];
+
+        //put logic for retrieving announcement
+
+        
 
         return [
             'forms' => $deployedForms,

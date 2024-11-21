@@ -26,6 +26,7 @@ function Home({
     pageLayoutData,
     withFollow,
     preview,
+    isMember,
 }) {
     const { toast } = useToast();
 
@@ -58,6 +59,9 @@ function Home({
             withFollow={withFollow}
             preview={preview}
         >
+            {/* Announcement */}
+            {isMember && <AnnouncementContainer />}
+
             {/* About Us */}
             <AboutUsContainer />
             <Head title={pageData.metadata.organizationName} />
@@ -99,6 +103,103 @@ function Home({
                     {children}
                 </div>
             </div>
+        );
+    }
+
+    function AnnouncementContainer() {
+        if (!pageData.announcement || pageData.announcement.length === 0) {
+            return null;
+        }
+
+        const sortedAnnouncements = [...pageData.announcement].sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+
+        return (
+            <Tile
+                className="overflow-auto max-h-52 sm:max-h-80"
+                name="Announcements"
+                id="announcement"
+            >
+                <div className="font-semibold text-sm text-slate-400">
+                    Note: Only members of the organization can view this
+                    section.
+                </div>
+                <ul className="">
+                    {sortedAnnouncements.map((announcement, index) => {
+                        const announcementData =
+                            typeof announcement.data === "string"
+                                ? JSON.parse(announcement.data)
+                                : announcement.data;
+
+                        const formattedDate = new Date(
+                            announcement.created_at
+                        ).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        });
+
+                        return (
+                            <li key={index} className={`mt-4`}>
+                                <div className="flex flex-col">
+                                    <div
+                                        className="flex-1 flex-wrap text-left rounded-md hover:outline-gray-500  transition-all"
+                                        dangerouslySetInnerHTML={{
+                                            __html: announcementData.message,
+                                        }}
+                                    ></div>
+                                    <small className="text-gray-500 text-xs mt-1">
+                                        {formattedDate}
+                                    </small>
+                                </div>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </Tile>
+            // <TileAnnounce name="Announcement" id="announcement">
+            //     <div className="font-semibold text-md">
+            //         Note: Only members of the organization can view this
+            //         section.
+            //     </div>
+            //     <ul className="w-full max-w-48 mt-1 space-y-2 pl-2 relative">
+            //         {sortedAnnouncements.map((announcement, index) => {
+            //             const announcementData =
+            //                 typeof announcement.data === "string"
+            //                     ? JSON.parse(announcement.data)
+            //                     : announcement.data;
+
+            //             const formattedDate = new Date(
+            //                 announcement.created_at
+            //             ).toLocaleDateString("en-US", {
+            //                 year: "numeric",
+            //                 month: "long",
+            //                 day: "numeric",
+            //                 hour: "2-digit",
+            //                 minute: "2-digit",
+            //             });
+
+            //             return (
+            //                 <li
+            //                     key={index}
+            //                     className={`flex flex-col  sm:flex-row sm:items-center quicksand gap-x-2 `}
+            //                 >
+            //                     <div className="flex flex-col">
+            //                         <div className="truncate  flex-1 flex-wrap text-left  rounded-md hover:outline-gray-500  transition-all">
+            //                             {announcementData.message}
+            //                         </div>
+            //                         <small className="text-gray-500 text-xs mt-1">
+            //                             {formattedDate}
+            //                         </small>
+            //                     </div>
+            //                 </li>
+            //             );
+            //         })}
+            //     </ul>
+            // </TileAnnounce>
         );
     }
 

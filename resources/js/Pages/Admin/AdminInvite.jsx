@@ -96,6 +96,8 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
         router.post(`/admin/${orgID}/makeAnnouncement`, values);
     }
 
+    const maxTextLength = 1500;
+
     return (
         <div className="w-full">
             <Head title="Admin Dashboard" />
@@ -147,10 +149,16 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                             id="message"
                                             value={values.message}
                                             onChange={handleChange}
+                                            maxLength={maxTextLength}
                                             className="block w-full px-4 h-44 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                             placeholder="Type here your announcement"
                                             required
                                         />
+                                        <div className="font-bold text-sm text-red-500">
+                                            {values.message.length ==
+                                                maxTextLength &&
+                                                `Max. length ${maxTextLength} reached.`}
+                                        </div>
                                     </div>
 
                                     <div className="mt-4 grid justify-items-end">
