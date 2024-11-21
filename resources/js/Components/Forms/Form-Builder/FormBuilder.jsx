@@ -235,7 +235,7 @@ function FormBuilder({ orgID, formData, criterias }) {
                         disabled={processing || data.layout.length === 0}
                         className="bg-[#04aa6dd5] hover:bg-[#04AA6D] text-white font-medium text-lg transition ease-in-out duration-300 w-fit text-right px-4 py-1 border rounded-full disabled:opacity-50"
                     >
-                        {processing ? "Saving..." : "Save Draft"}
+                        {processing ? "Saving..." : "Save"}
                     </button>
                 </div>
             </form>
