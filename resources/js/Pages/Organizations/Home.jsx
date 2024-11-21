@@ -323,7 +323,7 @@ function Home({
                                     <DialogTitle>{photo.caption}</DialogTitle>
                                     <DialogDescription></DialogDescription>
                                 </DialogHeader>
-                                <div className="overflow-y-auto flex justify-center">
+                                <div className="overflow-y-auto h-fit flex justify-center">
                                     <img
                                         src={photo.filename}
                                         className="object-contain max-w-full h-full max-h-full"
