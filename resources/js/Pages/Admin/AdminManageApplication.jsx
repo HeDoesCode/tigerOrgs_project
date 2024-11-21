@@ -424,7 +424,7 @@ function ApplicationResponses({
                 </td>
             )}
 
-            {!isMember ? (
+            {isMember ? (
                 application.status === "accepted" ? (
                     <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
                         <div className="bg-green-400 p-1 text-black rounded-xl">
@@ -443,7 +443,7 @@ function ApplicationResponses({
                             <AdminDialog
                                 title="Answer of the Applicant"
                                 trigger={
-                                    <div className=" justify-self-center underline content-center underline-offset-2">
+                                    <div className="rounded-full bg:[#FF9900] p-2 text-sm justify-self-center underline content-center underline-offset-2">
                                         View{" "}
                                         <span className="sm:hidden">
                                             Response
