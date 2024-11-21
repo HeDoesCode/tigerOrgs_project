@@ -169,7 +169,8 @@ class KeywordSeeder extends Seeder
             "Interfaith Council",
             "Religious Tolerance",
             "Moral Philosophy",
-            "Ethics in Religion"
+            "Ethics in Religion",
+            "International"
         ];
 
         // Transform the keywords into an array of associative arrays with 'keyID' and 'keyword'
