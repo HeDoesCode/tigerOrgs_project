@@ -16,6 +16,7 @@ use App\Models\Officer;
 use App\Notifications\RecruitingEnabledNotification;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -49,12 +50,29 @@ class AdminController extends Controller
             $latestOfficerUpdateDate = 'N/A';
         }
 
+        $announcement = DB::table('notifications')
+        ->where('type', 'App\Notifications\AdminAnnouncementNotification')
+        ->where('data->org_name', $organization->name)
+        ->get();
+
+        //add logic to see if auth user will be able to see announcement section
+
+        // dd(Auth::id());
+
+        $isMember = DB::table('organization_user_role')
+        ->where('userID', Auth::id())
+        ->where('orgID', $orgID)
+        ->exists();
+
+        
+
         $pageData = [
             'metadata' => [
                 'organizationName' => $organization->name,
                 'members' => $organization->members_count,
             ],
             'aboutUs' => $organization->description,
+            'announcement' => $announcement,
             'fb_link' => $organization->fb_link,
             'contacts' => $organization->contacts,
             'officers' => $organization->officers,
@@ -75,6 +93,7 @@ class AdminController extends Controller
             ->select('users.*')->get();
 
         return Inertia::render('Admin/AdminEditPage', [
+            'isMember'=> $isMember,
             'pageData' => $pageData,
             'pageLayoutData' => $pageLayoutData,
             'keywords' => $keywordsArray,
@@ -540,7 +559,7 @@ class AdminController extends Controller
         try {
             $validated = $request->validate([
                 'orgID' => 'required|exists:organizations,orgID',
-                'message' => 'required|max:250',
+                'message' => 'required|max:1500',
             ]);
 
             $message = $validated['message'];

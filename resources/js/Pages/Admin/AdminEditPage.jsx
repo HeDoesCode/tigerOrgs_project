@@ -46,7 +46,14 @@ import { useMemo } from "react";
 import React from "react";
 import { RotateCcw, Check } from "lucide-react";
 
-function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
+function AdminEditPage({
+    pageData,
+    pageLayoutData,
+    keywords,
+    orgID,
+    members,
+    isMember,
+}) {
     const { errors } = usePage().props;
     console.log("errors:", errors);
     const MAX_FILE_SIZE = 20 * 1024 * 1024; // 2 MB
@@ -248,6 +255,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                                 photos: <EditorPhotos />,
                                 saveButton: <EditorSaveButton />,
                             }}
+                            isMember={isMember}
                             pageData={currentPageState.pageData}
                             pageLayoutData={currentPageState.pageLayoutData}
                         />
