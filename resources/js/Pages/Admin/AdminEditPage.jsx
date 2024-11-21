@@ -280,7 +280,7 @@ function AdminEditPage({
 
             if (selectedFile) {
                 if (selectedFile.size > MAX_FILE_SIZE) {
-                    setError("Max. file size 2MB exceeded.");
+                    setError("Max. file size 20MB exceeded.");
                     return;
                 } else {
                     setError("");
@@ -364,7 +364,7 @@ function AdminEditPage({
                 <label>
                     Select an image:{" "}
                     <span className="text-gray-400">
-                        (Accepts .png, .jpg, and .jpeg. Max 2MB)
+                        (Accepts .png, .jpg, and .jpeg. Max 20MB)
                     </span>
                 </label>
                 <input
@@ -409,7 +409,7 @@ function AdminEditPage({
 
             if (selectedFile) {
                 if (selectedFile.size > MAX_FILE_SIZE) {
-                    setError("Max. file size 2MB exceeded.");
+                    setError("Max. file size 20MB exceeded.");
                     return;
                 } else {
                     setError("");
@@ -493,7 +493,7 @@ function AdminEditPage({
                 <label>
                     Select an image:{" "}
                     <span className="text-gray-400">
-                        (Accepts .png, .jpg, and .jpeg. Max 2MB)
+                        (Accepts .png, .jpg, and .jpeg. Max 20MB)
                     </span>
                 </label>
                 <input
@@ -1468,7 +1468,7 @@ function AdminEditPage({
                             <th className="w-56 max-w-56 min-w-36">
                                 Preview <br />
                                 <span className="text-gray-400 text-xs !leading-[0rem]">
-                                    (Accepts .png, .jpg, and .jpeg. Max 2MB.{" "}
+                                    (Accepts .png, .jpg, and .jpeg. Max 20MB.{" "}
                                     <s>default.jpeg</s>)
                                 </span>
                             </th>
@@ -1505,7 +1505,7 @@ function AdminEditPage({
 
                 if (selectedFile) {
                     if (selectedFile.size > MAX_FILE_SIZE) {
-                        setError("Max. file size 2MB exceeded.");
+                        setError("Max. file size 20MB exceeded.");
                         return;
                     } else {
                         setError("");
