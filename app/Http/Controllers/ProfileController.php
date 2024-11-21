@@ -9,6 +9,7 @@ use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
@@ -164,5 +165,15 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->back();
+    }
+
+
+    public function download($filename)
+    {
+        switch ($filename) {
+            case 'manual': {
+                    return Storage::download('private/Manuals/User Manual - Users.pdf');
+                }
+        }
     }
 }

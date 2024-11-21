@@ -49,6 +49,8 @@ Route::middleware(['auth', 'isSuperAdmin:block', 'isHiddenOrganization:block'])-
     });
 
     Route::post('/{orgID}/form-submission/{formID}', [FormController::class, 'submitForm'])->name('formSubmission')->middleware([IsRecruiting::class, 'isMember:block']);
+
+    Route::get('/download/{filename}', [ProfileController::class, 'download'])->name('download');
 });
 
 //superadmin temporary routes
