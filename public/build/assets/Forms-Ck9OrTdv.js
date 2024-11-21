@@ -1,1 +1,0 @@
-import{j as o}from"./app-DabE_VNa.js";import{F as t}from"./FormRenderer-BVwAzrtJ.js";import"./AdminAlertDialog-Cerk4CL5.js";import"./alert-dialog-BrfRYmln.js";import"./utils-DtBPdTrs.js";import"./index-BoRN951-.js";import"./index-BM6JwYQ_.js";import"./index-D7B5CpxX.js";import"./button-CDge09jQ.js";function x({formLayout:r}){return o.jsx(t,{formLayout:r})}export{x as default};

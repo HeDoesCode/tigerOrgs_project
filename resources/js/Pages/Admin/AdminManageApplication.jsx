@@ -424,7 +424,7 @@ function ApplicationResponses({
                 </td>
             )}
 
-            {isMember ? (
+            {!isMember ? (
                 application.status === "accepted" ? (
                     <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
                         <div className="bg-green-400 p-1 text-black rounded-xl">
