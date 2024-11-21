@@ -318,7 +318,7 @@ function Home({
                                     </div>
                                 </div>
                             </DialogTrigger>
-                            <DialogContent className="max-w-5xl w-full md:w-fit max-h-[90%]">
+                            <DialogContent className="max-w-5xl w-full md:w-fit overflow-hidden max-h-[90%]">
                                 <DialogHeader>
                                     <DialogTitle>{photo.caption}</DialogTitle>
                                     <DialogDescription></DialogDescription>
