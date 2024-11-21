@@ -157,36 +157,6 @@ function AdminManageForms({
                     }
                 >
                     <div className="p-5">
-                        <div className="poppins mb-5">
-                            {recruitmentStatusofOSA ? (
-                                <>
-                                    <span className="font-semibold">
-                                        Recruitment is now open.
-                                    </span>
-                                    &nbsp; You may now deploy a Recruitment Form
-                                    for&nbsp;
-                                    <span className="font-semibold">
-                                        {orgName}.
-                                    </span>
-                                    &nbsp; You can also browse history of forms
-                                    from previous year&nbsp;
-                                    <span className="text-[#FF9900]">
-                                        <Link
-                                            href={route("admin.formhistory", {
-                                                orgID,
-                                            })}
-                                        >
-                                            here.
-                                        </Link>
-                                    </span>
-                                </>
-                            ) : (
-                                <span className="font-semibold">
-                                    Recruitment is currently closed.
-                                </span>
-                            )}
-                        </div>
-
                         <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-4 gap-5">
                             <Link
                                 href={route("admin.formbuilder", { orgID })}
