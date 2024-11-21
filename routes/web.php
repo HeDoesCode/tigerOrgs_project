@@ -95,6 +95,10 @@ Route::prefix('/superadmin/')
         //settings page
         Route::get('settings', 'settings')->name('settings');
         Route::post('toggle-settings', 'toggleSetting')->name('toggle-setting');
+
+        // manuals download
+        Route::get('manual', 'manual')->name('manual');
+        Route::get('download/{filename}', 'download')->name('download.manual');
     });
 
 // admin routes

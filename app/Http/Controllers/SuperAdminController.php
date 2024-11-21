@@ -140,8 +140,8 @@ class SuperAdminController extends Controller
         }
 
         $organizations = $query->select('*', 'visibility') // Or however your visibility column is defined
-        ->paginate(12)
-        ->withQueryString();
+            ->paginate(12)
+            ->withQueryString();
 
         $recruitment = DB::table('settings')
             ->where('name', 'Recruitment')
@@ -797,5 +797,19 @@ class SuperAdminController extends Controller
             ],
             'recruiting' => $organization->recruiting,
         ];
+    }
+
+    public function manual()
+    {
+        return Inertia::render('SuperAdmin/SuperAdminManual');
+    }
+
+    public function download($filename)
+    {
+        switch ($filename) {
+            case 'manual': {
+                    return Storage::download('private/Manuals/User Manual - Super Admin.pdf');
+                }
+        }
     }
 }
