@@ -55,10 +55,6 @@ function Layout({
                 </main>
             </div>
             <Toaster className="z-[+1]" />
-            <span className="text-xs text-transparent select-none pointer-events-none fixed -bottom-10">
-                Devs: Joseph Paduga, Laurence Arcilla, Arvin Alkuino, Ethan
-                Catacutan
-            </span>
         </>
     );
 
