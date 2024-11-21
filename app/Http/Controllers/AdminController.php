@@ -51,20 +51,20 @@ class AdminController extends Controller
         }
 
         $announcement = DB::table('notifications')
-        ->where('type', 'App\Notifications\AdminAnnouncementNotification')
-        ->where('data->org_name', $organization->name)
-        ->get();
+            ->where('type', 'App\Notifications\AdminAnnouncementNotification')
+            ->where('data->org_name', $organization->name)
+            ->get();
 
         //add logic to see if auth user will be able to see announcement section
 
         // dd(Auth::id());
 
         $isMember = DB::table('organization_user_role')
-        ->where('userID', Auth::id())
-        ->where('orgID', $orgID)
-        ->exists();
+            ->where('userID', Auth::id())
+            ->where('orgID', $orgID)
+            ->exists();
 
-        
+
 
         $pageData = [
             'metadata' => [
@@ -93,7 +93,7 @@ class AdminController extends Controller
             ->select('users.*')->get();
 
         return Inertia::render('Admin/AdminEditPage', [
-            'isMember'=> $isMember,
+            'isMember' => $isMember,
             'pageData' => $pageData,
             'pageLayoutData' => $pageLayoutData,
             'keywords' => $keywordsArray,
@@ -838,8 +838,8 @@ class AdminController extends Controller
 
     public function categorizeApplications($orgID, $selectedFormId)
     {
-        CategorizeApplication::dispatch($selectedFormId); 
-        
+        CategorizeApplication::dispatch($selectedFormId);
+
         session()->flash('toast', [
             'title' => 'Categorize Applications',
             'description' => 'Application are being categorize, this may take a while...',
@@ -847,5 +847,19 @@ class AdminController extends Controller
         ]);
 
         return redirect()->back();
+    }
+
+    public function manual($orgID)
+    {
+        return Inertia::render('Admin/AdminManual', ['orgID' => $orgID]);
+    }
+
+    public function download($orgID, $filename)
+    {
+        switch ($filename) {
+            case 'manual': {
+                    return Storage::download('private/Manuals/User Manual - Administrators.pdf');
+                }
+        }
     }
 }

@@ -12,6 +12,7 @@ import IconOrg from "@/Components/Icons/IconOrg";
 import SideBar from "@/Components/ui/Custom/SideBar";
 import axios from "axios";
 import { useEffect } from "react";
+import IconBook2 from "@/Components/Icons/IconBook2";
 
 function AdminLayout({ orgID, children }) {
     const { orgLogo, orgName } = usePage().props;
@@ -87,6 +88,14 @@ function AdminLayout({ orgID, children }) {
                             "admin.criteria.create",
                             "admin.criteria.edit",
                         ].includes(route().current())}
+                    />
+                    <SideBarLink
+                        icon={<IconBook2 size="100%" />}
+                        href={route("admin.manual", {
+                            orgID,
+                        })}
+                        desc="Manual"
+                        current={["admin.manual"].includes(route().current())}
                     />
                 </nav>
             </div>

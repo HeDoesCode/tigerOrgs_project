@@ -98,7 +98,7 @@ Route::prefix('/superadmin/')
 
         // manuals download
         Route::get('manual', 'manual')->name('manual');
-        Route::get('download/{filename}', 'download')->name('download.manual');
+        Route::get('download/{filename}', 'download')->name('download');
     });
 
 // admin routes
@@ -155,6 +155,9 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::post('/form-builder/save', [FormController::class, 'saveForm']); // create form action
         Route::patch('/form-builder/save/{formID}', [FormController::class, 'editForm']); // modify form action
         Route::delete('/form-builder/delete/{formID}', [FormController::class, 'deleteForm'])->name('formbuilder.delete');
+
+        Route::get('/manual', [AdminController::class, 'manual'])->name('manual');
+        Route::get('/download/{filename}', [AdminController::class, 'download'])->name('download');
     });
 
 
