@@ -117,7 +117,7 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                             params: { orgID },
                         },
                     ]}
-                    title={`Admin Invitation - ${organizationName}`}
+                    title={`Admin Management - ${organizationName}`}
                 >
                     <div>
                         <div className="flex justify-end me-5 mt-5 ">
