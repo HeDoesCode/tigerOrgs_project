@@ -40,11 +40,9 @@ export default function SuperAdminManage({
     const [edit, setEdit] = useState(false);
 
     const [visibleStates, setVisibleStates] = useState(() => {
-        if (!organizations?.data) return {};
+        if (!organizations?.data?.length) return {};
         return organizations.data.reduce((acc, org) => {
-            if (org?.orgID) {
-                acc[org.orgID] = org.visibility;
-            }
+            acc[org.orgID] = org.visibility ?? false;
             return acc;
         }, {});
     });
@@ -84,6 +82,16 @@ export default function SuperAdminManage({
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
     };
+
+    useEffect(() => {
+        if (organizations?.data?.length) {
+            const newVisibleStates = organizations.data.reduce((acc, org) => {
+                acc[org.orgID] = org.visibility ?? false;
+                return acc;
+            }, {});
+            setVisibleStates(newVisibleStates);
+        }
+    }, [organizations]);
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {

@@ -139,8 +139,9 @@ class SuperAdminController extends Controller
             $query->where('department', $request->department);
         }
 
-        $organizations = $query->paginate(12)
-            ->withQueryString();
+        $organizations = $query->select('*', 'visibility') // Or however your visibility column is defined
+        ->paginate(12)
+        ->withQueryString();
 
         $recruitment = DB::table('settings')
             ->where('name', 'Recruitment')
