@@ -82,6 +82,8 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
         message: "",
     });
 
+    const [openAnnouncementDialog, setOpenAnnouncementDialog] = useState(false);
+
     function handleChange(e) {
         const key = e.target.id;
         const value = e.target.value;
@@ -93,7 +95,11 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        router.post(`/admin/${orgID}/makeAnnouncement`, values);
+        console.log("test");
+        setOpenAnnouncementDialog(false);
+        router.post(`/admin/${orgID}/makeAnnouncement`, values, {
+            onSuccess: () => setOpenAnnouncementDialog(false),
+        });
     }
 
     const maxTextLength = 1500;
@@ -132,6 +138,10 @@ function AdminInvite({ members, admins, orgID, organizationName }) {
                                         icon={<IconBellFilled />}
                                         name="Send Announcement"
                                     />
+                                }
+                                open={openAnnouncementDialog}
+                                onOpenChange={(open) =>
+                                    setOpenAnnouncementDialog(open)
                                 }
                             >
                                 <form

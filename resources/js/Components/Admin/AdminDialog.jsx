@@ -10,9 +10,15 @@ import {
 import AdminButton from "@/Components/Admin/AdminButton";
 import IconInvite from "@/Components/Icons/IconInvite";
 
-function AdminDialog({ children, small, ...props }) {
+function AdminDialog({
+    children,
+    small,
+    open = undefined,
+    onOpenChange = undefined,
+    ...props
+}) {
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger>{props.trigger}</DialogTrigger>
             <DialogContent
                 className={`${

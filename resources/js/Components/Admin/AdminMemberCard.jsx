@@ -25,7 +25,7 @@ function AdminMemberCard({
 }) {
     const isAdmin = roleID === 2;
     const isMember = roleID === 1;
-    console.log(roleID);
+    // console.log(roleID);
 
     return (
         <div className="hover:scale-[1.02] transition-all duration-300 ease-in-out shadow-lg hover:bg-gray-100 p-3 w-full bg-white rounded-xl">
