@@ -25,7 +25,7 @@ function AdminDialog({
                     small
                         ? "w-80 sm:min-w-[400px] h-[40px]"
                         : "w-80 sm:min-w-[800px] h-[440px]"
-                }overflow-auto max-h-[700px] flex flex-col `}
+                } overflow-auto max-h-[700px] flex flex-col`}
             >
                 <DialogHeader>
                     <DialogTitle>{props.title}</DialogTitle>

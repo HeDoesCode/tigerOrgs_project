@@ -358,6 +358,8 @@ function ApplicationResponses({
         );
     }
 
+    const [openStatusDialog, setOpenStatusDialog] = useState(false);
+
     function handleStatusSubmit(e) {
         e.preventDefault();
 
@@ -375,6 +377,7 @@ function ApplicationResponses({
                 preserveState: true,
                 preserveScroll: true,
                 onSuccess: () => {
+                    setOpenStatusDialog(false);
                     setMessage("");
                 },
                 onError: () => {
@@ -382,13 +385,6 @@ function ApplicationResponses({
                 },
             }
         );
-
-        console.log(selectedApplicationId);
-        console.log(status);
-        console.log(selectedUser);
-        console.log(orgID);
-        console.log(message);
-        console.log(selectedFormId);
     }
 
     return (
@@ -559,6 +555,10 @@ function ApplicationResponses({
                                             );
                                         }}
                                     />
+                                }
+                                open={openStatusDialog}
+                                onOpenChange={(open) =>
+                                    setOpenStatusDialog(open)
                                 }
                             >
                                 <form
