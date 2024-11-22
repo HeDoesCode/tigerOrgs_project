@@ -46,7 +46,14 @@ import { useMemo } from "react";
 import React from "react";
 import { RotateCcw, Check } from "lucide-react";
 
-function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
+function AdminEditPage({
+    pageData,
+    pageLayoutData,
+    keywords,
+    orgID,
+    members,
+    isMember,
+}) {
     const { errors } = usePage().props;
     console.log("errors:", errors);
     const MAX_FILE_SIZE = 20 * 1024 * 1024; // 2 MB
@@ -248,6 +255,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                                 photos: <EditorPhotos />,
                                 saveButton: <EditorSaveButton />,
                             }}
+                            isMember={isMember}
                             pageData={currentPageState.pageData}
                             pageLayoutData={currentPageState.pageLayoutData}
                         />
@@ -272,7 +280,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
 
             if (selectedFile) {
                 if (selectedFile.size > MAX_FILE_SIZE) {
-                    setError("Max. file size 2MB exceeded.");
+                    setError("Max. file size 20MB exceeded.");
                     return;
                 } else {
                     setError("");
@@ -356,7 +364,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                 <label>
                     Select an image:{" "}
                     <span className="text-gray-400">
-                        (Accepts .png, .jpg, and .jpeg. Max 2MB)
+                        (Accepts .png, .jpg, and .jpeg. Max 20MB)
                     </span>
                 </label>
                 <input
@@ -401,7 +409,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
 
             if (selectedFile) {
                 if (selectedFile.size > MAX_FILE_SIZE) {
-                    setError("Max. file size 2MB exceeded.");
+                    setError("Max. file size 20MB exceeded.");
                     return;
                 } else {
                     setError("");
@@ -485,7 +493,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                 <label>
                     Select an image:{" "}
                     <span className="text-gray-400">
-                        (Accepts .png, .jpg, and .jpeg. Max 2MB)
+                        (Accepts .png, .jpg, and .jpeg. Max 20MB)
                     </span>
                 </label>
                 <input
@@ -1460,7 +1468,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
                             <th className="w-56 max-w-56 min-w-36">
                                 Preview <br />
                                 <span className="text-gray-400 text-xs !leading-[0rem]">
-                                    (Accepts .png, .jpg, and .jpeg. Max 2MB.{" "}
+                                    (Accepts .png, .jpg, and .jpeg. Max 20MB.{" "}
                                     <s>default.jpeg</s>)
                                 </span>
                             </th>
@@ -1497,7 +1505,7 @@ function AdminEditPage({ pageData, pageLayoutData, keywords, orgID, members }) {
 
                 if (selectedFile) {
                     if (selectedFile.size > MAX_FILE_SIZE) {
-                        setError("Max. file size 2MB exceeded.");
+                        setError("Max. file size 20MB exceeded.");
                         return;
                     } else {
                         setError("");

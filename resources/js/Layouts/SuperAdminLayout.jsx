@@ -8,6 +8,7 @@ import IconDataUpload from "@/Components/Icons/IconDataUpload";
 import { usePage } from "@inertiajs/react";
 import { Inertia } from "@inertiajs/inertia";
 import IconSettings from "@/Components/Icons/IconSettings";
+import IconBook2 from "@/Components/Icons/IconBook2";
 
 function SuperAdminLayout({ children }) {
     const { url } = usePage();
@@ -102,6 +103,13 @@ function SuperAdminLayout({ children }) {
                         current={
                             currentPath === routePath("superadmin.settings")
                         }
+                    />
+
+                    <SideBarLink
+                        icon={<IconBook2 size="100%" />}
+                        href={route("superadmin.manual")}
+                        desc="Manual"
+                        current={currentPath === routePath("superadmin.manual")}
                     />
                 </nav>
             </div>

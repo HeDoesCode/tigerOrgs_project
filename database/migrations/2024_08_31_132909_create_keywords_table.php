@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('keywords', function (Blueprint $table) {
-            $table->id('keyID');
-            $table->string('keyword');
+            $table->id('keyID')->primary();
+            $table->string('keyword')->unique();
         });
     }
 

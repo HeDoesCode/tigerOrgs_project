@@ -49,6 +49,8 @@ Route::middleware(['auth', 'isSuperAdmin:block', 'isHiddenOrganization:block'])-
     });
 
     Route::post('/{orgID}/form-submission/{formID}', [FormController::class, 'submitForm'])->name('formSubmission')->middleware([IsRecruiting::class, 'isMember:block']);
+
+    Route::get('/download/{filename}', [ProfileController::class, 'download'])->name('download');
 });
 
 //superadmin temporary routes
@@ -95,6 +97,10 @@ Route::prefix('/superadmin/')
         //settings page
         Route::get('settings', 'settings')->name('settings');
         Route::post('toggle-settings', 'toggleSetting')->name('toggle-setting');
+
+        // manuals download
+        Route::get('manual', 'manual')->name('manual');
+        Route::get('download/{filename}', 'download')->name('download');
     });
 
 // admin routes
@@ -151,6 +157,9 @@ Route::middleware(['auth', 'isAdmin', 'isSuperAdmin:block'])
         Route::post('/form-builder/save', [FormController::class, 'saveForm']); // create form action
         Route::patch('/form-builder/save/{formID}', [FormController::class, 'editForm']); // modify form action
         Route::delete('/form-builder/delete/{formID}', [FormController::class, 'deleteForm'])->name('formbuilder.delete');
+
+        Route::get('/manual', [AdminController::class, 'manual'])->name('manual');
+        Route::get('/download/{filename}', [AdminController::class, 'download'])->name('download');
     });
 
 

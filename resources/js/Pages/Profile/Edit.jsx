@@ -5,6 +5,7 @@ import KeywordSelect from "@/Components/Organizations/KeywordSelect";
 import React, { useState } from "react";
 import InputContainer from "./InputContainer";
 import IconCircleMinus from "@/Components/Icons/IconCircleMinus";
+import IconFileDownload from "@/Components/Icons/IconFileDownload";
 function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
     // const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
     const fullName = `${user.lastname}, ${user.firstname}
@@ -147,6 +148,24 @@ function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
                             )}
                         </div>
                     </div>
+                    {/* <div className="w-full max-w-[65rem] drop-shadow shadow-black rounded-[2rem] p-8 bg-[#F4F4F4] border border-gray-300"> */}
+                    <div className="p-5 grid max-w-[65rem] gridcol drop-shadow shadow-black rounded-[2rem] bg-[#F4F4F4] col-span-12 lg:col-span-7 w-full border border-gray-300">
+                        <h1 className="font-bold">User Manual - Users</h1>
+                        <div className="flex items-center mt-2 hover:scale-[1.01] transition-all duration-300 ease-in-out">
+                            <button
+                                className="cursor-pointer w-full flex items-center justify-between rounded-xl bg-[#D9D9D9] text-black px-4 py-2 shadow-md"
+                                onClick={() =>
+                                    (window.location.href = route("download", [
+                                        "manual",
+                                    ]))
+                                }
+                            >
+                                <span>Download Manual</span>
+                                <IconFileDownload />
+                            </button>
+                        </div>
+                    </div>
+                    {/* </div> */}
                 </div>
             </UserLayout>
         </div>

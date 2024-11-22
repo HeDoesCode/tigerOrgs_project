@@ -307,7 +307,7 @@ function ApplicationResponses({
     const user = application.user;
     const isMember = application.isMember;
 
-    const [status, setStatus] = useState("accepted");
+    const [status, setStatus] = useState("");
 
     const handleStatusValue = (value) => {
         setStatus(value);
@@ -375,7 +375,6 @@ function ApplicationResponses({
                 preserveState: true,
                 preserveScroll: true,
                 onSuccess: () => {
-                    setStatus("accepted");
                     setMessage("");
                 },
                 onError: () => {
@@ -572,16 +571,11 @@ function ApplicationResponses({
                                             Application:
                                         </label>
                                         <Select
-                                            defaultValue={
-                                                application.status ===
-                                                "submitted"
-                                                    ? "accepted"
-                                                    : application.status
-                                            }
+                                            required
                                             onValueChange={handleStatusValue}
                                         >
                                             <SelectTrigger className="w-full h-12 mb border-gray-300 bg-transparent">
-                                                <SelectValue placeholder="Set Status" />
+                                                <SelectValue placeholder="Select a Status" />
                                             </SelectTrigger>
                                             <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand">
                                                 <SelectItem value="accepted">
