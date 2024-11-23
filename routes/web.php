@@ -19,6 +19,7 @@ use App\Http\Middleware\IsRecruiting;
 use App\Http\Middleware\isSameDepartment;
 
 Route::get('/', function () {
+    dd(request());
     return Inertia::render('Home', [
         'bgImage' => asset('src/background/vecteezy_yellow-background-yellow-abstract-background-light-yellow_37153092.jpg'),
         'tiger1' => asset('src/background/tiger1.png'),
