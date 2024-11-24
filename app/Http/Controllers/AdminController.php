@@ -224,22 +224,22 @@ class AdminController extends Controller
                 'image',
                 'mimes:jpeg,png,jpg',
                 'max:20480',
-                function ($attribute, $value, $fail) {
-                    try {
-                        if ($value->getClientOriginalName() === 'default.jpeg') {
-                            $fail('The file name "default.jpeg" is not allowed.');
-                        }
-                    } catch (Exception $e) {
-                        session()->flash('toast', [
-                            'title' => 'Failed to save your changes.',
-                            'description' => 'Something went wrong on our end. Please inform your administrators and try again later.',
-                            'duration' => 5000,
-                            'variant' => 'destructive'
-                        ]);
+                // function ($attribute, $value, $fail) {
+                //     try {
+                //         if ($value->getClientOriginalName() === 'default.jpeg') {
+                //             $fail('The file name "default.jpeg" is not allowed.');
+                //         }
+                //     } catch (Exception $e) {
+                //         session()->flash('toast', [
+                //             'title' => 'Failed to save your changes.',
+                //             'description' => 'Something went wrong on our end. Please inform your administrators and try again later.',
+                //             'duration' => 5000,
+                //             'variant' => 'destructive'
+                //         ]);
 
-                        return redirect()->back();
-                    }
-                },
+                //         return redirect()->back();
+                //     }
+                // },
             ],
             'pageState.pageData.photos' => 'required|array|min:1',
             'pageState.pageData.photos.*.photoID' => 'sometimes|nullable|integer|exists:organization_photos,photoID',
