@@ -171,9 +171,12 @@ class OrganizationController extends Controller
         //put here logic for retrieving announcement
 
         $announcement = DB::table('notifications')
+        ->select('data', 'created_at')
+        ->distinct()
         ->where('type', 'App\Notifications\AdminAnnouncementNotification')
         ->where('data->org_name', $organization->name)
         ->get();
+
 
         //add logic to see if auth user will be able to see announcement section
 

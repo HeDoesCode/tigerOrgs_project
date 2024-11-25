@@ -39,18 +39,68 @@ export default function SuperAdminManage({
         useState(departments);
     const [edit, setEdit] = useState(false);
 
+    // Initialize visibility states directly from organizations data
     const [visibleStates, setVisibleStates] = useState(() => {
-        if (!organizations?.data?.length) return {};
-        return organizations.data.reduce((acc, org) => {
-            acc[org.orgID] = org.visibility ?? false;
-            return acc;
-        }, {});
+        const states = {};
+        if (organizations?.data) {
+            organizations.data.forEach((org) => {
+                states[org.orgID] = org.visibility;
+            });
+        }
+        return states;
     });
+
+    // Keep track of modified states only
+    const [modifiedStates, setModifiedStates] = useState({});
 
     const [filteredOrganizations, setFilteredOrganizations] = useState(
         organizations?.data || []
     );
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    // Handle filter category changes
+    const handleFilterCategory = (value) => {
+        setSelectedDepartment(value);
+        router.get(
+            route("superadmin.status"),
+            { search: searchQuery, department: value },
+            { preserveState: true, preserveScroll: true }
+        );
+    };
+
+    // Update visible states when organizations data changes
+    useEffect(() => {
+        if (organizations?.data) {
+            setVisibleStates((prevStates) => {
+                const newStates = { ...prevStates };
+                organizations.data.forEach((org) => {
+                    // Only update if not modified by user
+                    if (!modifiedStates[org.orgID]) {
+                        newStates[org.orgID] = org.visibility;
+                    }
+                });
+                return newStates;
+            });
+        }
+    }, [organizations?.data]);
+
+    // Search debounce effect
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            router.get(
+                route("superadmin.status"),
+                { search: searchQuery, department: selectedDepartment },
+                { preserveState: true, preserveScroll: true }
+            );
+        }, 300);
+
+        return () => clearTimeout(timeoutId);
+    }, [searchQuery]);
+
+    // Filter organizations effect
     useEffect(() => {
         const filterOrganizations = () => {
             let filtered = allOrganizations;
@@ -79,76 +129,50 @@ export default function SuperAdminManage({
         filterOrganizations();
     }, [searchQuery, selectedDepartment, allOrganizations]);
 
-    const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value);
-    };
-
-    useEffect(() => {
-        if (organizations?.data?.length) {
-            const newVisibleStates = organizations.data.reduce((acc, org) => {
-                acc[org.orgID] = org.visibility ?? false;
-                return acc;
-            }, {});
-            setVisibleStates(newVisibleStates);
-        }
-    }, [organizations]);
-
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            router.get(
-                route("superadmin.status"),
-                { search: searchQuery, department: selectedDepartment },
-                { preserveState: true, preserveScroll: true }
-            );
-        }, 300);
-
-        return () => clearTimeout(timeoutId);
-    }, [searchQuery]);
-
-    const handleFilterCategory = (value) => {
-        setSelectedDepartment(value);
-        router.get(
-            route("superadmin.status"),
-            { search: searchQuery, department: value },
-            { preserveState: true, preserveScroll: true }
-        );
-    };
-
     const { data, setData, post, processing, reset } = useForm({
-        organizations: allOrganizations.map((org) => ({
-            id: org?.orgID,
-            visibility: org?.visibility,
-        })),
+        organizations: [],
     });
 
+    // Update form data when visible states change
     useEffect(() => {
         setData(
             "organizations",
-            allOrganizations.map((org) => ({
-                id: org?.orgID,
-                visibility: visibleStates[org?.orgID],
+            Object.entries(visibleStates).map(([id, visibility]) => ({
+                id: id,
+                visibility: visibility,
             }))
         );
     }, [visibleStates]);
 
+    // Toggle edit mode
     const toggleEdit = () => {
         setEdit((prevEdit) => !prevEdit);
+        if (!edit) {
+            // Entering edit mode
+            setModifiedStates({});
+        }
     };
 
+    // Handle visibility toggle
+    const handleVisibilityChange = (orgId, newValue) => {
+        setVisibleStates((prevState) => ({
+            ...prevState,
+            [orgId]: newValue,
+        }));
+        setModifiedStates((prevState) => ({
+            ...prevState,
+            [orgId]: true,
+        }));
+    };
+
+    // Reset states on successful save
     const handleSave = () => {
         post(route("superadmin.update-organizations"), {
             preserveState: true,
             preserveScroll: true,
             onSuccess: () => {
                 setEdit(false);
-                // Update the initial state of organizations after successful save
-                if (organizations?.data) {
-                    organizations.data.forEach((org) => {
-                        if (org?.orgID) {
-                            org.visibility = visibleStates[org.orgID];
-                        }
-                    });
-                }
+                setModifiedStates({});
             },
             onError: () => {
                 console.error("Save failed. Please try again.");
@@ -156,16 +180,15 @@ export default function SuperAdminManage({
         });
     };
 
+    // Reset to original states on cancel
     const handleCancel = () => {
         if (organizations?.data) {
-            setVisibleStates(
-                organizations.data.reduce((acc, org) => {
-                    if (org?.orgID) {
-                        acc[org.orgID] = org.visibility;
-                    }
-                    return acc;
-                }, {})
-            );
+            const originalStates = {};
+            organizations.data.forEach((org) => {
+                originalStates[org.orgID] = org.visibility;
+            });
+            setVisibleStates(originalStates);
+            setModifiedStates({});
         }
         setEdit(false);
         reset();
@@ -206,26 +229,13 @@ export default function SuperAdminManage({
                                 <SelectTrigger className="w-full h-12 border-white bg-transparent">
                                     <SelectValue placeholder="All" />
                                 </SelectTrigger>
-                                <SelectContent
-                                    className="border-gray-500 bg-[#EEEEEE] quicksand"
-                                    ref={(ref) => {
-                                        if (!ref) return;
-                                        ref.ontouchstart = (e) =>
-                                            e.preventDefault();
-                                    }}
-                                >
-                                    <SelectItem
-                                        value="All"
-                                        className="hover:!bg-gray-3 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
-                                    >
-                                        All
-                                    </SelectItem>
+                                <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand">
+                                    <SelectItem value="All">All</SelectItem>
                                     {availableDepartments.map(
                                         (department, index) => (
                                             <SelectItem
                                                 key={index}
                                                 value={department}
-                                                className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
                                             >
                                                 {department}
                                             </SelectItem>
@@ -239,14 +249,12 @@ export default function SuperAdminManage({
                     <div className="w-full">
                         <div className="flex justify-end me-5 mt-5">
                             {!edit ? (
-                                <div className="flex">
-                                    <AdminButton
-                                        className="py-2 bg-white hover:bg-gray-800 hover:text-white"
-                                        onClick={toggleEdit}
-                                        icon={<IconEdit />}
-                                        name="Edit"
-                                    />
-                                </div>
+                                <AdminButton
+                                    className="py-2 bg-white hover:bg-gray-800 hover:text-white"
+                                    onClick={toggleEdit}
+                                    icon={<IconEdit />}
+                                    name="Edit"
+                                />
                             ) : (
                                 <div className="flex">
                                     <AdminButton
@@ -279,20 +287,20 @@ export default function SuperAdminManage({
                                         visible={
                                             visibleStates[organization.orgID]
                                         }
-                                        setVisible={(newValue) => {
-                                            setVisibleStates((prevState) => ({
-                                                ...prevState,
-                                                [organization.orgID]: newValue,
-                                            }));
-                                        }}
+                                        setVisible={(newValue) =>
+                                            handleVisibilityChange(
+                                                organization.orgID,
+                                                newValue
+                                            )
+                                        }
                                         organization={organization}
                                     />
                                 ))}
-                                <div className="fixed w-screen bottom-0 left-0 right-0 pl-8 sm:pl-24 pr-10 pb-3 flex justify-center">
-                                    <CustomPagination page={organizations} />
-                                </div>
                             </div>
                         )}
+                        <div className="fixed w-screen bottom-0 left-0 right-0 pl-8 sm:pl-24 pr-10 pb-3 flex justify-center">
+                            <CustomPagination page={organizations} />
+                        </div>
                     </div>
                 </MainAdminFrame>
             </SuperAdminLayout>

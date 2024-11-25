@@ -50,12 +50,6 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                 <MainAdminFrame
                     navItems={[
                         {
-                            icon: <IconCheckBox />,
-                            label: "Student Applications",
-                            link: "admin.applications",
-                            params: { orgID },
-                        },
-                        {
                             icon: <IconForms />,
                             label: "Recruitment Form",
                             link: "admin.forms",
@@ -65,6 +59,12 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                             icon: <IconStars />,
                             label: "Manage Criteria",
                             link: "admin.criteria.index",
+                            params: { orgID },
+                        },
+                        {
+                            icon: <IconCheckBox />,
+                            label: "Student Applications",
+                            link: "admin.applications",
                             params: { orgID },
                         },
                     ]}
