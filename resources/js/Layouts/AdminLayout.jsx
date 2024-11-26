@@ -75,7 +75,7 @@ function AdminLayout({ orgID, children }) {
                     />
                     <SideBarLink
                         icon={<IconOrg size="100%" />}
-                        href={route("admin.applications", {
+                        href={route("admin.forms", {
                             orgID,
                         })}
                         desc="Recruitment"

@@ -286,12 +286,12 @@ function AdminEditPage({
                     setError("");
                 }
 
-                if (selectedFile.name === "default.jpeg") {
-                    setError('File name "default.jpeg" is not allowed.');
-                    return;
-                } else {
-                    setError("");
-                }
+                // if (selectedFile.name === "default.jpeg") {
+                //     setError('File name "default.jpeg" is not allowed.');
+                //     return;
+                // } else {
+                //     setError("");
+                // }
 
                 setFile(selectedFile);
                 setPreviewUrl(URL.createObjectURL(selectedFile));
@@ -415,12 +415,12 @@ function AdminEditPage({
                     setError("");
                 }
 
-                if (selectedFile.name === "default.jpeg") {
-                    setError('File name "default.jpeg" is not allowed.');
-                    return;
-                } else {
-                    setError("");
-                }
+                // if (selectedFile.name === "default.jpeg") {
+                //     setError('File name "default.jpeg" is not allowed.');
+                //     return;
+                // } else {
+                //     setError("");
+                // }
 
                 setFile(selectedFile);
                 setPreviewUrl(URL.createObjectURL(selectedFile));
@@ -1511,12 +1511,12 @@ function AdminEditPage({
                         setError("");
                     }
 
-                    if (selectedFile.name === "default.jpeg") {
-                        setError('File name "default.jpeg" is not allowed.');
-                        return;
-                    } else {
-                        setError("");
-                    }
+                    // if (selectedFile.name === "default.jpeg") {
+                    //     setError('File name "default.jpeg" is not allowed.');
+                    //     return;
+                    // } else {
+                    //     setError("");
+                    // }
 
                     const newPhotoPreview = URL.createObjectURL(selectedFile);
 

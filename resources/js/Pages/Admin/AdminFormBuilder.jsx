@@ -15,12 +15,6 @@ function AdminFormBuilder({ orgID, formData, criterias }) {
                 <MainAdminFrame
                     navItems={[
                         {
-                            icon: <IconCheckBox />,
-                            label: "Student Applications",
-                            link: "admin.applications",
-                            params: { orgID },
-                        },
-                        {
                             icon: <IconForms />,
                             label: "Recruitment Form",
                             link: "admin.forms",
@@ -30,6 +24,12 @@ function AdminFormBuilder({ orgID, formData, criterias }) {
                             icon: <IconStars />,
                             label: "Manage Criteria",
                             link: "admin.criteria.index",
+                            params: { orgID },
+                        },
+                        {
+                            icon: <IconCheckBox />,
+                            label: "Student Applications",
+                            link: "admin.applications",
                             params: { orgID },
                         },
                     ]}

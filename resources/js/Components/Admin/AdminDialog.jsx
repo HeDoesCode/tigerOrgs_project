@@ -10,16 +10,22 @@ import {
 import AdminButton from "@/Components/Admin/AdminButton";
 import IconInvite from "@/Components/Icons/IconInvite";
 
-function AdminDialog({ children, small, ...props }) {
+function AdminDialog({
+    children,
+    small,
+    open = undefined,
+    onOpenChange = undefined,
+    ...props
+}) {
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger>{props.trigger}</DialogTrigger>
             <DialogContent
                 className={`${
                     small
                         ? "w-80 sm:min-w-[400px] h-[40px]"
                         : "w-80 sm:min-w-[800px] h-[440px]"
-                }overflow-auto max-h-[700px] flex flex-col `}
+                }overflow-auto max-h-[700px] flex flex-col`}
             >
                 <DialogHeader>
                     <DialogTitle>{props.title}</DialogTitle>
