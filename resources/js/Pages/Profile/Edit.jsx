@@ -6,7 +6,21 @@ import React, { useState } from "react";
 import InputContainer from "./InputContainer";
 import IconCircleMinus from "@/Components/Icons/IconCircleMinus";
 import IconFileDownload from "@/Components/Icons/IconFileDownload";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
+
 function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
+    const { toast } = useToast();
     // const fullName = `${user.firstname} ${user.lastname} ${user.middlename}`;
     const fullName = `${user.lastname}, ${user.firstname}
     ${user.middlename ? ` ${user.middlename[0]}.` : ""}`;
@@ -18,6 +32,9 @@ function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
     );
 
     const [editing, setEditing] = useState(false);
+
+    const [openFollowingAlertDialog, setOpenFollowingAlertDialog] =
+        useState(false);
 
     const handleSave = () => {
         if (
@@ -35,7 +52,23 @@ function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
             (item) => !currentFollowedOrgIDs.includes(item)
         );
         router.patch(route("update.user.follows"), unfollowedOrgs, {
-            onSuccess: () => setEditing(false),
+            onSuccess: () => {
+                setEditing(false);
+                toast({
+                    title: "Unfollow Organizations Success",
+                    description: "Successfully unfollowed organization/s.",
+                    variant: "success",
+                    duration: 3000,
+                });
+            },
+            onError: () =>
+                toast({
+                    title: "Unfollow Organizations Failed",
+                    description:
+                        "An error occurred while updating your followed organizations.",
+                    variant: "destructive",
+                    duration: 4000,
+                }),
         });
     };
 
@@ -124,12 +157,56 @@ function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
                                         }`}
                                         onClick={
                                             editing
-                                                ? handleSave
+                                                ? () => {
+                                                      if (
+                                                          JSON.stringify(
+                                                              currentFollowedOrgs
+                                                          ) ===
+                                                          JSON.stringify(
+                                                              followedOrgs
+                                                          )
+                                                      ) {
+                                                          setEditing(false);
+                                                          return;
+                                                      }
+                                                      setOpenFollowingAlertDialog(
+                                                          true
+                                                      );
+                                                  }
                                                 : () => setEditing(true)
                                         }
                                     >
                                         {editing ? "Save" : "Edit"}
                                     </button>
+                                    <AlertDialog
+                                        open={openFollowingAlertDialog}
+                                        onOpenChange={(open) =>
+                                            setOpenFollowingAlertDialog(open)
+                                        }
+                                    >
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>
+                                                    Confirm unfollowing
+                                                    organization/s.
+                                                </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    You may still strong them
+                                                    again later.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>
+                                                    Cancel
+                                                </AlertDialogCancel>
+                                                <AlertDialogAction
+                                                    onClick={handleSave}
+                                                >
+                                                    Continue
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
                                 </div>
                             )}
                         </div>
