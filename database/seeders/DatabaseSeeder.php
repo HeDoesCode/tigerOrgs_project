@@ -83,23 +83,36 @@ class DatabaseSeeder extends Seeder
             ->count(120)
             ->create()
             ->each(function ($organization) use ($users) {
+                // Photos
+                Photo::factory()
+                    ->for($organization, 'organization')
+                    ->portrait()
+                    ->count(1)
+                    ->create();
+
+                Photo::factory()
+                    ->for($organization, 'organization')
+                    ->count(3)
+                    ->create();
+
                 // Random Keywords
-                // $keywords = Keyword::all()->pluck('keyID')->toArray();
-                // $randomKeywords = array_rand(array_flip($keywords), rand(5, 15));
-                // $organization->keywords()->attach($randomKeywords);
+                $keywords = Keyword::all()->pluck('keyID')->toArray();
+                $randomKeywords = array_rand(array_flip($keywords), rand(5, 15));
+                $organization->keywords()->attach($randomKeywords);
 
                 // Random Officers
                 $usersArray = $users->pluck('userID')->toArray(); // Get an array of user IDs
-                // Officer::factory()
-                //     ->count(7)
-                //     ->for($organization, 'organization')
-                //     ->create()
-                //     ->each(function ($officer) use ($usersArray) {
-                //         $officer->userID = array_rand(array_flip($usersArray)); // Assign a random user ID
-                //         // dd($officer);
-                //         // dd($officer);
-                //         $officer->save(); // Save the officer with the new user ID
-                //     });
+                // dd($usersArray);
+                Officer::factory()
+                    ->count(7)
+                    ->for($organization, 'organization')
+                    ->create()
+                    ->each(function ($officer) use ($usersArray) {
+                        $officer->userID = array_rand(array_flip($usersArray)); // Assign a random user ID
+                        // dd($officer);
+                        // dd($officer);
+                        $officer->save(); // Save the officer with the new user ID
+                    });
 
                 Contact::factory()
                     ->for($organization, 'organization')
