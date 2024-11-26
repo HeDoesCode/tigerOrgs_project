@@ -20,7 +20,7 @@ class GoogleController extends Controller
 {
 session()->put('remember_me', request('remember_me'));
 
-if (env('APP_ENV') === "local") {
+if (env('APP_ENV') === "production") {
 return $this->mockGooglecallback();
 }
 return Socialite::driver('google')->with([
