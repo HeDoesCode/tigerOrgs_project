@@ -23,9 +23,7 @@ import IconStars from "@/Components/Icons/IconStars";
 
 export function Index({ orgID, criteriaData }) {
     const handleDelete = (criteriaID) => {
-        if (confirm("Are you sure you want to delete this?")) {
-            router.delete(route("admin.criteria.destroy", [orgID, criteriaID]));
-        }
+        router.delete(route("admin.criteria.destroy", [orgID, criteriaID]));
     };
 
     return (
