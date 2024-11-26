@@ -82,7 +82,7 @@ function AdminOrgCard({
                     <div className="p-2 col-span-2 content-center">
                         <img
                             className="rounded-full"
-                            src={`/storage/logo/${organization.logo}`}
+                            src={organization.logo}
                             alt="Organization Logo"
                             onError={(e) => {
                                 e.target.onerror = null;

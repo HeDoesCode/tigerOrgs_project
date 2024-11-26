@@ -48,8 +48,8 @@ class OrganizationFactory extends Factory
         return [
             'recruiting' => (bool) rand(0, 1),
             'name' => 'UST ' . fake()->unique()->company(),
-            'logo' => "default.jpeg",
-            'coverPhoto' => "default.jpeg",
+            'logo' => "https://picsum.photos/id/" . self::$i . "/800/800",
+            'coverPhoto' => "https://picsum.photos/id/" . self::$i . "/2800/800",
             'description' => fake()->realTextBetween($minNbChars = 160, $maxNbChars = 200, $indexSize = 2),
             // 'fb_link' => fake()->url(),
             'fb_link' => '',

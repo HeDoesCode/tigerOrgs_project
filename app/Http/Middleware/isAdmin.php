@@ -51,7 +51,7 @@ class isAdmin
                 return redirect()->back();
             }
             Inertia::share([
-                'orgLogo' => Storage::url('logo/' . Organization::where('orgID', $orgID)->value('logo')),
+                'orgLogo' => Organization::where('orgID', $orgID)->value('logo'),
                 'orgName' => Organization::where('orgID', $orgID)->value('name'),
             ]);
             return $next($request);

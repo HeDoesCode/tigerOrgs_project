@@ -787,8 +787,8 @@ class SuperAdminController extends Controller
         return [
             'forms' => $deployedForms,
             'orgID' => $organization->orgID,
-            'logo' => Storage::url("public/logo/" . $organization->logo),
-            'coverPhoto' => Storage::url("public/coverPhoto/" . $organization->coverPhoto),
+            'logo' => $organization->logo,
+            'coverPhoto' => $organization->coverPhoto,
             'metadata' => [
                 'keywords' => $organization->keywords ?: [],
                 'department' => $organization->department,

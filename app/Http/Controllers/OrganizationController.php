@@ -107,7 +107,7 @@ class OrganizationController extends Controller
                     $photo->filename = Storage::url('photo/' . $photo->filename);
                     return $photo;
                 });
-                $organization->logo = Storage::url('logo/' . $organization->logo);
+                $organization->logo;
                 return $organization;
             });
 
@@ -126,7 +126,7 @@ class OrganizationController extends Controller
             ->sortBy('name')
             ->map(
                 function ($organization) {
-                    $organization->logo = Storage::url('logo/' . $organization->logo);
+                    $organization->logo;
                     return $organization;
                 }
             );
@@ -331,8 +331,8 @@ class OrganizationController extends Controller
         return [
             'forms' => $deployedForms,
             'orgID' => $organization->orgID,
-            'logo' => Storage::url("public/logo/" . $organization->logo),
-            'coverPhoto' => Storage::url("public/coverPhoto/" . $organization->coverPhoto),
+            'logo' =>  $organization->logo,
+            'coverPhoto' => $organization->coverPhoto,
             'metadata' => [
                 'keywords' => $organization->keywords ?: [],
                 'department' => $organization->department,
