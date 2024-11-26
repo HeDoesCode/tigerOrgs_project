@@ -150,10 +150,10 @@ function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
                                         {editing && "Click to unfollow"}
                                     </span>
                                     <button
-                                        className={`px-3 select-none py-1 text-center w-20 rounded-md h-full ${
+                                        className={`px-2 select-none py-1 text-center w-20 rounded-md h-full ${
                                             editing
                                                 ? "bg-sky-400"
-                                                : "bg-slate-300"
+                                                : "bg-amber-500 hover:bg-amber-400 transition-colors"
                                         }`}
                                         onClick={
                                             editing

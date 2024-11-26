@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Link } from "@inertiajs/react";
 import IconSocialInstagram from "./Icons/Social/IconInstagram";
 import IconFacebookRoundFilled from "./Icons/Social/IconFacebookRoundFilled";
-import IconInstagram from "./Icons/Social/IconInstagram";
+import PrivacyPolicy from "@/Pages/Auth/PrivacyPolicy";
 
 function Footer() {
+    const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+
     return (
         <div
             className={`min-h-36 mt-5 -mx-4 pt-10 pb-4 inter font-extralight text-sm bg-[#EEEEEE] flex justify-center`}
@@ -11,7 +14,6 @@ function Footer() {
             <div className="flex space-x-2 mx-10 sm:mx-24 md:mx-52 border-gray-300 border-t-[1px] pt-3 pb-5 w-full max-w-[70rem] h-fit">
                 <div className="flex-1">
                     <p className="leading-6">
-                        {/* No Copyright 2024 © TigerOrgs Project <br /> */}
                         Property of the{" "}
                         <a
                             href="https://manila.ust.edu.ph/osawebapp/home"
@@ -20,7 +22,14 @@ function Footer() {
                             rel="noopener noreferrer"
                         >
                             UST Office for Student Affairs.
-                        </a>
+                        </a>{" "}
+                        <button
+                            className="text-md underline"
+                            onClick={() => setIsPrivacyModalOpen(true)}
+                        >
+                            Privacy Policy
+                        </button>
+                        <br />
                         <br />
                         <br />
                         <a
@@ -63,6 +72,10 @@ function Footer() {
                     </ul>
                 </div>
             </div>
+
+            {isPrivacyModalOpen && (
+                <PrivacyPolicy onClose={() => setIsPrivacyModalOpen(false)} />
+            )}
         </div>
     );
 

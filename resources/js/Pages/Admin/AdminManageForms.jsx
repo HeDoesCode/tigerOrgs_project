@@ -236,8 +236,9 @@ function AdminManageForms({
                                                                         )
                                                                     )
                                                                 }
+                                                                className="bg-amber-500 hover:bg-amber-600 transition-colors text-black"
                                                             >
-                                                                Continue
+                                                                Confirm
                                                             </AlertDialogAction>
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>

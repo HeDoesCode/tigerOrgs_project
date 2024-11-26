@@ -79,18 +79,4 @@ class DataExtractionTools extends Model
         return static::$data;
     }
 
-    // scrapped
-    // public static function NER()
-    // {
-    //     $NER_MODEL = new NER(Storage::disk()->path("MITIE-models/english/caTIGERizer_model.dat"));  
-        
-    //     $classifiedData = [];
-
-    //     foreach (static::$data as $token) {
-    //         $classifiedData[] = $NER_MODEL->entities($token);
-    //     }
-        
-    //     return $classifiedData;
-    // }
-
 }
