@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\Typography\FontFactory;
 
 use function Laravel\Prompts\error;
 
@@ -549,6 +551,7 @@ class SuperAdminController extends Controller
 
                 $organizationID = Organization::create([
                     'name' => $newOrgData['name'],
+                    'logo' => $this->generateDefaultImage(strtoupper(substr($newOrgData['name'], 0, 1))),
                     'department' => $newOrgData['department'],
                 ])->orgID;
 
@@ -558,13 +561,34 @@ class SuperAdminController extends Controller
             }
         }
 
-
         session()->flash('toast', [
             'title' => 'File Uploaded Successfully',
             'description' => 'The organization list and status was updated',
             'variant' => 'success'
         ]);
         return redirect()->back();
+    }
+
+    private function generateDefaultImage($character)
+    {
+        $image = Image::create(720,720)
+                    ->fill(sprintf('#%06X', mt_rand(0, 0xFFFFFF))."50")
+                    ->text($character, 360, 360, function(FontFactory $font) {
+                        $font->filename(public_path('fonts/Nunito-Regular.ttf'));
+                        $font->size(500);
+                        $font->align('center');
+                        $font->valign('middle');
+                    });
+
+        $generated_filename = hexdec(uniqid()).".jpeg";
+
+        $filename = "logo/$generated_filename";
+
+        $path = Storage::disk('public')->path($filename);
+
+        $image->toJpeg()->save($path);
+
+        return $generated_filename;
     }
 
     public function upload(Request $request)

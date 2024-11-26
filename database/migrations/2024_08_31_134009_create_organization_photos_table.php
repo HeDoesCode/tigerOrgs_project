@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('photoID');
             $table->foreignId('orgID')->constrained('organizations', 'orgID')->onDelete('cascade');
             $table->string('caption')->default('sample');
-            $table->string('filename')->default('default.jpeg');
+            $table->string('filename')->default('default.jpg');
         });
     }
 

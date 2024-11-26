@@ -47,7 +47,7 @@ class CategorizeApplication implements ShouldQueue
                 
                 while (true) {
                     $key = $batch->id."_VectorizedApplication_".$counter;
-                    $cachedData = Cache::get($key);
+                    $cachedData = Cache::pull($key);
 
                     if (is_null($cachedData)) {
                         break;
@@ -63,6 +63,12 @@ class CategorizeApplication implements ShouldQueue
 
                 Bus::batch($jobs)
                     ->finally(function() {
+                        
+                        session()->flash('toast', [
+                            'title' => 'Categorize Applications is now complete!',
+                            'variant' => 'success'
+                        ]);
+                        
                         logger("All jobs is done now");
                     })->dispatch();
             })->dispatch();
@@ -85,8 +91,8 @@ class CategorizeApplication implements ShouldQueue
         $corpus = $this->buildCorpus($applicationData);
 
         // all related jobs can have access to the data
-        Cache::put($batch->id."_documents", $applicationData);
-        Cache::put($batch->id."_corpus", $corpus);
+        Cache::put($batch->id."_documents", $applicationData, now()->addMinutes(30));
+        Cache::put($batch->id."_corpus", $corpus, now()->addMinutes(30));
 
         $batch->add($jobs);
     }
