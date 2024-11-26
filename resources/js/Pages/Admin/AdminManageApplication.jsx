@@ -75,7 +75,7 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                             <div className="grid grid-cols-1 md:grid-cols-12 divide-x divide-gray-200">
                                 <div className="col-span-5 md:col-span-3 mb-6">
                                     <div className="hidden sm:block poppins p-5">
-                                        Forms Available:
+                                        Available Forms:
                                     </div>
                                     <div className="hidden sm:block h-[500px] overflow-auto">
                                         {formsWithApplications.map((form) => (
@@ -171,7 +171,7 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                                     type="submit"
                                                     className="mr-2 py-1 bg-white flex px-5  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white"
                                                 >
-                                                    Categorize Similarity Score
+                                                    Run ATS Analysis
                                                 </button>
                                             </form>
                                         )}
@@ -424,13 +424,13 @@ function ApplicationResponses({
                 application.status === "accepted" ? (
                     <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
                         <div className="bg-green-400 p-1 text-black rounded-xl">
-                            Application Accepted
+                            Accepted
                         </div>
                     </td>
                 ) : application.status === "rejected" ? (
                     <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
                         <div className="bg-red-400 p-1 text-black rounded-xl">
-                            Application Rejected
+                            Rejected
                         </div>
                     </td>
                 ) : (
