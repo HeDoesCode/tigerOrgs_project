@@ -841,7 +841,7 @@ class AdminController extends Controller
         CategorizeApplication::dispatch($selectedFormId);
 
         session()->flash('toast', [
-            'title' => 'Categorize Applications',
+            'title' => 'Running ATS Analysis',
             'description' => 'Application are being categorize, this may take a while...',
             'variant' => 'success'
         ]);
