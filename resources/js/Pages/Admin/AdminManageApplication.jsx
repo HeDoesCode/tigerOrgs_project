@@ -425,13 +425,13 @@ function ApplicationResponses({
             {!isMember ? (
                 application.status === "accepted" ? (
                     <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
-                        <div className="bg-green-400 px-4 py-1 text-black rounded-xl w-screen text-center">
+                        <div className="bg-green-400 px-4 py-1 text-black rounded-xl">
                             Accepted
                         </div>
                     </td>
                 ) : application.status === "rejected" ? (
                     <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
-                        <div className="bg-red-400 px-4 py-1 text-black rounded-xl w-screen text-center">
+                        <div className="bg-red-400 px-4 py-1 text-black rounded-xl ">
                             Rejected
                         </div>
                     </td>
