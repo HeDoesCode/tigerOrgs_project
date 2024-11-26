@@ -1,10 +1,14 @@
 import { router, usePage, useForm } from "@inertiajs/react";
 import RenderFormItem from "./RenderFormItem";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AdminAlertDialog from "@/Components/Admin/AdminAlertDialog";
+import { Checkbox } from "@/Components/ui/checkbox";
 
 function FormRenderer({ formLayout, orgID, formID }) {
     const { errors, flash } = usePage().props;
+
+    const [disableSubmit, setDisableSubmit] = useState(true);
+    const [checkboxEmphasis, setCheckboxEmphasis] = useState(false);
 
     const { data, setData, post, reset } = useForm({
         userData: {},
@@ -50,6 +54,12 @@ function FormRenderer({ formLayout, orgID, formID }) {
     function handleSubmit(e) {
         e.preventDefault();
 
+        if (disableSubmit) {
+            // console.log("prevent submit");
+            setCheckboxEmphasis(true);
+            return;
+        }
+
         post(route("formSubmission", { orgID, formID }), {
             preserveState: true,
             preserveScroll: true,
@@ -75,7 +85,6 @@ function FormRenderer({ formLayout, orgID, formID }) {
                                 {formLayout.desc}
                             </p>
                         )}
-
                         {Object.keys(errors).length > 0 && (
                             <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
                                 <div className="flex">
@@ -110,7 +119,6 @@ function FormRenderer({ formLayout, orgID, formID }) {
                                 </div>
                             </div>
                         )}
-
                         <ul className="space-y-6">
                             {formLayout.layout.map((item, index) => (
                                 <RenderFormItem
@@ -128,6 +136,32 @@ function FormRenderer({ formLayout, orgID, formID }) {
                                 />
                             ))}
                         </ul>
+                        <div
+                            className={`flex items-center mt-7 text-sm w-fit ${
+                                checkboxEmphasis &&
+                                "outline outline-1 outline-red-500 px-3 bg-red-50 rounded-lg"
+                            }`}
+                        >
+                            <input
+                                id="permit"
+                                type="checkbox"
+                                className={
+                                    checkboxEmphasis ? "border-red-500" : ""
+                                }
+                                onChange={(e) => {
+                                    setDisableSubmit(!e.target.checked);
+                                }}
+                            />
+                            <label
+                                htmlFor="permit"
+                                className={`cursor-pointer pl-2 h-10 flex items-center select-none ${
+                                    checkboxEmphasis && "text-red-500 font-bold"
+                                }`}
+                            >
+                                "I confirm that all information provided above
+                                is correct."
+                            </label>
+                        </div>
                     </div>
 
                     <div className="px-6 py-4 bg-gray-50 flex justify-between">
@@ -146,7 +180,9 @@ function FormRenderer({ formLayout, orgID, formID }) {
                         />
                         <button
                             type="submit"
-                            className="inline-flex items-center px-4 py-2 border border-transparent font-medium rounded-md shadow-sm text-white bg-[#04aa6dd5] hover:bg-[#04AA6D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className={`inline-flex items-center px-4 py-2 border border-transparent font-medium rounded-md shadow-sm text-white bg-[#04aa6dd5] hover:bg-[#04AA6D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                                disableSubmit && "opacity-50 cursor-not-allowed"
+                            }`}
                         >
                             Submit
                         </button>
