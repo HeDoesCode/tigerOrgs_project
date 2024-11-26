@@ -50,12 +50,6 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                 <MainAdminFrame
                     navItems={[
                         {
-                            icon: <IconCheckBox />,
-                            label: "Student Applications",
-                            link: "admin.applications",
-                            params: { orgID },
-                        },
-                        {
                             icon: <IconForms />,
                             label: "Recruitment Form",
                             link: "admin.forms",
@@ -67,6 +61,12 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                             link: "admin.criteria.index",
                             params: { orgID },
                         },
+                        {
+                            icon: <IconCheckBox />,
+                            label: "Student Applications",
+                            link: "admin.applications",
+                            params: { orgID },
+                        },
                     ]}
                     title="Manage Student Applications"
                 >
@@ -75,7 +75,7 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                             <div className="grid grid-cols-1 md:grid-cols-12 divide-x divide-gray-200">
                                 <div className="col-span-5 md:col-span-3 mb-6">
                                     <div className="hidden sm:block poppins p-5">
-                                        Forms Available:
+                                        Available Forms:
                                     </div>
                                     <div className="hidden sm:block h-[500px] overflow-auto">
                                         {formsWithApplications.map((form) => (
@@ -169,9 +169,9 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                             >
                                                 <button
                                                     type="submit"
-                                                    className="mr-2 py-1 bg-white flex px-5  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white"
+                                                    className="mr-2 py-1 bg-white flex px-5  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white ease-in-out duration-300 "
                                                 >
-                                                    Categorize Similarity Score
+                                                    Run ATS Analysis
                                                 </button>
                                             </form>
                                         )}
@@ -358,6 +358,8 @@ function ApplicationResponses({
         );
     }
 
+    const [openStatusDialog, setOpenStatusDialog] = useState(false);
+
     function handleStatusSubmit(e) {
         e.preventDefault();
 
@@ -375,6 +377,7 @@ function ApplicationResponses({
                 preserveState: true,
                 preserveScroll: true,
                 onSuccess: () => {
+                    setOpenStatusDialog(false);
                     setMessage("");
                 },
                 onError: () => {
@@ -382,13 +385,6 @@ function ApplicationResponses({
                 },
             }
         );
-
-        console.log(selectedApplicationId);
-        console.log(status);
-        console.log(selectedUser);
-        console.log(orgID);
-        console.log(message);
-        console.log(selectedFormId);
     }
 
     return (
@@ -416,7 +412,9 @@ function ApplicationResponses({
                 ""
             ) : (
                 <td className="col-span-1 sm:col-span-1 px-4 text-sm content-center">
-                    <div className={`bg-gray-500 rounded-xl text-white`}>
+                    <div
+                        className={`bg-gray-500 rounded-xl text-white px-2 py-1`}
+                    >
                         {application.similarityScore !== null
                             ? `${application.similarityScore}%`
                             : "Not yet graded"}
@@ -427,14 +425,14 @@ function ApplicationResponses({
             {!isMember ? (
                 application.status === "accepted" ? (
                     <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
-                        <div className="bg-green-400 p-1 text-black rounded-xl">
-                            Application Accepted
+                        <div className="bg-green-400 px-4 py-1 text-black rounded-xl">
+                            Accepted
                         </div>
                     </td>
                 ) : application.status === "rejected" ? (
                     <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
-                        <div className="bg-red-400 p-1 text-black rounded-xl">
-                            Application Rejected
+                        <div className="bg-red-400 px-4 py-1 text-black rounded-xl ">
+                            Rejected
                         </div>
                     </td>
                 ) : (
@@ -560,6 +558,10 @@ function ApplicationResponses({
                                         }}
                                     />
                                 }
+                                open={openStatusDialog}
+                                onOpenChange={(open) =>
+                                    setOpenStatusDialog(open)
+                                }
                             >
                                 <form
                                     onSubmit={handleStatusSubmit}
@@ -624,8 +626,8 @@ function ApplicationResponses({
                 )
             ) : (
                 <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
-                    <div className="bg-[#FFBC58] p-1 text-black rounded-xl">
-                        Already a Member
+                    <div className="bg-[#FFBC58] px-4 py-1 text-black rounded-xl ">
+                        Member
                     </div>
                 </td>
             )}

@@ -25,12 +25,6 @@ function Create({ orgID }) {
                 <MainAdminFrame
                     navItems={[
                         {
-                            icon: <IconCheckBox />,
-                            label: "Student Applications",
-                            link: "admin.applications",
-                            params: { orgID },
-                        },
-                        {
                             icon: <IconForms />,
                             label: "Recruitment Form",
                             link: "admin.forms",
@@ -40,6 +34,12 @@ function Create({ orgID }) {
                             icon: <IconStars />,
                             label: "Manage Criteria",
                             link: "admin.criteria.index",
+                            params: { orgID },
+                        },
+                        {
+                            icon: <IconCheckBox />,
+                            label: "Student Applications",
+                            link: "admin.applications",
                             params: { orgID },
                         },
                     ]}
