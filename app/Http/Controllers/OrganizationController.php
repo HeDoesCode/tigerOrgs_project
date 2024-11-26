@@ -48,11 +48,11 @@ class OrganizationController extends Controller
                 $organization->photos = DB::table('organization_photos')
                     ->where('orgID', $organization->orgID)
                     ->select('*')->get()->map(function ($photo) {
-                        $photo->filename = Storage::url('photo/' . $photo->filename);
+                        $photo->filename ;
                         return $photo;
                     });
 
-                $organization->logo = Storage::url('logo/' . $organization->logo);
+                $organization->logo ;
                 return $organization;
             });
     }
@@ -104,7 +104,7 @@ class OrganizationController extends Controller
             ->map(function ($organization) {
                 // Map over each photo to modify its URL
                 $organization->photos = $organization->photos->map(function ($photo) {
-                    $photo->filename = Storage::url('photo/' . $photo->filename);
+                    $photo->filename;
                     return $photo;
                 });
                 $organization->logo;
@@ -302,7 +302,7 @@ class OrganizationController extends Controller
                 'photoID' => $photo['photoID'],
                 'orgID' => $photo['orgID'],
                 'caption' => $photo['caption'],
-                'filename' => Storage::url('public/photo/' . $photo['filename']),
+                'filename' => $photo['filename'],
             ];
         }
 

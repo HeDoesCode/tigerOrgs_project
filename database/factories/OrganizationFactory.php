@@ -51,21 +51,12 @@ class OrganizationFactory extends Factory
             'logo' => "https://picsum.photos/id/" . self::$i . "/800/800",
             'coverPhoto' => "https://picsum.photos/id/" . self::$i . "/2800/800",
             'description' => fake()->realTextBetween($minNbChars = 160, $maxNbChars = 200, $indexSize = 2),
-            // 'fb_link' => fake()->url(),
+            'fb_link' => fake()->url(),
             'fb_link' => '',
             'visibility' => fake()->boolean(),
             'department' => fake()->randomElement($departments)
         ];
     }
 
-    public function configure()
-    {
-        return $this->afterCreating(function ($organization) {
-            DB::table('organization_photos')->insert([
-                'orgID' => $organization->orgID,
-                'caption' => 'sample',
-                'filename' => 'default.jpeg',
-            ]);
-        });
-    }
+    
 }

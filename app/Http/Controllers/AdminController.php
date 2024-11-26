@@ -462,7 +462,7 @@ class AdminController extends Controller
                                             $origPhoto->caption = $photo['caption'];
                                             $origPhoto->save();
                                         }
-                                        if ($photo['filename'] !== Storage::url('photo/' . $origPhoto->filename)) { // image file has changed
+                                        if ($photo['filename'] !==  $origPhoto->filename) { // image file has changed
                                             // delete old photo in storage
                                             if ($origPhoto->filename !== 'default.jpeg') {
                                                 Storage::delete('public/photo/' . $origPhoto->filename);

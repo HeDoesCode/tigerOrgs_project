@@ -762,7 +762,7 @@ class SuperAdminController extends Controller
                 'photoID' => $photo['photoID'],
                 'orgID' => $photo['orgID'],
                 'caption' => $photo['caption'],
-                'filename' => Storage::url('public/photo/' . $photo['filename']),
+                'filename' =>  $photo['filename'],
             ];
         }
 
