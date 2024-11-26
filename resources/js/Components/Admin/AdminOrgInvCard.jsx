@@ -4,6 +4,7 @@ import IconStatus from "@/Components/Icons/IconStatus";
 import IconChevronDown from "@/Components/Icons/IconChevronDown";
 import AdminDropdownMenu from "@/Components/Admin/AdminInvDropdownMenu";
 import { XCircle } from "lucide-react";
+import AdminAlertDialog from "./AdminAlertDialog";
 
 function AdminOrgInvCard({
     organization,
@@ -61,15 +62,22 @@ function AdminOrgInvCard({
                 </div>
             </div>
             {isAssigned && isDeleting && (
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
+                <AdminAlertDialog
+                    trigger={
+                        <div
+                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                            type="button"
+                        >
+                            <XCircle size={20} />
+                        </div>
+                    }
+                    title={`Confirm Deletion?`}
+                    description="The user will be removed as admin from their organization."
+                    accept="Confirm"
+                    onclick={() => {
                         onDelete(organization.orgID);
                     }}
-                    className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                >
-                    <XCircle size={20} />
-                </button>
+                ></AdminAlertDialog>
             )}
         </div>
     );
