@@ -169,7 +169,7 @@ function AdminManageApplication({ orgID, formsWithApplications }) {
                                             >
                                                 <button
                                                     type="submit"
-                                                    className="mr-2 py-1 bg-white flex px-5  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white"
+                                                    className="mr-2 py-1 bg-white flex px-5  shadow-lg rounded-2xl hover:bg-gray-800 hover:text-white ease-in-out duration-300 "
                                                 >
                                                     Run ATS Analysis
                                                 </button>
@@ -412,7 +412,9 @@ function ApplicationResponses({
                 ""
             ) : (
                 <td className="col-span-1 sm:col-span-1 px-4 text-sm content-center">
-                    <div className={`bg-gray-500 rounded-xl text-white`}>
+                    <div
+                        className={`bg-gray-500 rounded-xl text-white px-2 py-1`}
+                    >
                         {application.similarityScore !== null
                             ? `${application.similarityScore}%`
                             : "Not yet graded"}
@@ -423,13 +425,13 @@ function ApplicationResponses({
             {!isMember ? (
                 application.status === "accepted" ? (
                     <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
-                        <div className="bg-green-400 p-1 text-black rounded-xl w-full text-center">
+                        <div className="bg-green-400 px-4 py-1 text-black rounded-xl w-screen text-center">
                             Accepted
                         </div>
                     </td>
                 ) : application.status === "rejected" ? (
                     <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
-                        <div className="bg-red-400 p-1 text-black rounded-xl w-full text-center">
+                        <div className="bg-red-400 px-4 py-1 text-black rounded-xl w-screen text-center">
                             Rejected
                         </div>
                     </td>
@@ -624,8 +626,8 @@ function ApplicationResponses({
                 )
             ) : (
                 <td className="col-span-1  px-2  grid-cols-1 text-sm font-bold grid content-center justify-self-center sm:grid-cols-1">
-                    <div className="bg-[#FFBC58] p-1 text-black rounded-2xl ">
-                        Already a Member
+                    <div className="bg-[#FFBC58] px-4 py-1 text-black rounded-xl ">
+                        Member
                     </div>
                 </td>
             )}

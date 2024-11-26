@@ -844,7 +844,7 @@ class AdminController extends Controller
 
         session()->flash('toast', [
             'title' => 'Running ATS Analysis',
-            'description' => 'Applications are being annalyzed, this may take a while...',
+            'description' => 'Applications are being evaluated according to their criteria. This may take a while...',
             'variant' => 'success'
         ]);
 
