@@ -22,7 +22,8 @@ function Footer() {
                             rel="noopener noreferrer"
                         >
                             UST Office for Student Affairs.
-                        </a>{" "}
+                        </a>
+                        {"  "}
                         <button
                             className="text-md underline"
                             onClick={() => setIsPrivacyModalOpen(true)}

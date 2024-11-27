@@ -146,7 +146,7 @@ function FormRenderer({ formLayout, orgID, formID }) {
                                 id="permit"
                                 type="checkbox"
                                 className={
-                                    checkboxEmphasis ? "border-red-500" : ""
+                                    checkboxEmphasis ? "border-red-500 " : ""
                                 }
                                 onChange={(e) => {
                                     setDisableSubmit(!e.target.checked);
@@ -154,12 +154,12 @@ function FormRenderer({ formLayout, orgID, formID }) {
                             />
                             <label
                                 htmlFor="permit"
-                                className={`cursor-pointer pl-2 h-10 flex items-center select-none ${
+                                className={`cursor-pointer pl-2 h-10 flex items-center select-none font-semibold ${
                                     checkboxEmphasis && "text-red-500 font-bold"
                                 }`}
                             >
-                                "I confirm that all information provided above
-                                is correct."
+                                I confirm that all information provided above is
+                                correct.
                             </label>
                         </div>
                     </div>
