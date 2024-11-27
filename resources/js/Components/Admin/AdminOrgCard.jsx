@@ -91,8 +91,10 @@ function AdminOrgCard({
                         />
                     </div>
                     <div className="col-span-3  px-2">
-                        <h1 className="text-sm font-bold py-4 ">
-                            {organization.name}
+                        <h1 className="text-sm  font-bold py-4 ">
+                            <div className="line-clamp-2">
+                                {organization.name}
+                            </div>
                         </h1>
                     </div>
                 </div>

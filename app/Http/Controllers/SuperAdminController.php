@@ -141,7 +141,8 @@ class SuperAdminController extends Controller
             $query->where('department', $request->department);
         }
 
-        $organizations = $query->select('*', 'visibility') // Or however your visibility column is defined
+        $organizations = $query->select('*', 'visibility') 
+            ->withCount('members')
             ->paginate(12)
             ->withQueryString();
 
