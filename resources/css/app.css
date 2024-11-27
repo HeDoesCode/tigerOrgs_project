@@ -7,7 +7,6 @@
 .transOptimize {
     backface-visibility: hidden;
 }
-
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -20,7 +19,7 @@
 ::-webkit-scrollbar-thumb {
     background-color: rgba(155, 155, 155, 0.7);
     border-radius: 20px;
-    /* border: 2px solid rgba(0, 0, 0, 0.1); */
+    border: 1px solid transparent;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -31,7 +30,7 @@
     background-color: rgba(155, 155, 155, 1);
 }
 
-::-webkit-scrollbar:active {
+::-webkit-scrollbar-thumb:active {
     background-color: rgba(155, 155, 155, 1);
 }
 
@@ -86,7 +85,6 @@ button {
 .questrial {
     font-family: "Questrial", sans-serif;
 }
-
 
 /* Custom CSS */
 
