@@ -51,11 +51,11 @@ class AdminController extends Controller
         }
 
         $announcement = DB::table('notifications')
-        ->select('data', 'created_at')
-        ->distinct()
-        ->where('type', 'App\Notifications\AdminAnnouncementNotification')
-        ->where('data->org_name', $organization->name)
-        ->get();
+            ->select('data', 'created_at')
+            ->distinct()
+            ->where('type', 'App\Notifications\AdminAnnouncementNotification')
+            ->where('data->org_name', $organization->name)
+            ->get();
 
         //add logic to see if auth user will be able to see announcement section
 
@@ -804,7 +804,8 @@ class AdminController extends Controller
         $formsWithApplications = Form::where('orgID', $orgID)
             ->with(['applications' => function ($query) {
                 $query->select('applicationID', 'formID', 'userID', 'userData', 'similarityScore', 'status', 'created_at')
-                    ->with('user:userID,firstname,lastname,email,college');
+                    ->with('user:userID,firstname,lastname,email,college')
+                    ->orderByRaw('CASE WHEN similarityScore IS NULL THEN 0 ELSE similarityScore END DESC');
             }])
             ->get(['formID', 'formLayout', 'orgID']);
 
