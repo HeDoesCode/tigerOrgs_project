@@ -21,6 +21,7 @@ import OrganizationContainerRow from "@/Components/Organizations/OrganizationCon
 import OrganizationTile from "@/Components/Organizations/OrganizationTile";
 import { useState } from "react";
 import { useEffect } from "react";
+import ImageWithLoader from "@/Components/ImageWithLoader";
 
 function Organizations({
     organizations,
@@ -270,7 +271,6 @@ function Organizations({
                     {/* orgs panel */}
                     <div className="md:flex-1 space-y-3 overflow-x-hidden">
                         {/* <Pre object={Object.values(myMemberOrganizations)} /> */}
-
                         {queryParameters && organizations.length === 0 && (
                             <div className="w-full flex justify-center font-bold text-gray-400">
                                 No Organizations Found

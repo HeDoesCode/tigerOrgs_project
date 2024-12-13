@@ -38,9 +38,11 @@ Route::middleware(['auth', 'isSuperAdmin:block', 'isHiddenOrganization:block'])-
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
     Route::post('/applications/{application}/status', [NotificationController::class, 'updateStatus'])->name('notifications.updateStatus');
 
-
+    // for Organizations
     Route::prefix('organizations')->group(function () {
         Route::get('/', [OrganizationController::class, 'browse'])->name('organizations');
+        // for Lazy Loading (returns JSON reponse only)
+
         Route::get('/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
         Route::patch('/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
 
