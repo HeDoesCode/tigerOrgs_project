@@ -148,6 +148,30 @@ class OrganizationController extends Controller
         ]);
     }
 
+    public function loadIndex()
+    {
+        $paginatedOrganizations = Organization::simplePaginate(20);
+
+        if (request()->wantsJson()) {
+            return response()->json($paginatedOrganizations);
+        }
+
+        return Inertia::render('Organizations/TestOrganizationsPagination', [
+            'paginatedOrganizations' => $paginatedOrganizations,
+        ]);
+    }
+
+    public function loadNext(Request $request)
+    {
+        /**
+         * $organizations []
+         * Push all recommended organizations
+         * Push first 20 visible and filtered organizations
+         *
+         * variable: [nextPageUrl, currentPageItems]
+         */
+    }
+
     public function visit($orgID)
     {
         $organization = Organization::withCount('members')
@@ -171,11 +195,11 @@ class OrganizationController extends Controller
         //put here logic for retrieving announcement
 
         $announcement = DB::table('notifications')
-        ->select('data', 'created_at')
-        ->distinct()
-        ->where('type', 'App\Notifications\AdminAnnouncementNotification')
-        ->where('data->org_name', $organization->name)
-        ->get();
+            ->select('data', 'created_at')
+            ->distinct()
+            ->where('type', 'App\Notifications\AdminAnnouncementNotification')
+            ->where('data->org_name', $organization->name)
+            ->get();
 
 
         //add logic to see if auth user will be able to see announcement section
@@ -183,9 +207,9 @@ class OrganizationController extends Controller
         // dd(Auth::id());
 
         $isMember = DB::table('organization_user_role')
-        ->where('userID', Auth::id())
-        ->where('orgID', $orgID)
-        ->exists();
+            ->where('userID', Auth::id())
+            ->where('orgID', $orgID)
+            ->exists();
 
 
         $pageData = [
@@ -208,7 +232,7 @@ class OrganizationController extends Controller
             ->exists();
 
         return Inertia::render('Organizations/Home', [
-            'isMember'=> $isMember,
+            'isMember' => $isMember,
             'pageData' => $pageData,
             'pageLayoutData' => $this->getPageLayoutData($orgID),
             'withFollow' => $followButton, // values: 1(can follow), 0(cannot follow/is already following), no parameter(not displayed)
@@ -326,7 +350,7 @@ class OrganizationController extends Controller
 
         //put logic for retrieving announcement
 
-        
+
 
         return [
             'forms' => $deployedForms,

@@ -42,6 +42,8 @@ Route::middleware(['auth', 'isSuperAdmin:block', 'isHiddenOrganization:block'])-
     Route::prefix('organizations')->group(function () {
         Route::get('/', [OrganizationController::class, 'browse'])->name('organizations');
         // for Lazy Loading (returns JSON reponse only)
+        Route::get('/loadIndex', [OrganizationController::class, 'loadIndex']);
+        // Route::get('/load', [OrganizationController::class, 'loadNext'])->name('loadNext');
 
         Route::get('/{orgID}/home', [OrganizationController::class, 'visit'])->name('organizations.home');
         Route::patch('/{orgID}/follow', [OrganizationController::class, 'toggleFollow'])->name('organizations.follow');
