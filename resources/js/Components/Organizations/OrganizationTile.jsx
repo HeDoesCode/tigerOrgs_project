@@ -25,7 +25,6 @@ function OrganizationTile({
                 <ImageWithLoader
                     className="h-full aspect-[5/8]"
                     img={{ src: orgBg }}
-                    div={{}}
                 />
                 {recruiting && (
                     <div className="absolute left-1/2 -translate-x-1/2 top-3 text-[0.6rem] px-2 py-[0.15rem] rounded-[0.25rem] bg-[#EF9B1E]/90 inter font-extrabold text-white shadow-sm shadow-black/50">
