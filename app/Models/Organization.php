@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Organization extends Model
 {
@@ -27,6 +28,11 @@ class Organization extends Model
     protected $casts = [
         'recruiting' => 'boolean',
         'visibility' => 'boolean',
+    ];
+
+    protected $appends = [
+        'logoUrl',
+        'coverPhotoUrl'
     ];
 
     // Relationships:
@@ -72,10 +78,20 @@ class Organization extends Model
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class, 'orgID', 'orgID');
-    }   
+    }
 
     public function criteria(): HasMany
     {
         return $this->hasMany(Criteria::class, 'orgID', 'orgID');
+    }
+
+    public function getlogoUrlAttribute()
+    {
+        return (Storage::url('logo/' . $this->logo));
+    }
+
+    public function getcoverPhotoUrlAttribute()
+    {
+        return (Storage::url('logo/' . $this->coverPhoto));
     }
 }
