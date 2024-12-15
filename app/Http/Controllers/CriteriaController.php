@@ -61,8 +61,8 @@ class CriteriaController extends Controller
     public function update(Request $request, $orgID, $criterion)
     {
         $validatedData = $request->validate([
-            'name' => ['required', 'string'],
-            'description' => ['required', 'string']
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:4294967295']
         ]);
 
         $editedCriteria = Criteria::find($criterion);
