@@ -62,6 +62,13 @@ class GoogleController extends Controller
                     'status' => 'osa',
                     'college' => 'osa',
                 ]);
+
+                DB::table('superadmin_login_history')->insert([ 
+                    'userID' => Auth::id(),
+                    'action' => 'created a new OSA Account',
+                    'login_timestamp' => now(),
+                 ]);
+
             }
         
 
