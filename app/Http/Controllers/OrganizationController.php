@@ -12,11 +12,15 @@ use Inertia\Controller;
 use App\Models\Organization;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+
+use function PHPUnit\Framework\isEmpty;
 
 class OrganizationController extends Controller
 {
@@ -43,18 +47,8 @@ class OrganizationController extends Controller
                 'organizations.orgID'
             )
             ->distinct()
-            ->get()
-            ->map(function ($organization) {
-                $organization->photos = DB::table('organization_photos')
-                    ->where('orgID', $organization->orgID)
-                    ->select('*')->get()->map(function ($photo) {
-                        $photo->filename = Storage::url('photo/' . $photo->filename);
-                        return $photo;
-                    });
-
-                $organization->logo = Storage::url('logo/' . $organization->logo);
-                return $organization;
-            });
+            ->with('photos')
+            ->get();
     }
 
     public function browse(Request $request): Response
@@ -97,19 +91,28 @@ class OrganizationController extends Controller
         }
 
         $organizations = $query
-            ->where('visibility', 1)    // Only include visible organizations
-            ->with('photos')             // Attach photos relationship
-            ->withCount('members')       // Attach member count
-            ->get()
-            ->map(function ($organization) {
-                // Map over each photo to modify its URL
-                $organization->photos = $organization->photos->map(function ($photo) {
-                    $photo->filename = Storage::url('photo/' . $photo->filename);
-                    return $photo;
-                });
-                $organization->logo = Storage::url('logo/' . $organization->logo);
-                return $organization;
-            });
+            ->where('visibility', 1)
+            ->with('photos')
+            ->withCount('members')
+            ->get()->groupBy('department');
+
+        if ($organizations->has('University-Wide')) {
+            $universityWide = $organizations->pull('University-Wide');
+            $organizations = $organizations->prepend($universityWide, 'University-Wide');
+        }
+
+        if (empty($queryParameters)) {
+            $currentPage = Paginator::resolveCurrentPage();
+            $perPage = 5;
+
+            $organizations = new LengthAwarePaginator(
+                $organizations->slice(($currentPage - 1) * $perPage, $perPage),
+                $organizations->count(),
+                $perPage,
+                $currentPage,
+                ['path' => Paginator::resolveCurrentPath()]
+            );
+        }
 
         // // get all available keywords
         $keywords = Keyword::join('organization_keywords', 'keywords.keyID', '=', 'organization_keywords.keyID')
@@ -120,29 +123,17 @@ class OrganizationController extends Controller
             ->join('roles', 'organization_user_role.roleID', '=', 'roles.roleID')
             ->where('organization_user_role.userID', Auth::id())
             ->select('organizations.name', 'roles.role_description', 'organizations.orgID', 'organizations.logo', 'organizations.visibility')
-            // ->limit(10) // remove in production
-            ->orderBy('organizations.name', 'asc')
+            ->orderBy('organizations.name', 'asc', 'name')
             ->get()
-            ->sortBy('name')
-            ->map(
-                function ($organization) {
-                    $organization->logo = Storage::url('logo/' . $organization->logo);
-                    return $organization;
-                }
-            );
+            ->sortBy('name');
 
-        $isSuperAdmin = DB::table('organization_user_role')
-            ->where('userID', Auth::id())
-            ->where('roleID', 3)
-            ->select('*')
-            ->first();
+        // dd($queryParameters);
 
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
-            'recommendedOrganizations' => $recommendedOrganizations,
+            'recommendedOrganizations' => isEmpty($queryParameters) ? $recommendedOrganizations : [],
             'departments' => $departments,
             'keywords' => $keywords,
-            'isSuperAdmin' => $isSuperAdmin,
             'myMemberOrganizations' => $myMemberOrganizations ?: [],
             'queryParameters' => $queryParameters ?: null,
         ]);
@@ -171,11 +162,11 @@ class OrganizationController extends Controller
         //put here logic for retrieving announcement
 
         $announcement = DB::table('notifications')
-        ->select('data', 'created_at')
-        ->distinct()
-        ->where('type', 'App\Notifications\AdminAnnouncementNotification')
-        ->where('data->org_name', $organization->name)
-        ->get();
+            ->select('data', 'created_at')
+            ->distinct()
+            ->where('type', 'App\Notifications\AdminAnnouncementNotification')
+            ->where('data->org_name', $organization->name)
+            ->get();
 
 
         //add logic to see if auth user will be able to see announcement section
@@ -183,9 +174,9 @@ class OrganizationController extends Controller
         // dd(Auth::id());
 
         $isMember = DB::table('organization_user_role')
-        ->where('userID', Auth::id())
-        ->where('orgID', $orgID)
-        ->exists();
+            ->where('userID', Auth::id())
+            ->where('orgID', $orgID)
+            ->exists();
 
 
         $pageData = [
@@ -208,7 +199,7 @@ class OrganizationController extends Controller
             ->exists();
 
         return Inertia::render('Organizations/Home', [
-            'isMember'=> $isMember,
+            'isMember' => $isMember,
             'pageData' => $pageData,
             'pageLayoutData' => $this->getPageLayoutData($orgID),
             'withFollow' => $followButton, // values: 1(can follow), 0(cannot follow/is already following), no parameter(not displayed)
@@ -326,7 +317,7 @@ class OrganizationController extends Controller
 
         //put logic for retrieving announcement
 
-        
+
 
         return [
             'forms' => $deployedForms,

@@ -31,37 +31,45 @@ function Organizations({
     myMemberOrganizations,
 }) {
     queryParameters = queryParameters || {};
-    const [organizationList, setOrganizationList] = useState({});
+    const hasQueryParameters = Object.keys(queryParameters).length !== 0;
+    const [organizationList, setOrganizationList] = useState([]);
     // console.log(myMemberOrganizations)
     // group organizations by department/college
     useEffect(() => {
-        const groupedByDepartment = organizations.reduce(
-            (acc, organization) => {
-                const department = organization.department;
-                if (!acc[department]) {
-                    acc[department] = [];
-                }
-                acc[department].push(organization);
-                return acc;
-            },
-            {}
-        );
-
-        // Move 'University-Wide' organizations to the start of the array
-        if (groupedByDepartment["University-Wide"]) {
-            const universityWideOrgs = groupedByDepartment["University-Wide"];
-            delete groupedByDepartment["University-Wide"]; // Remove from its original position
-
-            // Prepend University-Wide organizations to the start
-            setOrganizationList({
-                "University-Wide": universityWideOrgs,
-                ...groupedByDepartment, // Spread the rest of the grouped organizations
-            });
-        } else {
-            // If there are no 'University-Wide' organizations, just set normally
-            setOrganizationList(groupedByDepartment);
-        }
+        // const groupedByDepartment = organizations.reduce(
+        //     (acc, organization) => {
+        //         const department = organization.department;
+        //         if (!acc[department]) {
+        //             acc[department] = [];
+        //         }
+        //         acc[department].push(organization);
+        //         return acc;
+        //     },
+        //     {}
+        // );
+        // // Move 'University-Wide' organizations to the start of the array
+        // if (groupedByDepartment["University-Wide"]) {
+        //     const universityWideOrgs = groupedByDepartment["University-Wide"];
+        //     delete groupedByDepartment["University-Wide"]; // Remove from its original position
+        //     // Prepend University-Wide organizations to the start
+        //     setOrganizationList({
+        //         "University-Wide": universityWideOrgs,
+        //         ...groupedByDepartment, // Spread the rest of the grouped organizations
+        //     });
+        // } else {
+        //     // If there are no 'University-Wide' organizations, just set normally
+        //     setOrganizationList(groupedByDepartment);
+        // }
+        // if (organizations.data["University-Wide"]) {
+        //     organizations.data = {
+        //         "University-Wide": organizations.data["University-Wide"],
+        //         ...organizations.data,
+        //     };
+        // }
+        setOrganizationList(organizations.data || organizations);
     }, [organizations]);
+
+    console.log("organizationList", organizationList);
 
     // call server for search query every change
     const handleSearch = (e) => {
@@ -112,6 +120,8 @@ function Organizations({
     const handleClearQuery = () => {
         router.get(route("organizations"));
     };
+
+    // return <></>;
 
     return (
         <div className="w-full">
@@ -195,19 +205,6 @@ function Organizations({
                             </button>
                         </ControlContainer>
 
-                        {/* {isSuperAdmin && (
-                            <ControlContainer>
-                                <ul className="bg-transparent flex flex-col py-3 rounded-md space-y-4">
-                                    <OrganizationJoined
-                                        icon="https://scontent.fmnl30-2.fna.fbcdn.net/v/t39.30808-1/379249269_872028557643589_7767519284231773085_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeFZKMicf1CYVeO4tuXfLyje4vxiXiyaS5Pi_GJeLJpLkxoQdpaGhxXY4SmR3UK6qiMMC1rZpt805xAUxbdgvAMc&_nc_ohc=waaGroD6R1cQ7kNvgHtcHoo&_nc_ht=scontent.fmnl30-2.fna&oh=00_AYAs3lfS3aOKI2arEPVOaRvbB6MUXpd7KTxLuOGdcKaJgA&oe=66C28011"
-                                        title="Office for Student Affairs"
-                                        isSuperAdmin
-                                        link={route("superadmin.status")}
-                                    />
-                                </ul>
-                            </ControlContainer>
-                        )}
- */}
                         {myMemberOrganizations.length !== 0 && (
                             <ControlContainer
                                 name="Organizations&nbsp;you've&nbsp;joined:"
@@ -219,7 +216,7 @@ function Organizations({
                                             <OrganizationJoined
                                                 key={index}
                                                 visibility={org.visibility}
-                                                icon={org.logo}
+                                                icon={org.logoUrl}
                                                 title={org.name}
                                                 isAdmin={
                                                     org.role_description ===
@@ -249,7 +246,7 @@ function Organizations({
                                             <OrganizationJoined
                                                 key={index}
                                                 visibility={org.visibility}
-                                                icon={org.logo}
+                                                icon={org.logoUrl}
                                                 title={org.name}
                                                 isAdmin={
                                                     org.role_description ===
@@ -277,33 +274,42 @@ function Organizations({
                             </div>
                         )}
 
-                        {recommendedOrganizations.length !== 0 && (
-                            <OrganizationContainerRow
-                                title={"Recommended based on your interests"}
-                                collegeLength={
-                                    Object.keys(organizationList).length
-                                }
-                            >
-                                {recommendedOrganizations.map((org, index) => (
-                                    <OrganizationTile
-                                        key={index}
-                                        orgBg={
-                                            org.photos && org.photos.length > 0
-                                                ? org.photos[0].filename
-                                                : "https://placehold.co/500x800"
-                                        }
-                                        orgIcon={org.logo}
-                                        title={org.name}
-                                        recruiting={org.recruiting}
-                                        desc={org.description}
-                                        count={org.members_count}
-                                        href={route("organizations.home", {
-                                            orgID: org.orgID,
-                                        })}
-                                    />
-                                ))}
-                            </OrganizationContainerRow>
-                        )}
+                        {recommendedOrganizations.length !== 0 &&
+                            !hasQueryParameters && (
+                                <OrganizationContainerRow
+                                    title={
+                                        "Recommended based on your interests"
+                                    }
+                                    collegeLength={
+                                        Object.keys(organizationList).length
+                                    }
+                                >
+                                    {recommendedOrganizations.map(
+                                        (org, index) => (
+                                            <OrganizationTile
+                                                key={index}
+                                                orgBg={
+                                                    org.photos &&
+                                                    org.photos.length > 0
+                                                        ? org.photos[0].Url
+                                                        : "https://placehold.co/500x800"
+                                                }
+                                                orgIcon={org.logoUrl}
+                                                title={org.name}
+                                                recruiting={org.recruiting}
+                                                desc={org.description}
+                                                count={org.members_count}
+                                                href={route(
+                                                    "organizations.home",
+                                                    {
+                                                        orgID: org.orgID,
+                                                    }
+                                                )}
+                                            />
+                                        )
+                                    )}
+                                </OrganizationContainerRow>
+                            )}
 
                         {Object.entries(organizationList).map(
                             ([department, orgs], index) => (
