@@ -31,8 +31,8 @@ function OrganizationTile({
                      className="object-cover h-full rounded-lg shadow-sm aspect-[5/8]"
                  /> */}
                 <ImageWithLoader
-                    className="h-full aspect-[5/8] object-cover rounded-lg"
-                    img={{ src: orgBg }}
+                    className="h-full aspect-[5/8] rounded-lg"
+                    img={{ src: orgBg, className: "object-cover" }}
                 />
                 {recruiting && (
                     <div className="absolute left-1/2 -translate-x-1/2 top-3 text-[0.6rem] px-2 py-[0.15rem] rounded-[0.25rem] bg-[#EF9B1E]/90 inter font-extrabold text-white shadow-sm shadow-black/50">
