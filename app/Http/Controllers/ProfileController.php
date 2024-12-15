@@ -90,8 +90,7 @@ class ProfileController extends Controller
         ]);
 
         $validator = Validator::make($request->all(), [
-            // 'section' => ['required', 'regex:/^\d-[A-Z]+$/'],
-            'section' => ['required'],
+            'section' => ['required|string|max:255'],
         ]);
 
         if ($validator->fails()) {
@@ -133,7 +132,7 @@ class ProfileController extends Controller
 
         $validator = Validator::make($request->all(), [
             'unfollowedOrgIDs' => 'array',
-            'unfollowedOrgIDs.*' => 'integer',
+            'unfollowedOrgIDs.*' => 'integer|exists:organizations,orgID',
         ]);
 
         if ($validator->fails()) {

@@ -191,7 +191,7 @@ function Edit({ user, activeUserKeywords, keywords, followedOrgs = [] }) {
                                                     organization/s.
                                                 </AlertDialogTitle>
                                                 <AlertDialogDescription>
-                                                    You may still strong them
+                                                    You may still follow them
                                                     again later.
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
