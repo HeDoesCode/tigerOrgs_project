@@ -89,10 +89,11 @@ Route::prefix('/superadmin/')
 
         // routes for activity log tab
         Route::get('loginhistory', 'viewLoginHistory')->name('loginhistory');
+        Route::get('invitehistory', 'viewInviteHistory')->name('invitehistory');
 
-        Route::get('invitehistory', function () {
-            return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
-        })->name('invitehistory');
+        // Route::get('invitehistory', function () {
+        //     return Inertia::render('SuperAdmin/SuperAdminInviteHistory');
+        // })->name('invitehistory');
 
         //settings page
         Route::get('settings', 'settings')->name('settings');

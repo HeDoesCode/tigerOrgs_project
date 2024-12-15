@@ -44,6 +44,7 @@ class isSuperAdmin
             // log the login activity
             DB::table('superadmin_login_history')->insert([ // insert the log to db
                'userID' => Auth::id(),
+               'action' => 'accessed the Super Admin Dashboard',
                'login_timestamp' => now(),
             ]);
          } // else (it is already logged), continue request

@@ -16,6 +16,7 @@ use App\Notifications\MakeAdminNotification;
 use App\Notifications\RecruitmentStatusNotification;
 use App\Notifications\RemoveAdminNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Expr\PostDec;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -311,8 +312,7 @@ class SuperAdminController extends Controller
                 ]);
                 return redirect()->back();
             }
-
-
+      
             DB::table('organization_user_role')->updateOrInsert(
                 [
                     'userID' => $validated['userID'],
@@ -324,6 +324,19 @@ class SuperAdminController extends Controller
                     'updated_at' => now(),
                 ]
             );
+            
+
+            DB::table('admin_invite_history')->updateOrInsert(
+                [
+                    'inviter_userID' => Auth::id(),
+                    'invited_userID' => $validated['userID'],
+                    'orgID' => $validated['orgID'],
+                ],
+                [
+                    'invite_timestamp' => now(),
+                ]
+            );
+
 
             session()->flash('toast', [
                 'title' => 'Saved',
@@ -472,6 +485,12 @@ class SuperAdminController extends Controller
 
         fclose($studentData);
 
+        DB::table('superadmin_login_history')->insert([ 
+            'userID' => Auth::id(),
+            'action' => 'uploaded a new Student List',
+            'login_timestamp' => now(),
+         ]);
+
         session()->flash('toast', [
             'title' => 'File Uploaded Successfully',
             'description' => 'The users list has been updated',
@@ -564,6 +583,13 @@ class SuperAdminController extends Controller
             }
         }
 
+        DB::table('superadmin_login_history')->insert([ 
+            'userID' => Auth::id(),
+            'action' => 'uploaded a new Organization List',
+            'login_timestamp' => now(),
+         ]);
+
+
         session()->flash('toast', [
             'title' => 'File Uploaded Successfully',
             'description' => 'The organization list and status was updated',
@@ -637,7 +663,7 @@ class SuperAdminController extends Controller
 
         $loginEntries = DB::table('superadmin_login_history')
             ->join('users', 'superadmin_login_history.userID', '=', 'users.userID')
-            ->select('users.firstname', 'users.middlename', 'users.lastname', 'superadmin_login_history.login_timestamp')
+            ->select('users.firstname', 'users.middlename', 'users.lastname', 'superadmin_login_history.action', 'superadmin_login_history.login_timestamp')
             ->orderByDesc('superadmin_login_history.loginID')
             ->paginate(20); // Use paginate() instead of get()
 
@@ -654,6 +680,42 @@ class SuperAdminController extends Controller
         // dd($loginEntries);
         return Inertia::render('SuperAdmin/SuperAdminLoginHistory', [
             'loginEntries' => $loginEntries,
+        ]);
+    }
+
+    public function viewInviteHistory()
+    {
+        
+        $inviteEntries = DB::table('admin_invite_history')
+        ->join('users as inviter', 'admin_invite_history.inviter_userID', '=', 'inviter.userID')
+        ->join('users as invited', 'admin_invite_history.invited_userID', '=', 'invited.userID')
+        ->join('organizations', 'admin_invite_history.orgID', '=', 'organizations.orgID')
+        ->select(
+            'admin_invite_history.invite_timestamp',
+            'inviter.firstname as inviter_firstname',
+            'inviter.lastname as inviter_lastname',
+            'invited.firstname as invited_firstname',
+            'invited.lastname as invited_lastname',
+            'organizations.name'
+        )
+        ->orderByDesc('admin_invite_history.inviteID')
+        ->paginate(20);
+
+        // Apply the formatting to each entry
+        // HINDI ERROR YUNG map() IGNORE
+        $inviteEntries->getCollection()->transform(function ($entry) {
+            $inviteTime = Carbon::parse($entry->invite_timestamp);
+            $entry->invite_date = $inviteTime->format('M-d-Y'); // e.g., "Dec-15-2024"
+            $entry->invite_time = $inviteTime->format('h:i A'); // e.g., "07:56 PM"
+            return $entry;
+        });
+
+        
+
+
+        // dd($loginEntries);
+        return Inertia::render('SuperAdmin/SuperAdminInviteHistory', [
+            'inviteEntries' => $inviteEntries,
         ]);
     }
 
@@ -686,6 +748,12 @@ class SuperAdminController extends Controller
 
 
         $filename = 'organizations-members-' . date('Y-m-d') . '.json';
+
+        DB::table('superadmin_login_history')->insert([ 
+            'userID' => Auth::id(),
+            'action' => 'downloaded the Members JSON File',
+            'login_timestamp' => now(),
+         ]);
 
         return response()->json($organizations)
             ->header('Content-Disposition', 'attachment; filename=' . $filename)
@@ -732,6 +800,44 @@ class SuperAdminController extends Controller
         $message = $status
             ? ucfirst($settingName) . " Enabled Successfully"
             : ucfirst($settingName) . " Disabled Successfully";
+
+
+            if ($settingName === 'Recruitment') {
+
+                if ($status === true ){
+                    DB::table('superadmin_login_history')->insert([ 
+                        'userID' => Auth::id(),
+                        'action' => 'turned on the Recruitment Settings',
+                        'login_timestamp' => now(),
+                     ]);
+                }else{
+                    DB::table('superadmin_login_history')->insert([ 
+                        'userID' => Auth::id(),
+                        'action' => 'turned off the Recruitment Settings',
+                        'login_timestamp' => now(),
+                     ]);
+                }
+                
+            }
+
+            if ($settingName === 'Manual Registration') {
+                if ($status === true ){
+                    DB::table('superadmin_login_history')->insert([ 
+                        'userID' => Auth::id(),
+                        'action' => 'turned on the Manual Registration Settings',
+                        'login_timestamp' => now(),
+                     ]);
+                }else{
+                    DB::table('superadmin_login_history')->insert([ 
+                        'userID' => Auth::id(),
+                        'action' => 'turned off the Manual Registration Settings',
+                        'login_timestamp' => now(),
+                     ]);
+                }
+            }
+
+
+            
 
         session()->flash('toast', [
             'title' => $message,

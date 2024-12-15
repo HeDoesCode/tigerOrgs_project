@@ -14,12 +14,17 @@ export default function SuperAdminLoginHistory({ loginEntries }) {
                 <MainAdminFrame
                     navItems={[
                         {
-                            icon: <IconCheckBox />,
-                            label: "Login History",
+                            icon: <IconInvite />,
+                            label: "Action History",
                             link: "superadmin.loginhistory",
                         },
+                        {
+                            icon: <IconCheckBox />,
+                            label: "Invite History",
+                            link: "superadmin.invitehistory",
+                        },
                     ]}
-                    title="Activity Log"
+                    title="Action History"
                 >
                     <div className="grid grid-rows-1 p-5 gap-2">
                         {/* <div className="-mt-4 text-sm w-full flex justify-end">
@@ -41,7 +46,7 @@ export default function SuperAdminLoginHistory({ loginEntries }) {
                                             {`${entry.firstname} ${entry.lastname}`}
                                         </span>{" "}
                                         <span className="text-gray-500 font-medium">
-                                            accessed the Super Admin Dashboard
+                                            {entry.action}
                                         </span>
                                     </h1>
                                 </div>
