@@ -13,6 +13,7 @@ use Inertia\Response;
 use App\Models\Organization;
 use App\Models\Photo;
 use App\Notifications\MakeAdminNotification;
+use App\Notifications\RecruitmentStatusNotification;
 use App\Notifications\RemoveAdminNotification;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\PostDec;
@@ -333,6 +334,7 @@ class SuperAdminController extends Controller
 
             $user = User::find($validated['userID']);
             $org = Organization::find($validated['orgID']);
+
 
             $user->notify(new MakeAdminNotification($org, $user));
 
@@ -713,6 +715,19 @@ class SuperAdminController extends Controller
         DB::table('settings')
             ->where('name', $settingName)
             ->update(['status' => $status]);
+
+
+            $admins = DB::table('users')
+            ->join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
+            ->where('organization_user_role.orgID', 2)
+            ->get();
+
+        foreach ($admins as $admin) {
+            $user = \App\Models\User::find($admin->userID); 
+            if ($user) {
+                $user->notify(new RecruitmentStatusNotification($status));
+            }
+        }
 
         $message = $status
             ? ucfirst($settingName) . " Enabled Successfully"
