@@ -14,6 +14,7 @@ use App\Models\Organization;
 use App\Models\Photo;
 use App\Notifications\MakeAdminNotification;
 use App\Notifications\RecruitmentStatusNotification;
+use App\Notifications\RecruitmentStatusUserNotification;
 use App\Notifications\RemoveAdminNotification;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\PostDec;
@@ -728,6 +729,12 @@ class SuperAdminController extends Controller
                 $user->notify(new RecruitmentStatusNotification($status));
             }
         }
+
+        $users = User::get();
+            foreach ($users as $user) {
+                    $user->notify(new RecruitmentStatusUserNotification($status));
+              
+            }
 
         $message = $status
             ? ucfirst($settingName) . " Enabled Successfully"
