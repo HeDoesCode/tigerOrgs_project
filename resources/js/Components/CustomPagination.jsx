@@ -10,7 +10,7 @@ import {
 import { router } from "@inertiajs/react";
 import { useEffect } from "react";
 
-function CustomPagination({ page }) {
+function CustomPagination({ page, params = undefined }) {
     function scrollToElement() {
         const element = document.getElementById("scroll-target");
         if (element) {
@@ -32,29 +32,38 @@ function CustomPagination({ page }) {
 
     function handlePaging(href = false) {
         if (href) {
-            // Get current URL search params
-            const currentParams = new URLSearchParams(window.location.search);
-            // Get new URL search params
-            const newUrl = new URL(href, window.location.origin);
-            const newParams = newUrl.searchParams;
-
-            // Preserve existing search and department parameters
-            const search = currentParams.get("search") || "";
-            const department = currentParams.get("department") || "All";
-
-            // Navigate with preserved parameters
             router.get(
                 href,
-                {
-                    search: search,
-                    department: department,
-                },
+                { params },
                 {
                     preserveState: true,
                     preserveScroll: true,
                     replace: true,
                 }
             );
+            // // Get current URL search params
+            // const currentParams = new URLSearchParams(window.location.search);
+            // // Get new URL search params
+            // const newUrl = new URL(href, window.location.origin);
+            // const newParams = newUrl.searchParams;
+
+            // // Preserve existing search and department parameters
+            // const search = currentParams.get("search") || "";
+            // const department = currentParams.get("department") || "All";
+
+            // // Navigate with preserved parameters
+            // router.get(
+            //     href,
+            //     {
+            //         search: search,
+            //         department: department,
+            //     },
+            //     {
+            //         preserveState: true,
+            //         preserveScroll: true,
+            //         replace: true,
+            //     }
+            // );
         }
     }
 

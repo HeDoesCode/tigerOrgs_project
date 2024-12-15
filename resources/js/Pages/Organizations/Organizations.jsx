@@ -32,14 +32,19 @@ function Organizations({
     myMemberOrganizations,
 }) {
     queryParameters = queryParameters || {};
-    const hasQueryParameters = Object.keys(queryParameters).length !== 0;
+
+    const hasQueryParameters = [
+        "search",
+        "department",
+        "keyword_filter[0][keyID]",
+        "keyword_filter[1][keyword]",
+    ].some((param) => new URLSearchParams(window.location.search).has(param));
+
     const [organizationList, setOrganizationList] = useState([]);
 
     useEffect(() => {
         setOrganizationList(organizations.data || organizations);
     }, [organizations]);
-
-    console.log("organizationList", organizationList);
 
     // call server for search query every change
     const handleSearch = (e) => {
@@ -90,8 +95,6 @@ function Organizations({
     const handleClearQuery = () => {
         router.get(route("organizations"));
     };
-
-    // return <></>;
 
     return (
         <div className="w-full relative">
@@ -233,43 +236,6 @@ function Organizations({
                                 No Organizations Found
                             </div>
                         )}
-
-                        {recommendedOrganizations.length !== 0 &&
-                            !hasQueryParameters && (
-                                <OrganizationContainerRow
-                                    title={
-                                        "Recommended based on your interests"
-                                    }
-                                    collegeLength={
-                                        Object.keys(organizationList).length
-                                    }
-                                >
-                                    {recommendedOrganizations.map(
-                                        (org, index) => (
-                                            <OrganizationTile
-                                                key={index}
-                                                orgBg={
-                                                    org.photos &&
-                                                    org.photos.length > 0
-                                                        ? org.photos[0].Url
-                                                        : "https://placehold.co/500x800"
-                                                }
-                                                orgIcon={org.logoUrl}
-                                                title={org.name}
-                                                recruiting={org.recruiting}
-                                                desc={org.description}
-                                                count={org.members_count}
-                                                href={route(
-                                                    "organizations.home",
-                                                    {
-                                                        orgID: org.orgID,
-                                                    }
-                                                )}
-                                            />
-                                        )
-                                    )}
-                                </OrganizationContainerRow>
-                            )}
 
                         {Object.entries(organizationList).map(
                             ([department, orgs]) => (

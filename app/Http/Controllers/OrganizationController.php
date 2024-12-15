@@ -53,12 +53,14 @@ class OrganizationController extends Controller
 
     public function browse(Request $request): Response
     {
+
+        // dd($request);
         // $this->getRecommendations();
         $query = Organization::query();
         $queryParameters = [];
 
         $recommendedOrganizations = [];
-        if (!request()->all()) {
+        if (!request()->hasAny(['search', 'department', 'keyword'])) {
             $recommendedOrganizations = $this->getRecommendations();
         }
 
@@ -70,6 +72,7 @@ class OrganizationController extends Controller
                     ->orWhere('department', 'like', $searchTerm);
             });
             $queryParameters['search'] = request('search');
+        } else {
         }
 
         // show departments that are present in the current search query
@@ -101,6 +104,10 @@ class OrganizationController extends Controller
             $organizations = $organizations->prepend($universityWide, 'University-Wide');
         }
 
+        if (!request()->hasAny(['search', 'department', 'keyword_filter'])) {
+            $organizations = $organizations->prepend($this->getRecommendations(), 'Recommended based on your interests');
+        }
+
         if (empty($queryParameters)) {
             $currentPage = Paginator::resolveCurrentPage();
             $perPage = 5;
@@ -126,8 +133,6 @@ class OrganizationController extends Controller
             ->orderBy('organizations.name', 'asc', 'name')
             ->get()
             ->sortBy('name');
-
-        // dd($queryParameters);
 
         return Inertia::render('Organizations/Organizations', [
             'organizations' => $organizations,
