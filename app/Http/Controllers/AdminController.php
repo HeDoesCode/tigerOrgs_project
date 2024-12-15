@@ -204,10 +204,6 @@ class AdminController extends Controller
             'pageState.pageData.contacts.*.orgID' => 'sometimes|integer|exists:organizations,orgID',
             'pageState.pageData.contacts.*.platform' => 'sometimes|string|in:facebook,instagram,linkedin,email,x,default',
             'pageState.pageData.contacts.*.address' => 'sometimes|string|max:255',
-            // 'pageState.pageData.contacts.*.contactID' => 'sometimes|nullable|integer|exists:organization_contacts,contactID',
-            // 'pageState.pageData.contacts.*.orgID' => 'sometimes|required|integer|exists:organizations,orgID',
-            // 'pageState.pageData.contacts.*.platform' => 'sometimes|required|string|in:facebook,instagram,linkedin,email,x,default',
-            // 'pageState.pageData.contacts.*.address' => 'sometimes|required|string',
 
             // fb_link
             'pageState.pageData.fb_link' => 'nullable|string|url|max:255',
@@ -226,22 +222,6 @@ class AdminController extends Controller
                 'image',
                 'mimes:jpeg,png,jpg',
                 'max:20480',
-                // function ($attribute, $value, $fail) {
-                //     try {
-                //         if ($value->getClientOriginalName() === 'default.jpeg') {
-                //             $fail('The file name "default.jpeg" is not allowed.');
-                //         }
-                //     } catch (Exception $e) {
-                //         session()->flash('toast', [
-                //             'title' => 'Failed to save your changes.',
-                //             'description' => 'Something went wrong on our end. Please inform your administrators and try again later.',
-                //             'duration' => 5000,
-                //             'variant' => 'destructive'
-                //         ]);
-
-                //         return redirect()->back();
-                //     }
-                // },
             ],
             'pageState.pageData.photos' => 'required|array|min:1',
             'pageState.pageData.photos.*.photoID' => 'sometimes|nullable|integer|exists:organization_photos,photoID',
@@ -560,8 +540,8 @@ class AdminController extends Controller
 
         try {
             $validated = $request->validate([
-                'orgID' => 'required|exists:organizations,orgID',
-                'message' => 'required|max:1500',
+                'orgID' => 'required|integer|exists:organizations,orgID',
+                'message' => 'required|string|max:1500',
             ]);
 
             $message = $validated['message'];
