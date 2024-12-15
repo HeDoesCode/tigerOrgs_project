@@ -2,9 +2,7 @@ import { useState } from "react";
 import LoadingDots from "./LoadingDots";
 
 function ImageWithLoader({ div, img, ...props }) {
-    const [isLoading, setIsLoading] = useState(false);
-    // const [isError, setIsError] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(true);
     return (
         <div
             {...props}
