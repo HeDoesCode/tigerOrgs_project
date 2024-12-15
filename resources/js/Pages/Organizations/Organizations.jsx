@@ -21,6 +21,7 @@ import OrganizationContainerRow from "@/Components/Organizations/OrganizationCon
 import OrganizationTile from "@/Components/Organizations/OrganizationTile";
 import { useState } from "react";
 import { useEffect } from "react";
+import CustomPagination from "@/Components/CustomPagination";
 
 function Organizations({
     organizations,
@@ -124,13 +125,13 @@ function Organizations({
     // return <></>;
 
     return (
-        <div className="w-full">
+        <div className="w-full relative">
             <Head title="Browse Organizations" />
             <UserLayout>
                 <div className="w-full poppins text-lg md:text-xl font-bold mt-3 mb-5">
                     Browse <span className="text-[#ffb700]">Organizations</span>
                 </div>
-                <div className="flex flex-col md:flex-row gap-6">
+                <div className="flex flex-col md:flex-row gap-6 ">
                     {/* control panel */}
                     <div className="flex flex-col w-full md:w-64 space-y-2">
                         <ControlContainer className="relative" name="Search">
@@ -346,6 +347,11 @@ function Organizations({
                     </div>
                 </div>
             </UserLayout>
+            {!hasQueryParameters && (
+                <div className="absolute bottom-5 left-5 md:left-64 right-5 flex justify-center">
+                    <CustomPagination page={organizations} />
+                </div>
+            )}
         </div>
     );
 }
