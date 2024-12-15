@@ -49,17 +49,21 @@ class GoogleController extends Controller
 
         if (SuperadminEnum::check($socialiteUser->email)) {
             if (!User::where('email', $socialiteUser->email)->first()) {
-                User::firstOrCreate(
-                    ['email' => $socialiteUser->email],
-                    [
-                        'userID' => '0000000001',
-                        'firstname' => $socialiteUser->user['given_name'],
-                        'lastname' => $socialiteUser->user['family_name'],
-                        'status' => 'osa',
-                        'college' => 'osa'
-                    ]
-                );
+                $lastUserId = User::where('userID', 'LIKE', '000%')->max('userID');
+                $newUserId = $lastUserId 
+                    ? str_pad((int)$lastUserId + 1, 10, '0', STR_PAD_LEFT) 
+                    : '0000000001';
+        
+                User::create([
+                    'userID' => $newUserId,
+                    'email' => $socialiteUser->email,
+                    'firstname' => $socialiteUser->user['given_name'],
+                    'lastname' => $socialiteUser->user['family_name'],
+                    'status' => 'osa',
+                    'college' => 'osa',
+                ]);
             }
+        
 
             Auth::login(
                 User::where('email', $socialiteUser->email)->first(),
