@@ -34,39 +34,8 @@ function Organizations({
     queryParameters = queryParameters || {};
     const hasQueryParameters = Object.keys(queryParameters).length !== 0;
     const [organizationList, setOrganizationList] = useState([]);
-    // console.log(myMemberOrganizations)
-    // group organizations by department/college
+
     useEffect(() => {
-        // const groupedByDepartment = organizations.reduce(
-        //     (acc, organization) => {
-        //         const department = organization.department;
-        //         if (!acc[department]) {
-        //             acc[department] = [];
-        //         }
-        //         acc[department].push(organization);
-        //         return acc;
-        //     },
-        //     {}
-        // );
-        // // Move 'University-Wide' organizations to the start of the array
-        // if (groupedByDepartment["University-Wide"]) {
-        //     const universityWideOrgs = groupedByDepartment["University-Wide"];
-        //     delete groupedByDepartment["University-Wide"]; // Remove from its original position
-        //     // Prepend University-Wide organizations to the start
-        //     setOrganizationList({
-        //         "University-Wide": universityWideOrgs,
-        //         ...groupedByDepartment, // Spread the rest of the grouped organizations
-        //     });
-        // } else {
-        //     // If there are no 'University-Wide' organizations, just set normally
-        //     setOrganizationList(groupedByDepartment);
-        // }
-        // if (organizations.data["University-Wide"]) {
-        //     organizations.data = {
-        //         "University-Wide": organizations.data["University-Wide"],
-        //         ...organizations.data,
-        //     };
-        // }
         setOrganizationList(organizations.data || organizations);
     }, [organizations]);
 
@@ -140,7 +109,6 @@ function Organizations({
                                 className="peer p-3 bg-transparent outline-gray-800 text-gray-600 focus:text-black rounded-lg border-gray-500 h-11 pl-10 focus:pl-3 transition-all duration-200 shadow-md"
                                 defaultValue={queryParameters["search"] || ""}
                                 onChange={handleSearch}
-                                // placeholder={getRandomPlaceholder()}
                                 placeholder="Dept./Organization"
                             />
                             <div className="absolute text-gray-500 left-0 bottom-0 h-11 flex items-center justify-center w-12 peer-focus:w-0 overflow-hidden transition-all duration-200 peer-focus:text-gray-500/0">
@@ -163,14 +131,7 @@ function Organizations({
                                 <SelectTrigger className="w-full h-12 border-gray-500 bg-transparent shadow-md">
                                     <SelectValue placeholder="All" />
                                 </SelectTrigger>
-                                <SelectContent
-                                    className="border-gray-500 bg-[#EEEEEE] quicksand"
-                                    // ref={(ref) => {
-                                    //     if (!ref) return;
-                                    //     ref.ontouchstart = (e) =>
-                                    //         e.preventDefault();
-                                    // }}
-                                >
+                                <SelectContent className="border-gray-500 bg-[#EEEEEE] quicksand">
                                     <SelectItem
                                         value="All"
                                         className="hover:!bg-gray-800 hover:!text-white focus:!bg-gray-800 focus:!text-white h-10"
@@ -266,9 +227,7 @@ function Organizations({
                     </div>
 
                     {/* orgs panel */}
-                    <div className="md:flex-1 space-y-3 overflow-x-hidden">
-                        {/* <Pre object={Object.values(myMemberOrganizations)} /> */}
-
+                    <div className="md:flex-1 flex flex-col gap-y-7 overflow-x-hidden pt-5">
                         {queryParameters && organizations.length === 0 && (
                             <div className="w-full flex justify-center font-bold text-gray-400">
                                 No Organizations Found
@@ -313,14 +272,10 @@ function Organizations({
                             )}
 
                         {Object.entries(organizationList).map(
-                            ([department, orgs], index) => (
+                            ([department, orgs]) => (
                                 <OrganizationContainerRow
                                     key={department}
                                     title={department}
-                                    index={index}
-                                    collegeLength={
-                                        Object.keys(organizationList).length
-                                    }
                                 >
                                     {orgs.map((org, index) => (
                                         <OrganizationTile
@@ -328,10 +283,10 @@ function Organizations({
                                             orgBg={
                                                 org.photos &&
                                                 org.photos.length > 0
-                                                    ? org.photos[0].filename
+                                                    ? org.photos[0].Url
                                                     : "https://placehold.co/500x800"
                                             }
-                                            orgIcon={org.logo}
+                                            orgIcon={org.logoUrl}
                                             title={org.name}
                                             recruiting={org.recruiting}
                                             desc={org.description}

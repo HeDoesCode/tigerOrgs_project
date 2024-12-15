@@ -72,7 +72,7 @@ function CustomPagination({ page }) {
                         />
                     </PaginationItem>
 
-                    <div className="flex flex-row flex-1 overflow-x-auto">
+                    <div className="flex flex-row flex-1 overflow-x-auto scrollbar-thin">
                         {page.links.map((link, index) => {
                             if (
                                 index !== 0 &&
