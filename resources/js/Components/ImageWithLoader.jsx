@@ -6,8 +6,8 @@ function ImageWithLoader({ div, img, ...props }) {
     return (
         <div
             {...props}
-            className={`${props?.className} ${div?.className}`}
             {...div}
+            className={`${props?.className} ${div?.className}`}
         >
             <LoadingDots active={isLoading} />
             <img

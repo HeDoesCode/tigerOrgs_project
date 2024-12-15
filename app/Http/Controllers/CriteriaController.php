@@ -8,17 +8,17 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CriteriaController extends Controller
-{    
+{
     // GET: get all and display criteria
     public function index($orgID)
-    {   
+    {
         $allCriteria = Criteria::where('orgID', $orgID)->get()->toArray();
 
         return Inertia::render('Admin/AdminManageCriteria/Index', ['orgID' => $orgID, 'criteriaData' => $allCriteria]);
     }
 
     // GET: display create form
-    public function create($orgID) 
+    public function create($orgID)
     {
         return Inertia::render('Admin/AdminManageCriteria/Create', ['orgID' => $orgID]);
     }
@@ -27,15 +27,15 @@ class CriteriaController extends Controller
     public function store(Request $request, $orgID)
     {
         $validatedData = $request->validate([
-                            'name' => ['required', 'string'],
-                            'description' => ['required', 'string']
-                        ]);
-        
-       $createdCriteria = Criteria::create([
-                            'orgID' => $orgID,
-                            'name' => $validatedData['name'],
-                            'description' => $validatedData['description'],
-                        ]);
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:4294967295']
+        ]);
+
+        $createdCriteria = Criteria::create([
+            'orgID' => $orgID,
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+        ]);
 
         // prepare data in the background
         PrepareCriteriaData::dispatch($createdCriteria->criteriaID);
@@ -46,7 +46,7 @@ class CriteriaController extends Controller
             'variant' => 'success'
         ]);
 
-        return redirect()->route('admin.criteria.index',['orgID' => $orgID]);
+        return redirect()->route('admin.criteria.index', ['orgID' => $orgID]);
     }
 
     // GET: get specific criteria and display in edit form
@@ -56,14 +56,14 @@ class CriteriaController extends Controller
 
         return Inertia::render('Admin/AdminManageCriteria/Edit', ['orgID' => $orgID, 'criteriaData' => $editedCriteria]);
     }
-    
+
     // PUT: update criteria
     public function update(Request $request, $orgID, $criterion)
     {
         $validatedData = $request->validate([
-                            'name' => ['required', 'string'],
-                            'description' => ['required', 'string']
-                        ]);
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:4294967295']
+        ]);
 
         $editedCriteria = Criteria::find($criterion);
         $editedCriteria->name = $validatedData['name'];
@@ -71,18 +71,18 @@ class CriteriaController extends Controller
         $editedCriteria->save();
 
         PrepareCriteriaData::dispatch($editedCriteria->criteriaID);
-        
+
         session()->flash('toast', [
             'title' => 'Criteria was successfully updated!',
             'description' => '',
             'variant' => 'success'
         ]);
-        
+
         return redirect()->route('admin.criteria.index', ['orgID' => $orgID]);
     }
 
     // DELETE: delete criteria
-    public function destroy($orgID, $criterion) 
+    public function destroy($orgID, $criterion)
     {
         $deletedCriteria = Criteria::find($criterion);
 

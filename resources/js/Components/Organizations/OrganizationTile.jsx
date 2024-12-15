@@ -31,7 +31,7 @@ function OrganizationTile({
                      className="object-cover h-full rounded-lg shadow-sm aspect-[5/8]"
                  /> */}
                 <ImageWithLoader
-                    className="h-full aspect-[5/8]"
+                    className="h-full aspect-[5/8] rounded-lg"
                     img={{ src: orgBg }}
                 />
                 {recruiting && (
