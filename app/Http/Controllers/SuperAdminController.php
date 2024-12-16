@@ -789,18 +789,21 @@ public function toggleSetting(Request $request)
 
     $settingName = $request->input('settingName');
     $status = $request->input('status');
-    $startDate = $request->input('start_date') 
-        ? Carbon::parse($request->input('start_date'))->format('Y-m-d H:i:s') 
-        : null;
-    $endDate = $request->input('end_date') 
-        ? Carbon::parse($request->input('end_date'))->format('Y-m-d H:i:s') 
-        : null;
+    
+    if ($request->has('start_date') && $request->has('end_date')) {
+        $startDate = $request->input('start_date') 
+            ? Carbon::parse($request->input('start_date'))->format('Y-m-d H:i:s') 
+            : null;
+        $endDate = $request->input('end_date') 
+            ? Carbon::parse($request->input('end_date'))->format('Y-m-d H:i:s') 
+            : null;
+    }
         
     // Update dates and status
     $updateData = [
         'status' => $status,
-        'start_date' => $startDate,
-        'end_date' => $endDate
+        'start_date' => $startDate ?? null,
+        'end_date' => $endDate ?? null
     ];
 
     DB::table('settings')
