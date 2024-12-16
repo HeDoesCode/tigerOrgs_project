@@ -761,30 +761,30 @@ class SuperAdminController extends Controller
     }
 
     public function settings()
-{
-    $settings = DB::table('settings')
-        ->whereIn('name', ['Recruitment', 'Manual Registration'])
-        ->select('name', 'status', 'start_date', 'end_date')
-        ->get()
-        ->keyBy('name');
-    
-    return Inertia::render('SuperAdmin/SuperAdminSettings', [
-        'recruitment' => $settings['Recruitment']->status ?? false,
-        'recruitmentStartDate' => $settings['Recruitment']->start_date ?? null,
-        'recruitmentEndDate' => $settings['Recruitment']->end_date ?? null,
-        'manualreg' => $settings['Manual Registration']->status ?? false,
-        'manualRegStartDate' => $settings['Manual Registration']->start_date ?? null,
-        'manualRegEndDate' => $settings['Manual Registration']->end_date ?? null,
-    ]);
-}
+    {
+        $settings = DB::table('settings')
+            ->whereIn('name', ['Recruitment', 'Manual Registration'])
+            ->select('name', 'status', 'start_date', 'end_date')
+            ->get()
+            ->keyBy('name');
+        
+        return Inertia::render('SuperAdmin/SuperAdminSettings', [
+            'recruitment' => $settings['Recruitment']->status ?? false,
+            'recruitmentStartDate' => $settings['Recruitment']->start_date ?? now()->toIso8601String(),
+            'recruitmentEndDate' => $settings['Recruitment']->end_date ?? null,
+            'manualreg' => $settings['Manual Registration']->status ?? false,
+            'manualRegStartDate' => $settings['Manual Registration']->start_date ?? now()->toIso8601String(),
+            'manualRegEndDate' => $settings['Manual Registration']->end_date ?? null,
+        ]);
+    }
 
 public function toggleSetting(Request $request)
 {
     $request->validate([
         'settingName' => 'required|in:Recruitment,Manual Registration',
         'status' => 'boolean',
-        'start_date' => ['nullable', 'date', 'after_or_equal:today'],
-        'end_date' => ['nullable', 'date', 'after:start_date'],
+        'start_date' => ['sometimes', 'required', 'date', 'after_or_equal:today'],
+        'end_date' => ['sometimes', 'required', 'date', 'after:start_date'],
     ]);
 
     $settingName = $request->input('settingName');
@@ -795,24 +795,7 @@ public function toggleSetting(Request $request)
     $endDate = $request->input('end_date') 
         ? Carbon::parse($request->input('end_date'))->format('Y-m-d H:i:s') 
         : null;
-
-    // Check if the setting is within the specified date range
-    $currentTime = now();
-    if ($startDate && $endDate) {
-        if ($currentTime < Carbon::parse($startDate) || $currentTime > Carbon::parse($endDate)) {
-            
-            session()->flash('toast', [
-                'title' => "Error Updating",
-                'description' => 'The setting can only be toggled within the specified date range',
-                'variant' => 'destructive',
-            ]);
-
-            return back()->withErrors([
-                'date_range' => 'The setting can only be toggled within the specified date range.'
-            ]);
-        }
-    }
-
+        
     // Update dates and status
     $updateData = [
         'status' => $status,

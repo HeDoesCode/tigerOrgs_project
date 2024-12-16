@@ -5,25 +5,24 @@ import IconSettings from "@/Components/Icons/IconSettings";
 import { useState } from "react";
 import { Switch } from "@/Components/ui/switch";
 
-function SuperAdminSettings({ 
-    recruitment = false, 
-    recruitmentStartDate = null, 
+function SuperAdminSettings({
+    recruitment = false,
+    recruitmentStartDate = null,
     recruitmentEndDate = null,
-    manualreg = false, 
-    manualRegStartDate = null, 
-    manualRegEndDate = null 
+    manualreg = false,
+    manualRegStartDate = null,
+    manualRegEndDate = null,
 }) {
-    const [isRecruitmentEnabled, setIsRecruitmentEnabled] = useState(recruitment);
+    const [isRecruitmentEnabled, setIsRecruitmentEnabled] =
+        useState(recruitment);
     const [isManualRegEnabled, setIsManualRegEnabled] = useState(manualreg);
 
     const handleToggle = (checked, settingName) => {
         router.post(
             route("superadmin.toggle-setting"),
-            { 
+            {
                 settingName: settingName,
                 status: checked,
-                start_date: settingName === "Recruitment" ? recruitmentDate.start_date : manualRegDate.start_date,
-                end_date: settingName === "Recruitment" ? recruitmentDate.end_date : manualRegDate.end_date
             },
             {
                 preserveState: true,
@@ -36,7 +35,10 @@ function SuperAdminSettings({
                     }
                 },
                 onError: (errors) => {
-                    console.error(`Failed to toggle ${settingName} status`, errors);
+                    console.error(
+                        `Failed to toggle ${settingName} status`,
+                        errors
+                    );
                 },
             }
         );
@@ -58,28 +60,28 @@ function SuperAdminSettings({
 
     const handleRecruitmentDateSubmit = (e) => {
         e.preventDefault();
-        router.post(
-            route("superadmin.toggle-setting"),
-            {
-                settingName: "Recruitment",
-                status: isRecruitmentEnabled,
-                start_date: recruitmentDate.start_date,
-                end_date: recruitmentDate.end_date
-            }
-        );
+        router.post(route("superadmin.toggle-setting"), {
+            settingName: "Recruitment",
+            status: isRecruitmentEnabled,
+            start_date: recruitmentDate.start_date,
+            end_date: recruitmentDate.end_date,
+        });
     };
 
     const handleManualRegDateSubmit = (e) => {
         e.preventDefault();
-        router.post(
-            route("superadmin.toggle-setting"),
-            {
-                settingName: "Manual Registration",
-                status: isManualRegEnabled,
-                start_date: manualRegDate.start_date,
-                end_date: manualRegDate.end_date
-            }
-        );
+        router.post(route("superadmin.toggle-setting"), {
+            settingName: "Manual Registration",
+            status: isManualRegEnabled,
+            start_date: manualRegDate.start_date,
+            end_date: manualRegDate.end_date,
+        });
+    };
+
+    const formatDateForInput = (isoDate) => {
+        if (!isoDate) return "";
+        const date = new Date(isoDate);
+        return date.toISOString().slice(0, 16);
     };
 
     return (
@@ -105,11 +107,12 @@ function SuperAdminSettings({
                                         Recruitment Settings
                                     </h2>
                                     <p className="text-sm text-gray-500">
-                                        Enable or disable recruitment functionality for all organizations.
+                                        Enable or disable recruitment
+                                        functionality for all organizations.
                                     </p>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <label 
+                                    <label
                                         htmlFor="recruitment-toggle"
                                         className="text-gray-700"
                                     >
@@ -119,10 +122,7 @@ function SuperAdminSettings({
                                         id="recruitment-toggle"
                                         checked={isRecruitmentEnabled}
                                         onCheckedChange={(checked) =>
-                                            handleToggle(
-                                                checked,
-                                                "Recruitment"
-                                            )
+                                            handleToggle(checked, "Recruitment")
                                         }
                                     />
                                     <span>
@@ -130,15 +130,15 @@ function SuperAdminSettings({
                                     </span>
                                 </div>
                             </div>
-                            
-                            <form 
-                                onSubmit={handleRecruitmentDateSubmit} 
+
+                            <form
+                                onSubmit={handleRecruitmentDateSubmit}
                                 className="space-y-4"
                             >
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label 
-                                            htmlFor="recruitment-start-date" 
+                                        <label
+                                            htmlFor="recruitment-start-date"
                                             className="block text-sm font-medium text-gray-700 mb-1"
                                         >
                                             Start Date
@@ -147,7 +147,11 @@ function SuperAdminSettings({
                                             id="recruitment-start-date"
                                             type="datetime-local"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                            value={recruitmentDate.start_date || ''}
+                                            value={
+                                                formatDateForInput(
+                                                    recruitmentDate.start_date
+                                                ) || ""
+                                            }
                                             onChange={(e) =>
                                                 setRecruitmentDate(
                                                     "start_date",
@@ -157,8 +161,8 @@ function SuperAdminSettings({
                                         />
                                     </div>
                                     <div>
-                                        <label 
-                                            htmlFor="recruitment-end-date" 
+                                        <label
+                                            htmlFor="recruitment-end-date"
                                             className="block text-sm font-medium text-gray-700 mb-1"
                                         >
                                             End Date
@@ -167,7 +171,11 @@ function SuperAdminSettings({
                                             id="recruitment-end-date"
                                             type="datetime-local"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                            value={recruitmentDate.end_date || ''}
+                                            value={
+                                                formatDateForInput(
+                                                    recruitmentDate.end_date
+                                                ) || ""
+                                            }
                                             onChange={(e) =>
                                                 setRecruitmentDate(
                                                     "end_date",
@@ -196,7 +204,8 @@ function SuperAdminSettings({
                                         Manual Registration Settings
                                     </h2>
                                     <p className="text-sm text-gray-500">
-                                        Enable or disable manual registration of students on the website.
+                                        Enable or disable manual registration of
+                                        students on the website.
                                     </p>
                                 </div>
                                 <div className="flex items-center space-x-2">
@@ -221,15 +230,15 @@ function SuperAdminSettings({
                                     </span>
                                 </div>
                             </div>
-                            
-                            <form 
-                                onSubmit={handleManualRegDateSubmit} 
+
+                            <form
+                                onSubmit={handleManualRegDateSubmit}
                                 className="space-y-4"
                             >
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label 
-                                            htmlFor="manualreg-start-date" 
+                                        <label
+                                            htmlFor="manualreg-start-date"
                                             className="block text-sm font-medium text-gray-700 mb-1"
                                         >
                                             Start Date
@@ -238,7 +247,11 @@ function SuperAdminSettings({
                                             id="manualreg-start-date"
                                             type="datetime-local"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                            value={manualRegDate.start_date || ''}
+                                            value={
+                                                formatDateForInput(
+                                                    manualRegDate.start_date
+                                                ) || ""
+                                            }
                                             onChange={(e) =>
                                                 setManualRegDate(
                                                     "start_date",
@@ -248,8 +261,8 @@ function SuperAdminSettings({
                                         />
                                     </div>
                                     <div>
-                                        <label 
-                                            htmlFor="manualreg-end-date" 
+                                        <label
+                                            htmlFor="manualreg-end-date"
                                             className="block text-sm font-medium text-gray-700 mb-1"
                                         >
                                             End Date
@@ -258,7 +271,11 @@ function SuperAdminSettings({
                                             id="manualreg-end-date"
                                             type="datetime-local"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                            value={manualRegDate.end_date || ''}
+                                            value={
+                                                formatDateForInput(
+                                                    manualRegDate.end_date
+                                                ) || ""
+                                            }
                                             onChange={(e) =>
                                                 setManualRegDate(
                                                     "end_date",
