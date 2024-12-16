@@ -760,103 +760,96 @@ class SuperAdminController extends Controller
             ->header('Content-Type', 'application/json');
     }
 
-    //settings
-
     public function settings()
     {
         $settings = DB::table('settings')
             ->whereIn('name', ['Recruitment', 'Manual Registration'])
-            ->pluck('status', 'name');
-
+            ->select('name', 'status', 'start_date', 'end_date')
+            ->get()
+            ->keyBy('name');
+        
         return Inertia::render('SuperAdmin/SuperAdminSettings', [
-            'recruitment' => $settings['Recruitment'] ?? false,
-            'manualreg' => $settings['Manual Registration'] ?? false,
+            'recruitment' => $settings['Recruitment']->status ?? false,
+            'recruitmentStartDate' => $settings['Recruitment']->start_date ?? now()->toIso8601String(),
+            'recruitmentEndDate' => $settings['Recruitment']->end_date ?? null,
+            'manualreg' => $settings['Manual Registration']->status ?? false,
+            'manualRegStartDate' => $settings['Manual Registration']->start_date ?? now()->toIso8601String(),
+            'manualRegEndDate' => $settings['Manual Registration']->end_date ?? null,
         ]);
     }
 
+public function toggleSetting(Request $request)
+{
+    $request->validate([
+        'settingName' => 'required|in:Recruitment,Manual Registration',
+        'status' => 'boolean',
+        'start_date' => ['sometimes', 'required', 'date', 'after_or_equal:today'],
+        'end_date' => ['sometimes', 'required', 'date', 'after:start_date'],
+    ]);
 
-    public function toggleSetting(Request $request)
-    {
-        $status = $request->input('status');
-        $settingName = $request->input('setting_name');
+    $settingName = $request->input('settingName');
+    $status = $request->input('status');
+    $startDate = $request->input('start_date') 
+        ? Carbon::parse($request->input('start_date'))->format('Y-m-d H:i:s') 
+        : null;
+    $endDate = $request->input('end_date') 
+        ? Carbon::parse($request->input('end_date'))->format('Y-m-d H:i:s') 
+        : null;
+        
+    // Update dates and status
+    $updateData = [
+        'status' => $status,
+        'start_date' => $startDate,
+        'end_date' => $endDate
+    ];
 
-        DB::table('settings')
-            ->where('name', $settingName)
-            ->update(['status' => $status]);
+    DB::table('settings')
+        ->where('name', $settingName)
+        ->update($updateData);
 
+    // Notify admins
+    $this->notifyAdmins($settingName, $status);
 
-            $admins = DB::table('users')
-            ->join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
-            ->where('organization_user_role.orgID', 2)
-            ->get();
+    // Log activity
+    $this->logActivity($settingName, $status);
 
-        foreach ($admins as $admin) {
-            $user = \App\Models\User::find($admin->userID); 
-            if ($user) {
-                $user->notify(new RecruitmentStatusNotification($status));
-            }
+    // Flash success message
+    session()->flash('toast', [
+        'title' => "Setting Updated",
+        'description' => $settingName . ' status updated successfully!',
+        'variant' => 'success',
+    ]);
+
+    return redirect()->route('superadmin.settings');
+}
+
+private function notifyAdmins(string $settingName, bool $status)
+{
+    $admins = DB::table('users')
+        ->join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
+        ->where('organization_user_role.orgID', 2)
+        ->get();
+
+    foreach ($admins as $admin) {
+        $user = \App\Models\User::find($admin->userID); 
+        if ($user) {
+            $user->notify(new RecruitmentStatusNotification($status, $settingName));
         }
-
-        $message = $status
-            ? ucfirst($settingName) . " Enabled Successfully"
-            : ucfirst($settingName) . " Disabled Successfully";
-
-
-            if ($settingName === 'Recruitment') {
-
-                if ($status === true ){
-                    DB::table('superadmin_login_history')->insert([ 
-                        'userID' => Auth::id(),
-                        'action' => 'turned on the Recruitment Settings',
-                        'login_timestamp' => now(),
-                     ]);
-                }else{
-                    DB::table('superadmin_login_history')->insert([ 
-                        'userID' => Auth::id(),
-                        'action' => 'turned off the Recruitment Settings',
-                        'login_timestamp' => now(),
-                     ]);
-                }
-                
-            }
-
-            if ($settingName === 'Manual Registration') {
-                if ($status === true ){
-                    DB::table('superadmin_login_history')->insert([ 
-                        'userID' => Auth::id(),
-                        'action' => 'turned on the Manual Registration Settings',
-                        'login_timestamp' => now(),
-                     ]);
-                }else{
-                    DB::table('superadmin_login_history')->insert([ 
-                        'userID' => Auth::id(),
-                        'action' => 'turned off the Manual Registration Settings',
-                        'login_timestamp' => now(),
-                     ]);
-                }
-            }
-
-
-            
-
-        session()->flash('toast', [
-            'title' => $message,
-            'description' => 'Status Updated Successfully!',
-            'variant' => $status ? 'success' : 'destructive'
-        ]);
-
-        if (!$status && $settingName === 'Recruitment') {
-            DB::table('organizations')->update(['recruiting' => false]);
-        }
-
-        return redirect()->route('superadmin.settings');
     }
+}
 
+private function logActivity(string $settingName, bool $status)
+{
+    $actionMessage = $status 
+        ? "turned on the {$settingName} Settings" 
+        : "turned off the {$settingName} Settings";
 
-
-
-
-
+    DB::table('superadmin_login_history')->insert([ 
+        'userID' => Auth::id(),
+        'action' => $actionMessage,
+        'login_timestamp' => now(),
+    ]);
+}
 
     public function previewOrganizationData($orgID)
     {

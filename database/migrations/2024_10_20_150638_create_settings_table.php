@@ -16,21 +16,23 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('status');
-            $table->timestamps();
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
         });
 
         DB::table('settings')->insert([
             'name' => 'Recruitment',  
-            'status' => false,             
-            'created_at' => now(),
-            'updated_at' => now(),
+            'status' => false,         
         ]);
 
         DB::table('settings')->insert([
             'name' => 'Manual Registration',  
-            'status' => false,             
-            'created_at' => now(),
-            'updated_at' => now(),
+            'status' => false,          
+        ]);
+
+        DB::table('settings')->insert([
+            'name' => 'Automation',  
+            'status' => true,            
         ]);
 
     }

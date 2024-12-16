@@ -90,7 +90,7 @@ class ProfileController extends Controller
         ]);
 
         $validator = Validator::make($request->all(), [
-            'section' => ['required|string|max:255'],
+            'section' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
