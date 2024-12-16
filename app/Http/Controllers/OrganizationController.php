@@ -61,7 +61,7 @@ class OrganizationController extends Controller
 
         $recommendedOrganizations = [];
         if (!request()->hasAny(['search', 'department', 'keyword'])) {
-            $recommendedOrganizations = $this->getRecommendations();
+            $recommendedOrganizations = $this->getRecommendations() ?: [];
         }
 
         // handle search query
@@ -88,9 +88,9 @@ class OrganizationController extends Controller
         }
 
         // handle category filter
-        if (request('category')) {
-            $query->where('department', request('category'));
-            $queryParameters['category'] = request('category');
+        if (request('department')) {
+            $query->where('department', request('department'));
+            $queryParameters['department'] = request('department');
         }
 
         $organizations = $query

@@ -10,7 +10,12 @@ import {
 import { router } from "@inertiajs/react";
 import { useEffect } from "react";
 
-function CustomPagination({ page, params = undefined }) {
+function CustomPagination({
+    page,
+    params = undefined,
+    preserveScroll = true,
+    preserveState = true,
+}) {
     function scrollToElement() {
         const element = document.getElementById("scroll-target");
         if (element) {
@@ -36,8 +41,8 @@ function CustomPagination({ page, params = undefined }) {
                 href,
                 { params },
                 {
-                    preserveState: true,
-                    preserveScroll: true,
+                    preserveState,
+                    preserveScroll,
                     replace: true,
                 }
             );

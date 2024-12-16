@@ -64,12 +64,12 @@ function Organizations({
     };
 
     // call server for department/college filter
-    const handleFilterCategory = (category) => {
-        const filterCategoryDebounce = setTimeout(() => {
-            if (category !== "All") {
-                queryParameters["category"] = category;
+    const handleFilterDepartment = (department) => {
+        const filterDepartmentDebounce = setTimeout(() => {
+            if (department !== "All") {
+                queryParameters["department"] = department;
             } else {
-                delete queryParameters["category"];
+                delete queryParameters["department"];
             }
             router.get(route("organizations"), queryParameters, {
                 preserveState: true,
@@ -77,7 +77,7 @@ function Organizations({
             });
         }, 500);
 
-        return () => clearTimeout(filterCategoryDebounce);
+        return () => clearTimeout(filterDepartmentDebounce);
     };
 
     const formatOrgJoinedLink = (role, orgID) => {
@@ -129,7 +129,7 @@ function Organizations({
                         <ControlContainer name="Department">
                             <Select
                                 defaultValue="All"
-                                onValueChange={handleFilterCategory}
+                                onValueChange={handleFilterDepartment}
                             >
                                 <SelectTrigger className="w-full h-12 border-gray-500 bg-transparent shadow-md">
                                     <SelectValue placeholder="All" />
@@ -270,7 +270,10 @@ function Organizations({
             </UserLayout>
             {!hasQueryParameters && (
                 <div className="absolute bottom-5 left-5 md:left-64 right-5 flex justify-center">
-                    <CustomPagination page={organizations} />
+                    <CustomPagination
+                        page={organizations}
+                        preserveScroll={false}
+                    />
                 </div>
             )}
         </div>
