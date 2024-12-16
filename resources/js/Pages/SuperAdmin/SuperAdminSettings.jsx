@@ -78,12 +78,6 @@ function SuperAdminSettings({
         });
     };
 
-    const formatDateForInput = (isoDate) => {
-        if (!isoDate) return "";
-        const date = new Date(isoDate);
-        return date.toISOString().slice(0, 16);
-    };
-
     return (
         <div className="w-full">
             <Head title="OSA Dashboard - Settings" />
@@ -148,9 +142,7 @@ function SuperAdminSettings({
                                             type="datetime-local"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                             value={
-                                                formatDateForInput(
-                                                    recruitmentDate.start_date
-                                                ) || ""
+                                                recruitmentDate.start_date || ""
                                             }
                                             onChange={(e) =>
                                                 setRecruitmentDate(
@@ -172,9 +164,7 @@ function SuperAdminSettings({
                                             type="datetime-local"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                             value={
-                                                formatDateForInput(
-                                                    recruitmentDate.end_date
-                                                ) || ""
+                                                recruitmentDate.end_date || ""
                                             }
                                             onChange={(e) =>
                                                 setRecruitmentDate(
@@ -248,9 +238,7 @@ function SuperAdminSettings({
                                             type="datetime-local"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                             value={
-                                                formatDateForInput(
-                                                    manualRegDate.start_date
-                                                ) || ""
+                                                manualRegDate.start_date || ""
                                             }
                                             onChange={(e) =>
                                                 setManualRegDate(
@@ -271,11 +259,7 @@ function SuperAdminSettings({
                                             id="manualreg-end-date"
                                             type="datetime-local"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                            value={
-                                                formatDateForInput(
-                                                    manualRegDate.end_date
-                                                ) || ""
-                                            }
+                                            value={manualRegDate.end_date || ""}
                                             onChange={(e) =>
                                                 setManualRegDate(
                                                     "end_date",

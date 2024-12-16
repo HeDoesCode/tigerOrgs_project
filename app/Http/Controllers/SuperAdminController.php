@@ -770,10 +770,10 @@ class SuperAdminController extends Controller
         
         return Inertia::render('SuperAdmin/SuperAdminSettings', [
             'recruitment' => $settings['Recruitment']->status ?? false,
-            'recruitmentStartDate' => $settings['Recruitment']->start_date ?? now()->toIso8601String(),
+            'recruitmentStartDate' => $settings['Recruitment']->start_date ?? substr(now()->toIso8601String(),0, 16),
             'recruitmentEndDate' => $settings['Recruitment']->end_date ?? null,
             'manualreg' => $settings['Manual Registration']->status ?? false,
-            'manualRegStartDate' => $settings['Manual Registration']->start_date ?? now()->toIso8601String(),
+            'manualRegStartDate' => $settings['Manual Registration']->start_date ?? substr(now()->toIso8601String(),0, 16),
             'manualRegEndDate' => $settings['Manual Registration']->end_date ?? null,
         ]);
     }
