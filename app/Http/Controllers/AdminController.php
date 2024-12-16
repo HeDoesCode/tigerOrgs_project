@@ -820,7 +820,22 @@ class AdminController extends Controller
     }
 
     public function categorizeApplications($orgID, $selectedFormId)
-    {
+    {   
+        $form = Form::findOrFail($selectedFormId);
+        $applications = $form->applications->toArray();
+
+        foreach ($applications as $application) {
+            // checks if atleast 1 application does not have prepared data yet
+            if(is_null($application['prepared_data'])) {  
+                session()->flash('toast', [
+                    'title' => 'Preparing Application data',
+                    'description' => 'We are still preparing application data, please try again later.',
+                ]);
+
+                return redirect()->back()->withErrors('errors');
+            }
+        }
+
         CategorizeApplication::dispatch($selectedFormId);
 
         session()->flash('toast', [
