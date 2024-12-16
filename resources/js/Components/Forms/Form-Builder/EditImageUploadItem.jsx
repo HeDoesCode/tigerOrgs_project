@@ -60,6 +60,8 @@ function EditImageUploadItem({ id, item, required }) {
     useEffect(() => {
         handleEditItem(id, data);
     }, [data]);
+    
+    const maxTextLength = 2000;
 
     return (
         <ul>
@@ -72,6 +74,7 @@ function EditImageUploadItem({ id, item, required }) {
                     placeholder="Type question here..."
                     required={required}
                     minLength={1}
+                    maxLength={maxTextLength}
                     pattern=".{1,}"
                     title="Question is required"
                     onInvalid={(e) => {
@@ -81,6 +84,11 @@ function EditImageUploadItem({ id, item, required }) {
                         e.target.setCustomValidity("");
                     }}
                 />
+                <div className="font-bold text-sm mt-1 ml-1 mb-4 text-red-500">
+                                            {data.question.length ==
+                                                maxTextLength &&
+                                                `Max. length ${maxTextLength} reached.`}
+                                        </div>
             </li>
 
             {/* Image Upload Configuration */}

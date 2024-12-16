@@ -17,6 +17,8 @@ function EditSimpleItem({ id, item, required }) {
         handleEditItem(id, data);
     }, [data]);
 
+    const maxTextLength = 2000;
+
     return (
         <div className="space-y-4">
             <div className="flex flex-col px-2 space-y-2">
@@ -26,6 +28,7 @@ function EditSimpleItem({ id, item, required }) {
                     value={data.question}
                     onChange={(e) => setData("question", e.target.value)}
                     placeholder="Type question here..."
+                    maxLength={maxTextLength}
                     required={required}
                     minLength={1}
                     pattern=".{1,}"
@@ -37,6 +40,11 @@ function EditSimpleItem({ id, item, required }) {
                         e.target.setCustomValidity("");
                     }}
                 />
+                <div className="font-bold text-sm mt-1 ml-1 mb-4 text-red-500">
+                                            {data.question.length ==
+                                                maxTextLength &&
+                                                `Max. length ${maxTextLength} reached.`}
+                                        </div>
             </div>
 
             <div className="flex justify-end ">
