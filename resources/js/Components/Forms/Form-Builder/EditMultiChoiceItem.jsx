@@ -65,6 +65,11 @@ function EditMultiChoiceItem({ id, item, required }) {
         handleEditItem(id, data);
     }, [data]);
 
+    
+    const maxTextLength = 2000;
+    const maxTextLengthOption = 1000;
+    
+
     return (
         <ul>
             <li className="mb-4 rounded-2xl px-2">
@@ -75,6 +80,7 @@ function EditMultiChoiceItem({ id, item, required }) {
                     onChange={(e) => setData("question", e.target.value)}
                     placeholder="Type question here..."
                     required={required}
+                    maxLength={maxTextLength}
                     minLength={1}
                     pattern=".{1,}"
                     title="Question is required"
@@ -85,41 +91,55 @@ function EditMultiChoiceItem({ id, item, required }) {
                         e.target.setCustomValidity("");
                     }}
                 />
+                <div className="font-bold text-sm mt-1 ml-1 mb-4 text-red-500">
+                                            {data.question.length ==
+                                                maxTextLength &&
+                                                `Max. length ${maxTextLength} reached.`}
+                                        </div>
             </li>
 
             <li className="mb-2 px-2">
                 <ul>
                     {data.options.map((option, index) => (
-                        <li key={index} className="flex items-center mb-2">
-                            <input
-                                className="w-full  rounded-xl border-1 border-slate-300 bg-white/80"
-                                type="text"
-                                value={option}
-                                placeholder={option}
-                                onChange={(e) =>
-                                    handleEditOption(index, e.target.value)
-                                }
-                                required={required}
-                                minLength={1}
-                                pattern=".{1,}"
-                                title="Option is required"
-                                onInvalid={(e) => {
-                                    e.target.setCustomValidity(
-                                        "Please enter an option"
-                                    );
-                                }}
-                                onInput={(e) => {
-                                    e.target.setCustomValidity("");
-                                }}
-                            />
-                            <button
-                                className="ml-2 text-black/50"
-                                onClick={() => handleDeleteOption(index)}
-                                type="button"
-                            >
-                                <IconX />
-                            </button>
-                        </li>
+                        <div><li key={index} className="flex items-center mb-2">
+                            
+                        <div></div><input
+                            className="w-full ml-5   rounded-xl border-1 border-slate-300 bg-white/80"
+                            type="text"
+                            value={option}
+                            placeholder={option}
+                            onChange={(e) =>
+                                handleEditOption(index, e.target.value)
+                            }
+                            required={required}
+                            minLength={1}
+                            
+                maxLength={maxTextLengthOption}
+                            pattern=".{1,}"
+                            title="Option is required"
+                            onInvalid={(e) => {
+                                e.target.setCustomValidity(
+                                    "Please enter an option"
+                                );
+                            }}
+                            onInput={(e) => {
+                                e.target.setCustomValidity("");
+                            }}
+                        />
+                        
+                        <button
+                            className="ml-2 text-black/50"
+                            onClick={() => handleDeleteOption(index)}
+                            type="button"
+                        >
+                            <IconX />
+                        </button>
+                    </li><div className="font-bold text-sm ml-6 my-1  text-red-500">
+                                        {option.length ==
+                                            maxTextLengthOption &&
+                                            `Max. length ${maxTextLengthOption} reached.`}
+                                    </div></div>
+                        
                     ))}
                 </ul>
             </li>

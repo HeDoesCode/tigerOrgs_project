@@ -140,6 +140,9 @@ function FormBuilder({ orgID, formData, criterias }) {
         }
     };
 
+    const maxTextLengthTitle = 250;
+    const maxTextLengthDescription = 2500;
+
     return (
         <div className="bg-white min-h-screen">
             <form
@@ -152,26 +155,32 @@ function FormBuilder({ orgID, formData, criterias }) {
                 </h1>
                 <input
                     type="text"
-                    className="w-full bg-transparent rounded-xl border-[1.5px] border-x-stone-600 mb-4 p-2"
+                    className="w-full bg-transparent rounded-xl border-[1.5px] border-x-stone-600  p-2"
                     placeholder="Form title..."
+                    maxLength={maxTextLengthTitle}
                     value={data.name}
                     onChange={(e) => setData("name", e.target.value)}
                     required
                 />
-                {errors.name && (
-                    <div className="text-red-500">{errors.name}</div>
-                )}
+                <div className="font-bold text-sm mt-1 ml-1 mb-4 text-red-500">
+                                            {data.name.length ==
+                                                maxTextLengthTitle &&
+                                                `Max. length ${maxTextLengthTitle} reached.`}
+                                        </div>
 
-                <input
+                <textarea
                     type="text"
-                    className="w-full bg-transparent rounded-xl border-[1.5px] border-x-stone-600 mb-2"
+                    className="w-full bg-transparent min-h-48 rounded-xl border-[1.5px] border-x-stone-600 "
                     placeholder="Form description..."
+                    maxLength={maxTextLengthDescription}
                     value={data.desc}
                     onChange={(e) => setData("desc", e.target.value)}
                 />
-                {errors.desc && (
-                    <div className="text-red-500">{errors.desc}</div>
-                )}
+                <div className="font-bold text-sm ml-1 mt-1 mb-2 text-red-500">
+                                            {data.desc.length ==
+                                                maxTextLengthDescription &&
+                                                `Max. length ${maxTextLengthDescription} reached.`}
+                                        </div>
 
                 <select
                     value={data.criteria}
