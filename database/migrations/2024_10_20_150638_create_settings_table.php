@@ -22,16 +22,12 @@ return new class extends Migration
 
         DB::table('settings')->insert([
             'name' => 'Recruitment',  
-            'status' => false,  
-            'start_date' => now(),           
-            'end_date' => now(),           
+            'status' => false,         
         ]);
 
         DB::table('settings')->insert([
             'name' => 'Manual Registration',  
-            'status' => false,  
-            'start_date' => now(),           
-            'end_date' => now(),          
+            'status' => false,          
         ]);
 
         DB::table('settings')->insert([
