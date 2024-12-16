@@ -767,7 +767,7 @@ class SuperAdminController extends Controller
         $settings = DB::table('settings')
             ->whereIn('name', ['Recruitment', 'Manual Registration'])
             ->pluck('status', 'name');
-
+        
         return Inertia::render('SuperAdmin/SuperAdminSettings', [
             'recruitment' => $settings['Recruitment'] ?? false,
             'manualreg' => $settings['Manual Registration'] ?? false,
@@ -777,29 +777,46 @@ class SuperAdminController extends Controller
 
     public function toggleSetting(Request $request)
     {
-        $status = $request->input('status');
-        $settingName = $request->input('setting_name');
+        $request-> validate([
+            'start_date' => ['date', 'after_or_equal:today'],
+            'end_date' => ['date', 'after:start_date'],
+        ]);
+
+        $settingName = $request->input('settingName');
 
         DB::table('settings')
             ->where('name', $settingName)
-            ->update(['status' => $status]);
+            ->update([
+                'start_date' => Carbon::parse($request->input('start_date'))->format('Y-m-d H:i:s'),
+                'end_date' => Carbon::parse($request->input('end_date'))->format('Y-m-d H:i:s'),
+            ]);
+        
+        if ($request->input('start_date') <= now() && $request->input('end_date') > now()) {
+            $status = true;
 
+            DB::table('settings')
+            ->where('name', $settingName)
+            ->update([
+                'status' => $status,
+            ]);
 
+            // for notification sending
             $admins = DB::table('users')
-            ->join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
-            ->where('organization_user_role.orgID', 2)
-            ->get();
+                ->join('organization_user_role', 'users.userID', '=', 'organization_user_role.userID')
+                ->where('organization_user_role.orgID', 2)
+                ->get();
 
-        foreach ($admins as $admin) {
-            $user = \App\Models\User::find($admin->userID); 
-            if ($user) {
-                $user->notify(new RecruitmentStatusNotification($status));
+            foreach ($admins as $admin) {
+                $user = \App\Models\User::find($admin->userID); 
+                if ($user) {
+                    $user->notify(new RecruitmentStatusNotification($status));
+                }
             }
-        }
 
-        $message = $status
-            ? ucfirst($settingName) . " Enabled Successfully"
-            : ucfirst($settingName) . " Disabled Successfully";
+            // activity log
+            $message = $status
+                ? ucfirst($settingName) . " Enabled Successfully"
+                : ucfirst($settingName) . " Disabled Successfully";
 
 
             if ($settingName === 'Recruitment') {
@@ -809,13 +826,13 @@ class SuperAdminController extends Controller
                         'userID' => Auth::id(),
                         'action' => 'turned on the Recruitment Settings',
                         'login_timestamp' => now(),
-                     ]);
+                    ]);
                 }else{
                     DB::table('superadmin_login_history')->insert([ 
                         'userID' => Auth::id(),
                         'action' => 'turned off the Recruitment Settings',
                         'login_timestamp' => now(),
-                     ]);
+                    ]);
                 }
                 
             }
@@ -826,37 +843,25 @@ class SuperAdminController extends Controller
                         'userID' => Auth::id(),
                         'action' => 'turned on the Manual Registration Settings',
                         'login_timestamp' => now(),
-                     ]);
+                    ]);
                 }else{
                     DB::table('superadmin_login_history')->insert([ 
                         'userID' => Auth::id(),
                         'action' => 'turned off the Manual Registration Settings',
                         'login_timestamp' => now(),
-                     ]);
+                    ]);
                 }
             }
-
-
-            
-
-        session()->flash('toast', [
-            'title' => $message,
-            'description' => 'Status Updated Successfully!',
-            'variant' => $status ? 'success' : 'destructive'
-        ]);
-
-        if (!$status && $settingName === 'Recruitment') {
-            DB::table('organizations')->update(['recruiting' => false]);
         }
+        
+        session()->flash('toast', [
+            'title' => "test",
+            'description' => 'Status Updated Successfully!',
+            'variant' => 'success',
+        ]);
 
         return redirect()->route('superadmin.settings');
     }
-
-
-
-
-
-
 
     public function previewOrganizationData($orgID)
     {

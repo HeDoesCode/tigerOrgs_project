@@ -1,6 +1,6 @@
 import MainAdminFrame from "@/Components/MainAdminFrame";
 import SuperAdminLayout from "@/Layouts/SuperAdminLayout";
-import { Head, router } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import IconSettings from "@/Components/Icons/IconSettings";
 import { useState } from "react";
 import { Switch } from "@/Components/ui/switch";
@@ -11,26 +11,57 @@ function SuperAdminSettings({ recruitment = false, manualreg = false }) {
         useState(recruitment);
     const [isManualRegEnabled, setIsManualRegEnabled] = useState(manualreg);
 
-    const handleToggle = (checked, settingName) => {
-        router.post(
-            route("superadmin.toggle-setting"),
-            { status: checked, setting_name: settingName },
-            {
-                preserveState: true,
-                preserveScroll: true,
-                onSuccess: () => {
-                    if (settingName === "Recruitment") {
-                        setIsRecruitmentEnabled(checked);
-                    } else if (settingName === "Manual Registration") {
-                        setIsManualRegEnabled(checked);
-                    }
-                    router.visit(route("superadmin.settings"));
-                },
-                onError: () => {
-                    console.error(`Failed to toggle ${settingName} status`);
-                },
-            }
-        );
+    // const handleToggle = (checked, settingName) => {
+    //     router.post(
+    //         route("superadmin.toggle-setting"),
+    //         { status: checked, setting_name: settingName },
+    //         {
+    //             preserveState: true,
+    //             preserveScroll: true,
+    //             onSuccess: () => {
+    //                 if (settingName === "Recruitment") {
+    //                     setIsRecruitmentEnabled(checked);
+    //                 } else if (settingName === "Manual Registration") {
+    //                     setIsManualRegEnabled(checked);
+    //                 }
+    //                 router.visit(route("superadmin.settings"));
+    //             },
+    //             onError: () => {
+    //                 console.error(`Failed to toggle ${settingName} status`);
+    //             },
+    //         }
+    //     );
+    // };
+    const { errors } = usePage().props;
+
+    const {
+        data: recruitmentDate,
+        setData: setRecruitmentDate,
+        post: submitRecruitmentDate,
+    } = useForm({
+        settingName: "Recruitment",
+        start_date: null,
+        end_date: null,
+    });
+
+    const {
+        data: manualRegDate,
+        setData: setManualRegDate,
+        post: submitManualRegDate,
+    } = useForm({
+        settingName: "Manual Registration",
+        start_date: null,
+        end_date: null,
+    });
+
+    const handleRecruitmentDateSubmit = (e) => {
+        e.preventDefault();
+        submitRecruitmentDate(route("superadmin.toggle-setting"));
+    };
+
+    const handleManualRegDateSubmit = (e) => {
+        e.preventDefault();
+        submitManualRegDate(route("superadmin.toggle-setting"));
     };
 
     return (
@@ -77,22 +108,47 @@ function SuperAdminSettings({ recruitment = false, manualreg = false }) {
                                 }
                             >
                                 <div className="flex items-center space-x-3 mt-4">
-                                    <label
-                                        htmlFor="recruitment-toggle"
-                                        className="text-gray-700"
+                                    <form
+                                        onSubmit={handleRecruitmentDateSubmit}
                                     >
-                                        Recruitment
-                                    </label>
-                                    <Switch
-                                        id="recruitment-toggle"
-                                        checked={isRecruitmentEnabled}
-                                        onCheckedChange={(checked) =>
-                                            handleToggle(checked, "Recruitment")
-                                        }
-                                    />
-                                    <span>
-                                        {isRecruitmentEnabled ? "On" : "Off"}
-                                    </span>
+                                        <ul className="grid grid-cols-2 gap-4">
+                                            <li>
+                                                <label
+                                                    htmlFor=""
+                                                    className="block font-bold"
+                                                >
+                                                    Start Date
+                                                </label>
+                                                <input
+                                                    type="datetime-local"
+                                                    onChange={(e) =>
+                                                        setRecruitmentDate(
+                                                            "start_date",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            </li>
+                                            <li>
+                                                <label
+                                                    htmlFor=""
+                                                    className="block font-bold"
+                                                >
+                                                    End Date
+                                                </label>
+                                                <input
+                                                    type="datetime-local"
+                                                    onChange={(e) =>
+                                                        setRecruitmentDate(
+                                                            "end_date",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            </li>
+                                        </ul>
+                                        <button type="submit">Save</button>
+                                    </form>
                                 </div>
                             </AdminDialog>
                         </div>
@@ -127,12 +183,52 @@ function SuperAdminSettings({ recruitment = false, manualreg = false }) {
                                 }
                             >
                                 <div className="flex items-center space-x-3 mt-4">
+                                    <form onSubmit={handleManualRegDateSubmit}>
+                                        <ul className="grid grid-cols-2 gap-4">
+                                            <li>
+                                                <label
+                                                    htmlFor=""
+                                                    className="block font-bold"
+                                                >
+                                                    Start Date
+                                                </label>
+                                                <input
+                                                    type="datetime-local"
+                                                    onChange={(e) =>
+                                                        setManualRegDate(
+                                                            "start_date",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            </li>
+                                            <li>
+                                                <label
+                                                    htmlFor=""
+                                                    className="block font-bold"
+                                                >
+                                                    End Date
+                                                </label>
+                                                <input
+                                                    type="datetime-local"
+                                                    onChange={(e) =>
+                                                        setManualRegDate(
+                                                            "end_date",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            </li>
+                                        </ul>
+                                        <button type="submit">Save</button>
+                                    </form>
                                     <label
                                         htmlFor="manualreg-toggle"
                                         className="text-gray-700"
                                     >
                                         Manual Registration
                                     </label>
+
                                     <Switch
                                         id="manualreg-toggle"
                                         checked={isManualRegEnabled}
@@ -149,6 +245,9 @@ function SuperAdminSettings({ recruitment = false, manualreg = false }) {
                                 </div>
                             </AdminDialog>
                         </div>
+                        <button onClick={() => console.log(errors)}>
+                            Check Errors
+                        </button>
                     </div>
                 </MainAdminFrame>
             </SuperAdminLayout>
