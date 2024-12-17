@@ -836,7 +836,7 @@ private function notifyAdmins(string $settingName, bool $status)
     foreach ($admins as $admin) {
         $user = \App\Models\User::find($admin->userID); 
         if ($user) {
-            $user->notify(new RecruitmentStatusNotification($status, $settingName));
+            $user->notify(new RecruitmentStatusNotification($status));
         }
     }
 }
